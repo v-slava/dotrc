@@ -1,0 +1,5 @@
+# LG G2:
+SUBSYSTEM=="usb", ATTR{idVendor}=="1004", MODE="0666", GROUP="plugdev"
+# Freelander i20 (newman n2):
+SUBSYSTEM=="usb", ATTR{idVendor}=="283b", MODE="0666", OWNER="plugdev"
+

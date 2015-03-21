@@ -1,0 +1,10 @@
+!profile=NAME_THIS_PROFILE
+%session_key(text):user@gmail.com
+%session_password(password):some_password
+%firstName(text):
+%lastName(text):
+%email(email):
+%password(password):
+%first(text):
+%last(text):
+!

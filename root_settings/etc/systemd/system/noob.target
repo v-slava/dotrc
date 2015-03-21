@@ -1,0 +1,7 @@
+# A target to run startx from user 'noob'
+
+[Unit]
+Description=startx noob
+Requires=multi-user.target
+Conflicts=rescue.target
+

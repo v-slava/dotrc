@@ -1,0 +1,16 @@
+PHONY := all
+all: download_git
+	cd vifm && ./configure --disable-desktop-files --without-gtk
+	make -C vifm -j 9
+	su -c "make -C vifm install"
+
+PHONY += download_git
+download_git:
+	git clone git://github.com/ksteen/vifm.git
+	cd vifm && git tag && git checkout v0.7.8
+
+PHONY += clean
+clean:
+	rm -rf vifm
+
+.PHONY: $(PHONY)

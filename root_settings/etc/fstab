@@ -1,0 +1,8 @@
+# <file system>        <dir>         <type>    <options>           <dump> <pass>
+/dev/sda3              /             ext4      defaults,noatime      0      1
+/dev/sda5              none          swap      defaults              0      0
+/dev/sda6              /media/files  ext4      defaults,noatime      0      2
+
+# Mount /dev/sdb1:
+/dev/sdb1              /media/sdb1   vfat noauto,noatime,user,flush,rw,exec 0 0
+

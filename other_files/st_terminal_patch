@@ -1,0 +1,101 @@
+diff --git a/config.def.h b/config.def.h
+index 58b470e..ff5a76d 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -5,8 +5,8 @@
+  *
+  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
+  */
+-static char font[] = "Liberation Mono:pixelsize=12:antialias=false:autohint=false";
+-static int borderpx = 2;
++static char font[] = "Inconsolata:pixelsize=17";
++static int borderpx = 0;
+ static char shell[] = "/bin/sh";
+ 
+ /* Kerning / character bounding-box mutlipliers */
+@@ -51,30 +51,24 @@ static unsigned int tabspaces = 8;
+ 
+ /* Terminal colors (16 first used in escape sequence) */
+ static const char *colorname[] = {
+-	/* 8 normal colors */
+-	"black",
+-	"red3",
+-	"green3",
+-	"yellow3",
+-	"blue2",
+-	"magenta3",
+-	"cyan3",
+-	"gray90",
+ 
+-	/* 8 bright colors */
+-	"gray50",
+-	"red",
+-	"green",
+-	"yellow",
+-	"#5c5cff",
+-	"magenta",
+-	"cyan",
+-	"white",
+-
+-	[255] = 0,
+-
+-	/* more colors can be added after 255 to use with DefaultXX */
+-	"#cccccc",
++	/* Molokai theme: */
++	"#101010",
++	"#960050",
++	"#66aa11",
++	"#c47f2c",
++	"#30309b",
++	"#7e40a5",
++	"#3579a8",
++	"#9999aa",
++	"#303030",
++	"#ff0090",
++	"#80ff00",
++	"#ffba68",
++	"#5f5fee",
++	"#bb88dd",
++	"#4eb4fa",
++	"#d0d0d0",
+ };
+ 
+ 
+@@ -82,9 +76,9 @@ static const char *colorname[] = {
+  * Default colors (colorname index)
+  * foreground, background, cursor
+  */
+-static unsigned int defaultfg = 7;
++static unsigned int defaultfg = 15;
+ static unsigned int defaultbg = 0;
+-static unsigned int defaultcs = 256;
++static unsigned int defaultcs = 15;
+ 
+ /*
+  * Colors used, when the specific fg == defaultfg. So in reverse mode this
+diff --git a/st.c b/st.c
+index 392f12d..a5d360b 100644
+--- a/st.c
++++ b/st.c
+@@ -3149,6 +3149,10 @@ xdraws(char *s, Glyph base, int x, int y, int charlen, int bytelen) {
+ 		bg = &dc.col[base.bg];
+ 	}
+ 
++	if(base.mode & ATTR_UNDERLINE) {
++		fg = &dc.col[75];
++	}
++
+ 	if(base.mode & ATTR_BOLD) {
+ 		if(BETWEEN(base.fg, 0, 7)) {
+ 			/* basic system colors */
+@@ -3160,6 +3164,10 @@ xdraws(char *s, Glyph base, int x, int y, int charlen, int bytelen) {
+ 			/* greyscale */
+ 			fg = &dc.col[base.fg + 4];
+ 		}
++		else if(base.fg == 15)
++		{
++			fg = &dc.col[185];
++		}
+ 		/*
+ 		 * Those ranges will not be brightened:
+ 		 *    8 - 15 – bright system colors

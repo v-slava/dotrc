@@ -1,0 +1,17 @@
+[Unit]
+Description=WPA supplicant
+ConditionCapability=CAP_NET_ADMIN
+DefaultDependencies=no
+After=dbus.service network-pre.target systemd-sysusers.service
+Before=network.target multi-user.target shutdown.target
+Conflicts=shutdown.target
+Wants=network.target
+
+[Service]
+Type=dbus
+BusName=fi.epitest.hostap.WPASupplicant
+ExecStart=/sbin/wpa_supplicant -u -s -O /run/wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
+
+[Install]
+WantedBy=multi-user.target
+Alias=dbus-fi.epitest.hostap.WPASupplicant.service

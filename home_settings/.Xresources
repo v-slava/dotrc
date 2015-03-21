@@ -1,0 +1,63 @@
+! Dump scrollback buffer with <Ctrl>+PrintScreen:
+URxvt.print-pipe: ~/os_settings/other_files/handle_terminal_scrollback_buffer.sh
+
+! font:
+URxvt.font:    xft:Inconsolata:pixelsize=16
+URxvt.boldfont:xft:Inconsolata:pixelsize=16:style=bold
+
+! Reduce distance between letters:
+! URxvt.letterSpace: -1
+
+URxvt.perl-ext-common: default,matcher,font-size
+
+! Clickable URLs (ctrl + left button):
+URxvt.urlLauncher: /usr/local/bin/vimb
+URxvt.matcher.button: C1
+
+! Hotkeys to change font size on the fly (Ctrl+Up/Down):
+URxvt.keysym.C-Up:     perl:font-size:increase
+URxvt.keysym.C-Down:   perl:font-size:decrease
+! URxvt.keysym.C-A-Up:   perl:font-size:incglobal
+! URxvt.keysym.C-A-Down: perl:font-size:decglobal
+
+! Other:
+URxvt.saveLines: 1000000
+URxvt.scrollBar: false
+! URxvt.scrollstyle: plain
+! URxvt.scrollBar_right: true
+
+URxvt.cursorBlink: true
+! URxvt.cursorUnderline: true
+
+! Bold:
+URxvt.colorBD: #E6DB74
+! Underlined:
+URxvt.colorUL: #66D9EF
+! Italic:
+! Urxvt.colorIT: #00FF00
+
+! URxvt.depth: 32
+! URxvt.tintColor: rgba:0000/0000/0000/bbbb
+! URxvt.cursorColor
+! URxvt.cursorColor2
+
+! Molokai theme
+URxvt.background: #101010
+URxvt.foreground: #d0d0d0
+URxvt.color0: #101010
+URxvt.color1: #960050
+URxvt.color2: #66aa11
+URxvt.color3: #c47f2c
+URxvt.color4: #30309b
+URxvt.color5: #7e40a5
+URxvt.color6: #3579a8
+URxvt.color7: #9999aa
+URxvt.color8: #303030
+URxvt.color9: #ff0090
+URxvt.color10: #80ff00
+URxvt.color11: #ffba68
+URxvt.color12: #5f5fee
+URxvt.color13: #bb88dd
+URxvt.color14: #4eb4fa
+URxvt.color15: #d0d0d0
+

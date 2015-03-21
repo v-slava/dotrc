@@ -1,0 +1,949 @@
+
+# sink input #i - application #i playing audio
+pacmd list-sinks
+# sink #0 (not 'sink input #0'!) has associated:
+# - port (headphones / speaker);
+# - profile (sound card ports configuration).
+#                 sink  port
+pactl set-sink-port 0 analog-output-headphones
+pactl set-sink-port 0 analog-output-speaker
+
+amixer set Master toggle
+amixer set Master on
+
+# Set time 3 hours back:
+date -s "$(date -R -d '-3 hour')"
+hwclock -w
+
+# Set timezone (EET = Eastern European Time = UTC+2):
+ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+
+# View timezone:
+date +%Z
+
+# Recursively show control group contents:
+systemd-cgls
+
+# Systemd commands:
+systemctl is-enabled SERVICE
+systemctl status SERVICE
+systemctl enable SERVICE
+systemctl start SERVICE
+systemctl set-default multi-user.target
+# target example: /usr/lib/systemd/system/graphical.target
+
+# Connect manually to wifi (wpasupplicant):
+wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+
+# LG G2 path to camera photos:
+/storage/emulated/legacy/DCIM/Camera/
+
+# Download video from youtube:
+cclive -f best URL
+
+# Bluetooth headset:
+# /etc/bluetooth/audio.conf:
+[General]
+Enable=Socket
+
+# cat << EOF >> ~/.asoundrc
+pcm.btheadset {
+	type plug
+	slave {
+		pcm {
+			type bluetooth
+			device "34:DF:2A:07:71:E8"
+			profile "auto"
+		}
+	}
+
+	hint {
+		show on
+		description "BT Headset"
+	}
+}
+
+ctl.btheadset {
+	type bluetooth
+}
+# EOF
+
+# Scan for bluetooth devices:
+hcitool scan
+
+# On first connect to enter PIN:
+bluez-simple-agent hci0 MAC
+
+# Connect to bluetooth headset:
+bt-audio -c MAC
+
+# Display active baseband connections:
+hcitool con
+
+# Play mp3:
+mplayer -ao alsa:device=btheadset file.mp3
+
+# doxygen generate info for any C/C++ project:
+# generate doxygen file:
+doxygen -s -g [Doxyfile]
+vim Doxyfile
+# Set the following config options to YES:
+# RECURSIVE, HAVE_DOT, CALL_GRAPH, CALLER_GRAPH
+# INPUT = path_to_your_folder
+# Also make sure the path to dot is in your PATH variable.
+# If that still doesn't work, set to YES:
+# EXTRACT_ALL, EXTRACT_STATIC
+
+# Display the whole server certificate chain:
+openssl s_client -showcerts -connect developer.mozilla.org:443 </dev/null
+
+# view certificate revocation list:
+openssl crl -text -inform {DER|PEM} FILE.crl
+
+# view certificate details:
+openssl x509 -text -in CERTIFICATE_FILE
+
+# List services available on server:
+smbclient -U v.volkov -W SURC -L seclab.surc.kiev.ua
+smbclient -U v.volkov -W SURC -L s-file.surc.kiev.ua
+# Mount shared folder via smb (package=cifs-utils, root required):
+mount -t cifs -o user=v.volkov,domain=SURC //seclab.surc.kiev.ua/Exchange /media/exchange
+# Mount shared folder via smb (package=smbnetfs|fusesmb, no root required):
+
+# Restart nfs server (ubuntu):
+sudo service nfs-kernel-server restart
+# sudo vim /etc/exports:
+# /mnt_folder 106.125.45.192(rw,sync,no_root_squash,no_subtree_check)
+# /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
+
+# View machines, connected via ssh:
+who -a
+
+# Rootfs via nfs - kernel cmdline options:
+KERNEL_CMDLINE:root=/dev/nfs nfsroot=106.125.38.23:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
+# Restart nfs service:
+service nfs-kernel-server restart
+# nfs server config (/etc/exports):
+/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
+# Install nfs server package:
+sudo apt-get install nfs-kernel-server
+
+# register foreign (x86-64 elf files) binary format:
+echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
+
+# register foreign (arm elf files) binary format:
+echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm:OC' > /proc/sys/fs/binfmt_misc/register
+
+# Simulate root access via LD_PRELOAD:
+fakeroot id
+echo "id ; whoami" | fakeroot
+# Create tarball for variant=fakechroot (use variant=minbase without fakechroot):
+fakechroot debootstrap --arch=armhf --download-only --variant=fakechroot \
+	--make-tarball=debootstrap.tgz wheezy tmp_dir
+# If tmp_dir doesn't exist - it will be created. It will be deleted at the end.
+# Unpack tarball for foreign architecture:
+fakeroot debootstrap --arch=armhf --foreign --unpack-tarball=debootstrap.tgz wheezy mnt
+# Download and install (first stage only):
+fakeroot debootstrap --arch=armhf --foreign wheezy mnt
+# Chroot without root privileges:
+fakechroot chroot root_dir
+fakechroot chroot root_dir CMD
+echo "CMD1 ; CMD2" | fakechroot chroot root_dir
+# Transparent cross-compilation (your cross-compiler will be accessed via /usr/bin/gcc):
+# Initialize a target (need to be executed just once, TARGET may be any string):
+sb2-init -d -n TARGET CROSS_COMPILER
+sb2 # -eR # Enter scratchbox environment
+fakeroot debootstrap --arch=armhf --foreign --variant=scratchbox wheezy DIR
+# Here DIR is a directory you've executed sb2-init in (be carefull with symlinks).
+# Chroot to foreign architecture rootfs:
+cp /usr/bin/qemu-arm-static root_dir/usr/bin
+sudo chroot root_dir
+# Note: there might be issues with fakechroot-ing to foreign architecture.
+
+# Generate password for /etc/passwd:
+openssl passwd -1 -salt my_salt my_password
+echo 'my_password' | mkpasswd --salt=MyLongSalt --method=sha-512 -s
+# Exact line in /etc/passwd:
+root:OUTPUT_FROM_PREVIOUS_CMD:0:0:Root,,,:/:/bin/sh
+
+# View current kernel config:
+zcat /proc/config.gz
+
+# debug printk:
+pr_devel() should produce zero code unless DEBUG is defined
+# printk(KERN_DEBUG "fmt", ...)
+# For dynamic debugging:
+pr_debug(char *format, ...);
+# If you are writing a driver, please use dev_dbg instead
+dev_dbg(struct device *dev, char *format, ...);
+
+# Unset environment variable (bash):
+unset ENV_VAR_NAME
+
+# Truncate file:
+truncate -s SIZE FILE
+
+# View file sizes (right one is apparent size = including holes):
+ls -lsh FILE
+ls -ls --block-size=1 FILE
+
+# Resize ext2/3/4 partition:
+resize2fs -p FILE [SIZE]
+
+# Check filesystem for errors (do not correct anything):
+fsck.reiserfs -n FILE
+
+# Do not reserve 5% of space on file system:
+mkfs.ext4 -m 0 ..
+tune2fs -m 0 FILE
+
+# xargs specify parameters order (you can use anything as replace_str):
+echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
+
+# Debian packaging from source:
+# Debian download source package:
+apt-get source PACKAGE
+Got sources with patches applied.
+
+# To apply patches manually:
+1. Copy debian folder to original sources
+2. export QUILT_PATCHES=debian/patches
+3. cd original_sources_root_folder && quilt push -a
+
+# To unapply debian patches (see also quilt applied/unapplied):
+quilt pop -a
+
+# Manual patching (according to order in "series" file):
+patch --no-backup-if-mismatch -p1 < $SOME_PATH_PREFIX/debian/patches/PATCH_NAME.patch
+
+# To generate package description file (.dsc):
+(needed: root/PACKAGE_ROOT/debian, root/original_sources.tar.*):
+cd root && dpkg-source -b PACKAGE_ROOT
+
+# Build package from source and do not sign anything:
+dpkg-buildpackage -us -uc
+
+# Create patch file (use diff -uNr for directories):
+diff -uN old_file new_file > patch_file
+
+# Apply patch:
+patch old_file patch_file
+cd destination_dir && patch -p1 < ../patch_file
+# Do not ask anything, do not create .orig and .rej files:
+patch -f -r - --no-backup-if-mismatch old_file patch_file
+
+# Create patch file (use git diff):
+git diff folder1 folder2 --no-prefix > patch_file
+git diff commitid1 commitid2 > patch_file
+
+# Git do not verify ssl certificates:
+git config [--global] http.sslVerify false
+GIT_SSL_NO_VERIFY=true git clone URL
+git -c http.sslVerify=false clone URL
+# Git use custom certificate:
+git config [--global] http.sslCAInfo $HOME/srk_interception.cer
+GIT_SSL_CAINFO=$HOME/SOME_FILE.cer git clone URL
+git -c http.sslCAInfo=$HOME/SOME_FILE.cer clone URL
+
+# Add all untracked files:
+git add -A
+
+# Add tracking information to git branch:
+git branch -u origin/remote_branch [local_branch]
+
+# Gerrit sample commit:
+git pull
+git checkout local_branch
+git rebase -i origin/remote_branch
+git push origin local_branch:remote_branch
+
+# Show changes in the cache/index (i.e. staged chenages) against the current HEAD:
+git diff --name-only --cached
+
+# Git amend not last commit:
+git rebase --interactive bbc643cd^
+# In the default editor, modify 'pick' to 'edit' in the line whose commit you want to modify
+vim FILES_TO_MODIFY
+git add FILES_TO_MODIFY
+git commit --amend --no-edit
+git rebase --continue
+
+git log --graph --pretty=format:"%d %h %ai %an %s"
+git log --graph --all --decorate
+
+# Alsa sound recording (tee plugin):
+aplay -v -Dtee:\'plughw:0,0\',./raw_samples_file,raw FILE.wav
+# Alsa play recorded sound:
+aplay -v -c 2 -f S16_LE -r 44100 ./raw_samples_file
+
+# Play sound via specific sound device:
+aplay -D hw:#CARD,#DEVICE,#SUBDEVICE FILE.wav
+
+# Alsa commands:
+cat /proc/asound/cards (modules, devices)
+aplay -v file.wav
+
+# Who uses file/folder:
+fuser FILE
+fuser -m FOLDER
+
+# Show session IDs and process group IDs:
+ps -eo sid,pgid,ppid,pid,comm
+
+# Show all processes and threads:
+ps -efL
+
+# Show process hierarchy (forest):
+ps -efH
+
+# rpm print macro definition:
+rpm --eval "%{_prefix}"
+
+# List all filesystems, devices backed by them, mount points:
+findmnt
+
+# trace execve syscalls (including child processes):
+strace -f -s 8192 -o trace_file -e trace=execve CMD
+# attach to process and begin tracing:
+strace -p PID
+
+# Set mac address:
+ifconfig eth0 hw ether 12:34:56:78:9a:bc
+
+# P4 help:
+p4 help COMMAND
+
+# P4 changelist:
+# P4 view changelists, integrated into specified file(s):
+p4 changes -i REMOTE_FILE
+p4 changes -i REMOTE_FOLDER/...
+
+# P4 list of pending changelists:
+p4 changes -s pending -u USER_NAME -c WORKSPACE_NAME
+
+# P4 create new changelist:
+cat CHANGELIST_DESCRIPTION_TXT | p4 change -i
+
+# P4 edit existed changelist:
+p4 change -O changelist#
+
+# P4 view changelist:
+p4 change -o
+p4 change -o -O changelist#
+p4 describe changelist#
+p4 files @=changelist#
+
+# P4 submit changelist:
+p4 submit [-r -f] -c changelist#
+
+# P4 delete changelist:
+p4 change -d changelist#
+
+# P4 workspace:
+# P4 list all workspaces, owned by USER_NAME:
+p4 clients -u USER_NAME
+
+# P4 switch to a workspace:
+export P4CLIENT=WORKSPACE_NAME
+
+# P4 print current workspace settings:
+p4 client -o
+
+# P4 create workspace:
+cat WORKSPACE_SETTINGS_TXT | p4 client -i
+
+# P4 delete workspace:
+p4 client -d WORKSPACE_NAME
+
+# P4 get latest revision:
+p4 sync
+p4 sync -f //depot/path/to/folder/...#head
+
+# P4 remove all files from workspace:
+p4 sync /path/to/local/workspace/...#0
+
+# P4 file/folder operations:
+# P4 view opened files:
+p4 opened
+p4 opened -a
+
+# P4 mark file for deletion:
+p4 delete -c changelist# -v //depot/path/to/file
+
+# P4 mark folder for deletion:
+p4 delete -c changelist# -v //depot/path/to/folder/...
+
+# P4 revert file:
+p4 revert //depot/path/to/file
+
+# P4 revert folder:
+p4 revert //depot/path/to/folder/...
+
+# P4 mark file for add:
+p4 add -c changelist# /path/to/local/file
+
+# P4 mark folder for add:
+p4 add -c changelist# '/path/to/local/folder/*'
+
+# P4 mark file for edit (checkout):
+p4 edit -c changelist# /path/to/local/file
+
+# P4 mark folder for edit (checkout):
+p4 edit -c changelist# /path/to/folder/...
+
+# P4 rename file:
+p4 edit -c changelist# /path/to/local/file/before
+p4 move /path/to/local/file/before /path/to/local/file/after
+In changelist:
+	//depot/path/to/remote/file/before	# move/delete
+	//depot/path/to/remote/file/after	# move/add
+
+# Output lines [K; L]
+tail -n +K | head -n {L - K + 1}
+
+# Output lines [1; K]
+head -n K
+
+# Output lines [K; EOF)
+tail -n +K
+
+# Documentation browser: zeal (depends on latest qt5)
+
+# Search man pages description for keyword:
+apropos KEYWORD
+man -k KEYWORD
+
+# Search man pages contents for keyword:
+man -K -w KEYWORD
+
+# generate password for linux:
+openssl passwd -1 -salt xyz yourpass
+# -1  Use the MD5 based BSD password algorithm 1.
+
+# man for openssl command (enc, passwd, ...):
+man 1ssl cmd
+
+# Qemu monitor:
+qemu-system-arm -monitor pty
+> pid 23969's current affinity mask: ff
+> pid 23969's new affinity mask: 1
+> char device redirected to /dev/pts/4 (label compat_monitor0)
+screen /dev/pts/4
+minicom -p /dev/pts/4
+
+# Connect to serial port:
+sudo minicom -D /dev/ttyUSB0
+
+# minicom configuration:
+<ctrl>+A <pause> O  -> serial port setup -> hardware flow control
+(set to Novia "F" key)
+than go to main menu, select "Save setup as dfl"
+
+# Start screen:
+screen /dev/ttyUSB0 115200N1
+
+# Detach from screen:
+<ctrl>a + d
+
+# Create new screen session or attach to existing ones (if present):
+screen -d -R
+
+# Exit from screen:
+<ctrl>a + :quit
+
+# QEMU save memory:
+pmemsave <address> <size> <file>
+
+# Qemu interaction:
+<Ctrl> + A     <pause>     H
+
+# Exit qemu:
+<Ctrl> + A     <pause>     X
+
+# Switch to qemu's console:
+<Ctrl> + A     <pause>     C
+
+# Clear out the local repository of retrieved package files:
+apt-get clean
+
+# Show dependencies to be installed for a package:
+apt-get install -s <package_name>
+apt-rdepends --state-show NotInstalled --state-follow NotInstalled <package_name>
+# Show reverse dependencies:
+apt-cache rdepends <package_name>
+
+# Download sources for a package:
+apt-get source --download-only <package_name>
+
+# Download package from repository:
+apt-get download <package_name>
+
+# dpkg restore broken installation:
+dpkg --configure -a
+
+# dpkg apt-get add architecture x86-64 x86_64:
+sudo dpkg --add-architecture <arch>
+sudo apt-get update
+dpkg --remove-architecture <arch>
+
+# list installed packages by installation date:
+ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
+
+# Install package without root privileges:
+mkdir -p ~/root_dir/var/lib
+cp -r /var/lib/dpkg ~/root_dir/var/lib/
+dpkg --force-not-root --root=$HOME/root_dir --log=$HOME/var_log_dpkg.log -i <package_name>
+
+# Show files in package:
+apt-file list <package_name_from_repository>
+dpkg -c <package>.deb
+
+# Measure disk speed:
+sudo hdparm -t DEVICE
+
+# All info elf:
+readelf -a FILE
+
+# Find *.c files only in specified path:
+find -path './some/path*' -name '*.c
+
+# Execute command for each element found:
+find -exec CMD args_before {} args_after \;
+
+# Show video mode resolution ModeLine:
+xvidtune -show
+
+# Display total size of current directory:
+du -h -s
+# Display size of each direcory inside current ones:
+du -h -d 1
+
+# Mount usb so that all users can write to it:
+su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
+
+# Show dmesg log:
+tail -F /var/log/messages
+
+# gcc save preprocessed and assembler files:
+gcc -save-temps=obj
+
+# Standart compiler include paths:
+touch foo.h && gcc -c -v foo.h
+
+# Standart compiler macros:
+touch foo.h && gcc -c -dM -E foo.h
+
+# Replace symbol (space in this case) witn \n:
+cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER
+
+# To inspect bash keyboard mapping:
+bind -P
+
+# Vim delete empty lines:
+:%g/^\s*$/d
+
+# Vim delete lines by regex:
+:%g/<regex>/d
+
+# Canonicalize PATH:
+readlink -f PATH
+
+# Debug Makefile:
+make -d
+# Create linux man pages (docs):
+make mandocs
+make installmandocs # installs in /usr/local/man/man9
+# Use "make help" to get info about all targets
+
+# Create uImage from raw binary:
+mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
+
+# Create hard drive image in regular file:
+sudo su
+losetup -f # print name of first unused loop device (for example /dev/loop0)
+losetup -o OFFSET /dev/loop0 FILE # attach loop device with regular file
+losetup -d /dev/loop0 # detach loop device from file
+
+# Convert raw framebuffer data to png image:
+ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
+
+# Start logging bash session:
+script IN_OUT_LOG_FILE -t 2>TIMING_LOG_FILE
+
+# Read logging bash session:
+scriptreplay -t TIMINT_LOG_FILE IN_OUT_LOG_FILE
+cat <file_name>
+less -r|-R IN_OUT_LOG_FILE
+
+# less search command line:
+less -p pattern FILE
+
+# get timestamp
+ls -l --time-style=+%s <FILE | FOLDER> | cut -d' ' -f 6
+
+# Get squashfs compression algorithm:
+unsquashfs -s rootfs.img | grep Compression
+
+# grep recursively by file extension:
+grep -R --include=*.cpp --include=*.h --exclude=*.inl.h <pattern> .
+
+# Show only file names with matched content:
+grep -rl -m 1 'REGEX' .
+
+# preprocess bash script:
+#!/bin/bash -x
+# in "help set":
+# -x  Print commands and their arguments as they are executed.
+bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
+
+# Check debug info in elf:
+readelf --sections FILE | grep debug
+# Without debug info output is empty. With debug info output looks like:
+# [27] .debug_aranges    PROGBITS        00000000 001071 000020 00      0   0  1
+# [28] .debug_info       PROGBITS        00000000 001091 000042 00      0   0  1
+# [29] .debug_abbrev     PROGBITS        00000000 0010d3 000037 00      0   0  1
+# [30] .debug_line       PROGBITS        00000000 00110a 000038 00      0   0  1
+# [31] .debug_str        PROGBITS        00000000 001142 000063 01  MS  0   0  1
+
+# Dynamic dependencies (shared libraries):
+readelf -d FILE | grep NEEDED
+objdump -p FILE | grep NEEDED
+ldd FILE # doesn't work for other architecture (always returns not a dynamic executable)
+LD_TRACE_LOADED_OBJECTS=1 /lib/ld-linux.so.3 FILE
+
+# 7z decompressing:
+7z x FILE.7z
+p7zip -d FILE.7z
+
+# 7z compressing:
+7z a FILE.7z /path/to/folder
+7z a -t7z -v89m -mx0 -r FILE.7z /path/to/folder
+
+# Determine sectors occupied by a given file:
+sudo hdparm --fibmap FILE
+
+# View dot files:
+xdot file.dot (or better file.gv)
+
+# Trace32 commands:
+break.set 0x12345678
+data.load.elf <elf file> /nocode
+data.load.binary <binary file> 0x12345678
+data.dump 0x12345678
+break.set 0x12345678 /condition register(r0)==0x12345678
+go.till register(r0)==0x12
+r.s r4 <value>
+
+# get line with specified number from file:
+sed -n '<line number>p' < file
+
+# Delete specified lines interval from file:
+sed -i OLD_FILE -e '<start line>,<end line>d'
+
+# Insert specified line into text file under a given line number:
+sed -i OLD_FILE -e '<line number>i<text to be inserted>'
+# A line, which is currently under <line number> will be
+# under <line number>+1 after execution.
+
+# Replace string by regex:
+cat file_before | sed -e 's/REGEX/STRING_AFTER/g' > file_after
+
+# Delete strings by regex:`
+cat file_before | sed -e '/REGEX/d' > file_after
+
+# Core dump:
+# grep core_pattern linux_src/Documentation/sysctl/kernel.txt
+# cat /proc/sys/kernel/core_pattern
+# man core
+# man bash # search for ulimit
+ulimit -c unlimited
+ulimit -a
+echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
+# now launch executable crashed..
+
+# Debug program with core dump:
+gdb -e PROGRAM -c core.dump
+gdb PROGRAM core.dump
+backtrace full
+
+# GDB save value in variable:
+set $var_name = expression
+
+# GDB step out of a function:
+finish
+
+# gdb (tui) refresh screen:
+refresh
+
+# gdb debug threads:
+info thread	# list threads
+thread Id	# switch to thread Id
+
+# gdb: write to process memory from file:
+restore FILE binary START_ADDRESS_IN_MEMORY
+
+# gdb: write to file from process memory [START .. STOP):
+dump binary memory FILE START STOP
+
+# GDB catch syscall:
+catch syscall chroot
+
+# GDB disable/enable breakpoints:
+disable num
+enable num
+
+# GDB conditional breakpoints:
+cond <bnum> <expression> # stop if <expression> == true
+b LOCATION if CONDITION
+ignore <bnum> <count>
+
+# GDB breakpoints on read/write:
+# watch *0xaab12450 [mask 0xfffffff0]
+watch - only breaks on write
+rwatch - breaks on read, and
+awatch - breaks on read/write.
+
+# GDB delete breakpoint
+del <breakpoint number>
+
+# GDB list breakpoints
+info break
+
+# GDB: display an array of values:
+disp {$r0, $r1}
+
+# Write into memory using GDB:
+set *0xAb000000 = 0xcd
+set {int}0xAb000000 = 0xcd
+
+# GDB signals handling:
+handle SIGTRAP nostop
+handle all nostop noprint
+
+# gdb load symbols from file:
+sym FILE
+
+# gdb view source files:
+info sources
+
+# gdb sysroot (to debug shared libraries with gdb-server):
+set sysroot HOST_COPY_OF_DEBUGGIE_ROOT_WITH_LIBS_AND_LD
+set solib-search-path DIR # not recommended, single step doesn't work without ld
+
+# gdb change sources path:
+set substitute-path FROM TO
+
+# gdb view loaded shared libraries:
+info sharedlibrary
+
+# Generate core dump on runtime error:
+ulimit -c unlimited && ./launch_buggy_program
+
+# Restore deleted file:
+mkdir restore
+sudo extundelete --restore-file other/commands --output-dir restore /dev/sda5
+
+# Linux kernel objdump
+arm-linux-gnueabi-objdump -D -b binary -m arm Image
+
+# Pack initramfs:
+cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
+
+# Extract initramfs:
+cd FOLDER_TO_EXTRACT_INTO && gunzip -c -9 /boot/initrd.img-3.11.0-12-generic | cpio -i -d -H newc --no-absolute-filenames
+
+# Copy files over ssh:
+ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
+ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# Compress folder by tar:
+tar cf tar_name.tar ./source_directory/*
+tar czf archive.tar.gz /path/to/directory
+
+# View kernel messages (printk):
+tail /var/log/syslog
+
+# Mount initrd:
+sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>
+
+# Run arm executable using qemu-arm:
+sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
+sudo apt-get install libc6-dev-armel-cross # arm C library development files
+arm-linux-gnueabi-gcc -static 1.c
+qemu-arm a.out
+
+# mount iso file:
+fuseiso <image_file> <mount_point>
+fuseiso --help
+fusermount -u -z <mount_point> # unmount
+
+# Turn screen off (without blocking):
+xset dpms force off
+
+# Code formatting (eclipse):
+<Ctrl> + I
+
+# Display stack size
+ulimit -all
+man 2 getrlimit
+
+cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
+
+# Print hex dump (format - big endian):
+xxd
+# Format: 7A123456 (4 byte long values, native endianess = little):
+hexdump -v -e '/4 "%08X\n"' FILE
+# Format: 0000461f:   D5
+hexdump -v -e '/1 "%08_ax:   "' -e '/1 "%02X\n"' FILE
+# Format: C array: 0x0A, 0x69
+hexdump -v -e '/1 "0x%02X, "' FILE
+# Format: shell string of hex-encoded characters: \x0A\x69
+hexdump -v -e '"\\" /1 "x%02X"' FILE
+
+# Assembler thumb code:
+".code 16\n\t"
+".arch armv5te\n\t"
+
+# "adb remount" from android device terminal (su required):
+mount -r -w -o remount /system /system
+mount -o rw,remount /
+
+# assemble jump instruction (0x848a <main+10>:	bl	0x84dc):
+bl m1
+.skip 0x84dc - 0x848a - 4
+m1:
+
+# ARM, THUMB opcodes
+binutils-2.23.2/opcodes/arm-dis.c
+binutils-2.23.2/include/opcode/arm.h
+
+# Scan for network devices (port will be blocked):
+sudo arp-scan --interface=eth0 --localnet
+
+# Internet fixing commands:
+nm-tool
+tracepath
+route # get default gateway
+cat /etc/resolv.conf
+/etc/network/interfaces
+
+# Partitions details:
+ls /dev/disk/by-uuid
+sudo blkid /dev/sda6
+lsblk
+
+# Linux directories rights access:
+# If no access to file then open() syscall fails.
+# Hard link- completely another file.
+# Symbolic link - just a reference to real file.
+# Folder read access:    can't open files (can't read, can't write), can't cd to folder,
+#                        can ls folder contents (only file/folder names, no details)
+# Folder execute access: can open files (read/write permissions depend on file permissions),
+#                        can cd to folder, can't ls folder contents.
+# Folder write access:   can create new files,
+#                        can delete existed ones if execute folder access available.
+
+# Find all packages that provide www-browser:
+aptitude search '~Pwww-browser'
+
+# Format partition as a swap:
+mkswap /dev/sdaX
+
+# update-alternatives:
+ls -l /etc/alternatives
+update-alternatives --query x-window-manager
+update-alternatives --set x-window-manager $(which i3)
+
+# Get audio/video file info (package libav-tools needed):
+avprobe file.avi
+
+# Brightness on samsung laptop:
+# current brightness:
+/sys/class/backlight/intel_backlight/brightness
+# maximum brightness:
+/sys/class/backlight/intel_backlight/max_brightness
+
+# Flash player with webkit-based browsers:
+http://sourceforge.net/p/vimprobable/wiki/Plugins/
+strings -a /usr/lib/libwebkitgtk-3.0.so.0 | grep plugin
+
+# Add ppa to /etc/apt/sources.list (debian):
+deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main
+
+# Create usb to install Windows 7 (without grub):
+dd if=/dev/zero of=/dev/sdX count=3000
+fdisk /dev/sdX
+mkfs -t ntfs -f -L windows_7 /dev/sdX1
+# Copy files:
+mount /dev/sdX1 /mnt/usb_mnt
+mount windows_7.iso /mnt/windows_iso
+cp -r /mnt/windows_iso/* /mnt/usb_mnt/
+umount /mnt/usb_mnt
+# Fix MBR (add bootstrap code):
+wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
+dd if=syslinux-6.01/bios/mbr/mbr.bin of=/dev/sdX
+sync
+# For grub2 version syslinux is not necessary (see os_settings/other_files/grub.cfg)
+
+# Create bootable usb (grub2):
+dd if=/dev/zero of=/dev/sdX count=3000
+fdisk /dev/sdX
+mkfs -t vfat -F 32 -n usb_boot /dev/sdX1
+mount /dev/sdX1 /mnt
+grub-install --boot-directory=/mnt/boot /dev/sdX
+vim /mnt/boot/grub/grub.cfg
+# Add memdisk (to boot iso/floppy/hard disk images):
+wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
+cp syslinux-6.01/bios/memdisk/memdisk /mnt/boot/memdisk
+# Add mhdd:
+wget http://www.ihdd.ru/download/software/mhdd/mhdd32ver4.6iso.zip
+cp mhdd32ver4.6.iso /mnt/boot/mhdd.iso
+# Add memtest:
+wget http://www.memtest86.com/downloads/memtest86-iso.gz
+cp memtest86-iso /mnt/boot/memtest.iso
+# See os_settings/other_files/grub.cfg
+
+# Set static ip (iproute package in debian):
+ip addr add 192.168.1.29/24 dev wlan0
+ip route add default via 192.168.1.1
+# ip addr del 106.124.32.34/24 dev eth0
+
+# Release current lease and stop running DHCP client:
+dhclient -r
+
+# Get ip by DHCP:
+dhclient -v eth0
+
+# DNS server:
+/etc/resolv.conf
+
+# Add default gateway:
+route add default gw 192.168.1.1
+
+# Get wireless networks list:
+iwlist wlan0 scan
+
+# Connect to wireless network:
+iwconfig wlan0 essid Egorator key 9173557391
+# After this I'm unable to get IP by DHCP. Need to run wpa_supplicant first?
+
+# Use ifup to configure according to /etc/network/interfaces:
+ifup --all --verbose
+
+# Wireless devices manipulation (run as root):
+iw dev wlan0 <command>
+commands: link, scan
+iw dev wlan0 connect <SSID>
+
+# Write file to CD-R:
+genisoimage -r -J -o cd_image.iso <folder> # create iso image
+# Check (paranoidal) image correctness:
+sudo mount -t iso9660 -o ro cd_image.iso /media/cd_mount_point
+sudo wodim -v -eject dev=/dev/sr0 /home/user/img.iso # -multi
+
+# Cmake: generate project for eclipse:
+cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
+
+# Launch wi-fi access point:
+wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
+

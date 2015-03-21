@@ -1,0 +1,18 @@
+# Package search:
+# https://www.debian.org/distrib/packages#search_packages
+
+# Security updates:
+deb http://security.debian.org/ wheezy/updates main contrib non-free
+deb-src http://security.debian.org/ wheezy/updates main contrib non-free
+
+# Base repository:
+deb http://http.debian.net/debian wheezy main contrib non-free
+deb-src http://http.debian.net/debian wheezy main contrib non-free
+
+# Stable updates:
+deb http://http.debian.net/debian wheezy-updates main contrib non-free
+deb-src http://http.debian.net/debian wheezy-updates main contrib non-free
+
+# Stable backports:
+deb http://http.debian.net/debian wheezy-backports main contrib non-free
+deb-src http://http.debian.net/debian wheezy-backports main contrib non-free
