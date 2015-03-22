@@ -182,8 +182,9 @@ bindsym $WIN+f exec --no-startup-id alsaplayer --relative +3
 # volume hotkeys:
 # bindsym $WIN+u exec --no-startup-id amixer set Master 3%+
 # bindsym $WIN+d exec --no-startup-id amixer set Master 3%-
-bindsym $WIN+u exec --no-startup-id pactl -- set-sink-volume 0 +3%
-bindsym $WIN+d exec --no-startup-id pactl -- set-sink-volume 0 -3%
+bindsym $WIN+u exec --no-startup-id exec volume.sh +3%
+bindsym $WIN+d exec --no-startup-id exec volume.sh -3%
+bindsym $WIN+t exec --no-startup-id exec bluetooth_toggle.sh
 
 # dmenu (a program launcher)
 bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata-16:monospace'

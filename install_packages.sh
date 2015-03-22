@@ -58,10 +58,10 @@ apt-get install libreoffice
 apt-get install apvlv
 
 # Build and install vimb:
-apt-get install libwebkitgtk-3.0-dev flashplugin-nonfree
+apt-get install libwebkitgtk-dev flashplugin-nonfree
 make -f ./other_files/Makefile_vimb
 make -f ./other_files/Makefile_vimb clean
-apt-get purge libwebkitgtk-3.0-dev
+apt-get purge libwebkitgtk-dev
 apt-get autoremove --purge
 
 # Install alternative browsers:

@@ -86,6 +86,9 @@ export QUILT_PATCHES=debian/patches
 # export T32TMP=/tmp
 # export T32ID=T32
 
+# Bluetooth headset MAC address:
+export BT_MAC='57:D3:98:0C:4A:2F'
+
 # IP:
 export IP_PC=106.125.38.23
 export IP_BUILD_SERVER=106.125.52.218

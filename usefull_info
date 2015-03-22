@@ -2,21 +2,28 @@
 # in the results of pathname expansion:
 shopt -s dotglob
 
-# add to groups?
-bluetoothctl -> connect MAC
+# View bluetoothctl commands:
+echo help | bluetoothctl
+
 # pactl -- set-sink-volume 2 +3%
 
-# sink input #i - application #i playing audio
-pacmd list-sinks
-# sink #0 (not 'sink input #0'!) has associated:
-# - port (headphones / speaker);
-# - profile (sound card ports configuration).
-#                 sink  port
+# sound application (output):
+pacmd list-sink-inputs
+
+# sound outputs:
+pamd list-sinks
+# index 0 (ports: analog-output-speaker, analog-output-headphones)
+# index 1 (bluetooth headset)
+
+# Change port for sink 0:
 pactl set-sink-port 0 analog-output-headphones
 pactl set-sink-port 0 analog-output-speaker
 
-amixer set Master toggle
-amixer set Master on
+# volume control (per-sink):
+pactl -- set-sink-volume INDEX +3%
+
+# get volume:
+pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
 
 # Set time 3 hours back:
 date -s "$(date -R -d '-3 hour')"
@@ -875,7 +882,7 @@ avprobe file.avi
 
 # Flash player with webkit-based browsers:
 http://sourceforge.net/p/vimprobable/wiki/Plugins/
-strings -a /usr/lib/libwebkitgtk-3.0.so.0 | grep plugin
+strings /usr/lib/x86_64-linux-gnu/libwebkitgtk-3.0.so.0 | grep plugin
 
 # Add ppa to /etc/apt/sources.list (debian):
 deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main

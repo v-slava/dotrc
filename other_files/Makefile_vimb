@@ -1,6 +1,7 @@
 PHONY := all
 all: patch_src
-	CFLAGS=-O2 make -C vimb GTK=3 -j 4
+	# CFLAGS=-O2 make -C vimb GTK=3 -j 4
+	CFLAGS=-O2 make -C vimb -j 4
 	su -c "make -C vimb install"
 
 PHONY += patch_src
