@@ -98,5 +98,5 @@ export P4PORT=pfproxy.surc.kiev.ua:1666
 
 export P4USER=USER_NAME
 # export P4PASSWD=
-export SECOS_DIR=/home/volkov/workspace/uhd_image/p4_workspace/SECOS/SECOS
+export SECOS_DIR=$HOME/workspace/uhd_image/p4_workspace/SECOS/SECOS
 
