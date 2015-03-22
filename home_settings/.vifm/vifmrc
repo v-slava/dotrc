@@ -382,7 +382,7 @@ nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_se
 nnoremap ,b :!vim ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
 nnoremap ,i :!vim ~/os_settings/home_settings/.config_xdg/i3/config && make -C ~ home_settings && i3-msg reload<cr>
 nnoremap ,w :!vim ~/os_settings/home_settings/.config_xdg/vimb/config && make -C ~ home_settings<cr>
-nnoremap ,u :!vim ~/other/usefull_info<cr>
+nnoremap ,u :!vim ~/os_settings/usefull_info<cr>
 nnoremap ,r :!vim ~/other/remarks<cr>
 nnoremap ,g :!vim /media/sdb1/glanguage_lessons/4/4.gl<cr>
 
