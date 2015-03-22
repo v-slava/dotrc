@@ -1,3 +1,10 @@
+# Signal bash to include filenames beginning with a `.'
+# in the results of pathname expansion:
+shopt -s dotglob
+
+# add to groups?
+bluetoothctl -> connect MAC
+# pactl -- set-sink-volume 2 +3%
 
 # sink input #i - application #i playing audio
 pacmd list-sinks
@@ -21,6 +28,9 @@ ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
 # View timezone:
 date +%Z
 
+# View systemd log (from root):
+journalctl
+
 # Recursively show control group contents:
 systemd-cgls
 
@@ -33,7 +43,7 @@ systemctl set-default multi-user.target
 # target example: /usr/lib/systemd/system/graphical.target
 
 # Connect manually to wifi (wpasupplicant):
-wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 
 # LG G2 path to camera photos:
 /storage/emulated/legacy/DCIM/Camera/
@@ -41,7 +51,7 @@ wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
 # Download video from youtube:
 cclive -f best URL
 
-# Bluetooth headset:
+# Bluetooth headset alsa:
 # /etc/bluetooth/audio.conf:
 [General]
 Enable=Socket

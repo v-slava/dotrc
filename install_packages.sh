@@ -1,41 +1,22 @@
 #!/usr/bin/env bash
 
-# already installed packages:
-# apt-get install linux-image-amd64 grub-pc os-prober udev kmod
+# already installed packages: linux-image-amd64 grub-pc os-prober
 
 apt-get upgrade --yes
 
-# In wheezy: iproute2 conflicts with iproute, but ifupdown depends on iproute
-# Wheezy-only packages:
-# apt-get install iproute ifupdown dhcpcd5 rsyslog sudo uncrustify
-
-# Jessie-only packages:
-apt-get install iproute2 vifm
-
 # Install non-gui packages:
-apt-get install apt-file apt-rdepends \
-	usbutils pciutils util-linux lsof vim less bash-completion \
-	apt-utils dialog locales wpasupplicant dbus iputils-ping \
-	wireless-tools iptables hostapd dnsmasq traceroute wget \
+apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
+	vim vifm less bash-completion \
+	apt-file apt-rdepends apt-utils dialog locales \
+	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
-	smbclient smbnetfs openssh-client sshfs fuse \
+	openssh-client sshfs fuse \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace \
-	socat psmisc zip unzip bzip2 unrar \
-	exuberant-ctags cscope doxygen graphviz pv htop colordiff \
+	zip unzip gzip bzip2 p7zip-full cpio unrar \
+	alsa-utils alsaplayer-daemon alsaplayer-common \
+	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
+	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-
-# xdg-user-dirs cifs-utils
-
-# Build and install vifm (wheezy):
-# apt-get install libncursesw5-dev
-# make -f ./other_files/Makefile_vifm
-# make -f ./other_files/Makefile_vifm clean
-# Jessie:
-apt-get install vifm
-
-# Install audio player (no X required):
-apt-get install alsa-utils \
-	alsaplayer-daemon alsaplayer-common
 
 apt-file update
 
@@ -44,79 +25,51 @@ apt-get install xorg xserver-xorg-video-intel \
 	xserver-xorg-input-evdev xinit rxvt-unicode-256color
 
 # Install window manager, status bar, screen locker, keyboard layout
-# indicator/switcher and fonts:
-# Wheezy:
-# I3_WM=i3-wm=4.8-1~bpo70+1
-# Jessie:
-I3_WM=i3-wm
-apt-get install $I3_WM i3status i3lock \
+# indicator and fonts:
+apt-get install i3-wm i3status i3lock \
 	fbxkb fonts-inconsolata
-# bspwm2 - similar to i3, unstable, configuration from scratch
 
-# Install X helper programs (we need xclip because of uzbl):
+# Install X helper programs:
 apt-get install wmctrl xclip scrot zenity
 
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 
 # Install email client:
-apt-get install claws-mail
-# Wheezy:
-# apt-get install claws-mail-trayicon
-# Jessie:
-apt-get install claws-mail-multi-notifier
-# icedove (thunderbird)
+apt-get install claws-mail claws-mail-multi-notifier
+# On wheezy: claws-mail-trayicon
 
-# Install offline vocabulary:
-# apt-get install goldendict
-# apt-get install sdcv
-
-# Install pulseaudio:
-apt-get install pulseaudio pulseaudio-utils pavucontrol
+# Install pavucontrol:
+apt-get install pavucontrol
 
 # Install video player:
 apt-get install mplayer smplayer
-# Install alternative video player:
-# apt-get install vlc
-
-# Install images viewer:
-apt-get install gliv
 
 # Install images editor:
-# apt-get install gimp # kolourpaint4
+apt-get install gimp
 
 # Install torrent client:
 apt-get install transmission-gtk
 
 # Install office suite:
-apt-get install libreoffice # libreoffice-pdfimport
-# Install alternative office suite:
-# apt-get install abiword gnumeric
+apt-get install libreoffice
 
 # Install pdf viewer:
 apt-get install apvlv
-# mupdf, zathura
 
 # Build and install vimb:
-apt-get install libwebkitgtk-3.0-dev
+apt-get install libwebkitgtk-3.0-dev flashplugin-nonfree
 make -f ./other_files/Makefile_vimb
 make -f ./other_files/Makefile_vimb clean
-# apt-get purge libwebkitgtk-3.0-dev
-# apt-get autoremove --purge
+apt-get purge libwebkitgtk-3.0-dev
+apt-get autoremove --purge
 
 # Install alternative browsers:
-# apt-get install iceweasel iceweasel-l10n-ru # flashplugin-nonfree
-
-# Wheezy:
-# CHROMIUM_LANG=chromium-l10n
-# Jessie:
-CHROMIUM_LANG=chromium-browser-l10n
-apt-get install chromium $CHROMIUM_LANG # pepperflashplugin-nonfree
-
+# apt-get install iceweasel iceweasel-l10n-ru
+apt-get install chromium chromium-browser-l10n pepperflashplugin-nonfree
+# On wheezy: chromium-l10n
 
 # dmenu:
-# apt-get install suckless-tools # for dmenu
-# Install build dependencies and build dmenu from sources with ttf support:
 apt-get install libx11-dev libxinerama-dev libxft-dev
 make -f ./other_files/Makefile_dmenu
 make -f ./other_files/Makefile_dmenu clean
@@ -128,5 +81,12 @@ apt-get update
 # Download skype.deb via browser
 # dpkg -i skype.deb # install skype
 # apt-get -f install # fix missing dependencies
-# apt-get install dbus dbus-x11
+
+# Other/old packages:
+# hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
+# libreoffice-pdfimport abiword gnumeric mupdf zathura suckless-tools # (dmenu)
+# gliv kolourpaint4 vlc icedove (thunderbird)
+
+# On wheezy: iproute2 conflicts with iproute, but ifupdown depends on iproute
+# Wheezy-only packages: iproute ifupdown dhcpcd5 rsyslog uncrustify
 
