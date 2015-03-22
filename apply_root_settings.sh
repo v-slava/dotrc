@@ -7,11 +7,15 @@ fi
 
 set -ex
 
-cp -rafv $PWD/root_settings/* /
+cp -rfv --preserve=mode $PWD/root_settings/* /
 
 update-grub
 locale-gen
-systemctl enable systemd-networkd.service
-systemctl enable wpa_supplicant
+if ! systemctl is-enabled systemd-networkd.service ; then
+	systemctl enable systemd-networkd.service
+fi
+if ! systemctl is-enabled wpa_supplicant.service ; then
+	systemctl enable wpa_supplicant
+fi
 systemctl set-default volkov.target
 
