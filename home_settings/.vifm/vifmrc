@@ -412,8 +412,8 @@ nnoremap rs :!! echo -e "\nCommand:\n./%c\nCommand output:" && ./%c<cr>
 nnoremap rm :!! echo "make output:" && make O=out<cr>
 nnoremap rc :!! echo "make clean output:" && make O=out clean<cr>
 
-nmap cx :! toggle_executable.sh %"f<cr>
-vmap cx :! toggle_executable.sh %"f<cr>
+nmap cx :! ~/os_settings/other_files/toggle_executable.sh %"f<cr>
+vmap cx :! ~/os_settings/other_files/toggle_executable.sh %"f<cr>
 
 nnoremap od :! arm-linux-gnueabi-objdump -D ./%c | less<cr>
 nnoremap oz :! arm-linux-gnueabi-objdump -D -z ./%c | less<cr>
@@ -421,9 +421,9 @@ nnoremap ot :! arm-linux-gnueabi-objdump -t ./%c | less<cr>
 nnoremap os :! arm-linux-gnueabi-objdump -S ./%c | less<cr>
 nnoremap ob :! arm-linux-gnueabi-objdump -D -b binary -m arm ./%c | less<cr>
 
-nnoremap xx :! extract_progress.sh %"f<cr>
-vmap xx :! extract_progress.sh %"f<cr>
-nmap xc :! compress.sh %c<cr>
+nnoremap xx :! ~/os_settings/other_files/extract_progress.sh %"f<cr>
+vmap xx :! ~/os_settings/other_files/extract_progress.sh %"f<cr>
+nmap xc :! ~/os_settings/other_files/compress.sh %"f<cr>
 
 " Yank current directory path into the clipboard
 nnoremap yd :!echo -n %d | clipboard.sh<cr>

@@ -17,5 +17,6 @@ else
 	SINK="alsa_output.pci-0000_00_1b.0.analog-stereo"
 fi
 
+# amixer set Master 3%+
 pactl -- set-sink-volume "$SINK" "$VOLUME"
 
