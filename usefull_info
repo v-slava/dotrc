@@ -1,3 +1,8 @@
+#pragma pack(push, 1)
+#pragma pack(pop)
+
+# assert.h : assert() -DNDEBUG to turn off
+
 # Signal bash to include filenames beginning with a `.'
 # in the results of pathname expansion:
 shopt -s dotglob
@@ -100,6 +105,30 @@ hcitool con
 # Play mp3:
 mplayer -ao alsa:device=btheadset file.mp3
 
+# USB flash turn write protection off:
+hdparm -R0 /dev/sdX
+hdparm -r0 /dev/sdX
+
+# Read korean text:
+LANG=ko_KR.EUC-KR gvim file.cpp
+
+# Generate SSH keys:
+ssh-keygen -t rsa -C "user@email.com"
+# SSH no password:
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+# check signature:
+gpg --verify FILE.sig FILE
+# If got "Can't check signature: public key not found", use:
+gpg --recv-keys KEY_ID
+
+# gpg view supported ciphers:
+gpg --version
+# gpg encrypt file:
+gpg --symmetric --cipher-algo AES256 FILE
+# gpg decrypt file:
+gpg --decrypt FILE > OUT_FILE
+
 # doxygen generate info for any C/C++ project:
 # generate doxygen file:
 doxygen -s -g [Doxyfile]
@@ -120,24 +149,27 @@ openssl crl -text -inform {DER|PEM} FILE.crl
 # view certificate details:
 openssl x509 -text -in CERTIFICATE_FILE
 
+# Add certificate:
+cp certificate.crt /usr/share/ca-certificates/
+sudo dpkg-reconfigure ca-certificates
+# see also folder /etc/ssl/certs
+
 # List services available on server:
 smbclient -U v.volkov -W SURC -L seclab.surc.kiev.ua
 smbclient -U v.volkov -W SURC -L s-file.surc.kiev.ua
-# Mount shared folder via smb (package=cifs-utils, root required):
-mount -t cifs -o user=v.volkov,domain=SURC //seclab.surc.kiev.ua/Exchange /media/exchange
-# Mount shared folder via smb (package=smbnetfs|fusesmb, no root required):
+# See also mount shared folder via smb (package=smbnetfs|fusesmb, no root required)
 
 # Restart nfs server (ubuntu):
 sudo service nfs-kernel-server restart
 # sudo vim /etc/exports:
-# /mnt_folder 106.125.45.192(rw,sync,no_root_squash,no_subtree_check)
+# /mnt_folder 192.168.1.1(rw,sync,no_root_squash,no_subtree_check)
 # /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
 
 # View machines, connected via ssh:
 who -a
 
 # Rootfs via nfs - kernel cmdline options:
-KERNEL_CMDLINE:root=/dev/nfs nfsroot=106.125.38.23:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
+KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
 # Restart nfs service:
 service nfs-kernel-server restart
 # nfs server config (/etc/exports):
@@ -249,6 +281,18 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# do not track changes in commited file:
+git update-index --assume-unchanged FILE
+
+# push all except last commit to upstream:
+git push origin HEAD~1:BRANCH
+
+# Show all files, affected by a given commit:
+git diff-tree --no-commit-id --name-only -r COMMIT
+git show --name-only COMMIT
+# Show changes introduced by a commit in a single given file:
+git show COMMIT FILE
+
 # Create patch file (use git diff):
 git diff folder1 folder2 --no-prefix > patch_file
 git diff commitid1 commitid2 > patch_file
@@ -258,15 +302,25 @@ git config [--global] http.sslVerify false
 GIT_SSL_NO_VERIFY=true git clone URL
 git -c http.sslVerify=false clone URL
 # Git use custom certificate:
-git config [--global] http.sslCAInfo $HOME/srk_interception.cer
-GIT_SSL_CAINFO=$HOME/SOME_FILE.cer git clone URL
-git -c http.sslCAInfo=$HOME/SOME_FILE.cer clone URL
+git config [--global] http.sslCAInfo FILE.cer
+GIT_SSL_CAINFO=FILE.cer git clone URL
+git -c http.sslCAInfo=FILE.cer clone URL
 
 # Add all untracked files:
 git add -A
 
 # Add tracking information to git branch:
 git branch -u origin/remote_branch [local_branch]
+# The same for git 1.7 (old):
+git branch --set-upstream local_branch origin/remote_branch
+# gerrit update branch
+git pull --rebase
+
+# gerrit udpate commit (patch set):
+git push origin HEAD:refs/changes/CHANGE_NUMBER
+
+# Gerrit commit:
+git push origin HEAD:refs/for/BRANCH_NAME
 
 # Gerrit sample commit:
 git pull
@@ -500,6 +554,7 @@ dpkg --configure -a
 
 # dpkg apt-get add architecture x86-64 x86_64:
 sudo dpkg --add-architecture <arch>
+dpkg --print-foreign-architectures
 sudo apt-get update
 dpkg --remove-architecture <arch>
 
@@ -513,6 +568,7 @@ dpkg --force-not-root --root=$HOME/root_dir --log=$HOME/var_log_dpkg.log -i <pac
 
 # Show files in package:
 apt-file list <package_name_from_repository>
+dpkg -L <installed_package_name>
 dpkg -c <package>.deb
 
 # Measure disk speed:
@@ -544,14 +600,21 @@ tail -F /var/log/messages
 # gcc save preprocessed and assembler files:
 gcc -save-temps=obj
 
-# Standart compiler include paths:
+# Standard compiler include search paths:
 touch foo.h && gcc -c -v foo.h
 
-# Standart compiler macros:
-touch foo.h && gcc -c -dM -E foo.h
+# Standard compiler macros:
+gcc -dM -E - < /dev/null
 
 # Replace symbol (space in this case) witn \n:
 cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER
+
+# Print keymap table:
+xmodmap -pk
+xmodmap -pke
+
+# Print contents of X events (and keyboard codes):
+xev
 
 # To inspect bash keyboard mapping:
 bind -P
@@ -816,6 +879,8 @@ hexdump -v -e '/1 "%08_ax:   "' -e '/1 "%02X\n"' FILE
 hexdump -v -e '/1 "0x%02X, "' FILE
 # Format: shell string of hex-encoded characters: \x0A\x69
 hexdump -v -e '"\\" /1 "x%02X"' FILE
+# Format: space-delimited bytes in hex: 0A 69
+hexdump -v -e '" " /1 "%02X"' FILE
 
 # Assembler thumb code:
 ".code 16\n\t"

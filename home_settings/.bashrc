@@ -3,7 +3,7 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -al'
-alias bc='bc -l ~/os_settings/other_files/bc_library_my'
+alias bc='cat ~/os_settings/other_files/bc_library_my && bc -l ~/os_settings/other_files/bc_library_my'
 alias glog='git log --all --graph --decorate'
 # export GREP_OPTIONS=--color=auto
 alias grep='grep --color=auto'

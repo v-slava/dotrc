@@ -3,10 +3,20 @@
 # Set number of decimal digits after the decimal point:
 # scale=20
 
+# dec := hex + hex:
+# ibase=16; obase=16
+
+# hex := hex + hex:
+# obase=16; ibase=16
+
 # Convert hex to dec:
 # ibase=16; F1A
+
 # Convert dec to hex:
 # obase=16; 17
+
+# Power (2 ^ 4 = 16):
+# 2 ^ 4
 
 # Print decimal 7bit ASCII code for 'A':
 # printf "%d" \'A
