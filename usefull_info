@@ -1,3 +1,6 @@
+# git change author of commit:
+git commit --amend --author "New Author Name <email@address.com>"
+
 #pragma pack(push, 1)
 #pragma pack(pop)
 
