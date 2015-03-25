@@ -1,8 +1,6 @@
 #!/bin/sh
 
-xrandr --output LVDS1 --mode 1280x800
-xrandr --output HDMI1 --mode 1920x1080
-xrandr --output HDMI1 --right-of LVDS1
+xrandr --output HDMI1 --mode 1920x1080 --output LVDS1 --mode 1280x800 --left-of HDMI1
 
 ~/os_settings/other_files/lock_screen.sh
 
