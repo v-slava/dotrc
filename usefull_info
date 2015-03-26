@@ -312,6 +312,8 @@ git -c http.sslCAInfo=FILE.cer clone URL
 # Add all untracked files:
 git add -A
 
+# View branches tracking information:
+git branch -vv
 # Add tracking information to git branch:
 git branch -u origin/remote_branch [local_branch]
 # The same for git 1.7 (old):
