@@ -10,7 +10,8 @@ fi
 IN="$1"
 OUT="/tmp/vim_ide_${IN}.out"
 LOG="/tmp/vim_ide_${IN}_log"
-FLAGS=" -Wall -Wextra -Werror "
+# FLAGS=" -Wall -Wextra -Werror "
+FLAGS=" -Wall -Wextra "
 
 rm -f $OUT $LOG
 

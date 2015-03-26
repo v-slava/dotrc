@@ -159,7 +159,7 @@ bindsym $ALT+b exec exec vimb -s ~/os_settings/other_files/start_page.html
 bindsym $ALT+t exec exec ~/os_settings/other_files/torrent_download.sh
 
 # Attendance:
-bindsym $WIN+a exec exec chromium http://myspot/_layouts/SRK.AttendanceControl/MyAttendance.aspx
+bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.AttendanceControl/MyAttendance.aspx
 
 # autostart mail client:
 exec --no-startup-id exec i3-msg 'workspace 1; exec --no-startup-id exec claws-mail'
