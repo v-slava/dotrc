@@ -409,8 +409,8 @@ vmap <c-d> :exit<cr>
 nnoremap rg :!./%c %i &<cr>
 nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>
 " Launch make:
-nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make O=out"<cr>
-nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make O=out clean"<cr>
+nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<cr>
+nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<cr>
 
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
