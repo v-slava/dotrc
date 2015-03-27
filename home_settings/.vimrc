@@ -65,8 +65,9 @@ set hlsearch
 set ignorecase
 set incsearch
 
-" set colorcolumn=81
-" hi ColorColumn ctermbg=yellow
+" highlight column (right after last that can be used):
+set colorcolumn=81
+hi ColorColumn ctermbg=234
 
 " Use F3 to set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
