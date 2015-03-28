@@ -11,7 +11,7 @@ fi
 
 VOLUME="$1"
 
-if bluetooth_connected.sh ; then
+if ~/os_settings/other_files/bluetooth_connected.sh ; then
 	SINK="bluez_sink.$(echo $BT_MAC | sed 's/:/_/g')"
 else
 	SINK="alsa_output.pci-0000_00_1b.0.analog-stereo"
