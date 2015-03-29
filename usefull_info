@@ -996,6 +996,11 @@ wget http://www.memtest86.com/downloads/memtest86-iso.gz
 cp memtest86-iso /mnt/boot/memtest.iso
 # See os_settings/other_files/grub.cfg
 
+# up/down interface
+ifconfig eth0 up
+ip link set wlan0 down
+man ip-link
+
 # Set static ip (iproute package in debian):
 ip addr add 192.168.1.29/24 dev wlan0
 ip route add default via 192.168.1.1
