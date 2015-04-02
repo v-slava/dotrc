@@ -4,7 +4,7 @@
 # If was connected    -> disconnecting
 # If was disconnected -> connecting
 
-if bluetooth_connected.sh ; then
+if ~/os_settings/other_files/bluetooth_connected.sh ; then
 	echo -e "\nDisconnecting ...\n"
 	echo "disconnect $BT_MAC" | bluetoothctl
 else
