@@ -30,7 +30,7 @@ apt-get install i3-wm i3status i3lock \
 	fbxkb fonts-inconsolata
 
 # Install X helper programs:
-apt-get install wmctrl xclip scrot zenity
+apt-get install wmctrl xclip scrot zenity keynav
 
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
