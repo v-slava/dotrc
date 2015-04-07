@@ -12,9 +12,8 @@ I3_WORKSPACE_LOG=5
 # GREP_OPTIONS="-i \"some info\""
 GREP_OPTIONS="__AACS__"
 
-# VIEW_CMD=nl
-VIEW_CMD="stdbuf -o 0 nl"
-# VIEW_CMD=cat
+# VIEW_CMD="stdbuf -o 0 nl"
+VIEW_CMD="cat -n"
 
 set -e
 
