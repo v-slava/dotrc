@@ -1,22 +1,5 @@
-# Usage: bc -l THIS_FILE
-
 # Set number of decimal digits after the decimal point:
 # scale=20
-
-# dec := hex + hex:
-# ibase=16; obase=16
-
-# hex := hex + hex:
-# obase=16; ibase=16
-
-# Convert hex to dec:
-# ibase=16; F1A
-
-# Convert dec to hex:
-# obase=16; 17
-
-# Power (2 ^ 4 = 16):
-# 2 ^ 4
 
 # Print decimal 7bit ASCII code for 'A':
 # printf "%d" \'A
@@ -37,7 +20,6 @@
 # > echo -n 'ABab' | hexdump -C
 # 00000000  41 42 61 62                                       |ABab|
 # 00000004
-
 
 # tg(pi / 4) = 1   =>   pi = arctg(1) * 4:
 pi=a(1)*4
@@ -61,4 +43,20 @@ define arctan(x) { return a(x); }
 define arcsin(x) { return arctan(x / sqrt(1 - x * x)); }
 define arccos(x) { return arctan(sqrt(1 - x * x) / x); }
 define arccot(x) { return pi / 2 - arctan(x); }
+
+# Wrong:
+# dec := hex + hex:
+# ibase=16; obase=16
+
+# hex := hex + hex:
+# obase=16; ibase=16
+
+# Convert hex to dec:
+# ibase=16; F1A
+
+# Convert dec to hex:
+# obase=16; 17
+
+# Power (2 ^ 4 = 16):
+# 2 ^ 4
 
