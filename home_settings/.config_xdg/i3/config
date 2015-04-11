@@ -171,6 +171,9 @@ bindsym $ALT+m exec --no-startup-id exec claws-mail
 bindsym $ALT+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
 bindsym $ALT+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
 
+# Start network manager applet:
+exec --no-startup-id exec nm-applet
+
 # Start keyboard layout indicator/switcher:
 exec --no-startup-id exec fbxkb
 

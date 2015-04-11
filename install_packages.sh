@@ -27,7 +27,7 @@ apt-get install xorg xserver-xorg-video-intel \
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator and fonts:
 apt-get install i3-wm i3status i3lock \
-	fbxkb fonts-inconsolata
+	fbxkb fonts-inconsolata network-manager-gnome
 
 # Install X helper programs:
 apt-get install wmctrl xclip scrot zenity keynav
