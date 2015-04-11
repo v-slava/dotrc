@@ -221,8 +221,8 @@ display_header_pane=0
 display_header=1
 display_xface=1
 render_html=1
-invoke_plugin_on_html=0
-promote_html_part=0
+invoke_plugin_on_html=1
+promote_html_part=1
 line_space=2
 never_send_retrcpt=0
 enable_smooth_scroll=0
@@ -402,6 +402,7 @@ enable_avatars=3
 
 [Plugins_GTK2]
 /usr/lib/x86_64-linux-gnu/claws-mail/plugins/notification.so
+/usr/lib/x86_64-linux-gnu/claws-mail/plugins/fancy.so
 
 [TrayIcon]
 hide_at_startup=0
@@ -456,4 +457,16 @@ trayicon_popup_enabled=0
 trayicon_popup_timeout=5000
 hotkeys_enabled=0
 hotkeys_toggle_mainwindow=
+
+[fancy]
+enable_images=1
+enable_remote_content=1
+enable_scripts=0
+enable_plugins=0
+open_external=1
+zoom_level=100
+enable_java=0
+enable_proxy=0
+proxy_server=http://SERVERNAME:PORT
+stylesheet=
 
