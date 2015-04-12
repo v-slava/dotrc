@@ -233,5 +233,10 @@ endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call MyMergeLines()
 
 " Macros:
-" let @m = 'A@*0'
+" You can use <C-o>q to finish recording while in insert mode.
+" <C-o> in insert mode allows you to execute one command in
+" normal mode, and then returns to insert mode (see :help i^O).
+
+" Insert <shortinfo> tags (for glanguage):
+let @s = 'o<shortinfo></shortinfo>0O'
 
