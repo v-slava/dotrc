@@ -163,8 +163,8 @@ filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
 
 " Video
 filextype *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
-	\ smplayer %f,
-	\ mplayer %f,
+	\ smplayer %f &,
+	\ mplayer %f &,
 	\ ffplay -fs %c,
 	\ dragon %f,
 
@@ -441,7 +441,7 @@ nnoremap au :! umount /dev/sdb1<cr>
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
 command diff diff.sh %c %C
-command vdiff vim -d %c %C
+command vdiff cd && vim -c "set titlestring=%c" -d %d/%c %C
 command gdiff diffuse %d/%c %C
 command bdiff dhex %d/%c %C
 command mc mc %d %D

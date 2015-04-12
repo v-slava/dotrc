@@ -48,26 +48,34 @@
 " set lines=25
 " set columns=83
 
-set autoindent
-" set cindent " C-style indents (after '{' and so on)
-set number " display line numbers
-" set nowrap " do not wrap long lines
-
 syntax on
 colorscheme molokai
-set cursorline
+
+" Fix colorscheme:
 hi Search ctermfg=0 ctermbg=12
+hi DiffAdd ctermbg=234
+hi DiffDelete ctermbg=16
+hi StatusLine ctermfg=232 ctermbg=46
+hi StatusLineNC ctermfg=232 ctermbg=252
+
+" Highlight spaces and tabs in the end of the line as errors:
 match Error /\s\+$/
-highlight DiffAdd ctermbg=234
-highlight DiffDelete ctermbg=16
+
+" highlight current line:
+set cursorline
+
+" highlight column (right after last that can be used):
+set colorcolumn=81
+hi ColorColumn ctermbg=234
 
 set hlsearch
 set ignorecase
 set incsearch
 
-" highlight column (right after last that can be used):
-set colorcolumn=81
-hi ColorColumn ctermbg=234
+set autoindent
+" set cindent " C-style indents (after '{' and so on)
+set number " display line numbers
+" set nowrap " do not wrap long lines
 
 " Use F3 to set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
