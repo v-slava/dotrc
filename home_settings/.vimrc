@@ -238,5 +238,5 @@ command! -range -nargs=* Mlines <line1>,<line2> call MyMergeLines()
 " normal mode, and then returns to insert mode (see :help i^O).
 
 " Insert <shortinfo> tags (for glanguage):
-let @s = 'o<shortinfo></shortinfo>0O'
+let @s = 'A<shortinfo></shortinfo>F<i'
 
