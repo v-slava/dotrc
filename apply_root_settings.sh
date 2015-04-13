@@ -11,11 +11,9 @@ cp -rfv --preserve=mode $PWD/root_settings/* /
 
 update-grub
 locale-gen
-if ! systemctl is-enabled systemd-networkd.service ; then
-	systemctl enable systemd-networkd.service
+if systemctl is-enabled systemd-networkd.service ; then
+	systemctl disable systemd-networkd.service
 fi
-if ! systemctl is-enabled wpa_supplicant.service ; then
-	systemctl enable wpa_supplicant
-fi
+# systemctl status wpa_supplicant
 systemctl set-default volkov.target
 

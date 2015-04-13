@@ -77,8 +77,14 @@ set autoindent
 set number " display line numbers
 " set nowrap " do not wrap long lines
 
+" View invisible characters for makefiles:
+" autocmd FileType make set list
+nmap <F2> :set list!<CR>
+
 " Use F3 to set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
+
+imap оо <shortinfo></shortinfo><Esc>F<i
 
 " Reload vimrc:
 nmap <C-m> :source $MYVIMRC<CR>
@@ -119,10 +125,6 @@ autocmd FileType asm set syntax=armasm
 " Set tab width:
 autocmd FileType c,cpp,sh,expect set tabstop=4
 autocmd FileType c,cpp,sh,expect set shiftwidth=4
-
-" View invisible characters for makefiles:
-" autocmd FileType make set list
-nmap <F2> :set list!<CR>
 
 " Move current tab left and right:
 nnoremap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
@@ -194,7 +196,7 @@ hi ShowMarksHLu   cterm=bold ctermfg=black ctermbg=white
 hi ShowMarksHLm   cterm=bold ctermfg=black ctermbg=white
 
 " Tcomment:
-vmap gb :TCommentBlock<cr>
+vmap gb :TCommentBlock<CR>
 call tcomment#DefineType('unknown', '# %s')
 call tcomment#DefineType('make', '# %s')
 call tcomment#DefineType('gdb', '# %s')
@@ -238,5 +240,5 @@ command! -range -nargs=* Mlines <line1>,<line2> call MyMergeLines()
 " normal mode, and then returns to insert mode (see :help i^O).
 
 " Insert <shortinfo> tags (for glanguage):
-let @s = 'A<shortinfo></shortinfo>F<i'
+" let @s = 'A<shortinfo></shortinfo>F<i'
 
