@@ -17,7 +17,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect
+	expect mpg321
 
 apt-file update
 
