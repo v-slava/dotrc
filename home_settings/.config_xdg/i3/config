@@ -135,6 +135,7 @@ bar {
 # Set floating mode for some programs:
 for_window [class="Skype"] floating enable
 for_window [class="Gimp"] floating enable
+for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 
