@@ -130,8 +130,6 @@ bindsym $ALT+r mode "resize"
 bar {
 	status_command exec i3status
 	tray_output LVDS1
-	# To set primary output:
-	# xrandr --output LVDS1 --primary
 }
 
 # Set floating mode for some programs:
