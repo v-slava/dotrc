@@ -67,8 +67,8 @@ apt-get autoremove --purge
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
-apt-get install chromium chromium-browser-l10n pepperflashplugin-nonfree
-# On wheezy: chromium-l10n
+apt-get install chromium chromium-l10n pepperflashplugin-nonfree
+# On wheezy: chromium-browser-l10n
 
 # dmenu:
 apt-get install libx11-dev libxinerama-dev libxft-dev

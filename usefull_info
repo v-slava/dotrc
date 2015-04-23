@@ -252,7 +252,7 @@ resize2fs -p FILE [SIZE]
 fsck.reiserfs -n FILE
 
 # Do not reserve 5% of space on file system:
-mkfs.ext4 -m 0 ..
+mkfs -t ext4 -m 0 -L files_partition /dev/sdX1
 tune2fs -m 0 FILE
 
 # xargs specify parameters order (you can use anything as replace_str):
@@ -391,6 +391,7 @@ strace -p PID
 
 # Set mac address:
 ifconfig eth0 hw ether 12:34:56:78:9a:bc
+ip link set eth0 address 12:34:56:78:9a:bc
 
 # P4 help:
 p4 help COMMAND
@@ -940,7 +941,7 @@ lsblk
 aptitude search '~Pwww-browser'
 
 # Format partition as a swap:
-mkswap /dev/sdaX
+mkswap -L linux_swap /dev/sdaX
 
 # update-alternatives:
 ls -l /etc/alternatives
