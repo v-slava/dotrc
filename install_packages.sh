@@ -40,8 +40,8 @@ apt-get install vim-gtk
 apt-get install claws-mail claws-mail-multi-notifier
 # On wheezy: claws-mail-trayicon
 
-# Install pavucontrol:
-apt-get install pavucontrol
+# Install PulseAudio tools:
+apt-get install pulseaudio-utils pavucontrol
 
 # Install video player:
 apt-get install mplayer smplayer
