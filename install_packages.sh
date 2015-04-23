@@ -49,6 +49,9 @@ apt-get install mplayer smplayer
 # Install images editor:
 apt-get install gimp
 
+# Install vocabulary:
+apt-get install goldendict
+
 # Install torrent client:
 apt-get install transmission-gtk
 
@@ -59,7 +62,7 @@ apt-get install libreoffice
 apt-get install apvlv
 
 # Build and install vimb:
-apt-get install libwebkitgtk-dev flashplugin-nonfree
+apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
 make -f ./other_files/Makefile_vimb
 make -f ./other_files/Makefile_vimb clean
 apt-get purge libwebkitgtk-dev
