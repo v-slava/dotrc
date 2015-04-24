@@ -3,7 +3,7 @@
 ;
 (gtk_accel_path "<Actions>/Menu/Message/Delete" "<Shift>d")
 (gtk_accel_path "<Actions>/Menu/Message/Forward" "f")
-(gtk_accel_path "<Actions>/Menu/Message/Move" "o")
+(gtk_accel_path "<Actions>/Menu/Message/Move" "m")
 (gtk_accel_path "<Actions>/Menu/Message/Receive/AllAccounts" "r")
 (gtk_accel_path "<Actions>/Menu/Message/Trash" "d")
 (gtk_accel_path "<Actions>/Menu/View/Goto/Next" "<Primary>j")

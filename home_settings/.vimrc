@@ -1,3 +1,11 @@
+" ]c               - advance to the next block with differences
+" [c               - reverse search for the previous block with differences
+" do (diff obtain) - bring changes from the other file to the current file
+" dp (diff put)    - send changes from the current file to the other file
+" zo               - unfold/unhide text
+" zc               - refold/rehide text
+" zr               - unfold both files completely
+"
 " <C-E> - line up
 " <C-Y> - line down
 "
@@ -91,6 +99,9 @@ nmap <C-m> :source $MYVIMRC<CR>
 
 " Use <ctrl>+D to exit from vim:
 nmap <C-d> :q<CR>
+
+" Use <Tab> to change focus to another window (split, vsplit):
+nmap <Tab> <C-W>W
 
 " Use :Wq to save file as root (you can change % to another file name):
 " cmap Wq w !sudo tee >/dev/null %
