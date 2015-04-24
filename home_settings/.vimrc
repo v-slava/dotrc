@@ -102,6 +102,8 @@ nmap <C-d> :q<CR>
 
 " Use <Tab> to change focus to another window (split, vsplit):
 nmap <Tab> <C-W>W
+" Use '=' to make windows size equal:
+nmap = <C-W>=
 
 " Use :Wq to save file as root (you can change % to another file name):
 " cmap Wq w !sudo tee >/dev/null %

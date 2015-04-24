@@ -19,13 +19,13 @@ if [ -d "$LEFT" ]; then
 		usage
 	fi
 	# diff -uNr "$LEFT" "$RIGHT" | less -iN
-	colordiff -uNr "$LEFT" "$RIGHT" | less -iNR
+	colordiff -ur "$LEFT" "$RIGHT" | less -iNR
 else
 	if [ -d "$RIGHT" ]; then
 		usage
 	fi
 	# vim -d "$LEFT" "$RIGHT"
 	# diff -uN "$LEFT" "$RIGHT" | less -i
-	colordiff -uN "$LEFT" "$RIGHT" | less -iNR
+	colordiff -u "$LEFT" "$RIGHT" | less -iNR
 fi
 
