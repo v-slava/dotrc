@@ -4,6 +4,8 @@
 # If was connected    -> disconnecting
 # If was disconnected -> connecting
 
+source ~/.config_xdg/BT_MAC.sh
+
 BLUETOOTH_CONNECTED=~/os_settings/other_files/bluetooth_connected.sh
 
 if $BLUETOOTH_CONNECTED ; then # connected => need to disconnect
