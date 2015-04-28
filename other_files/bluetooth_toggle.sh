@@ -33,6 +33,7 @@ EOF
 		echo "Failed to disconnect from bluetooth headset $BT_MAC." 1>&2
 		exit 1
 	fi
+	~/os_settings/other_files/volume.sh 20%
 	echo "Disconnected from bluetooth headset $BT_MAC."
 
 else # disconnected => need to connect
@@ -64,6 +65,7 @@ EOF
 	set -e
 	BT_SINK=$(pacmd list-sinks | grep -o "bluez_sink\.$(echo $BT_MAC | sed 's/:/\./g')")
 	pacmd set-default-sink $BT_SINK
+	~/os_settings/other_files/volume.sh 20%
 	echo "Connected to bluetooth headset $(hcitool name $BT_MAC) (MAC = $BT_MAC)."
 fi
 

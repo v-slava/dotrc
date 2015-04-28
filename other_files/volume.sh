@@ -16,7 +16,7 @@ source ~/.config_xdg/BT_MAC.sh
 if ~/os_settings/other_files/bluetooth_connected.sh ; then
 	SINK="bluez_sink.$(echo $BT_MAC | sed 's/:/_/g')"
 else
-	SINK="alsa_output.pci-0000_00_1b.0.analog-stereo"
+	SINK="$(pactl list sinks | grep 'Name: alsa_output' | cut -d' ' -f2)"
 fi
 
 # amixer set Master 3%+
