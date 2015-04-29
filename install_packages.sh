@@ -78,7 +78,7 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree
 apt-get install libx11-dev libxinerama-dev libxft-dev libxmu-dev
 make -f ./other_files/Makefile_dmenu
 make -f ./other_files/Makefile_dmenu clean
-apt-get purge libx11-dev libxinerama-dev libxft-dev
+apt-get purge libx11-dev libxinerama-dev libxft-dev libxmu-dev
 apt-get autoremove --purge
 
 dpkg --add-architecture i386
