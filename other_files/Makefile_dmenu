@@ -4,7 +4,7 @@ DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
 DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
 PATCH_NAME := dmenu-4.5-xft-debian.diff
 PATCH_URL := tools.suckless.org/dmenu/patches/$(PATCH_NAME)
-CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_xa_clipboard.diff
+CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_clipboard.diff
 
 PHONY := all
 all: apply_patch

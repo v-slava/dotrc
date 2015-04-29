@@ -8,7 +8,7 @@ URxvt.boldfont:xft:Inconsolata:pixelsize=16:style=bold
 ! Reduce distance between letters:
 ! URxvt.letterSpace: -1
 
-URxvt.perl-ext-common: default,matcher,font-size
+URxvt.perl-ext-common: default,matcher,font-size,clipboard
 
 ! Clickable URLs (ctrl + left button):
 URxvt.urlLauncher: /usr/local/bin/vimb
@@ -20,6 +20,16 @@ URxvt.keysym.C-Down:   perl:font-size:decrease
 ! URxvt.keysym.C-A-Up:   perl:font-size:incglobal
 ! URxvt.keysym.C-A-Down: perl:font-size:decglobal
 
+! Clipboard extension:
+! URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-y:   perl:clipboard:paste
+! URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+! URxvt.clipboard.autocopy: If true, PRIMARY overwrites clipboard
+! URxvt.clipboard.copycmd:  xsel -ib
+! URxvt.clipboard.pastecmd: xsel -ob
+! URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+! URxvt.clipboard.pastecmd: xclip -o -selection clipboard
+URxvt.clipboard.pastecmd: clipboard.sh -o
 ! Other:
 URxvt.saveLines: 1000000
 URxvt.scrollBar: false

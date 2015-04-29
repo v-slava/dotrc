@@ -62,7 +62,7 @@ bindsym $ALT+space focus mode_toggle
 bindsym $ALT+a focus parent
 
 # focus the child container
-bindsym $WIN+c focus child
+bindsym $ALT+c focus child
 
 # switch to workspace
 bindsym $ALT+1 workspace 1
@@ -164,9 +164,6 @@ bindsym $ALT+b exec exec vimb -s ~/os_settings/other_files/start_page.html
 
 # windows guest
 bindsym $ALT+q exec exec ~/os_settings/other_files/qemu_start.sh
-
-# Copy clipboard:
-bindsym $ALT+c exec --no-startup-id exec clipboard.sh -copy
 
 # start downloading .torrent file from ~/downloads:
 bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh

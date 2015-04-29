@@ -75,7 +75,7 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree
 # On wheezy: chromium-browser-l10n
 
 # dmenu:
-apt-get install libx11-dev libxinerama-dev libxft-dev
+apt-get install libx11-dev libxinerama-dev libxft-dev libxmu-dev
 make -f ./other_files/Makefile_dmenu
 make -f ./other_files/Makefile_dmenu clean
 apt-get purge libx11-dev libxinerama-dev libxft-dev
