@@ -389,10 +389,6 @@ strace -f -s 8192 -o trace_file -e trace=execve CMD
 # attach to process and begin tracing:
 strace -p PID
 
-# Set mac address:
-ifconfig eth0 hw ether 12:34:56:78:9a:bc
-ip link set eth0 address 12:34:56:78:9a:bc
-
 # P4 help:
 p4 help COMMAND
 
@@ -651,10 +647,14 @@ make installmandocs # installs in /usr/local/man/man9
 mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
 
 # Create hard drive image in regular file:
-sudo su
-losetup -f # print name of first unused loop device (for example /dev/loop0)
-losetup -o OFFSET /dev/loop0 FILE # attach loop device with regular file
-losetup -d /dev/loop0 # detach loop device from file
+fdisk FILE
+kpartx -a FILE # add partition mappings
+losetup -l # print info about loop devices
+mount /dev/mapper/loop0p1 /mnt # mount first partition from FILE to /mnt
+kpartx -d FILE # delete partition mappings
+# losetup -f # print name of first unused loop device (for example /dev/loop0)
+# losetup -o OFFSET /dev/loop0 FILE # attach loop device with regular file
+# losetup -d /dev/loop0 # detach loop device from file
 
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
@@ -997,10 +997,26 @@ wget http://www.memtest86.com/downloads/memtest86-iso.gz
 cp memtest86-iso /mnt/boot/memtest.iso
 # See os_settings/other_files/grub.cfg
 
-# up/down interface
+# Create bootable iso image (for cdrom):
+mkdir -p image_root/boot/grub
+vim image_root/boot/grub/grub.cfg
+grub-mkrescue -o grub.iso image_root
+
+# Add bridge:
+brctl addbr br0
+brctl addif br0 eth0
+
+# Set mac address:
+ifconfig eth0 hw ether 12:34:56:78:9a:bc
+ip link set eth0 address 12:34:56:78:9a:bc
+
+# up/down interface:
 ifconfig eth0 up
 ip link set wlan0 down
 man ip-link
+
+# view default route:
+ip route
 
 # Set static ip (iproute package in debian):
 ip addr add 192.168.1.29/24 dev wlan0

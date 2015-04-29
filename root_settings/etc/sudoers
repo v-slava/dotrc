@@ -30,3 +30,5 @@ volkov laptop= NOPASSWD: /sbin/poweroff, /sbin/halt, /sbin/reboot
 
 volkov laptop= NOPASSWD: /bin/mount -t cifs -o user=* //*/* /media/*, /bin/umount /media/*
 
+volkov laptop=(qemu_user) NOPASSWD: /usr/bin/qemu-system-x86_64, /bin/nc
+

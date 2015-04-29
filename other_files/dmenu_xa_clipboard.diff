@@ -1,0 +1,41 @@
+diff -rup a/config.mk b/config.mk
+--- a/config.mk
++++ b/config.mk
+@@ -18,13 +18,13 @@ XFTLIBS  = -lXft -lXrender -lfreetype -l
+ 
+ # includes and libs
+ INCS = -I${X11INC} ${XFTINC}
+-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS}
++LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS} -lXmu
+ 
+ # flags
+ CPPFLAGS = -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+ #CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+-CFLAGS   = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+-LDFLAGS  = -s ${LIBS}
++CFLAGS   = -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS} -O2 -flto
++LDFLAGS  = -s ${LIBS} -O2 -flto
+ 
+ # compiler and linker
+ CC = cc
+diff -rup a/dmenu.c b/dmenu.c
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -8,6 +8,7 @@
+ #include <X11/Xlib.h>
+ #include <X11/Xatom.h>
+ #include <X11/Xutil.h>
++#include <X11/Xmu/Atoms.h>
+ #ifdef XINERAMA
+ #include <X11/extensions/Xinerama.h>
+ #endif
+@@ -288,7 +289,8 @@ keypress(XKeyEvent *ev) {
+ 				insert(NULL, nextrune(-1) - cursor);
+ 			break;
+ 		case XK_y: /* paste selection */
+-			XConvertSelection(dc->dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
++		case XK_v:
++			XConvertSelection(dc->dpy, XA_CLIPBOARD(dc->dpy),
+ 			                  utf8, utf8, win, CurrentTime);
+ 			return;
+ 		default:

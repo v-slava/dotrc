@@ -118,10 +118,10 @@ set shellredir=>%s
 " Reformat C/C++ source code:
 nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
 
-" Map clipboard to unnamed register '*':
-set clipboard=unnamed
+" Map clipboard to unnamedplus register '+':
+set clipboard=unnamedplus
 " Preserve copied text in clipboard on exit:
-autocmd VimLeave * call system("clipboard.sh", getreg('*'))
+autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 
 " Set correct filetypes:
 autocmd BufEnter vifmrc set filetype=vim
