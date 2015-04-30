@@ -39,7 +39,7 @@ diff -urp a/dmenu.1 b/dmenu.1
 -.TP
 -C\-Y
 -Paste from X clipboard
-+A\-y
++A\-i
 +Paste from clipboard
  .TP
  M\-g
@@ -101,7 +101,7 @@ diff -urp a/dmenu.c b/dmenu.c
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
-+		case XK_y: // paste from clipboard
++		case XK_i: // paste (insert) from clipboard
 +		{
 +			Atom sel;
 +			switch (clipboard)

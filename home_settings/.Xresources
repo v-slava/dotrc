@@ -21,8 +21,8 @@ URxvt.keysym.C-Down:   perl:font-size:decrease
 ! URxvt.keysym.C-A-Down: perl:font-size:decglobal
 
 ! Clipboard extension:
-! URxvt.keysym.M-c:   perl:clipboard:copy
-URxvt.keysym.M-y:   perl:clipboard:paste
+URxvt.keysym.M-y:   perl:clipboard:copy
+URxvt.keysym.M-i:   perl:clipboard:paste
 ! URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
 ! URxvt.clipboard.autocopy: If true, PRIMARY overwrites clipboard
 ! URxvt.clipboard.copycmd:  xsel -ib
