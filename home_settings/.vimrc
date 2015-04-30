@@ -165,9 +165,9 @@ function! CopyLocation(in_file, strip_part)
 	let full_location = a:in_file . ':' . line_number
 	let strip_width = strlen(a:strip_part)
 	if strip_width
-		let @* = strpart(full_location, strip_width)
+		let @+ = strpart(full_location, strip_width)
 	else
-		let @* = full_location
+		let @+ = full_location
 	endif
 endfunction
 nmap <F12> :call CopyLocation( expand('%:p'), "" )<CR>
