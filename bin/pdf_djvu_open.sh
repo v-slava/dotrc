@@ -8,7 +8,7 @@ if [ $# -ne 1 ]; then
 fi
 FILE="$1"
 
-CMD="zathura"
+CMD="zathura --fork"
 if [ -f $PASSWORD_FILE ]; then
 	PASSWORD=$(head -n 1 $PASSWORD_FILE)
 	CMD="$CMD -w '$PASSWORD'"
