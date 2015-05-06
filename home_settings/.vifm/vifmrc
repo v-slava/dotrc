@@ -132,9 +132,9 @@ set statusline="  %t%= %A %10u:%-7g %15s %30d  "
 
 " Pdf
 filextype *.pdf
-	\ apvlv %c 2>/dev/null &,
-	\ mupdf %c &,
 	\ zathura %c %i &,
+	\ apvlv %c %i &,
+	\ mupdf %c &,
 	\ xpdf %c
 
 " fileviewer *.pdf pdftotext -nopgbrk %c -
@@ -148,8 +148,8 @@ filextype *.pdf
 
 " Djvu
 filextype *.djvu
-	\ apvlv %c 2>/dev/null &,
-	\ zathura %c,
+	\ zathura %c %i &,
+	\ apvlv %c %i &,
 
 " Audio
 filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3

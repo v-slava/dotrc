@@ -60,7 +60,7 @@ apt-get install transmission-gtk
 apt-get install libreoffice
 
 # Install pdf viewer:
-apt-get install apvlv
+apt-get install zathura # apvlv
 
 # Build and install vimb:
 apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
