@@ -24,8 +24,15 @@ echo help | bluetoothctl
 # sound application (output):
 pacmd list-sink-inputs
 
+# if no sound:
+$ pacmd list-sinks | grep -i mute
+       muted: yes
+$ pacmd list-sinks | grep -i index
+  * index: 0
+$ pacmd set-sink-mute INDEX 0
+
 # sound outputs:
-pamd list-sinks
+pacmd list-sinks
 # index 0 (ports: analog-output-speaker, analog-output-headphones)
 # index 1 (bluetooth headset)
 
