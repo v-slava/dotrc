@@ -1,0 +1,4 @@
+set font "inconsolata 14"
+set incremental-search false
+set incremental-search true
+
