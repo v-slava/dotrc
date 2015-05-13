@@ -9,6 +9,9 @@
 " <C-E> - line up
 " <C-Y> - line down
 "
+" <C-L> - scroll right (my binding)
+" <C-H> - scroll left (my binding)
+"
 " <F12> - copy full source location into clipboard
 " <F11> - copy stripped source location into clipboard
 "
@@ -93,6 +96,10 @@ nmap <F2> :set list!<CR>
 nmap <F3> :set hlsearch!<CR>
 
 imap оо <shortinfo></shortinfo><Esc>F<i
+
+" Scroll horizontally:
+nmap <C-l> zl
+nmap <C-h> zh
 
 " Reload vimrc:
 nmap <C-m> :source $MYVIMRC<CR>
