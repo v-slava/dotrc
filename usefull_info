@@ -1,3 +1,20 @@
+# Pack initramfs:
+cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
+
+# Extract initramfs:
+cd FOLDER_TO_EXTRACT_INTO && gunzip -c -9 /boot/initrd.img-3.11.0-12-generic | cpio -i -d -H newc --no-absolute-filenames
+
+# Copy files over ssh:
+ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
+ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# View progress using coreutils viewer:
+cv -wm
+
+# Compress folder by tar:
+tar cf tar_name.tar ./source_directory/*
+tar czf archive.tar.gz /path/to/directory
+
 # .gitignore file in .git folder:
 .git/info/exclude
 
@@ -844,20 +861,6 @@ sudo extundelete --restore-file other/commands --output-dir restore /dev/sda5
 
 # Linux kernel objdump
 arm-linux-gnueabi-objdump -D -b binary -m arm Image
-
-# Pack initramfs:
-cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
-
-# Extract initramfs:
-cd FOLDER_TO_EXTRACT_INTO && gunzip -c -9 /boot/initrd.img-3.11.0-12-generic | cpio -i -d -H newc --no-absolute-filenames
-
-# Copy files over ssh:
-ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
-ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
-
-# Compress folder by tar:
-tar cf tar_name.tar ./source_directory/*
-tar czf archive.tar.gz /path/to/directory
 
 # View kernel messages (printk):
 tail /var/log/syslog

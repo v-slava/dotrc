@@ -1,4 +1,5 @@
 set font "inconsolata 14"
-set incremental-search false
-set incremental-search true
+# set incremental-search false
+# set incremental-search true
+set selection-clipboard clipboard
 

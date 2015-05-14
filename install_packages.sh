@@ -81,6 +81,11 @@ make -f ./other_files/Makefile_dmenu clean
 apt-get purge libx11-dev libxinerama-dev libxft-dev libxmu-dev
 apt-get autoremove --purge
 
+# Coreutils viewer:
+apt-get install libncurses5-dev
+make -f ./other_files/Makefile_coreutils_viewer
+apt-get purge libncurses5-dev
+
 dpkg --add-architecture i386
 apt-get update
 # Download skype.deb via browser
