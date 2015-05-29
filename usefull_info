@@ -780,6 +780,7 @@ echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 # Debug program with core dump:
 gdb -e PROGRAM -c core.dump
 gdb PROGRAM core.dump
+info proc mappings
 backtrace full
 
 # GDB save value in variable:

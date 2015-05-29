@@ -376,8 +376,9 @@ mark f /media/files
 mark n /media/files/new_music
 mark M /media/files/music
 mark T /media/files/trash_vifm
-mark B /media/build_server/home/build
-mark e /media/build_server/home/exchange
+mark B /media/new_build_server/home/bld
+mark E /media/build_server/home/exchange
+mark e /media/new_build_server/home/bld/exchange
 
 nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.vifm/vifmrc && cp ~/os_settings/home_settings/.vifm/vifmrc $MYVIFMRC' | restart<cr>
 nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>

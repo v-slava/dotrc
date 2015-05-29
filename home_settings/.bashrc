@@ -89,6 +89,7 @@ export QUILT_PATCHES=debian/patches
 # IP:
 export IP_PC=106.125.38.23
 export IP_BUILD_SERVER=106.125.52.218
+export IP_NEW_BUILD_SERVER=106.125.34.189
 
 # Perforce (Tizen TV):
 # export P4PORT=10.41.130.122:1888
