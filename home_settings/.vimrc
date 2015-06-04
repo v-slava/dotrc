@@ -83,7 +83,7 @@ set colorcolumn=81
 hi ColorColumn ctermbg=234
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
-" set wrapmargin=80
+set textwidth=80
 
 set hlsearch
 set ignorecase
