@@ -1,3 +1,6 @@
+" To reformat text to fit max 80 columns: select text, and type 'gq'.
+" In normal mode: 'gq' + motion
+"
 " ]c               - advance to the next block with differences
 " [c               - reverse search for the previous block with differences
 " do (diff obtain) - bring changes from the other file to the current file
@@ -78,6 +81,9 @@ set cursorline
 " highlight column (right after last that can be used):
 set colorcolumn=81
 hi ColorColumn ctermbg=234
+
+" Auto insert <EOL> and move last word to next line if it reaches 81 column
+" set wrapmargin=80
 
 set hlsearch
 set ignorecase
