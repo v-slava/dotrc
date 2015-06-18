@@ -10,7 +10,7 @@ I3_WORKSPACE_MINICOM=4
 I3_WORKSPACE_LOG=5
 
 # GREP_OPTIONS="-i \"some info\""
-GREP_OPTIONS="__AACS__"
+GREP_OPTIONS="TZ_AACS"
 
 # VIEW_CMD="stdbuf -o 0 nl"
 VIEW_CMD="cat -n"

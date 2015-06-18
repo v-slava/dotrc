@@ -33,7 +33,8 @@ nmap <C-r> :tabopen file:///home/volkov/os_settings/other_files/start_page.html<
 # noob settings end
 
 # Use google search engine: :open s my search phrase
-shortcut-add s=http://www.google.com/search?q=$0
+# shortcut-add s=http://www.google.com/search?q=$0
+shortcut-add s=https://www.google.com/search?q=$0
 # Use duckduckgo search engine: :open ds my search phrase
 shortcut-add ds=https://duckduckgo.com/lite/?q=$0
 # Use google translate (en->ru language): :open t Phrase To Translate
@@ -45,9 +46,11 @@ shortcut-add to=https://translate.google.com/?hl=en#$0
 # Calculate route with google maps: :open map "city hall, London" railway station, London
 shortcut-add map=https://maps.google.com/maps?mode=transit&saddr=$0&daddr=$1
 # Search for music:
-# www.audiopoisk.com
 shortcut-add mus=http://go.mail.ru/search_site?p=1&aux=Kd7dJd&q=$0
 shortcut-add 1mus=http://pleer.com/search?q=$0#
+# www.audiopoisk.com
+# http://mp3brainz.net/
+# http://epicmusictime.com/ # online radio
 # Search for torrent on rutracker.org:
 shortcut-add tor=http://rutracker.org/forum/tracker.php?nm=$0
 
