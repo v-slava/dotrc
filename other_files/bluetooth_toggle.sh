@@ -38,7 +38,9 @@ EOF
 
 else # disconnected => need to connect
 
-	cat << EOF | expect 2>&1
+	bluetoothctl_RET=0
+	while [ $bluetoothctl_RET -ne 1 ]; do
+		cat << EOF | expect 2>&1
 set timeout 10
 spawn bluetoothctl
 expect "\[bluetooth\]"
@@ -56,12 +58,12 @@ expect "\# "
 send "quit\n"
 exit \$RET
 EOF
-	bluetoothctl_RET=$?
-	echo -e "\n"
-	if [ $bluetoothctl_RET -ne 1 ]; then
-		echo "Failed to connect to bluetooth headset $BT_MAC." 1>&2
-		exit 1
-	fi
+		bluetoothctl_RET=$?
+		echo -e "\n"
+		if [ $bluetoothctl_RET -ne 1 ]; then
+			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2
+		fi
+	done # while [ $bluetoothctl_RET -ne 1 ]
 	set -e
 	BT_SINK=$(pacmd list-sinks | grep -o "bluez_sink\.$(echo $BT_MAC | sed 's/:/\./g')")
 	pacmd set-default-sink $BT_SINK
