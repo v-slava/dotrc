@@ -1,3 +1,5 @@
+" Toggle language: <C-K>
+"
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
 " In normal mode: 'gq' + motion
 "
@@ -33,7 +35,7 @@
 " :ts[elect][!] [ident]     == g]	list the tags that match [indent]
 " :sts[elect][!] [ident]    == <C-W>g]	Like :ts, but splits the window for the selected tag.
 " :tags		Show the contents of the tag stack.  The active entry is marked with a '>'.
-
+"
 " cscope:
 " Query types:
 "   's'   symbol: find all references to the token under cursor
@@ -58,7 +60,7 @@
 " view vim filetypes:
 " ls /usr/share/vim/vim74/ftplugin/
 " ls /usr/share/vim/vim74/syntax/
-
+"
 " set lines=25
 " set columns=83
 
@@ -81,6 +83,25 @@ set cursorline
 " highlight column (right after last that can be used):
 set colorcolumn=81
 hi ColorColumn ctermbg=234
+
+" Russian keyboard layout:
+set keymap=russian-jcukenwin
+set iminsert=0 " default english in insert mode
+set imsearch=0 " default english while searching
+function Swap_keyboard_layout()
+	if &iminsert
+		set iminsert=0
+		set imsearch=0
+		set statusline=EN\ \ \ file:\ %f
+	else
+		set iminsert=1
+		set imsearch=1
+		set statusline=RU\ \ \ file:\ %f
+	endif
+	set laststatus=2
+endfunction
+nmap <C-k> :call Swap_keyboard_layout()<CR>
+imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 set textwidth=80
@@ -165,15 +186,15 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-function! MyQuickRun(in_file)
+function! Quick_run(in_file)
 	let cmd = "~/os_settings/other_files/quick_run.sh " . a:in_file
  	let log = '/tmp/vim_ide_' . a:in_file . '_log'
 	let ignored = system(cmd)
 	execute "botright pedit " . log
 endfunction
-nmap <F5> :w<CR>:call MyQuickRun( @% )<CR>
+nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
-function! CopyLocation(in_file, strip_part)
+function! Copy_location(in_file, strip_part)
 	let line_number = line('.')
 	let full_location = a:in_file . ':' . line_number
 	let strip_width = strlen(a:strip_part)
@@ -183,9 +204,9 @@ function! CopyLocation(in_file, strip_part)
 		let @+ = full_location
 	endif
 endfunction
-nmap <F12> :call CopyLocation( expand('%:p'), "" )<CR>
-nmap <F11> :call CopyLocation( expand('%:p'), "/home/volkov/workspace/uhd_image/p4_workspace/" )<CR>
-nmap <F10> :call CopyLocation( expand('%:p'), "/home/volkov/workspace/15_UHD_BD/modified_files/" )<CR>
+nmap <F12> :call Copy_location( expand('%:p'), "" )<CR>
+nmap <F11> :call Copy_location( expand('%:p'), "/home/volkov/workspace/uhd_image/p4_workspace/" )<CR>
+nmap <F10> :call Copy_location( expand('%:p'), "/home/volkov/workspace/15_UHD_BD/modified_files/" )<CR>
 
 
 " Update cscope connection while opening new file:
@@ -238,7 +259,7 @@ call tcomment#DefineType('xdefaults', '! %s')
 call tcomment#DefineType('fusesmbconf', '; %s')
 
 " Code to convert spaces to \n and backwards:
-function! MySplitLines() range
+function! Split_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
@@ -248,8 +269,8 @@ function! MySplitLines() range
 	let words_array = split(orig_text)
 	let failed = append(first_line - 1, words_array)
 endfunction
-command! -range -nargs=* Slines <line1>,<line2> call MySplitLines()
-function! MyMergeLines() range
+command! -range -nargs=* Slines <line1>,<line2> call Split_lines()
+function! Merge_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
@@ -258,7 +279,7 @@ function! MyMergeLines() range
 	execute first_line "," last_line 'delete z'
 	let failed = append(first_line - 1, orig_text)
 endfunction
-command! -range -nargs=* Mlines <line1>,<line2> call MyMergeLines()
+command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.
