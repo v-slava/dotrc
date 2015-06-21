@@ -89,11 +89,13 @@ set keymap=russian-jcukenwin
 set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
 function Swap_keyboard_layout()
-	if &iminsert
+	if &iminsert == 1 " If current layout is russian
+		" then switch to english
 		set iminsert=0
 		set imsearch=0
 		set statusline=EN\ \ \ file:\ %f
-	else
+	else " if current layout is english
+		" then switch to russian
 		set iminsert=1
 		set imsearch=1
 		set statusline=RU\ \ \ file:\ %f
@@ -102,9 +104,6 @@ function Swap_keyboard_layout()
 endfunction
 nmap <C-k> :call Swap_keyboard_layout()<CR>
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
-
-" Auto insert <EOL> and move last word to next line if it reaches 81 column
-set textwidth=80
 
 set hlsearch
 set ignorecase
@@ -121,8 +120,6 @@ nmap <F2> :set list!<CR>
 
 " Use F3 to set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
-
-imap оо <shortinfo></shortinfo><Esc>F<i
 
 " Scroll horizontally:
 nmap <C-l> zl
@@ -164,6 +161,7 @@ autocmd BufEnter *.ii set filetype=cpp
 autocmd BufEnter *.gdb set filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm set filetype=jtag_script " my filetype
 autocmd BufEnter menurc set filetype=claws_mail_menurc " my filetype
+autocmd BufEnter *.gl set filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
@@ -172,6 +170,24 @@ autocmd FileType asm set syntax=armasm
 " Set tab width:
 autocmd FileType c,cpp,sh,expect set tabstop=4
 autocmd FileType c,cpp,sh,expect set shiftwidth=4
+
+" Auto insert <EOL> and move last word to next line if it reaches 81 column
+autocmd FileType c,cpp set textwidth=80
+
+" glanguage mappings:
+" Use <C-i> to insert <shortinfo></shortinfo> and switch language
+autocmd FileType glanguage imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
+function! Translate()
+	if &iminsert == 0 " If current keyboard layout is english
+		" copy line to clipboard
+		execute "normal! 0y$"
+		" translate line with goldendict
+		call system('goldendict "$(clipboard.sh -o)" &')
+		" say line (if LINE.wav is available)
+		call system('~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)" &')
+	endif " else do nothing
+endfunction
+autocmd FileType glanguage imap <CR> <Esc> k :call Translate()<CR><C-k>o
 
 " Move current tab left and right:
 nnoremap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
