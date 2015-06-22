@@ -1,3 +1,45 @@
+# Disable GNU Make builtin rules:
+.SUFFIXES:
+MAKEFLAGS += --no-builtin-rules
+export MAKEFLAGS
+
+# Determine unit tests coverage:
+gcc UNIT_TESTS.c -o UNIT_TESTS.out --coverage
+gcov UNIT_TESTS.out
+
+# gcc output rules for make describing dependencies:
+gcc FILE.c -o FILE.d -MM -MT FILE.o
+# In Makefile:
+-include FILE.d
+
+# Reformat source file with uncrustify:
+uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
+
+# Use doxygen to generate documentation:
+cd OUTPUT_FOLDER
+# generate sample Doxyfile:
+doxygen -g
+# fix Doxyfile (see the following options):
+# PROJECT_NAME INPUT RECURSIVE SOURCE_BROWSER INLINE_SOURCES
+# STRIP_CODE_COMMENTS GENERATE_LATEX GENERATE_DOCBOOK HAVE_DOT CALL_GRAPH
+# CALLER_GRAPH CLASS_GRAPH EXTRACT_ALL EXTRACT_STATIC REFERENCED_BY_RELATION
+# REFERENCED_RELATION MACRO_EXPANSION SKIP_FUNCTION_MACROS
+vim Doxyfile
+# generate documentation:
+doxygen
+# view generated documentation:
+firefox html/index.html
+
+# Use valgrind for dynamic memory analysis:
+valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
+
+# Use clang's static analysis:
+scan-build BUILD_COMMAND
+
+# Preprocess source file for further compilation:
+gcc FILE.c -o FILE.i -E -P -dN
+# (see -dCHARS in "man gcc")
+
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
 
