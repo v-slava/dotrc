@@ -168,8 +168,8 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm set syntax=armasm
 
 " Set tab width:
-autocmd FileType c,cpp,sh,expect set tabstop=4
-autocmd FileType c,cpp,sh,expect set shiftwidth=4
+autocmd FileType c,cpp,sh,expect,cmake set tabstop=4
+autocmd FileType c,cpp,sh,expect,cmake set shiftwidth=4
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp set textwidth=80
