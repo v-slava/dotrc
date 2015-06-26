@@ -1,3 +1,6 @@
+# Add authorization without password:
+ssh-copy-id user@hostname
+
 # Disable GNU Make builtin rules:
 .SUFFIXES:
 MAKEFLAGS += --no-builtin-rules
