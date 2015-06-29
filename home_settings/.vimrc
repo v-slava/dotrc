@@ -188,6 +188,7 @@ function! Translate()
 	endif " else do nothing
 endfunction
 autocmd FileType glanguage imap <CR> <Esc> k :call Translate()<CR><C-k>o
+autocmd FileType glanguage imap <C-u> <Esc>ddk<C-k>S
 
 " Move current tab left and right:
 nnoremap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
