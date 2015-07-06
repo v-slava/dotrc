@@ -828,8 +828,10 @@ gdb PROGRAM core.dump
 info proc mappings
 backtrace full
 
-# GDB save value in variable:
+# GDB save value in gdb variable:
 set $var_name = expression
+# GDB overwrite variable in program:
+set var_name = expression
 
 # GDB step out of a function:
 finish

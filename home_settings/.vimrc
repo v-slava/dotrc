@@ -108,6 +108,7 @@ imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 set hlsearch
 set ignorecase
 set incsearch
+set mouse=a
 
 set autoindent
 " set cindent " C-style indents (after '{' and so on)
@@ -305,4 +306,7 @@ command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 
 " Insert <shortinfo> tags (for glanguage):
 " let @s = 'A<shortinfo></shortinfo>F<i'
+
+let @r = 'f_lceDEVICE_REVOKED0'
+let @s = 'f_lceSUCCESS0'
 

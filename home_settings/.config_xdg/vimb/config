@@ -33,14 +33,17 @@ nmap <C-r> :tabopen file:///home/volkov/os_settings/other_files/start_page.html<
 # noob settings end
 
 # Use google search engine: :open s my search phrase
-# shortcut-add s=http://www.google.com/search?q=$0
 shortcut-add s=https://www.google.com/search?q=$0
 # Use duckduckgo search engine: :open ds my search phrase
 shortcut-add ds=https://duckduckgo.com/lite/?q=$0
-# Use google translate (en->ru language): :open t Phrase To Translate
-shortcut-add t=https://translate.google.com/?hl=en#en/ru/$0
-# Use google translate (ru->en language): :open tr Phrase To Translate
-shortcut-add tr=https://translate.google.com/?hl=en#ru/en/$0
+# Use google translate (en->ru language):
+shortcut-add ter=https://translate.google.com/?hl=en#en/ru/$0
+# Use google translate (ru->en language):
+shortcut-add tre=https://translate.google.com/?hl=en#ru/en/$0
+# Use google translate (ru->de language):
+shortcut-add trd=https://translate.google.com/?hl=en#ru/de/$0
+# Use google translate (de->ru language):
+shortcut-add tdr=https://translate.google.com/?hl=en#de/ru/$0
 # Use google translate (any->any language): :open to en/ru/Phrase To Translate  (de, uk, ko)
 shortcut-add to=https://translate.google.com/?hl=en#$0
 # Calculate route with google maps: :open map "city hall, London" railway station, London
@@ -56,7 +59,7 @@ shortcut-add tor=http://rutracker.org/forum/tracker.php?nm=$0
 
 set strict-ssl=false
 
-nmap ,t :sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
+# nmap ,t :sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
 # au LoadFinished http://ejudge.surc.kiev.ua/cgi-bin/new-client?contest_id=* sh ~/os_settings/other_files/vimb_formfiller.sh %
 au LoadFinished https://106.125.46.94/gerrit/login/q/status:open sh ~/os_settings/other_files/vimb_gerrit_login.sh %
 nmap ,l :sh ~/os_settings/other_files/vimb_formfiller.sh %<CR>
