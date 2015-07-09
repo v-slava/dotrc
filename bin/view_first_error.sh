@@ -11,7 +11,7 @@ ERROR_LINES=$(tee $TEMP_FILE | grep -n 'error:' | cut -d':' -f1)
 START_LINE=$(echo $ERROR_LINES | cut -d' ' -f1)
 # echo "START_LINE=|$START_LINE|"
 if [ -n "$START_LINE" ]; then
-	tail -n +${START_LINE} $TEMP_FILE | grep --color=always '[^/]\+\.\(i\|ii\|hh\|H\|hp\|hxx\|hpp\|HPP\|h++\|tcc\|cc\|cp\|cxx\|cpp\|CPP\|c++\|C\)\?:[0-9]\+:[0-9]\+: error:\|' | less -R
+	tail -n +${START_LINE} $TEMP_FILE | grep --color=always '[^/]\+\.\(c\|h\|i\|ii\|hh\|H\|hp\|hxx\|hpp\|HPP\|h++\|tcc\|cc\|cp\|cxx\|cpp\|CPP\|c++\|C\)\?:[0-9]\+:[0-9]\+: error:\|' | less -R
 	exit 1
 else
 	cat $TEMP_FILE
