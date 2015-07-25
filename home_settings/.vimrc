@@ -84,27 +84,6 @@ set cursorline
 set colorcolumn=81
 hi ColorColumn ctermbg=234
 
-" Russian keyboard layout:
-set keymap=russian-jcukenwin
-set iminsert=0 " default english in insert mode
-set imsearch=0 " default english while searching
-function Swap_keyboard_layout()
-	if &iminsert == 1 " If current layout is russian
-		" then switch to english
-		set iminsert=0
-		set imsearch=0
-		set statusline=EN\ \ \ file:\ %f
-	else " if current layout is english
-		" then switch to russian
-		set iminsert=1
-		set imsearch=1
-		set statusline=RU\ \ \ file:\ %f
-	endif
-	set laststatus=2
-endfunction
-nmap <C-k> :call Swap_keyboard_layout()<CR>
-imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
-
 set hlsearch
 set ignorecase
 set incsearch
@@ -162,7 +141,8 @@ autocmd BufEnter *.ii set filetype=cpp
 autocmd BufEnter *.gdb set filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm set filetype=jtag_script " my filetype
 autocmd BufEnter menurc set filetype=claws_mail_menurc " my filetype
-autocmd BufEnter *.gl set filetype=glanguage " my filetype
+autocmd BufEnter *_en.gl set filetype=glanguage_en " my filetype
+autocmd BufEnter *_de.gl set filetype=glanguage_de " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
@@ -177,19 +157,95 @@ autocmd FileType c,cpp set textwidth=80
 
 " glanguage mappings:
 " Use <C-i> to insert <shortinfo></shortinfo> and switch language
-autocmd FileType glanguage imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
-function! Translate()
-	if &iminsert == 0 " If current keyboard layout is english
-		" copy line to clipboard
-		execute "normal! 0y$"
-		" translate line with goldendict
-		call system('goldendict "$(clipboard.sh -o)" &')
-		" say line (if LINE.wav is available)
+autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
+" Use <C-u> to throw away (undo) current word
+autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line()
+function Translate()
+	" copy line to clipboard
+	execute "normal! 0y$"
+	" translate line with goldendict
+	call system('goldendict "$(clipboard.sh -o)" &')
+endfunction
+function Translate_and_say_english()
+	if &iminsert == 0 " If current keyboard layout is not russian
+		call Translate()
+		" say line (if LINE.mp3 is available)
 		call system('~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)" &')
 	endif " else do nothing
 endfunction
-autocmd FileType glanguage imap <CR> <Esc> k :call Translate()<CR><C-k>o
-autocmd FileType glanguage imap <C-u> <Esc>ddk<C-k>S
+function Translate_german()
+	if &iminsert == 0 " If current keyboard layout is not russian
+		call Translate()
+	endif
+endfunction
+autocmd FileType glanguage_en imap <CR> <Esc> k :call Translate_and_say_english()<CR><C-k>o
+autocmd FileType glanguage_de imap <CR> <Esc> k :call Translate_german()<CR><C-k>o
+
+" Russian keyboard layout:
+set keymap=russian-jcukenwin
+set iminsert=0 " default english in insert mode
+set imsearch=0 " default english while searching
+
+function Update_status_line()
+	if &iminsert == 1
+		let l:lang="RU"
+	else
+		if g:german == 1
+			let l:lang="DE"
+		else
+			let l:lang="EN"
+		endif
+	endif
+	let &statusline=l:lang . '   file: %f'
+	set laststatus=2
+endfunction
+
+function Swap_keyboard_layout()
+	if &iminsert == 1 " If current layout is russian
+		" then switch to english
+		set iminsert=0
+		set imsearch=0
+	else " if current layout is english
+		" then switch to russian
+		set iminsert=1
+		set imsearch=1
+	endif
+	call Update_status_line()
+endfunction
+nmap <C-k> :call Swap_keyboard_layout()<CR>
+imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
+
+" German-only letters mapping:
+function German_mapping_toggle()
+	if &iminsert == 0 " If current layout is english
+		if g:german == 1 " If german mapping is enabled
+			iunmap oe
+			iunmap OE
+			iunmap ae
+			iunmap AE
+			iunmap ue
+			iunmap UE
+			iunmap ss
+			iunmap SS
+			let g:german=0
+		else " if german mapping is disabled
+			imap oe ö
+			imap OE Ö
+			imap ae ä
+			imap AE Ä
+			imap ue ü
+			imap UE Ü
+			imap ss ß
+			imap SS ẞ
+			let g:german=1
+		endif " if german mapping is enabled
+	endif " if current layout is english
+	call Update_status_line()
+endfunction
+let german=0 " disable german mappings by default
+autocmd FileType glanguage_de call German_mapping_toggle()
+nmap <F7> :call German_mapping_toggle()<CR>
+imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
 
 " Move current tab left and right:
 nnoremap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
@@ -204,7 +260,7 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-function! Quick_run(in_file)
+function Quick_run(in_file)
 	let cmd = "~/os_settings/other_files/quick_run.sh " . a:in_file
  	let log = '/tmp/vim_ide_' . a:in_file . '_log'
 	let ignored = system(cmd)
@@ -212,7 +268,7 @@ function! Quick_run(in_file)
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
-function! Copy_location(in_file, strip_part)
+function Copy_location(in_file, strip_part)
 	let line_number = line('.')
 	let full_location = a:in_file . ':' . line_number
 	let strip_width = strlen(a:strip_part)
@@ -277,7 +333,7 @@ call tcomment#DefineType('xdefaults', '! %s')
 call tcomment#DefineType('fusesmbconf', '; %s')
 
 " Code to convert spaces to \n and backwards:
-function! Split_lines() range
+function Split_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
@@ -288,7 +344,7 @@ function! Split_lines() range
 	let failed = append(first_line - 1, words_array)
 endfunction
 command! -range -nargs=* Slines <line1>,<line2> call Split_lines()
-function! Merge_lines() range
+function Merge_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
