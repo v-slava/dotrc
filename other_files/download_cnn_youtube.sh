@@ -7,6 +7,7 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 URL="$1"
+# https://www.youtube.com/watch?v=4qqCtliBupA&list=PLpCR8mo8DkOzwhhTg7aO1B1TzikBA4YGa&index=9
 
 youtube-dl --write-sub "$URL"
 LAST_NUMBER=$(ls cnn_*.mp4 | tail -n 1 | cut -d'.' -f1 | cut -c 5-)
