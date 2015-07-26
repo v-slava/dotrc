@@ -1,17 +1,12 @@
 PHONY := all
-all: patch_src
+all: download_git
 	CFLAGS="-O2 -flto" LDFLAGS="-O2 -flto" make -C vimb -j 4
 	su -c "make -C vimb install"
-
-PHONY += patch_src
-patch_src: download_git
-	cp vimb/src/config.def.h vimb/src/config.h
-	sed -i vimb/src/config.h -e 's/#define FEATURE_SOUP_CACHE/\/\/ #define FEATURE_SOUP_CACHE/g'
 
 PHONY += download_git
 download_git:
 	git clone https://github.com/fanglingsu/vimb.git
-	cd vimb && git tag && git checkout 2.9
+	cd vimb && git tag && git checkout 2.10
 
 PHONY += clean
 clean:
