@@ -162,7 +162,7 @@ autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Es
 autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line()
 function Translate()
 	" copy line to clipboard
-	execute "normal! 0y$"
+	execute 'normal! 0y$'
 	" translate line with goldendict
 	call system('goldendict "$(clipboard.sh -o)" &')
 endfunction
@@ -188,12 +188,12 @@ set imsearch=0 " default english while searching
 
 function Update_status_line()
 	if &iminsert == 1
-		let l:lang="RU"
+		let l:lang='RU'
 	else
 		if g:german == 1
-			let l:lang="DE"
+			let l:lang='DE'
 		else
-			let l:lang="EN"
+			let l:lang='EN'
 		endif
 	endif
 	let &statusline=l:lang . '   file: %f'
@@ -261,10 +261,10 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 nmap <F9> :SrcIndexOn 
 
 function Quick_run(in_file)
-	let cmd = "~/os_settings/other_files/quick_run.sh " . a:in_file
+	let cmd = '~/os_settings/other_files/quick_run.sh ' . a:in_file
  	let log = '/tmp/vim_ide_' . a:in_file . '_log'
 	let ignored = system(cmd)
-	execute "botright pedit " . log
+	execute 'botright pedit ' . log
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
@@ -278,9 +278,9 @@ function Copy_location(in_file, strip_part)
 		let @+ = full_location
 	endif
 endfunction
-nmap <F12> :call Copy_location( expand('%:p'), "" )<CR>
-nmap <F11> :call Copy_location( expand('%:p'), "/home/volkov/workspace/uhd_image/p4_workspace/" )<CR>
-nmap <F10> :call Copy_location( expand('%:p'), "/home/volkov/workspace/15_UHD_BD/modified_files/" )<CR>
+nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
+nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/uhd_image/p4_workspace/' )<CR>
+nmap <F10> :call Copy_location( expand('%:p'), '/home/volkov/workspace/15_UHD_BD/modified_files/' )<CR>
 
 
 " Update cscope connection while opening new file:
@@ -337,9 +337,9 @@ function Split_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
-	let orig_text = join(lines_array, "\n")
+	let orig_text = join(lines_array, '\n')
 	" Delete original text into register z:
-	execute first_line "," last_line 'delete z'
+	execute first_line ',' last_line 'delete z'
 	let words_array = split(orig_text)
 	let failed = append(first_line - 1, words_array)
 endfunction
@@ -348,12 +348,26 @@ function Merge_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
-	let orig_text = join(lines_array, " ")
+	let orig_text = join(lines_array, ' ')
 	" Delete original text into register z:
-	execute first_line "," last_line 'delete z'
+	execute first_line ',' last_line 'delete z'
 	let failed = append(first_line - 1, orig_text)
 endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
+
+" function MyCIndent() range
+" 	let first_line = a:firstline
+" 	let last_line = a:lastline
+" 	let lines_array = getline(first_line, last_line)
+" 	silent execute first_line ',' last_line 'w! /tmp/asd'
+" 	silent execute '!cat /tmp/asd | ./c_indent.bin > /tmp/qwe'
+" 	" Delete original text into register z:
+" 	silent execute first_line ',' last_line 'delete z'
+" 	silent execute 'normal k'
+" 	silent execute 'r /tmp/qwe'
+" 	execute 'redraw!'
+" endfunction
+" command! -range -nargs=* MyIndent <line1>,<line2> call MyCIndent()
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.
