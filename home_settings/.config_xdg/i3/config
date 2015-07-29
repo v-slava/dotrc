@@ -140,6 +140,7 @@ for_window [class="Gimp"] floating enable
 for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
+for_window [class="Icedove" title="Search Messages"] floating enable
 
 bindsym $WIN+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym $WIN+h exec sudo poweroff
@@ -171,13 +172,17 @@ bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
 # Attendance:
 bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.AttendanceControl/MyAttendance.aspx
 
-# autostart mail client:
-exec --no-startup-id exec i3-msg 'workspace 1; exec --no-startup-id exec claws-mail'
+# autostart mail client (claws-mail):
+# exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
 # Hotkey to open mail client:
-bindsym $ALT+m exec --no-startup-id exec claws-mail
+# bindsym $ALT+m exec --no-startup-id exec claws-mail
 # Hotkeys to open specified folders:
-bindsym $ALT+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
-bindsym $ALT+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
+# bindsym $ALT+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
+# bindsym $ALT+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
+
+# autostart mail client (icedove):
+exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
+bindsym $ALT+m exec --no-startup-id exec icedove
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
