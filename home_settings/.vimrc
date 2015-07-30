@@ -149,8 +149,8 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm set syntax=armasm
 
 " Set tab width:
-autocmd FileType c,cpp,sh,expect,cmake set tabstop=4
-autocmd FileType c,cpp,sh,expect,cmake set shiftwidth=4
+autocmd FileType c,cpp,sh,expect,cmake,vim set tabstop=4
+autocmd FileType c,cpp,sh,expect,cmake,vim set shiftwidth=4
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp set textwidth=80
@@ -354,6 +354,54 @@ function Merge_lines() range
 	let failed = append(first_line - 1, orig_text)
 endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
+
+" doxygen: begin function:
+nmap \bf i/**<Esc>o * @fn 
+" doxygen: end function:
+nmap \ef :call End_function()<CR>
+function End_function()
+	let fn_line_number = line('.')
+	let fn_line = getline('.')
+
+	let prototype = strpart(fn_line, 6) " extra space in the front present
+	let brace_index = stridx(prototype, '(') " starts from 0
+	let prototype_before_brace = strpart(prototype, 0, brace_index)
+	let prototype_after_brace = substitute(strpart(prototype, brace_index + 1), ')', ', ', "")
+
+	" Insert function prototype:
+	call append(fn_line_number, '}')
+	call append(fn_line_number, '{')
+	call append(fn_line_number, strpart(prototype, 1))
+	call append(fn_line_number, ' */')
+
+	" Insert @return if needed:
+	let void_index = stridx(prototype_before_brace, ' void ')
+	if void_index == -1
+		call append(fn_line_number, ' * @return ')
+	endif
+
+	" Insert @param:
+	let param_words = split(prototype_after_brace, ' \zs')
+	let param_names = []
+	for word in param_words
+		let word_len = strlen(word)
+		let symbol = strpart(word, word_len - 2, 1)
+		if symbol == ','
+			let param_name = strpart(word, 0, word_len - 2)
+			call add(param_names, param_name)
+		endif
+	endfor
+	call reverse(param_names)
+	for param in param_names
+		call append(fn_line_number, ' * @param ' . param . ' ')
+	endfor
+
+	" Insert @brief:
+	call append(fn_line_number, ' * @brief ')
+	" Set cursor to proper position and go to insert mode:
+	execute 'normal! j$'
+	startinsert!
+endfunction
 
 " function MyCIndent() range
 " 	let first_line = a:firstline

@@ -353,6 +353,9 @@ patch --no-backup-if-mismatch -p1 < $SOME_PATH_PREFIX/debian/patches/PATCH_NAME.
 (needed: root/PACKAGE_ROOT/debian, root/original_sources.tar.*):
 cd root && dpkg-source -b PACKAGE_ROOT
 
+# Install build dependencies:
+apt-get build-dep PACKAGE
+
 # Build package from source and do not sign anything:
 dpkg-buildpackage -us -uc
 
