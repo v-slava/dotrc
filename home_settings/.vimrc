@@ -160,20 +160,20 @@ autocmd FileType c,cpp set textwidth=80
 autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
 " Use <C-u> to throw away (undo) current word
 autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line()
-function Translate()
+function! Translate()
 	" copy line to clipboard
 	execute 'normal! 0y$'
 	" translate line with goldendict
 	call system('goldendict "$(clipboard.sh -o)" &')
 endfunction
-function Translate_and_say_english()
+function! Translate_and_say_english()
 	if &iminsert == 0 " If current keyboard layout is not russian
 		call Translate()
 		" say line (if LINE.mp3 is available)
 		call system('~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)" &')
 	endif " else do nothing
 endfunction
-function Translate_german()
+function! Translate_german()
 	if &iminsert == 0 " If current keyboard layout is not russian
 		call Translate()
 	endif
@@ -186,7 +186,7 @@ set keymap=russian-jcukenwin
 set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
 
-function Update_status_line()
+function! Update_status_line()
 	if &iminsert == 1
 		let l:lang='RU'
 	else
@@ -200,7 +200,7 @@ function Update_status_line()
 	set laststatus=2
 endfunction
 
-function Swap_keyboard_layout()
+function! Swap_keyboard_layout()
 	if &iminsert == 1 " If current layout is russian
 		" then switch to english
 		set iminsert=0
@@ -216,7 +216,7 @@ nmap <C-k> :call Swap_keyboard_layout()<CR>
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 " German-only letters mapping:
-function German_mapping_toggle()
+function! German_mapping_toggle()
 	if &iminsert == 0 " If current layout is english
 		if g:german == 1 " If german mapping is enabled
 			iunmap oe
@@ -268,7 +268,30 @@ function Quick_run(in_file)
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
-function Copy_location(in_file, strip_part)
+function! Build_and_run(build_cmd, run_cmd)
+	let g:OUT_DIR = '/tmp/vim_ide_dir'
+	let full_cmd = a:build_cmd . ' 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[0]} > ' . g:OUT_DIR . '/build_result'
+	let ignored = system(full_cmd)
+	let build_result = get(readfile(g:OUT_DIR . '/build_result'), 0)
+	if build_result == 0 " if build succeeded
+		" TODO run_cmd
+	else " build failed => open error log for first error and goto source location
+		let g:error_index = 0
+		let g:source_locations = readfile(g:OUT_DIR . '/source_locations')
+		call Show_next_error()
+	endif
+endfunction
+nmap \b :w<CR>:call Build_and_run( 'cd /home/volkov/error_out && make -j9', 'echo Success!!' )<CR>
+
+function! Show_next_error()
+	let current_source_location = get(g:source_locations, g:error_index)
+	execute ':edit ' . current_source_location
+	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . g:error_index
+	let g:error_index = g:error_index + 1
+endfunction
+nmap \n :w<CR>:call Show_next_error()<CR>
+
+function! Copy_location(in_file, strip_part)
 	let line_number = line('.')
 	let full_location = a:in_file . ':' . line_number
 	let strip_width = strlen(a:strip_part)
@@ -333,7 +356,7 @@ call tcomment#DefineType('xdefaults', '! %s')
 call tcomment#DefineType('fusesmbconf', '; %s')
 
 " Code to convert spaces to \n and backwards:
-function Split_lines() range
+function! Split_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
@@ -344,7 +367,7 @@ function Split_lines() range
 	let failed = append(first_line - 1, words_array)
 endfunction
 command! -range -nargs=* Slines <line1>,<line2> call Split_lines()
-function Merge_lines() range
+function! Merge_lines() range
 	let first_line = a:firstline
 	let last_line = a:lastline
 	let lines_array = getline(first_line, last_line)
@@ -359,7 +382,7 @@ command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 nmap \bf i/**<Esc>o * @fn 
 " doxygen: end function:
 nmap \ef :call End_function()<CR>
-function End_function()
+function! End_function()
 	let fn_line_number = line('.')
 	let fn_line = getline('.')
 
@@ -403,7 +426,7 @@ function End_function()
 	startinsert!
 endfunction
 
-" function MyCIndent() range
+" function! MyCIndent() range
 " 	let first_line = a:firstline
 " 	let last_line = a:lastline
 " 	let lines_array = getline(first_line, last_line)
@@ -427,4 +450,5 @@ endfunction
 
 let @r = 'f_lceDEVICE_REVOKED0'
 let @s = 'f_lceSUCCESS0'
+let @d = 'f_lceDRM_ERROR_SWU0'
 

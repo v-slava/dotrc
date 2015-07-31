@@ -7,9 +7,7 @@
 TEMP_FILE=/tmp/view_first_error_TMP_file
 
 ERROR_LINES=$(tee $TEMP_FILE | grep -n 'error:' | cut -d':' -f1)
-# echo "ERROR_LINES=|$ERROR_LINES|"
 START_LINE=$(echo $ERROR_LINES | cut -d' ' -f1)
-# echo "START_LINE=|$START_LINE|"
 if [ -n "$START_LINE" ]; then
 	tail -n +${START_LINE} $TEMP_FILE | grep --color=always '[^/]\+\.\(c\|h\|i\|ii\|hh\|H\|hp\|hxx\|hpp\|HPP\|h++\|tcc\|cc\|cp\|cxx\|cpp\|CPP\|c++\|C\)\?:[0-9]\+:[0-9]\+: \(fatal \)\?error:\|' | less -R
 	exit 1
