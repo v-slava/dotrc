@@ -45,10 +45,6 @@ valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
 # Use clang's static analysis:
 scan-build BUILD_COMMAND
 
-# Preprocess source file for further compilation:
-gcc FILE.c -o FILE.i -E -P -dN
-# (see -dCHARS in "man gcc")
-
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
 
@@ -683,13 +679,23 @@ su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
 # Show dmesg log:
 tail -F /var/log/messages
 
+# preprocess bash script:
+#!/bin/bash -x
+# in "help set":
+# -x  Print commands and their arguments as they are executed.
+bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
+
+# Preprocess source file for further compilation:
+gcc FILE.c -o FILE.i -E -P -dN
+# (see -dCHARS in "man gcc")
+
 # gcc save preprocessed and assembler files:
 gcc -save-temps=obj
 
 # Standard compiler include search paths:
 touch foo.h && gcc -c -v foo.h
 
-# Standard compiler macros:
+# Standard compiler macros (preprocessor):
 gcc -dM -E - < /dev/null
 
 # Replace symbol (space in this case) witn \n:
@@ -759,12 +765,6 @@ grep -R --include=*.cpp --include=*.h --exclude=*.inl.h <pattern> .
 
 # Show only file names with matched content:
 grep -rl -m 1 'REGEX' .
-
-# preprocess bash script:
-#!/bin/bash -x
-# in "help set":
-# -x  Print commands and their arguments as they are executed.
-bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
 
 # Check debug info in elf:
 readelf --sections FILE | grep debug

@@ -23,6 +23,7 @@ mkdir $OUT_DIR
 # Write all output in $FULL_FILE and get space-separated line numbers of errors
 # in $ERROR_LINES:
 ERROR_LINES=$(tee $FULL_FILE | grep -n 'error:' | cut -d':' -f1)
+# ERROR_LINES=$(tee $FULL_FILE | grep -n '\(error\|warning\):' | cut -d':' -f1)
 
 error_index=0
 for error_line in $ERROR_LINES ; do

@@ -500,7 +500,3 @@ endfunction
 " Insert <shortinfo> tags (for glanguage):
 " let @s = 'A<shortinfo></shortinfo>F<i'
 
-let @r = 'f_lceDEVICE_REVOKED0'
-let @s = 'f_lceSUCCESS0'
-let @d = 'f_lceDRM_ERROR_SWU0'
-
