@@ -266,10 +266,10 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-function Quick_run(in_file)
+function! Quick_run(in_file)
 	let cmd = '~/os_settings/other_files/quick_run.sh ' . a:in_file
  	let log = '/tmp/vim_ide_' . a:in_file . '_log'
-	system(cmd)
+	call system(cmd)
 	execute 'botright pedit ' . log
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
@@ -283,9 +283,9 @@ function! Build_and_run(build_cmd, run_cmd)
 	let build_exit_code = system("echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[1]}")
 	if build_exit_code == 0 " if build succeeded
 		let run_log = g:OUT_DIR . '/run_log'
-		system('echo -e "Output:\n" > ' . run_log)
+		call system('echo -e "Output:\n" > ' . run_log)
 		let run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . run_log . ' 2>&1 ; echo $?')
-		system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . run_log)
+		call system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . run_log)
 		execute 'botright pedit ' . run_log
 	else " build failed => open error log for first error and goto source location
 		let src_loc_file = g:OUT_DIR . '/source_locations'
@@ -401,8 +401,11 @@ call tcomment#DefineType('fusesmbconf', '; %s')
 
 " localvimrc:
 let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced
-let g:localvimrc_blacklist='/media/*' " ignore .lvimrc files on mounted filesystems
-let g:localvimrc_ask = 0 " Don't ask before loading a vimrc file
+" accept .lvimrc files in /home/volkov/* and /media/files/*:
+let g:localvimrc_whitelist='^\(/home/volkov/*\|/media/files/*\)'
+" ignore .lvimrc files on mounted filesystems:
+let g:localvimrc_blacklist='^/media/*'
+let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)
 
 " Code to convert spaces to \n and backwards:
 function! Split_lines() range
