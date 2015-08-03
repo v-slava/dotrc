@@ -31,7 +31,7 @@ function! s:gotoline()
 
 		exec "keepalt edit " . fnameescape(file_name)
 		exec ":" . line_num
-		exec "normal! " . col_num . '|'
+		exec 'normal! 0' . col_num . 'lh'
 		if foldlevel(line_num) > 0
 			exec "normal! zv"
 		endif

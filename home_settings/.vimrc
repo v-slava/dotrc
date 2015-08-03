@@ -159,7 +159,7 @@ autocmd FileType c,cpp set textwidth=80
 " Use <C-i> to insert <shortinfo></shortinfo> and switch language
 autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
 " Use <C-u> to throw away (undo) current word
-autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line()
+autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line('', 'normal')
 function! Translate()
 	" copy line to clipboard
 	execute 'normal! 0y$'
@@ -186,7 +186,7 @@ set keymap=russian-jcukenwin
 set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
 
-function! Update_status_line()
+function! Update_status_line(message, status)
 	if &iminsert == 1
 		let l:lang='RU'
 	else
@@ -196,7 +196,13 @@ function! Update_status_line()
 			let l:lang='EN'
 		endif
 	endif
-	let &statusline=l:lang . '   file: %f'
+	let &statusline=l:lang . '   file: %f   ' . a:message
+	if a:status == 'error'
+		hi StatusLine ctermbg=160
+	endif
+	if a:status == 'normal'
+		hi StatusLine ctermbg=46
+	endif
 	set laststatus=2
 endfunction
 
@@ -210,7 +216,7 @@ function! Swap_keyboard_layout()
 		set iminsert=1
 		set imsearch=1
 	endif
-	call Update_status_line()
+	call Update_status_line('', 'normal')
 endfunction
 nmap <C-k> :call Swap_keyboard_layout()<CR>
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
@@ -240,7 +246,7 @@ function! German_mapping_toggle()
 			let g:german=1
 		endif " if german mapping is enabled
 	endif " if current layout is english
-	call Update_status_line()
+	call Update_status_line('', 'normal')
 endfunction
 let german=0 " disable german mappings by default
 autocmd FileType glanguage_de call German_mapping_toggle()
@@ -263,33 +269,71 @@ nmap <F9> :SrcIndexOn
 function Quick_run(in_file)
 	let cmd = '~/os_settings/other_files/quick_run.sh ' . a:in_file
  	let log = '/tmp/vim_ide_' . a:in_file . '_log'
-	let ignored = system(cmd)
+	system(cmd)
 	execute 'botright pedit ' . log
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
+let g:build_cmd = 'echo "no build_cmd defined" && false'
+let g:run_cmd = 'echo "build done successfully!"'
+let g:error_index = -1
 function! Build_and_run(build_cmd, run_cmd)
+	call Update_status_line('', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
-	let full_cmd = a:build_cmd . ' 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[0]} > ' . g:OUT_DIR . '/build_result'
-	let ignored = system(full_cmd)
-	let build_result = get(readfile(g:OUT_DIR . '/build_result'), 0)
-	if build_result == 0 " if build succeeded
-		" TODO run_cmd
+	let build_exit_code = system("echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[1]}")
+	if build_exit_code == 0 " if build succeeded
+		let run_log = g:OUT_DIR . '/run_log'
+		system('echo -e "Output:\n" > ' . run_log)
+		let run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . run_log . ' 2>&1 ; echo $?')
+		system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . run_log)
+		execute 'botright pedit ' . run_log
 	else " build failed => open error log for first error and goto source location
-		let g:error_index = 0
-		let g:source_locations = readfile(g:OUT_DIR . '/source_locations')
-		call Show_next_error()
+		let src_loc_file = g:OUT_DIR . '/source_locations'
+		if filereadable(src_loc_file)
+			let g:source_locations = readfile(src_loc_file)
+			let g:error_index = 0
+			call Show_error(g:error_index)
+		else
+			execute 'botright pedit ' . g:OUT_DIR . '/full_file'
+		endif
 	endif
 endfunction
-nmap \b :w<CR>:call Build_and_run( 'cd /home/volkov/error_out && make -j9', 'echo Success!!' )<CR>
+" build begin:
+nmap \bb :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd )<CR>
+
+function! Show_error( error_index )
+	let current_source_location = get(g:source_locations, a:error_index)
+	execute ':edit ' . current_source_location
+	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . a:error_index
+	call Update_status_line('error_index = ' . a:error_index, 'normal')
+endfunction
 
 function! Show_next_error()
-	let current_source_location = get(g:source_locations, g:error_index)
-	execute ':edit ' . current_source_location
-	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . g:error_index
-	let g:error_index = g:error_index + 1
+	if g:error_index == -1 " if there was no build
+		call Update_status_line('Error: unable to show next build error', 'error')
+	else
+		let last_error_index = len(g:source_locations) - 1
+		if g:error_index == last_error_index
+			call Update_status_line('Error: unable to show next build error', 'error')
+		else
+			let g:error_index = g:error_index + 1
+			call Show_error(g:error_index)
+		endif
+	endif
 endfunction
-nmap \n :w<CR>:call Show_next_error()<CR>
+" build next error:
+nmap \bn :w<CR>:call Show_next_error()<CR>
+
+function! Show_prev_error()
+	if g:error_index <= 0 " if there is no previous error
+		call Update_status_line('Error: unable to show previous build error', 'error')
+	else
+		let g:error_index = g:error_index - 1
+		call Show_error(g:error_index)
+	endif
+endfunction
+" build previous error:
+nmap \bp :w<CR>:call Show_prev_error()<CR>
 
 function! Copy_location(in_file, strip_part)
 	let line_number = line('.')
@@ -355,6 +399,11 @@ call tcomment#DefineType('texinfo', '@c %s')
 call tcomment#DefineType('xdefaults', '! %s')
 call tcomment#DefineType('fusesmbconf', '; %s')
 
+" localvimrc:
+let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced
+let g:localvimrc_blacklist='/media/*' " ignore .lvimrc files on mounted filesystems
+let g:localvimrc_ask = 0 " Don't ask before loading a vimrc file
+
 " Code to convert spaces to \n and backwards:
 function! Split_lines() range
 	let first_line = a:firstline
@@ -378,10 +427,10 @@ function! Merge_lines() range
 endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 
-" doxygen: begin function:
-nmap \bf i/**<Esc>o * @fn 
-" doxygen: end function:
-nmap \ef :call End_function()<CR>
+" doxygen: function begin:
+nmap \fb i/**<Esc>o * @fn 
+" doxygen: function end:
+nmap \fe :call End_function()<CR>
 function! End_function()
 	let fn_line_number = line('.')
 	let fn_line = getline('.')
