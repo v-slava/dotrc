@@ -204,6 +204,7 @@ function! Update_status_line(message, status)
 		hi StatusLine ctermbg=46
 	endif
 	set laststatus=2
+	redrawstatus!
 endfunction
 
 function! Swap_keyboard_layout()
@@ -275,18 +276,20 @@ endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
 let g:build_cmd = 'echo "no build_cmd defined" && false'
-let g:run_cmd = 'echo "build done successfully!"'
+let g:run_cmd = 'echo "build is done successfully!"'
 let g:error_index = -1
 function! Build_and_run(build_cmd, run_cmd)
-	call Update_status_line('', 'normal')
+	call Update_status_line('Build started...', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
 	let build_exit_code = system("echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[1]}")
 	if build_exit_code == 0 " if build succeeded
 		let run_log = g:OUT_DIR . '/run_log'
 		call system('echo -e "Output:\n" > ' . run_log)
+		call Update_status_line('Running...', 'normal')
 		let run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . run_log . ' 2>&1 ; echo $?')
 		call system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . run_log)
 		execute 'botright pedit ' . run_log
+		call Update_status_line('Running is done', 'normal')
 	else " build failed => open error log for first error and goto source location
 		let src_loc_file = g:OUT_DIR . '/source_locations'
 		if filereadable(src_loc_file)
