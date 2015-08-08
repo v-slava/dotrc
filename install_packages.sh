@@ -17,8 +17,8 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect mpg321 ntpdate ntfs-3g fuseiso9660 qemu-system-x86 spice-client \
-	netcat-openbsd
+	expect mpg321 ntpdate ntfs-3g fuseiso9660 qemu-system-x86 qemu-kvm \
+	spice-client netcat-openbsd
 
 apt-file update
 
