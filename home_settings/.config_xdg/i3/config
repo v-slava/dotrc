@@ -206,8 +206,8 @@ bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
 bindsym $ALT+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
 # dmenu (a program launcher)
-# bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata-16:monospace'
-bindsym $ALT+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata-16:monospace' --entry-type=command
+bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata-16:monospace'
+# bindsym $ALT+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata-16:monospace' --entry-type=command
 
 # noob settings begin
 # noob settings end
