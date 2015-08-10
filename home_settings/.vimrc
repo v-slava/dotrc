@@ -3,6 +3,7 @@
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
 " In normal mode: 'gq' + motion
 "
+" <C-W>=           - make split windows equal (diff)
 " ]c               - advance to the next block with differences
 " [c               - reverse search for the previous block with differences
 " do (diff obtain) - bring changes from the other file to the current file

@@ -1,3 +1,8 @@
+# Set the pipeline's return status to the value of the  last  (right‐most)
+# command to exit with a non-zero status, or zero if all commands exit
+# successfully:
+set -o pipefail
+
 # icedove / thunderbird:
 # see ~/other/icedove_thunderbird
 # use firetray addon
