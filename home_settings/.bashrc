@@ -99,6 +99,4 @@ export P4PORT=pfproxy.surc.kiev.ua:1666
 
 export P4USER=USER_NAME
 # export P4PASSWD=
-export TOP_DIR=/media/build_server/home/build/Perforce/402_1/DEV-UDAV15x64-vl.shein_server
-export SECOS_DIR=$TOP_DIR/SECOS/SECOS
 
