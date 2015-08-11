@@ -191,9 +191,11 @@ filextype *.html,*.htm
 
 " Image
 filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+	\ view_image.sh %c,
 	\ gliv %f,
-        \ sxiv,
-        \ gpicview %c,
+	\ sxiv %f,
+	\ gpicview %c,
+
 
 " fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm convert -identify %f -verbose /dev/null
 

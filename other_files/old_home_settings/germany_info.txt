@@ -10,24 +10,28 @@ http://www.null-provision.de/
 
 
 # Found wohnung:
+# 540 EUR + EUR, with furniture, waldbuttelbrunn
+# modern
 http://www.immowelt.de/expose/26XNU4R
+# big
 http://www.immonet.de/angebot/26193300
+
 # Hoechberg 370 EUR (without furniture?)
 http://www.immowelt.de/expose/267FE4U
 # Hoechberg 390 EUR (without furniture?)
 http://www.immowelt.de/expose/26ZQX4S
 
+# waldbuettelbrunn, no furniture? 300 EUR
 http://www.ebay-kleinanzeigen.de/s-anzeige/1-zimmer-wohnung-in-waldbuettelbrunn-zu-vermieten!/343179279-203-7682
+# part of furniture, rest buy yourself? wurzburg, not far from bahnhof. 331 EUR
 http://www.ebay-kleinanzeigen.de/s-anzeige/1-zimmer-apartment-top-lage/346705959-203-7702
 
-# 350 EUR wuerzburg, 13 km, common dusche and kueche:
+# 350 EUR wuerzburg, 13 km, common dusche and kueche. No furniture???
 http://www.immobilienscout24.de/expose/83295678?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
 
-# 310 EUR Hoechberg:
-http://marktplatz.immobilienscout24.de/expose/26083751/83237081/1/1?sid=hd4nrf02mq5ktguk8c7ub3hgb5
+# Hoechberg 01.10.2015, 360+ EUR, with furniture. Common dusche and kueche.
+http://www.immobilienscout24.de/expose/82856291?referrer=RELATED_EXPOSE
 
-# 360 EUR Wuerzburg (no furniture?):
-http://8010548.immoport.aareon-wodis.com/index.php?page=expose&show=11461#start
 
 Emergency questions:
 - Где произошел несчастный случай? (Wo ist der Unfall passiert?)
