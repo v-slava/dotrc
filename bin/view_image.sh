@@ -5,7 +5,6 @@ usage()
 	echo "Usage: $(basename $0) IMAGE_FILE" 1>&2
 	exit 1
 }
-echo asdf > ~/asdf
 
 set -e
 
@@ -16,9 +15,8 @@ fi
 IMAGE_FILE="$1"
 
 if ! pidof gliv ; then
-	gliv &
-	sleep 1
+	gliv "$IMAGE_FILE" &
+else
+	gliv -c "$IMAGE_FILE"
 fi
-
-gliv -c "$IMAGE_FILE"
 
