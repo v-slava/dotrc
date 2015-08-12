@@ -130,6 +130,10 @@ set shellredir=>%s
 " Reformat C/C++ source code:
 nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
 
+" Using vifm in vim as file selector:
+nmap <C-s> :VsplitVifm<CR>
+" :EditVifm :SplitVifm :DiffVifm :TabVifm
+
 " Map clipboard to unnamedplus register '+':
 set clipboard=unnamedplus
 " Preserve copied text in clipboard on exit:
