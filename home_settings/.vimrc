@@ -51,7 +51,7 @@
 " :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
 " :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
 "
-" Make windows equal (vsplit): <C-w>=
+" Make windows equal (vsplit): <C-w>= (standard) or '=' (my)
 "
 " reload file: :edit
 "
@@ -136,7 +136,9 @@ set clipboard=unnamedplus
 autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 
 " Set correct filetypes:
-autocmd BufEnter vifmrc set filetype=vim
+" autocmd BufRead,BufNewFile
+autocmd BufEnter vifmrc :set filetype=vifm
+autocmd BufEnter *vifm/colors/* :set filetype=vifm
 autocmd BufEnter *.i set filetype=c
 autocmd BufEnter *.ii set filetype=cpp
 autocmd BufEnter *.gdb set filetype=gdb " my filetype extension
@@ -396,12 +398,13 @@ call tcomment#DefineType('kconfig', '# %s')
 call tcomment#DefineType('sudoers', '# %s')
 call tcomment#DefineType('jtag_script', '; %s')
 call tcomment#DefineType('claws_mail_menurc', '; %s')
+call tcomment#DefineType('fusesmbconf', '; %s')
 call tcomment#DefineType('inittab', '# %s')
 call tcomment#DefineType('mplayerconf', '# %s')
 call tcomment#DefineType('asm', '/* %s */')
 call tcomment#DefineType('texinfo', '@c %s')
 call tcomment#DefineType('xdefaults', '! %s')
-call tcomment#DefineType('fusesmbconf', '; %s')
+call tcomment#DefineType('vifm', '" %s')
 
 " localvimrc:
 let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced

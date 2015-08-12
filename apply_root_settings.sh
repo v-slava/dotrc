@@ -17,3 +17,7 @@ fi
 # systemctl status wpa_supplicant
 systemctl set-default volkov.target
 
+# apply vifm settings to vim:
+cp /usr/share/vim/syntax/vifm.vim /usr/share/vim/vim74/syntax/
+cp /usr/share/vim/addons/plugin/vifm.vim /usr/share/vim/vim74/plugin/
+

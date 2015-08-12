@@ -454,7 +454,7 @@ nmap qv :winrun ^ !vimdiff.sh %c %C<cr>
 nmap qg :winrun ^ !diffuse %c %C<cr>
 nmap qh :winrun ^ !dhex %c %C<cr>
 nmap qm :winrun ^ !mc %d %D<cr>
-nmap qf :winrun ^ !x-terminal-emulator -e vifm %d %D &<cr>
+nmap qf :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command hexview xxd %c | less
 command hexedit hexedit %c

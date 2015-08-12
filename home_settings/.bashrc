@@ -1,4 +1,3 @@
-set -o vi
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
@@ -9,6 +8,9 @@ alias glog='git log --all --graph --decorate'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
+# disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
+stty -ixon
 
 if [ -f /etc/bash_completion ]; then
 	. /etc/bash_completion

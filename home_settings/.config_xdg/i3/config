@@ -152,7 +152,8 @@ bindsym $ALT+Tab focus left
 
 # terminal
 # bindsym $ALT+Return exec exec x-terminal-emulator -e vifm
-bindsym $ALT+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
+# bindsym $ALT+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
+bindsym $ALT+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm'
 
 # translator
 bindsym $ALT+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
