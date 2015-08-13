@@ -241,7 +241,7 @@ function! German_mapping_toggle()
 			iunmap UE
 			iunmap ss
 			iunmap SS
-			let g:german=0
+			let g:german = 0
 		else " if german mapping is disabled
 			imap oe ö
 			imap OE Ö
@@ -251,12 +251,12 @@ function! German_mapping_toggle()
 			imap UE Ü
 			imap ss ß
 			imap SS ẞ
-			let g:german=1
+			let g:german = 1
 		endif " if german mapping is enabled
 	endif " if current layout is english
 	call Update_status_line('', 'normal')
 endfunction
-let german=0 " disable german mappings by default
+let g:german = 0 " disable german mappings by default
 autocmd FileType glanguage_de call German_mapping_toggle()
 nmap <F7> :call German_mapping_toggle()<CR>
 imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
@@ -282,32 +282,34 @@ function! Quick_run(in_file)
 endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
+let g:config_cmd = 'echo "no config_cmd defined" && false'
 let g:build_cmd = 'echo "no build_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
-let g:run_cmd = 'echo "build is done successfully!"'
+let g:run_cmd = 'echo "no run_cmd defined" && false'
 let g:error_index = -1
 function! Build_and_run(build_cmd, run_cmd, no_warnings)
 	call Update_status_line('Build started...', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
-	let full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh "
+	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh "
 	if a:no_warnings == 1
-		let full_build_cmd = full_build_cmd . 'nw'
+		let l:full_build_cmd = l:full_build_cmd . 'nw'
 	endif
-	let full_build_cmd = full_build_cmd . " ; echo ${PIPESTATUS[1]}"
-	let build_exit_code = system(full_build_cmd)
-	let src_loc_file = g:OUT_DIR . '/source_locations'
-	let issues_found = filereadable(src_loc_file)
-	if build_exit_code == 0 && !issues_found " if build succeeded
-		let run_log = g:OUT_DIR . '/run_log'
-		call system('echo -e "Output:\n" > ' . run_log)
+	let l:full_build_cmd = l:full_build_cmd . " ; echo ${PIPESTATUS[1]}"
+	call system(l:full_build_cmd)
+	let l:build_exit_code = v:shell_error
+	let l:src_loc_file = g:OUT_DIR . '/source_locations'
+	let l:issues_found = filereadable(l:src_loc_file)
+	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
+		let l:run_log = g:OUT_DIR . '/run_log'
+		call system('echo -e "Output:\n" > ' . l:run_log)
 		call Update_status_line('Running...', 'normal')
-		let run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . run_log . ' 2>&1 ; echo $?')
-		call system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . run_log)
-		execute 'botright pedit ' . run_log
+		let l:run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1 ; echo $?')
+		call system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . l:run_log)
+		execute 'botright pedit ' . l:run_log
 		call Update_status_line('Running is done', 'normal')
 	else " build failed => open error log for first error and goto source location
-		if issues_found
-			let g:source_locations = readfile(src_loc_file)
+		if l:issues_found
+			let g:source_locations = readfile(l:src_loc_file)
 			let g:error_index = 0
 			call Show_error(g:error_index)
 		else
@@ -322,9 +324,20 @@ nmap \bw :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd, 1 )<CR>
 " rebuild begin (with warinings):
 nmap \br :w<CR>:call Build_and_run( g:rebuild_cmd, g:run_cmd, 0 )<CR>
 
+function! Configure(config_cmd)
+	call Update_status_line('Config started...', 'normal')
+	let l:config_log = '/tmp/vim_config_log'
+	let l:full_config_cmd = "echo '" . a:config_cmd . "' | bash 1>" . l:config_log . ' 2>&1'
+	call system(l:full_config_cmd)
+	let l:config_exit_code = v:shell_error
+	call system('echo -en "\nExit code: ' . l:config_exit_code . '" >> ' . l:config_log)
+	execute 'botright pedit ' . l:config_log
+endfunction
+nmap \bc :w<CR>:call Configure(g:config_cmd)<CR>
+
 function! Show_error( error_index )
-	let current_source_location = get(g:source_locations, a:error_index)
-	execute ':edit ' . current_source_location
+	let l:current_source_location = get(g:source_locations, a:error_index)
+	execute ':edit ' . l:current_source_location
 	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . a:error_index
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
@@ -333,8 +346,8 @@ function! Show_next_error()
 	if g:error_index == -1 " if there was no build
 		call Update_status_line('Error: unable to show next build error', 'error')
 	else
-		let last_error_index = len(g:source_locations) - 1
-		if g:error_index == last_error_index
+		let l:last_error_index = len(g:source_locations) - 1
+		if g:error_index == l:last_error_index
 			call Update_status_line('Error: unable to show next build error', 'error')
 		else
 			let g:error_index = g:error_index + 1
@@ -357,13 +370,13 @@ endfunction
 nmap \bp :w<CR>:call Show_prev_error()<CR>
 
 function! Copy_location(in_file, strip_part)
-	let line_number = line('.')
-	let full_location = a:in_file . ':' . line_number
-	let strip_width = strlen(a:strip_part)
+	let l:line_number = line('.')
+	let l:full_location = a:in_file . ':' . l:line_number
+	let l:strip_width = strlen(a:strip_part)
 	if strip_width
-		let @+ = strpart(full_location, strip_width)
+		let @+ = strpart(l:full_location, l:strip_width)
 	else
-		let @+ = full_location
+		let @+ = l:full_location
 	endif
 endfunction
 nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
@@ -431,24 +444,24 @@ let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)
 
 " Code to convert spaces to \n and backwards:
 function! Split_lines() range
-	let first_line = a:firstline
-	let last_line = a:lastline
-	let lines_array = getline(first_line, last_line)
-	let orig_text = join(lines_array, '\n')
+	let l:first_line = a:firstline
+	let l:last_line = a:lastline
+	let l:lines_array = getline(l:first_line, l:last_line)
+	let l:orig_text = join(l:lines_array, '\n')
 	" Delete original text into register z:
-	execute first_line ',' last_line 'delete z'
-	let words_array = split(orig_text)
-	let failed = append(first_line - 1, words_array)
+	execute l:first_line ',' last_line 'delete z'
+	let l:words_array = split(l:orig_text)
+	let l:failed = append(l:first_line - 1, l:words_array)
 endfunction
 command! -range -nargs=* Slines <line1>,<line2> call Split_lines()
 function! Merge_lines() range
-	let first_line = a:firstline
-	let last_line = a:lastline
-	let lines_array = getline(first_line, last_line)
-	let orig_text = join(lines_array, ' ')
+	let l:first_line = a:firstline
+	let l:last_line = a:lastline
+	let l:lines_array = getline(l:first_line, l:last_line)
+	let l:orig_text = join(l:lines_array, ' ')
 	" Delete original text into register z:
-	execute first_line ',' last_line 'delete z'
-	let failed = append(first_line - 1, orig_text)
+	execute l:first_line ',' l:last_line 'delete z'
+	let l:failed = append(l:first_line - 1, l:orig_text)
 endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 
@@ -457,57 +470,57 @@ nmap \fb i/**<Esc>o * @fn
 " doxygen: function end:
 nmap \fe :call End_function()<CR>
 function! End_function()
-	let fn_line_number = line('.')
-	let fn_line = getline('.')
+	let l:fn_line_number = line('.')
+	let l:fn_line = getline('.')
 
-	let prototype = strpart(fn_line, 6) " extra space in the front present
-	let brace_index = stridx(prototype, '(') " starts from 0
-	let prototype_before_brace = strpart(prototype, 0, brace_index)
-	let prototype_after_brace = substitute(strpart(prototype, brace_index + 1), ')', ', ', "")
+	let l:prototype = strpart(l:fn_line, 6) " extra space in the front present
+	let l:brace_index = stridx(l:prototype, '(') " starts from 0
+	let l:prototype_before_brace = strpart(l:prototype, 0, l:brace_index)
+	let l:prototype_after_brace = substitute(strpart(l:prototype, l:brace_index + 1), ')', ', ', "")
 
 	" Insert function prototype:
-	call append(fn_line_number, '}')
-	call append(fn_line_number, '{')
-	call append(fn_line_number, strpart(prototype, 1))
-	call append(fn_line_number, ' */')
+	call append(l:fn_line_number, '}')
+	call append(l:fn_line_number, '{')
+	call append(l:fn_line_number, strpart(l:prototype, 1))
+	call append(l:fn_line_number, ' */')
 
 	" Insert @return if needed:
-	let void_index = stridx(prototype_before_brace, ' void ')
-	if void_index == -1
-		call append(fn_line_number, ' * @return ')
+	let l:void_index = stridx(l:prototype_before_brace, ' void ')
+	if l:void_index == -1
+		call append(l:fn_line_number, ' * @return ')
 	endif
 
 	" Insert @param:
-	let param_words = split(prototype_after_brace, ' \zs')
-	let param_names = []
-	for word in param_words
-		let word_len = strlen(word)
-		let symbol = strpart(word, word_len - 2, 1)
-		if symbol == ','
-			let param_name = strpart(word, 0, word_len - 2)
-			call add(param_names, param_name)
+	let l:param_words = split(l:prototype_after_brace, ' \zs')
+	let l:param_names = []
+	for word in l:param_words
+		let l:word_len = strlen(l:word)
+		let l:symbol = strpart(l:word, l:word_len - 2, 1)
+		if l:symbol == ','
+			let l:param_name = strpart(l:word, 0, l:word_len - 2)
+			call add(l:param_names, l:param_name)
 		endif
 	endfor
-	call reverse(param_names)
-	for param in param_names
-		call append(fn_line_number, ' * @param ' . param . ' ')
+	call reverse(l:param_names)
+	for param in l:param_names
+		call append(l:fn_line_number, ' * @param ' . l:param . ' ')
 	endfor
 
 	" Insert @brief:
-	call append(fn_line_number, ' * @brief ')
+	call append(l:fn_line_number, ' * @brief ')
 	" Set cursor to proper position and go to insert mode:
 	execute 'normal! j$'
 	startinsert!
 endfunction
 
 " function! MyCIndent() range
-" 	let first_line = a:firstline
-" 	let last_line = a:lastline
-" 	let lines_array = getline(first_line, last_line)
-" 	silent execute first_line ',' last_line 'w! /tmp/asd'
+" 	let l:first_line = a:firstline
+" 	let l:last_line = a:lastline
+" 	let l:lines_array = getline(l:first_line, l:last_line)
+" 	silent execute l:first_line ',' l:last_line 'w! /tmp/asd'
 " 	silent execute '!cat /tmp/asd | ./c_indent.bin > /tmp/qwe'
 " 	" Delete original text into register z:
-" 	silent execute first_line ',' last_line 'delete z'
+" 	silent execute l:first_line ',' l:last_line 'delete z'
 " 	silent execute 'normal k'
 " 	silent execute 'r /tmp/qwe'
 " 	execute 'redraw!'
