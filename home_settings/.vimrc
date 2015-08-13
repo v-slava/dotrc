@@ -141,26 +141,26 @@ autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 
 " Set correct filetypes:
 " autocmd BufRead,BufNewFile
-autocmd BufEnter vifmrc :set filetype=vifm
-autocmd BufEnter *vifm/colors/* :set filetype=vifm
-autocmd BufEnter *.i set filetype=c
-autocmd BufEnter *.ii set filetype=cpp
-autocmd BufEnter *.gdb set filetype=gdb " my filetype extension
-autocmd BufEnter *.cmm set filetype=jtag_script " my filetype
-autocmd BufEnter menurc set filetype=claws_mail_menurc " my filetype
-autocmd BufEnter *_en.gl set filetype=glanguage_en " my filetype
-autocmd BufEnter *_de.gl set filetype=glanguage_de " my filetype
+autocmd BufEnter vifmrc setlocal filetype=vifm
+autocmd BufEnter *vifm/colors/* setlocal filetype=vifm
+autocmd BufEnter *.i setlocal filetype=c
+autocmd BufEnter *.ii setlocal filetype=cpp
+autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
+autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
+autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
+autocmd BufEnter *_en.gl setlocal filetype=glanguage_en " my filetype
+autocmd BufEnter *_de.gl setlocal filetype=glanguage_de " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
-autocmd FileType asm set syntax=armasm
+autocmd FileType asm setlocal syntax=armasm
 
 " Set tab width:
-autocmd FileType c,cpp,sh,expect,cmake,vim set tabstop=4
-autocmd FileType c,cpp,sh,expect,cmake,vim set shiftwidth=4
+autocmd FileType c,cpp,sh,expect,cmake,vim setlocal tabstop=4
+autocmd FileType c,cpp,sh,expect,cmake,vim setlocal shiftwidth=4
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
-autocmd FileType c,cpp set textwidth=80
+autocmd FileType c,cpp setlocal textwidth=80
 
 " glanguage mappings:
 " Use <C-i> to insert <shortinfo></shortinfo> and switch language
@@ -303,10 +303,11 @@ function! Build_and_run(build_cmd, run_cmd, no_warnings)
 		let l:run_log = g:OUT_DIR . '/run_log'
 		call system('echo -e "Output:\n" > ' . l:run_log)
 		call Update_status_line('Running...', 'normal')
-		let l:run_exit_code = system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1 ; echo $?')
-		call system('echo -en "\nExit code: ' . run_exit_code . '" >> ' . l:run_log)
+		call system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1 ; echo $?')
+		let l:run_exit_code = v:shell_error
+		call system('echo -en "\nExit code: ' . l:run_exit_code . '" >> ' . l:run_log)
 		execute 'botright pedit ' . l:run_log
-		call Update_status_line('Running is done', 'normal')
+		call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
 	else " build failed => open error log for first error and goto source location
 		if l:issues_found
 			let g:source_locations = readfile(l:src_loc_file)
@@ -332,6 +333,7 @@ function! Configure(config_cmd)
 	let l:config_exit_code = v:shell_error
 	call system('echo -en "\nExit code: ' . l:config_exit_code . '" >> ' . l:config_log)
 	execute 'botright pedit ' . l:config_log
+	call Update_status_line('Config is done. Exit code: ' . l:config_exit_code, 'normal')
 endfunction
 nmap \bc :w<CR>:call Configure(g:config_cmd)<CR>
 
@@ -380,8 +382,7 @@ function! Copy_location(in_file, strip_part)
 	endif
 endfunction
 nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
-nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/uhd_image/p4_workspace/' )<CR>
-nmap <F10> :call Copy_location( expand('%:p'), '/home/volkov/workspace/15_UHD_BD/modified_files/' )<CR>
+nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
 
 
 " Update cscope connection while opening new file:
@@ -441,6 +442,7 @@ let g:localvimrc_whitelist='^\(/home/volkov/*\|/media/files/*\)'
 " ignore .lvimrc files on mounted filesystems:
 let g:localvimrc_blacklist='^/media/*'
 let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)
+let g:localvimrc_sandbox = 0 " don't use sandbox (1 = use)
 
 " Code to convert spaces to \n and backwards:
 function! Split_lines() range
