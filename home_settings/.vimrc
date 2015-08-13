@@ -283,13 +283,21 @@ endfunction
 nmap <F5> :w<CR>:call Quick_run( @% )<CR>
 
 let g:build_cmd = 'echo "no build_cmd defined" && false'
+let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
 let g:run_cmd = 'echo "build is done successfully!"'
 let g:error_index = -1
-function! Build_and_run(build_cmd, run_cmd)
+function! Build_and_run(build_cmd, run_cmd, no_warnings)
 	call Update_status_line('Build started...', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
-	let build_exit_code = system("echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[1]}")
-	if build_exit_code == 0 " if build succeeded
+	let full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh "
+	if a:no_warnings == 1
+		let full_build_cmd = full_build_cmd . 'nw'
+	endif
+	let full_build_cmd = full_build_cmd . " ; echo ${PIPESTATUS[1]}"
+	let build_exit_code = system(full_build_cmd)
+	let src_loc_file = g:OUT_DIR . '/source_locations'
+	let issues_found = filereadable(src_loc_file)
+	if build_exit_code == 0 && !issues_found " if build succeeded
 		let run_log = g:OUT_DIR . '/run_log'
 		call system('echo -e "Output:\n" > ' . run_log)
 		call Update_status_line('Running...', 'normal')
@@ -298,8 +306,7 @@ function! Build_and_run(build_cmd, run_cmd)
 		execute 'botright pedit ' . run_log
 		call Update_status_line('Running is done', 'normal')
 	else " build failed => open error log for first error and goto source location
-		let src_loc_file = g:OUT_DIR . '/source_locations'
-		if filereadable(src_loc_file)
+		if issues_found
 			let g:source_locations = readfile(src_loc_file)
 			let g:error_index = 0
 			call Show_error(g:error_index)
@@ -308,8 +315,12 @@ function! Build_and_run(build_cmd, run_cmd)
 		endif
 	endif
 endfunction
-" build begin:
-nmap \bb :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd )<CR>
+" build begin (with warinings):
+nmap \bb :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd, 0 )<CR>
+" build begin (no warinings):
+nmap \bw :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd, 1 )<CR>
+" rebuild begin (with warinings):
+nmap \br :w<CR>:call Build_and_run( g:rebuild_cmd, g:run_cmd, 0 )<CR>
 
 function! Show_error( error_index )
 	let current_source_location = get(g:source_locations, a:error_index)
