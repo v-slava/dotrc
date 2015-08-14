@@ -294,9 +294,8 @@ function! Build_and_run(build_cmd, run_cmd, no_warnings)
 	if a:no_warnings == 1
 		let l:full_build_cmd = l:full_build_cmd . 'nw'
 	endif
-	let l:full_build_cmd = l:full_build_cmd . " ; echo ${PIPESTATUS[1]}"
-	call system(l:full_build_cmd)
-	let l:build_exit_code = v:shell_error
+	let l:full_build_cmd = l:full_build_cmd . " ; echo -n ${PIPESTATUS[1]}"
+	let l:build_exit_code = system(l:full_build_cmd)
 	let l:src_loc_file = g:OUT_DIR . '/source_locations'
 	let l:issues_found = filereadable(l:src_loc_file)
 	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
@@ -315,15 +314,16 @@ function! Build_and_run(build_cmd, run_cmd, no_warnings)
 			call Show_error(g:error_index)
 		else
 			execute 'botright pedit ' . g:OUT_DIR . '/full_file'
+			call Update_status_line('Build failed. Exit code: ' . l:build_exit_code, 'normal')
 		endif
 	endif
 endfunction
 " build begin (with warinings):
-nmap \bb :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd, 0 )<CR>
+nmap \bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, 0)<CR>
 " build begin (no warinings):
-nmap \bw :w<CR>:call Build_and_run( g:build_cmd, g:run_cmd, 1 )<CR>
+nmap \bw :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, 1)<CR>
 " rebuild begin (with warinings):
-nmap \br :w<CR>:call Build_and_run( g:rebuild_cmd, g:run_cmd, 0 )<CR>
+nmap \br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, 0)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')

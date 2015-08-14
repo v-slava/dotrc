@@ -27,7 +27,7 @@ if [ "$1" = "nw" ]; then
 else
 	REGEX='\(error\|warning\):'
 fi
-ERROR_LINES=$(tee $FULL_FILE | grep -n "$REGEX" | cut -d':' -f1)
+ERROR_LINES=$(tee $FULL_FILE | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | cut -d':' -f1)
 error_index=0
 for error_line in $ERROR_LINES ; do
 	sed "${error_line}q;d" $FULL_FILE | grep -o '^[^:]\+:[0-9]\+:[0-9]\+' >> $OUT_DIR/source_locations

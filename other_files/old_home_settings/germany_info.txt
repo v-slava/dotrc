@@ -11,14 +11,11 @@ http://www.null-provision.de/
 
 # Found wohnung:
 # 540 EUR + EUR, with furniture, waldbuttelbrunn
-# modern
-http://www.immowelt.de/expose/26XNU4R
-# big
 http://www.immonet.de/angebot/26193300
 
 # Hoechberg 370 EUR (without furniture?)
 http://www.immowelt.de/expose/267FE4U
-# Hoechberg 390 EUR (without furniture?)
+# Hoechberg 395 EUR without furniture:
 http://www.immowelt.de/expose/26ZQX4S
 
 # waldbuettelbrunn, no furniture? 300 EUR
@@ -31,6 +28,9 @@ http://www.immobilienscout24.de/expose/83295678?referrer=SCOUT_ID_SEARCH&ftc=579
 
 # Hoechberg 01.10.2015, 360+ EUR, with furniture. Common dusche and kueche.
 http://www.immobilienscout24.de/expose/82856291?referrer=RELATED_EXPOSE
+
+# Hoechberg, 585 EUR + EUR, with furniture, kuehlschrank!
+http://www.immobilienscout24.de/expose/82856494?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
 
 
 Emergency questions:
