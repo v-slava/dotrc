@@ -274,18 +274,10 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-function! Quick_run(in_file)
-	let cmd = '~/os_settings/other_files/quick_run.sh ' . a:in_file
- 	let log = '/tmp/vim_ide_' . a:in_file . '_log'
-	call system(cmd)
-	execute 'botright pedit ' . log
-endfunction
-nmap <F5> :w<CR>:call Quick_run( @% )<CR>
-
-let g:config_cmd = 'echo "no config_cmd defined" && false'
-let g:build_cmd = 'echo "no build_cmd defined" && false'
+let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh ' . expand('%:t'))
+let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh ' . expand('%:t'))
+let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
-let g:run_cmd = 'echo "no run_cmd defined" && false'
 let g:error_index = -1
 function! Build_and_run(build_cmd, run_cmd, no_warnings)
 	call Update_status_line('Build started...', 'normal')
@@ -302,7 +294,7 @@ function! Build_and_run(build_cmd, run_cmd, no_warnings)
 		let l:run_log = g:OUT_DIR . '/run_log'
 		call system('echo -e "Output:\n" > ' . l:run_log)
 		call Update_status_line('Running...', 'normal')
-		call system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1 ; echo $?')
+		call system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1')
 		let l:run_exit_code = v:shell_error
 		call system('echo -en "\nExit code: ' . l:run_exit_code . '" >> ' . l:run_log)
 		execute 'botright pedit ' . l:run_log

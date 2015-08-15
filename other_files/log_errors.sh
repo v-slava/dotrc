@@ -4,6 +4,7 @@
 
 # Create files with information about compilation / linking errors.
 # Sample usage:
+# echo 'cd some_dir && make -j9' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo -n "Build result: ${PIPESTATUS[1]}"
 # cd some_dir && make -j9 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[0]} > /tmp/vim_ide_dir/build_result
 
 # Files:
@@ -14,8 +15,7 @@
 
 set -e
 
-OUT_DIR=/tmp/vim_ide_dir
-FULL_FILE=$OUT_DIR/full_file
+source ~/os_settings/other_files/vim_ide_common.sh
 
 rm -rf $OUT_DIR
 mkdir $OUT_DIR
@@ -27,11 +27,11 @@ if [ "$1" = "nw" ]; then
 else
 	REGEX='\(error\|warning\):'
 fi
-ERROR_LINES=$(tee $FULL_FILE | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | cut -d':' -f1)
+ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | cut -d':' -f1)
 error_index=0
 for error_line in $ERROR_LINES ; do
-	sed "${error_line}q;d" $FULL_FILE | grep -o '^[^:]\+:[0-9]\+:[0-9]\+' >> $OUT_DIR/source_locations
-	tail -n +$error_line $FULL_FILE > $OUT_DIR/message_error_${error_index}
+	sed "${error_line}q;d" "$FULL_FILE" | grep -o '^[^:]\+:[0-9]\+:[0-9]\+' >> "$OUT_DIR/source_locations"
+	tail -n +$error_line "$FULL_FILE" > "$OUT_DIR/message_error_${error_index}"
 	error_index=$((error_index + 1))
 done
 
