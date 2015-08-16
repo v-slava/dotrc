@@ -15,6 +15,6 @@ case "$1" in
 	("-o") $CLIPBOARD_CMD -o ;;
 	("-n") cat | tr -d '\n' | $CLIPBOARD_CMD ;;
 	("-copy") $CLIPBOARD_CMD -o | xclip -selection primary ;;
-	(*) cat | $CLIPBOARD_CMD ;;
+	(*) $CLIPBOARD_CMD -i ;;
 esac
 

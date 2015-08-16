@@ -29,6 +29,7 @@ URxvt.keysym.M-i:   perl:clipboard:paste
 ! URxvt.clipboard.pastecmd: xsel -ob
 ! URxvt.clipboard.copycmd:  xclip -i -selection clipboard
 ! URxvt.clipboard.pastecmd: xclip -o -selection clipboard
+URxvt.clipboard.copycmd:  clipboard.sh
 URxvt.clipboard.pastecmd: clipboard.sh -o
 ! Other:
 URxvt.saveLines: 1000000
