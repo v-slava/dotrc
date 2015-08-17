@@ -18,7 +18,7 @@ set $CTRL Control
 # Menu: 135
 
 # font for window title
-font pango:Inconsolata 10
+font pango:Inconsolata LGC 10
 
 # use Mouse+$ALT to drag floating windows to their wanted position
 floating_modifier $ALT
@@ -162,7 +162,7 @@ bindsym $ALT+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "
 
 # browser
 bindsym $ALT+b exec exec vimb -s ~/os_settings/other_files/start_page.html
-# bindsym $ALT+b exec DMENU_FONT='Inconsolata-14:monospace' uzbl
+# bindsym $ALT+b exec DMENU_FONT='Inconsolata LGC-14:monospace' uzbl
 
 # windows guest
 bindsym $CTRL+$ALT+q exec exec ~/os_settings/other_files/qemu_start.sh
@@ -207,8 +207,8 @@ bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
 bindsym $ALT+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
 # dmenu (a program launcher)
-bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata-16:monospace'
-# bindsym $ALT+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata-16:monospace' --entry-type=command
+bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
+# bindsym $ALT+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
 
 # noob settings begin
 # noob settings end

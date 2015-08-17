@@ -1,3 +1,9 @@
+# list available fonts:
+fc-list
+
+# update fonts cache:
+fc-cache -fv
+
 # cut pages range from pdf:
 pdftk A=in_1.pdf B=in_2.pdf cat A3-5 B3left A2right output out.pdf
 

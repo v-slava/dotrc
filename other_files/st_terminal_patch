@@ -8,7 +8,7 @@ index 58b470e..ff5a76d 100644
   */
 -static char font[] = "Liberation Mono:pixelsize=12:antialias=false:autohint=false";
 -static int borderpx = 2;
-+static char font[] = "Inconsolata:pixelsize=17";
++static char font[] = "Inconsolata LGC:pixelsize=17";
 +static int borderpx = 0;
  static char shell[] = "/bin/sh";
  

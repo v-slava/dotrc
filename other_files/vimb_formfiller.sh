@@ -13,7 +13,7 @@
 # ["input[name='user']:daniel", "input[name='password']:p45w0rD"]
 
 # dmenu command use in case multiple files are found for current domain
-DMENU="dmenu -l 7 -fn 'Inconsolata-14:monospace'"
+DMENU="dmenu -l 7 -fn 'Inconsolata LGC-14:monospace'"
 
 VIMB_KEY_DIR=/media/files/passwords
 # VIMB_KEY_DIR=${VIMB_KEY_DIR:-"$XDG_CONFIG_HOME/vimb/keys"}

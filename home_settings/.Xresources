@@ -2,8 +2,8 @@
 URxvt.print-pipe: ~/os_settings/other_files/handle_terminal_scrollback_buffer.sh
 
 ! font:
-URxvt.font:    xft:Inconsolata:pixelsize=16
-URxvt.boldfont:xft:Inconsolata:pixelsize=16:style=bold
+URxvt.font:    xft:Inconsolata LGC:pixelsize=14
+URxvt.boldfont:xft:Inconsolata LGC:pixelsize=14:style=Bold
 
 ! Reduce distance between letters:
 ! URxvt.letterSpace: -1

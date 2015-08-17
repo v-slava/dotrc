@@ -21,3 +21,6 @@ systemctl set-default volkov.target
 cp /usr/share/vim/syntax/vifm.vim /usr/share/vim/vim74/syntax/
 cp /usr/share/vim/addons/plugin/vifm.vim /usr/share/vim/vim74/plugin/
 
+# update fonts cache:
+fc-cache -fv
+

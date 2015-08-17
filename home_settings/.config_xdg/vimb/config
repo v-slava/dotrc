@@ -15,10 +15,10 @@ set webgl=true
 # set useragent=Mozilla/5.0 (X11; Linux i686) AppleWebKit/538.15+ (KHTML, like Gecko) vimb/2.8 Version/8.0 Safari/538.15
 # set scrollstep=40
 
-set input-font-normal=inconsolata 14
-set input-font-error=inconsolata 14
-set status-font=inconsolata 14
-set status-ssl-font=inconsolata 14
+set input-font-normal=inconsolata LGC 14
+set input-font-error=inconsolata LGC 14
+set status-font=inconsolata LGC 14
+set status-ssl-font=inconsolata LGC 14
 
 # Zoom in/out hotkeys:
 nmap + :normal zI<CR>

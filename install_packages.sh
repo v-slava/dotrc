@@ -37,9 +37,8 @@ apt-get install wmctrl xclip scrot zenity keynav
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 
-# Install email client:
-apt-get install claws-mail claws-mail-multi-notifier
-# On wheezy: claws-mail-trayicon
+# Install email client (thunderbird):
+apt-get install icedove
 
 # Install PulseAudio tools:
 apt-get install pulseaudio-utils pavucontrol
@@ -60,7 +59,7 @@ apt-get install transmission-gtk
 apt-get install libreoffice
 
 # Install pdf viewer:
-apt-get install zathura # apvlv
+apt-get install zathura
 
 # Build and install vimb:
 apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
@@ -95,7 +94,8 @@ apt-get update
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
 # libreoffice-pdfimport abiword gnumeric mupdf zathura suckless-tools # (dmenu)
-# gliv kolourpaint4 vlc icedove (thunderbird)
+# gliv kolourpaint4 vlc apvlv
+# claws-mail-multi-notifier claws-mail # On wheezy: claws-mail-trayicon
 
 # On wheezy: iproute2 conflicts with iproute, but ifupdown depends on iproute
 # Wheezy-only packages: iproute ifupdown dhcpcd5 rsyslog uncrustify
