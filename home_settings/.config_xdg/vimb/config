@@ -71,3 +71,6 @@ nmap ,p :<Up>
 # Search info from clipboard in google:
 nmap ,s :sh ~/os_settings/other_files/vimb_google_clipboard.sh<CR>
 
+# Open url from clipboard:
+nmap p :sh ~/os_settings/other_files/vimb_url_clipboard.sh<CR>
+
