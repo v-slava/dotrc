@@ -18,7 +18,7 @@ set $CTRL Control
 # Menu: 135
 
 # font for window title
-font pango:Inconsolata LGC 10
+font pango:Inconsolata LGC 9
 
 # use Mouse+$ALT to drag floating windows to their wanted position
 floating_modifier $ALT
