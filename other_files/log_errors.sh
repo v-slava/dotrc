@@ -1,33 +1,63 @@
 #!/usr/bin/env bash
 
-# Note: this script is intended for vim IDE.
-
-# Create files with information about compilation / linking errors.
-# Sample usage:
-# echo 'cd some_dir && make -j9' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo -n "Build result: ${PIPESTATUS[1]}"
-# cd some_dir && make -j9 2>&1 | ~/os_settings/other_files/log_errors.sh ; echo ${PIPESTATUS[0]} > /tmp/vim_ide_dir/build_result
-
+USAGE="
+Create files with information about compilation / linking errors (for vim IDE).
+	Sample usage:
+echo 'cd some_dir && make -j9' | bash 2>&1 | $(basename $0) nw nf ; echo -n \"Build result: \${PIPESTATUS[1]}\"
+	Detailed usage:
+$(basename $0) {nw|w} {nf|FILTER_EXECUTABLE}
+nw                : no warnings (suppress warnings)
+w                 : warnings
+nf                : no filter required
+FILTER_EXECUTABLE : filter executable to be used"
+set -e
+source ~/os_settings/other_files/vim_ide_common.sh
 # Files:
 # $OUT_DIR/source_locations - source locations of error (each in separate line)
 # $OUT_DIR/message_error_0 - error message for first error (and further errors)
 # $OUT_DIR/message_error_1 - error message for second error (and further errors)
 # ...
-
-set -e
-
-source ~/os_settings/other_files/vim_ide_common.sh
-
 rm -rf $OUT_DIR
 mkdir $OUT_DIR
 
-# Write all output in $FULL_FILE and get space-separated line numbers of errors
-# in $ERROR_LINES:
-if [ "$1" = "nw" ]; then
+write_error()
+{
+	echo -e "$1" | tee -a "$FULL_FILE" 1>&2
+}
+usage()
+{
+	write_error "$USAGE"
+	exit 1
+}
+if [ $# -ne 2 ]; then
+	write_error "Exactly 2 arguments expected. Actually got $# arguments."
+	usage
+fi
+WARNINGS="$1"
+FILTER="$2"
+
+if [ "$WARNINGS" = "nw" ]; then
 	REGEX='error:'
 else
-	REGEX='\(error\|warning\):'
+	if [ "$WARNINGS" = "w" ]; then
+		REGEX='\(error\|warning\):'
+	else
+		write_error "Second argument should be either 'w' or 'nw'"
+		usage
+	fi
 fi
-ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | cut -d':' -f1)
+
+# Write all output in $FULL_FILE and get space-separated line numbers of errors
+# in $ERROR_LINES:
+if [ "$FILTER" = "nf" ]; then
+	ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | cut -d':' -f1)
+else
+	if [ ! -x "$FILTER" ]; then
+		write_error "Filter argument \"$FILTER\" != 'nf' and is not executable file"
+		usage
+	fi
+	ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | grep -v 'ld returned 1 exit status' | "$FILTER" | cut -d':' -f1)
+fi
 error_index=0
 for error_line in $ERROR_LINES ; do
 	sed "${error_line}q;d" "$FULL_FILE" | grep -o '^[^:]\+:[0-9]\+:[0-9]\+' >> "$OUT_DIR/source_locations"

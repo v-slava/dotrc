@@ -50,6 +50,8 @@ expect "Attempting to connect to"
 set RET 0
 expect {
 	"Connection successful" { set RET 1 }
+	"Connected: yes" { set RET 1 }
+	"Connected: no" { set RET 2 }
 	"Failed to connect" { set RET 2 }
 	timeout { exit 3 }
 }

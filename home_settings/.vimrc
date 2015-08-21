@@ -279,14 +279,12 @@ let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh ' . e
 let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
 let g:error_index = -1
-function! Build_and_run(build_cmd, run_cmd, no_warnings)
+let g:warnings = 'w' " change to 'nw' if you want to suppress warnings
+let g:filter = 'nf' " change to shell script name if you want to filter issues
+function! Build_and_run(build_cmd, run_cmd, warnings, filter)
 	call Update_status_line('Build started...', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
-	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh "
-	if a:no_warnings == 1
-		let l:full_build_cmd = l:full_build_cmd . 'nw'
-	endif
-	let l:full_build_cmd = l:full_build_cmd . " ; echo -n ${PIPESTATUS[1]}"
+	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
 	let l:build_exit_code = system(l:full_build_cmd)
 	let l:src_loc_file = g:OUT_DIR . '/source_locations'
 	let l:issues_found = filereadable(l:src_loc_file)
@@ -311,11 +309,9 @@ function! Build_and_run(build_cmd, run_cmd, no_warnings)
 	endif
 endfunction
 " build begin (with warinings):
-nmap \bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, 0)<CR>
-" build begin (no warinings):
-nmap \bw :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, 1)<CR>
+nmap \bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 " rebuild begin (with warinings):
-nmap \br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, 0)<CR>
+nmap \br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
