@@ -262,15 +262,6 @@ sudo service nfs-kernel-server restart
 # View machines, connected via ssh:
 who -a
 
-# Rootfs via nfs - kernel cmdline options:
-KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
-# Restart nfs service:
-service nfs-kernel-server restart
-# nfs server config (/etc/exports):
-/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
-# Install nfs server package:
-sudo apt-get install nfs-kernel-server
-
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
 
@@ -343,11 +334,6 @@ tune2fs -m 0 FILE
 # xargs specify parameters order (you can use anything as replace_str):
 echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
 
-# Debian packaging from source:
-# Debian download source package:
-apt-get source PACKAGE
-Got sources with patches applied.
-
 # To apply patches manually:
 1. Copy debian folder to original sources
 2. export QUILT_PATCHES=debian/patches
@@ -362,12 +348,6 @@ patch --no-backup-if-mismatch -p1 < $SOME_PATH_PREFIX/debian/patches/PATCH_NAME.
 # To generate package description file (.dsc):
 (needed: root/PACKAGE_ROOT/debian, root/original_sources.tar.*):
 cd root && dpkg-source -b PACKAGE_ROOT
-
-# Install build dependencies:
-apt-get build-dep PACKAGE
-
-# Build package from source and do not sign anything:
-dpkg-buildpackage -us -uc
 
 # Create patch file (use diff -uNr for directories):
 diff -uN old_file new_file > patch_file
@@ -630,6 +610,20 @@ pmemsave <address> <size> <file>
 # Switch to qemu's console:
 <Ctrl> + A     <pause>     C
 
+# Show which packages can be upgraded from backports:
+apt-get -s -t jessie-backports dist-upgrade
+
+# install package from backports:
+apt-get -t jessie-backports install PACKAGE
+
+# Debian packaging from source:
+# Debian download source package:
+apt-get source PACKAGE
+Got sources with patches applied.
+
+# Install build dependencies:
+apt-get build-dep PACKAGE
+
 # Clear out the local repository of retrieved package files:
 apt-get clean
 
@@ -653,6 +647,24 @@ sudo dpkg --add-architecture <arch>
 dpkg --print-foreign-architectures
 sudo apt-get update
 dpkg --remove-architecture <arch>
+
+# Run arm executable using qemu-arm:
+sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
+sudo apt-get install libc6-dev-armel-cross # arm C library development files
+arm-linux-gnueabi-gcc -static 1.c
+qemu-arm a.out
+
+# Install nfs server package:
+sudo apt-get install nfs-kernel-server
+# Rootfs via nfs - kernel cmdline options:
+KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
+# Restart nfs service:
+service nfs-kernel-server restart
+# nfs server config (/etc/exports):
+/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
+
+# Build package from source and do not sign anything:
+dpkg-buildpackage -us -uc
 
 # list installed packages by installation date:
 ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
@@ -938,12 +950,6 @@ tail /var/log/syslog
 
 # Mount initrd:
 sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>
-
-# Run arm executable using qemu-arm:
-sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
-sudo apt-get install libc6-dev-armel-cross # arm C library development files
-arm-linux-gnueabi-gcc -static 1.c
-qemu-arm a.out
 
 # mount iso file:
 fuseiso <image_file> <mount_point>
