@@ -40,13 +40,13 @@ bindsym $Alt_L+Shift+k move up
 bindsym $Alt_L+Shift+l move right
 
 # split in horizontal orientation
-bindsym $Alt_L+g split h
+bindsym $Alt_R+h split h
 
 # offline translate with goldendict:
 bindsym $Alt_R+t exec --no-startup-id exec ~/os_settings/other_files/translate_hotkey.sh
 
 # split in vertical orientation
-bindsym $Alt_L+v split v
+bindsym $Alt_R+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $Alt_L+f fullscreen
