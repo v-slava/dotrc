@@ -69,8 +69,8 @@ cd FOLDER_TO_EXTRACT_INTO && gunzip -c -9 /boot/initrd.img-3.11.0-12-generic | c
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
-# View progress using coreutils viewer:
-cv -wm
+# View progress using coreutils viewer (cv, progress viewer):
+progress -wm
 
 # Compress folder by tar:
 tar cf tar_name.tar ./source_directory/*

@@ -1,0 +1,2 @@
+# volkov laptop= NOPASSWD: /bin/mount -t cifs -o user=* //*/* /media/*, /bin/umount /media/*
+

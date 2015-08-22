@@ -34,6 +34,9 @@ apt-get install i3-wm i3status i3lock \
 # Install X helper programs:
 apt-get install wmctrl xclip scrot zenity keynav
 
+# Automatic installation of security upgrades:
+apt-get install unattended-upgrades bsd-mailx
+
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 

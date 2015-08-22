@@ -1,0 +1,2 @@
+volkov laptop= NOPASSWD: /sbin/poweroff, /sbin/halt, /sbin/reboot
+

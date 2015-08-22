@@ -1,0 +1,2 @@
+volkov laptop=(qemu_user) NOPASSWD: /usr/bin/qemu-system-x86_64, /bin/nc
+
