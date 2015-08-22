@@ -1,5 +1,6 @@
 #!/bin/sh
 
+xmodmap ~/.Xmodmap
 xrandr --output LVDS1 --mode 1280x800 \
        --output HDMI1 --mode 1920x1080 --right-of LVDS1 --rotate left
 

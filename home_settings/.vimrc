@@ -94,6 +94,7 @@ set autoindent
 " set cindent " C-style indents (after '{' and so on)
 set number " display line numbers
 " set nowrap " do not wrap long lines
+set linebreak
 
 " View invisible characters for makefiles:
 " autocmd FileType make set list

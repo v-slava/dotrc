@@ -11,7 +11,8 @@
 
 # standard keyboard modifiers according to xmodmap(1)
 # see xmodmap {-pk|-pke} for complete keymap table
-set $ALT Mod1
+set $Alt_L Mod1
+set $Alt_R Mod3
 set $WIN Mod4
 set $CTRL Control
 # Print: 107 - PrintScreen
@@ -20,62 +21,63 @@ set $CTRL Control
 # font for window title
 font pango:Inconsolata LGC 9
 
-# use Mouse+$ALT to drag floating windows to their wanted position
-floating_modifier $ALT
+# use Mouse+$Alt_L to drag floating windows to their wanted position
+floating_modifier $Alt_L
 
 # kill focused window
-bindsym $ALT+Shift+Q kill
+bindsym $Alt_R+Shift+Q kill
 
 # change focus
-bindsym $ALT+h focus left
-bindsym $ALT+j focus down
-bindsym $ALT+k focus up
-bindsym $ALT+l focus right
+bindsym $Alt_L+h focus left
+bindsym $Alt_L+j focus down
+bindsym $Alt_L+k focus up
+bindsym $Alt_L+l focus right
 
 # move focused window
-bindsym $ALT+Shift+h move left
-bindsym $ALT+Shift+j move down
-bindsym $ALT+Shift+k move up
-bindsym $ALT+Shift+l move right
+bindsym $Alt_L+Shift+h move left
+bindsym $Alt_L+Shift+j move down
+bindsym $Alt_L+Shift+k move up
+bindsym $Alt_L+Shift+l move right
 
 # split in horizontal orientation
-bindsym $ALT+g split h
+bindsym $Alt_L+g split h
+bindsym $Alt_R+t exec x-terminal-emulator
 
 # split in vertical orientation
-bindsym $ALT+v split v
+bindsym $Alt_L+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $ALT+f fullscreen
+bindsym $Alt_L+f fullscreen
 
 # change container layout (stacked, tabbed, default)
-# bindsym $ALT+s layout stacking
-bindsym $ALT+w layout tabbed
-bindsym $ALT+e layout default
+# bindsym $Alt_L+s layout stacking
+bindsym $Alt_L+w layout tabbed
+bindsym $Alt_L+e layout default
 
 # toggle tiling / floating
-bindsym $ALT+Shift+space floating toggle
+bindsym $Alt_L+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $ALT+space focus mode_toggle
+bindsym $Alt_L+space focus mode_toggle
 
 # focus the parent container
-bindsym $ALT+a focus parent
+bindsym $Alt_L+a focus parent
 
 # focus the child container
-bindsym $ALT+c focus child
+bindsym $Alt_L+c focus child
 
 # switch to workspace
-bindsym $ALT+1 workspace 1
-# bindsym $ALT+1 workspace 1: main
-bindsym $ALT+2 workspace 2
-bindsym $ALT+3 workspace 3
-bindsym $ALT+4 workspace 4
-bindsym $ALT+5 workspace 5
-bindsym $ALT+6 workspace 6
-bindsym $ALT+7 workspace 7
-bindsym $ALT+8 workspace 8
-bindsym $ALT+9 workspace 9
-bindsym $ALT+0 workspace 10
+bindsym $Alt_L+1 workspace 1
+# bindsym $Alt_L+1 workspace 1: main
+bindsym $Alt_L+2 workspace 2
+bindsym $Alt_L+3 workspace 3
+bindsym $Alt_L+4 workspace 4
+bindsym $Alt_L+5 workspace 5
+bindsym $Alt_L+6 workspace 6
+bindsym $Alt_L+7 workspace 7
+bindsym $Alt_L+8 workspace 8
+bindsym $Alt_L+9 workspace 9
+bindsym $Alt_L+0 workspace 10
 
 # Workspace-output assignments:
 workspace 1 output LVDS1
@@ -93,23 +95,23 @@ workspace 0 output HDMI1
 exec --no-startup-id exec i3-msg "workspace 1"
 
 # move focused container to workspace
-bindsym $ALT+Shift+exclam move container to workspace 1
-bindsym $ALT+Shift+at move container to workspace 2
-bindsym $ALT+Shift+numbersign move container to workspace 3
-bindsym $ALT+Shift+dollar move container to workspace 4
-bindsym $ALT+Shift+percent move container to workspace 5
-bindsym $ALT+Shift+asciicircum move container to workspace 6
-bindsym $ALT+Shift+ampersand move container to workspace 7
-bindsym $ALT+Shift+asterisk move container to workspace 8
-bindsym $ALT+Shift+parenleft move container to workspace 9
-bindsym $ALT+Shift+parenright move container to workspace 10
+bindsym $Alt_R+Shift+exclam move container to workspace 1
+bindsym $Alt_R+Shift+at move container to workspace 2
+bindsym $Alt_R+Shift+numbersign move container to workspace 3
+bindsym $Alt_R+Shift+dollar move container to workspace 4
+bindsym $Alt_R+Shift+percent move container to workspace 5
+bindsym $Alt_L+Shift+asciicircum move container to workspace 6
+bindsym $Alt_L+Shift+ampersand move container to workspace 7
+bindsym $Alt_L+Shift+asterisk move container to workspace 8
+bindsym $Alt_L+Shift+parenleft move container to workspace 9
+bindsym $Alt_L+Shift+parenright move container to workspace 10
 
 # reload the configuration file
-bindsym $ALT+Shift+C reload
+bindsym $Alt_R+Shift+C reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $ALT+Shift+R restart
+bindsym $Alt_R+Shift+R restart
 # exit i3 (logs you out of your X session)
-bindsym $ALT+Shift+E exit
+bindsym $Alt_R+Shift+E exit
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -124,7 +126,7 @@ mode "resize" {
 	bindsym Escape mode "default"
 }
 
-bindsym $ALT+r mode "resize"
+bindsym $Alt_L+r mode "resize"
 
 # Start i3bar:
 bar {
@@ -148,24 +150,24 @@ bindsym $WIN+h exec sudo poweroff
 bindsym $WIN+k exec --no-startup-id exec keynav
 
 # Define Alt+Tab in order not to remove file contents in vim by this key combination:
-bindsym $ALT+Tab focus left
+bindsym $Alt_L+Tab focus left
 
 # terminal
-# bindsym $ALT+Return exec exec x-terminal-emulator -e vifm
-# bindsym $ALT+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
-bindsym $ALT+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm'
+# bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm
+# bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
+bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm'
 
 # translator
-bindsym $ALT+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
+bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
-bindsym $ALT+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
+bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
 
 # browser
-bindsym $ALT+b exec exec vimb -s ~/os_settings/other_files/start_page.html
-# bindsym $ALT+b exec DMENU_FONT='Inconsolata LGC-14:monospace' uzbl
+bindsym $Alt_L+b exec exec vimb -s ~/os_settings/other_files/start_page.html
+# bindsym $Alt_L+b exec DMENU_FONT='Inconsolata LGC-14:monospace' uzbl
 
 # windows guest
-bindsym $CTRL+$ALT+q exec exec ~/os_settings/other_files/qemu_start.sh
+bindsym $CTRL+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
 
 # start downloading .torrent file from ~/downloads:
 bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
@@ -176,14 +178,14 @@ bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.Att
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
 # Hotkey to open mail client:
-# bindsym $ALT+m exec --no-startup-id exec claws-mail
+# bindsym $Alt_L+m exec --no-startup-id exec claws-mail
 # Hotkeys to open specified folders:
-# bindsym $ALT+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
-# bindsym $ALT+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
+# bindsym $Alt_L+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
+# bindsym $Alt_L+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
 
 # autostart mail client (icedove):
 exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
-bindsym $ALT+m exec --no-startup-id exec icedove
+bindsym $Alt_L+m exec --no-startup-id exec icedove
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
@@ -195,7 +197,7 @@ exec --no-startup-id exec fbxkb
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
 
 # alsaplayer hotkeys:
-bindsym $ALT+p exec --no-startup-id alsaplayer --pause
+bindsym $Alt_L+p exec --no-startup-id alsaplayer --pause
 bindsym $WIN+n exec --no-startup-id alsaplayer --next
 bindsym $WIN+p exec --no-startup-id alsaplayer --prev
 bindsym $WIN+b exec --no-startup-id alsaplayer --relative -3
@@ -204,11 +206,11 @@ bindsym $WIN+f exec --no-startup-id alsaplayer --relative +3
 bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/volume.sh +3%
 bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
 # sound output (bluetooth headset / built-in audio):
-bindsym $ALT+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
 # dmenu (a program launcher)
-bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
-# bindsym $ALT+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
+bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
+# bindsym $Alt_L+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
 
 # noob settings begin
 # noob settings end
@@ -218,5 +220,5 @@ bindsym $ALT+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monos
 # PrintScreen
 bindcode 107 exec --no-startup-id exec scrot
 # Alt + PrintScreen
-bindcode $ALT+107 exec --no-startup-id exec scrot --focused --border
+bindcode $Alt_L+107 exec --no-startup-id exec scrot --focused --border
 
