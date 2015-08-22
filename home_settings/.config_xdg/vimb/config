@@ -49,8 +49,7 @@ shortcut-add to=https://translate.google.com/?hl=en#$0
 # Calculate route with google maps: :open map "city hall, London" railway station, London
 shortcut-add map=https://maps.google.com/maps?mode=transit&saddr=$0&daddr=$1
 # Search for music:
-shortcut-add mus=http://go.mail.ru/search_site?p=1&aux=Kd7dJd&q=$0
-shortcut-add 1mus=http://pleer.com/search?q=$0#
+shortcut-add mus=http://pleer.com/search?q=$0#
 # https://myzuka.org
 # www.audiopoisk.com
 # http://mp3brainz.net/

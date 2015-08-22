@@ -36,6 +36,7 @@ apt-get install wmctrl xclip scrot zenity keynav
 
 # Automatic installation of security upgrades:
 apt-get install unattended-upgrades bsd-mailx
+# cron-apt
 
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
