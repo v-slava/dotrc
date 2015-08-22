@@ -50,3 +50,7 @@ while [ $i -le $LANG_NUM ]; do
 done
 xdotool search goldendict key Return
 
+# Focus goldendict and switch to floating layout
+wmctrl -a goldendict
+xdotool key Alt_L+shift+space
+
