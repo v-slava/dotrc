@@ -27,8 +27,8 @@ apt-file update
 apt-get install firmware-realtek
 
 # Install xorg:
-apt-get install xorg xserver-xorg-video-intel \
-	xserver-xorg-input-evdev xinit rxvt-unicode-256color
+apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
+	xserver-xorg-input-mtrack xinit rxvt-unicode-256color
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:
@@ -41,7 +41,7 @@ apt-get install network-manager-gnome gnome-keyring notification-daemon
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xclip scrot zenity
+apt-get install wmctrl xclip xinput scrot zenity
 # keynav
 
 # Automatic installation of security upgrades:

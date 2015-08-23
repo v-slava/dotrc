@@ -165,6 +165,7 @@ bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
 
 # browser
+bindsym XF86HomePage exec exec vimb -s ~/os_settings/other_files/start_page.html
 bindsym $Alt_L+b exec exec vimb -s ~/os_settings/other_files/start_page.html
 # bindsym $Alt_L+b exec DMENU_FONT='Inconsolata LGC-14:monospace' uzbl
 
@@ -199,16 +200,27 @@ exec --no-startup-id exec fbxkb
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
 
 # alsaplayer hotkeys:
-bindsym $Alt_L+p exec --no-startup-id alsaplayer --pause
-bindsym $WIN+n exec --no-startup-id alsaplayer --next
-bindsym $WIN+p exec --no-startup-id alsaplayer --prev
-bindsym $WIN+b exec --no-startup-id alsaplayer --relative -3
-bindsym $WIN+f exec --no-startup-id alsaplayer --relative +3
+bindsym $Alt_L+p      exec --no-startup-id alsaplayer --pause
+bindsym XF86AudioPlay exec --no-startup-id alsaplayer --pause
+bindsym XF86AudioNext exec --no-startup-id alsaplayer --next
+bindsym $WIN+n        exec --no-startup-id alsaplayer --next
+bindsym XF86AudioPrev exec --no-startup-id alsaplayer --prev
+bindsym $WIN+p        exec --no-startup-id alsaplayer --prev
+bindsym $WIN+b        exec --no-startup-id alsaplayer --relative -3
+bindsym $WIN+f        exec --no-startup-id alsaplayer --relative +3
+
 # volume hotkeys:
+bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/volume.sh 0%
+bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/volume.sh +3%
 bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/volume.sh +3%
+bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
 bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
-# sound output (bluetooth headset / built-in audio):
+
+# toggle sound output (bluetooth headset / built-in audio):
 bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+
+# toggle touchpad:
+bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
 bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
