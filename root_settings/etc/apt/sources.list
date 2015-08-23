@@ -15,5 +15,5 @@ deb-src http://http.debian.net/debian jessie-updates main contrib non-free
 
 # Stable backports:
 deb http://http.debian.net/debian jessie-backports main contrib non-free
-deb-src http://http.debian.net/debian jessie-backports main contrib non-free
+deb-src http://http.debian.net/debian jessie-backports contrib
 

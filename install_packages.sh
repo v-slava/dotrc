@@ -2,12 +2,14 @@
 
 # already installed packages: linux-image-amd64 grub-pc os-prober
 
+set -ex
+
 apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	vim vifm less bash-completion \
-	apt-file apt-rdepends apt-utils dialog locales \
+	apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
 	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
 	openssh-client sshfs fuse \
@@ -17,22 +19,30 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect mpg321 ntpdate ntfs-3g fuseiso9660 qemu-system-x86 qemu-kvm \
-	spice-client netcat-openbsd
+	expect mpg321 ntpdate ntfs-3g fuseiso9660 netcat-openbsd
 
 apt-file update
+
+# For HP630:
+apt-get install firmware-realtek
 
 # Install xorg:
 apt-get install xorg xserver-xorg-video-intel \
 	xserver-xorg-input-evdev xinit rxvt-unicode-256color
 
 # Install window manager, status bar, screen locker, keyboard layout
-# indicator and fonts:
-apt-get install i3-wm i3status i3lock \
-	fbxkb fonts-inconsolata network-manager-gnome
+# indicator:
+apt-get install -t jessie-backports i3-wm i3status i3lock fbxkb
+
+# Install network manager:
+apt-get install network-manager-gnome gnome-keyring notification-daemon
+
+# Install qemu:
+apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xclip scrot zenity keynav
+apt-get install wmctrl xclip scrot zenity
+# keynav
 
 # Automatic installation of security upgrades:
 apt-get install unattended-upgrades bsd-mailx
@@ -48,7 +58,10 @@ apt-get install icedove
 apt-get install pulseaudio-utils pavucontrol
 
 # Install video player:
-apt-get install mplayer smplayer
+apt-get install mplayer2 smplayer
+
+# Install images viewer:
+apt-get install gliv
 
 # Install images editor:
 apt-get install gimp
@@ -67,10 +80,8 @@ apt-get install zathura
 
 # Build and install vimb:
 apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
-make -f ./other_files/Makefile_vimb
-make -f ./other_files/Makefile_vimb clean
-apt-get purge libwebkitgtk-dev
-apt-get autoremove --purge
+make -f ~/os_settings/other_files/Makefile_vimb
+make -f ~/os_settings/other_files/Makefile_vimb clean
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
@@ -79,15 +90,12 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree
 
 # dmenu:
 apt-get install libx11-dev libxinerama-dev libxft-dev libxmu-dev
-make -f ./other_files/Makefile_dmenu
-make -f ./other_files/Makefile_dmenu clean
-apt-get purge libx11-dev libxinerama-dev libxft-dev libxmu-dev
-apt-get autoremove --purge
+make -f ~/os_settings/other_files/Makefile_dmenu
+make -f ~/os_settings/other_files/Makefile_dmenu clean
 
 # Coreutils viewer:
 apt-get install libncurses5-dev
-make -f ./other_files/Makefile_coreutils_viewer
-apt-get purge libncurses5-dev
+make -f ~/os_settings/other_files/Makefile_coreutils_viewer
 
 dpkg --add-architecture i386
 apt-get update
@@ -98,7 +106,7 @@ apt-get update
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
 # libreoffice-pdfimport abiword gnumeric mupdf zathura suckless-tools # (dmenu)
-# gliv kolourpaint4 vlc apvlv
+# gliv kolourpaint4 vlc apvlv fonts-inconsolata
 # claws-mail-multi-notifier claws-mail # On wheezy: claws-mail-trayicon
 
 # On wheezy: iproute2 conflicts with iproute, but ifupdown depends on iproute
