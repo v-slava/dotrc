@@ -639,6 +639,9 @@ apt-get source --download-only <package_name>
 # Download package from repository:
 apt-get download <package_name>
 
+# list installed packages by installation date:
+ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
+
 # dpkg restore broken installation:
 dpkg --configure -a
 
@@ -665,9 +668,6 @@ service nfs-kernel-server restart
 
 # Build package from source and do not sign anything:
 dpkg-buildpackage -us -uc
-
-# list installed packages by installation date:
-ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
 
 # Install package without root privileges:
 mkdir -p ~/root_dir/var/lib

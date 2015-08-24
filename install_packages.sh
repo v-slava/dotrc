@@ -81,7 +81,6 @@ apt-get install zathura
 # Build and install vimb:
 apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
 make -f ~/os_settings/other_files/Makefile_vimb
-make -f ~/os_settings/other_files/Makefile_vimb clean
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
@@ -91,7 +90,6 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree
 # dmenu:
 apt-get install libx11-dev libxinerama-dev libxft-dev libxmu-dev
 make -f ~/os_settings/other_files/Makefile_dmenu
-make -f ~/os_settings/other_files/Makefile_dmenu clean
 
 # Coreutils viewer:
 apt-get install libncurses5-dev

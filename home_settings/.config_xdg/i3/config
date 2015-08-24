@@ -132,7 +132,8 @@ bindsym $Alt_L+r mode "resize"
 
 # Start i3bar:
 bar {
-	status_command exec i3status
+	# status_command exec i3status
+	status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
 	tray_output LVDS1
 }
 
@@ -221,6 +222,8 @@ bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluet
 
 # toggle touchpad:
 bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
+# turn off touchpad by default:
+exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
 bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
