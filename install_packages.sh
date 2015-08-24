@@ -8,7 +8,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-	vim vifm less bash-completion \
+	vim vifm less bash-completion python \
 	apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
 	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
@@ -94,6 +94,10 @@ make -f ~/os_settings/other_files/Makefile_dmenu
 # Coreutils viewer:
 apt-get install libncurses5-dev
 make -f ~/os_settings/other_files/Makefile_coreutils_viewer
+
+# vifm:
+apt-get install libncursesw5-dev
+make -f ~/os_settings/other_files/Makefile_vifm
 
 dpkg --add-architecture i386
 apt-get update

@@ -98,6 +98,8 @@ endif
 if !exists('g:vifm_home')
 	if exists('$HOME') && isdirectory($HOME .'/.vifm/')
 		let g:vifm_home = $HOME."/.vifm"
+	elseif exists('$XDG_CONFIG_HOME') && isdirectory($XDG_CONFIG_HOME . '/vifm/')
+		let g:vifm_home = $XDG_CONFIG_HOME . "/vifm"
 	elseif exists('$APPDATA') && isdirectory($APPDATA.'/Vifm/')
 		let g:vifm_home = $APPDATA."/Vifm"
 	else

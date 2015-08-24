@@ -15,7 +15,7 @@ OUT="${OUT_DIR}/${IN}.out"
 FLAGS=" -Wall -Wextra "
 
 case "$IN" in
-	*.sh | *.bash)
+	*.sh | *.bash | *.py )
 		echo "./$IN"
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)

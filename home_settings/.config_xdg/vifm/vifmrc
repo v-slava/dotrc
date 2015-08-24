@@ -6,7 +6,7 @@
 " ------------------------------------------------------------------------------
 
 " This is the actual command used to start vi.  The default is vim.
-" If you would like to use another vi clone such Elvis or Vile
+" If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
 set vicmd=vim
@@ -73,7 +73,7 @@ set fusehome=/tmp/vifm_FUSE
 
 set timefmt=%T\ \ %F
 
-" Show list of matches on tab complition in command-line mode
+" Show list of matches on tab completion in command-line mode
 
 set wildmenu
 
@@ -94,7 +94,7 @@ set incsearch
 
 set scrolloff=4
 
-" Don't do to much requests to slow file systems
+" Don't do too many requests to slow file systems
 
 set slowfs=curlftpfs
 
@@ -170,8 +170,8 @@ filextype *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mo
 	\ ffplay -fs %c,
 	\ dragon %f,
 
-fileviewer *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
-	\ avprobe -pretty %c 2>&1
+" fileviewer *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
+" 	\ avprobe -pretty %c 2>&1
 
 " Web
 filextype *.html,*.htm
@@ -267,10 +267,10 @@ filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx libreoffice %f %i &
 " filetype *.tudu tudu -f %c
 
 " Qt projects
-filextype *.pro qtcreator %f &
+" filextype *.pro qtcreator %f &
 
 " Directories
-fileviewer .*/,*/ tree -a %f
+" fileviewer .*/,*/ tree -a %f
 
 " Syntax highlighting in preview
 "
@@ -382,7 +382,7 @@ mark B /media/new_build_server/home/bld
 mark E /media/build_server/home/exchange
 mark e /media/new_build_server/home/bld/exchange
 
-nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.vifm/vifmrc && cp ~/os_settings/home_settings/.vifm/vifmrc $MYVIFMRC' | restart<cr>
+nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
 nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
 nnoremap ,b :!vim ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
 nnoremap ,i :!vim ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<cr>
