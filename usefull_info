@@ -1,3 +1,6 @@
+# C++ hex output format example:
+std::cout << std::hex << std::setfill('0') << std::nouppercase << std::setw(8);
+
 # list available fonts:
 fc-list
 
