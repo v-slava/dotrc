@@ -901,8 +901,8 @@ ignore <bnum> <count>
 
 # GDB breakpoints on read/write:
 # watch *0xaab12450 [mask 0xfffffff0]
-watch - only breaks on write
-rwatch - breaks on read, and
+watch -  only breaks on write
+rwatch - only breaks on read
 awatch - breaks on read/write.
 
 # GDB delete breakpoint

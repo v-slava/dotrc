@@ -10,9 +10,6 @@ http://www.null-provision.de/
 
 
 # Found wohnung:
-# 465 EUR + EUR, with furniture, centre of Wuerzburg. 4 EUR per wash. Verlängert!
-http://www.immowelt.de/expose/269SF4X
-
 # 540 EUR + EUR, with furniture, waldbuttelbrunn
 http://www.immonet.de/angebot/26193300
 
