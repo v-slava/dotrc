@@ -148,7 +148,9 @@ for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 
 bindsym $CTRL+$Alt_L+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
-bindsym $CTRL+$Alt_L+h exec sudo poweroff
+# bindsym $CTRL+$Alt_L+h exec sudo poweroff
+bindsym $CTRL+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/shutdown_hotkey.sh
+for_window [class="URxvt" title="poweroff"] floating enable
 
 bindsym $WIN+k exec --no-startup-id exec keynav
 
