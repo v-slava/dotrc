@@ -8,7 +8,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-	vim vifm less bash-completion python youtube-dl cclive \
+	vim vifm less bash-completion python youtube-dl cclive bvi \
 	apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
 	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
@@ -28,7 +28,7 @@ apt-get install firmware-realtek
 
 # Install xorg:
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
-	xserver-xorg-input-mtrack xinit rxvt-unicode-256color
+	xserver-xorg-input-synaptics xinit rxvt-unicode-256color
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:

@@ -457,5 +457,5 @@ nmap qm :winrun ^ !mc %d %D<cr>
 nmap qf :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command hexview xxd %c | less
-command hexedit hexedit %c
+command hexedit hed %c
 
