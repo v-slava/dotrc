@@ -234,24 +234,24 @@ imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 function! German_mapping_toggle()
 	if &iminsert == 0 " If current layout is english
 		if g:german == 1 " If german mapping is enabled
-			iunmap oe
-			iunmap OE
-			iunmap ae
-			iunmap AE
-			iunmap ue
-			iunmap UE
-			iunmap ss
-			iunmap SS
+			iunmap `o
+			iunmap `O
+			iunmap `a
+			iunmap `A
+			iunmap `u
+			iunmap `U
+			iunmap `s
+			iunmap `S
 			let g:german = 0
 		else " if german mapping is disabled
-			imap oe ö
-			imap OE Ö
-			imap ae ä
-			imap AE Ä
-			imap ue ü
-			imap UE Ü
-			imap ss ß
-			imap SS ẞ
+			imap `o ö
+			imap `O Ö
+			imap `a ä
+			imap `A Ä
+			imap `u ü
+			imap `U Ü
+			imap `s ß
+			imap `S ẞ
 			let g:german = 1
 		endif " if german mapping is enabled
 	endif " if current layout is english
