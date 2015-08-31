@@ -148,6 +148,7 @@ for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 
 bindsym $CTRL+$Alt_L+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
+bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 # bindsym $CTRL+$Alt_L+h exec sudo poweroff
 bindsym $CTRL+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/shutdown_hotkey.sh
 for_window [class="URxvt" title="shutdown script"] floating enable
@@ -212,6 +213,7 @@ bindsym XF86AudioPrev exec --no-startup-id alsaplayer --prev
 bindsym $WIN+p        exec --no-startup-id alsaplayer --prev
 bindsym $WIN+h        exec --no-startup-id alsaplayer --relative -3
 bindsym $WIN+l        exec --no-startup-id alsaplayer --relative +3
+bindsym $WIN+0        exec --no-startup-id alsaplayer --seek 0
 
 # volume hotkeys:
 bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/volume.sh 0%
