@@ -14,7 +14,7 @@ order += "disk /media/files"
 # order += "run_watch VPN"
 # order += "wireless wlan0"
 # order += "ethernet eth0"
-# order += "battery 0"
+order += "battery 0"
 # order += "cpu_temperature 0"
 # order += "load"
 order += "time"
@@ -31,7 +31,8 @@ ethernet eth0 {
 }
 
 battery 0 {
-	format = "%status %percentage %remaining %emptytime"
+	# format = "%status %percentage %remaining %emptytime"
+	format = "%status %percentage %remaining"
 	path = "/sys/class/power_supply/BAT%d/uevent"
 }
 
