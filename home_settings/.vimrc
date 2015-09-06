@@ -275,8 +275,8 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh ' . expand('%:t'))
-let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh ' . expand('%:t'))
+let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')
+let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . expand('%:t') . '"')
 let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
 let g:error_index = -1
