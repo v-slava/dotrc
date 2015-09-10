@@ -21,6 +21,6 @@ USER_PASSWD=$USER_NAME
 
 echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
 
-usermod -a -G audio,video,systemd-journal,bluetooth,netdev $USER_NAME
+usermod -a -G audio,video,systemd-journal,bluetooth,netdev,plugdev $USER_NAME
 # usermod -a -G fuse $USER_NAME
 
