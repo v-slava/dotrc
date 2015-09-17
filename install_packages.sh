@@ -44,10 +44,6 @@ apt-get install qemu-system-x86 qemu-kvm spice-client
 apt-get install wmctrl xdotool xclip xinput scrot zenity
 # keynav
 
-# Automatic installation of security upgrades:
-apt-get install unattended-upgrades bsd-mailx
-# cron-apt
-
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 
