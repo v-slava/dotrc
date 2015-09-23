@@ -56,6 +56,8 @@ shortcut-add mus=http://pleer.com/search?q=$0#
 # http://epicmusictime.com/ # online radio
 # Search for torrent on rutracker.org:
 shortcut-add tor=http://rutracker.org/forum/tracker.php?nm=$0
+# Search for videos on youtube.com:
+shortcut-add y=https://www.youtube.com/results?search_query=$0
 
 set strict-ssl=false
 
