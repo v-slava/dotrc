@@ -96,6 +96,9 @@ set number " display line numbers
 " set nowrap " do not wrap long lines
 set linebreak
 
+" Use jk to exit from insert mode:
+imap jk <esc>
+
 " View invisible characters for makefiles:
 " autocmd FileType make set list
 nmap <F2> :set list!<CR>
