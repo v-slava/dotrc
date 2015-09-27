@@ -737,6 +737,20 @@ cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER
 xmodmap -pk
 xmodmap -pke
 
+# map Escape to CapsLock:
+xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+
+# Use setxkbmap to remap keys:
+setxkbmap -option OPT
+# Where OPT can be:
+caps:none          # Disables Caps Lock.
+caps:super         # Caps Lock becomes an additional Super (aka Win key).
+caps:ctrl_modifier # Caps Lock becomes an additional Ctrl.
+caps:numlock       # Caps Lock becomes an additional Num Lock.
+caps:escape        # Caps Lock becomes an additional Escape.
+caps:backspace     # Caps Lock becomes an additional Backspace.
+caps:swapescape    # Caps Lock becomes Escape, and Escape becomes Caps Lock
+
 # Print contents of X events (and keyboard codes):
 xev
 

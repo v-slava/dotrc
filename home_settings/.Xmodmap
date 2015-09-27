@@ -1,2 +1,20 @@
+remove Lock = Caps_Lock
+remove Control = Control_L
+keysym Control_L = Escape
+keysym Escape = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+
+! Remap <Caps_Lock+key> => <Control_L+key>
+! remove Lock = Caps_Lock
+! remove Control = Control_L
+! keysym Control_L = Caps_Lock
+! keysym Caps_Lock = Control_L
+! add Lock = Caps_Lock
+! add Control = Control_L
+
+! Allow usage of Alt_R as mod3 in i3wm:
 remove mod1 = Alt_R
 add mod3 = Alt_R
+

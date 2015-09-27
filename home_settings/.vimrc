@@ -26,7 +26,7 @@
 " gb in visual mode (my)
 " gcb<motion> in normal mode
 "
-" \mt : Toggles ShowMarks on and off.
+" <Leader>mt : Toggles ShowMarks on and off.
 "
 " ctags:
 " :help tag
@@ -96,8 +96,16 @@ set number " display line numbers
 " set nowrap " do not wrap long lines
 set linebreak
 
-" Use jk to exit from insert mode:
-imap jk <esc>
+" Use jk instead of <esc> to exit from insert mode:
+" inoremap jk <esc>
+" imap <esc> <nop>
+
+" let mapleader = "\\"
+let mapleader = "\<Space>"
+
+" Use <C-j> as <Backspace> in insert mode:
+" inoremap <C-j> <Backspace>
+" imap <Backspace> <nop>
 
 " View invisible characters for makefiles:
 " autocmd FileType make set list
@@ -313,9 +321,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter)
 	endif
 endfunction
 " build begin (with warinings):
-nmap \bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 " rebuild begin (with warinings):
-nmap \br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -327,7 +335,7 @@ function! Configure(config_cmd)
 	execute 'botright pedit ' . l:config_log
 	call Update_status_line('Config is done. Exit code: ' . l:config_exit_code, 'normal')
 endfunction
-nmap \bc :w<CR>:call Configure(g:config_cmd)<CR>
+nmap <Leader>bc :w<CR>:call Configure(g:config_cmd)<CR>
 
 function! Show_error( error_index )
 	let l:current_source_location = get(g:source_locations, a:error_index)
@@ -350,7 +358,7 @@ function! Show_next_error()
 	endif
 endfunction
 " build next error:
-nmap \bn :w<CR>:call Show_next_error()<CR>
+nmap <Leader>bn :w<CR>:call Show_next_error()<CR>
 
 function! Show_prev_error()
 	if g:error_index <= 0 " if there is no previous error
@@ -361,7 +369,7 @@ function! Show_prev_error()
 	endif
 endfunction
 " build previous error:
-nmap \bp :w<CR>:call Show_prev_error()<CR>
+nmap <Leader>bp :w<CR>:call Show_prev_error()<CR>
 
 function! Copy_location(in_file, strip_part)
 	let l:line_number = line('.')
@@ -426,6 +434,7 @@ call tcomment#DefineType('fusesmbconf', '; %s')
 call tcomment#DefineType('asm', '/* %s */')
 call tcomment#DefineType('texinfo', '@c %s')
 call tcomment#DefineType('xdefaults', '! %s')
+call tcomment#DefineType('xmodmap', '! %s')
 call tcomment#DefineType('vifm', '" %s')
 
 " localvimrc:
@@ -461,9 +470,9 @@ endfunction
 command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 
 " doxygen: function begin:
-nmap \fb i/**<Esc>o * @fn 
+nmap <Leader>fb i/**<Esc>o * @fn 
 " doxygen: function end:
-nmap \fe :call End_function()<CR>
+nmap <Leader>fe :call End_function()<CR>
 function! End_function()
 	let l:fn_line_number = line('.')
 	let l:fn_line = getline('.')
@@ -521,6 +530,32 @@ endfunction
 " 	execute 'redraw!'
 " endfunction
 " command! -range -nargs=* MyIndent <line1>,<line2> call MyCIndent()
+
+" command! -nargs=1 CmdName call Func_name(<f-args>)
+" command! -nargs=0 CmdName call Func_name('arg1')
+
+if has('nvim')
+	" First invoke terminal:
+	nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
+	" In terminal switch to normal mode:
+	tnoremap <Esc> <C-\><C-n>:set number<CR>
+	" In terminal switch back to insert mode:
+	nmap <Leader>ti :set nonumber<CR>:startinsert<CR>
+	" Copy modified file name from git status:
+	function Git_copy_modified_file_name(file_number)
+		let l:line_1 = search('        modified:   ', 'b')
+		if l:line_1 == 0 " not found
+			:echo 'Error: modified by git files not found'
+			return
+		endif
+		let @+ = strpart(getline(l:line_1 - a:file_number + 1), 20)
+		set nonumber
+		startinsert
+	endfunction
+	command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)
+	nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
+	nmap <Leader>ga :GitCopy 
+endif
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.

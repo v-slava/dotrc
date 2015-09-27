@@ -21,7 +21,3 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-# if ! pidof alsaplayer 1>/dev/null ; then
-# 	/usr/bin/alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
-# fi
-
