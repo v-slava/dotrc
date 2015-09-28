@@ -1,3 +1,25 @@
+" Rtags:
+" Run rdm, select project by running "rc -J <project dir>".
+" Project dir should contain file "compile_commands.json".
+" +------------+------------------+--------------------------------------------+
+" | Mapping    | rc flag          | Description                                |
+" +------------+------------------+--------------------------------------------+
+" | <Leader>ri | -U               | Symbol info                                |
+" | <Leader>rj | -f               | Follow location (jump)                     |
+" | <Leader>rh | -f               | Follow location (open in horizontal split) |
+" | <Leader>rv | -f               | Follow location (open in vertical split)   |
+" | <Leader>rt | -f               | Follow location open in a new tab          |
+" | <Leader>rp | -U --symbol-info-include-parents      |        Jump to parent |
+" | <Leader>rf | -e -r            | Find references                            |
+" | <Leader>rn | -ae -R           | Find references by name                    |
+" | <Leader>rs | -a -F            | Find symbols by name                       |
+" | <Leader>rr | -V               | Reindex current file                       |
+" | <Leader>rl | -w               | List all available projects                |
+" | <Leader>rw | -e -r --rename   | Rename symbol under cursor                 |
+" | <Leader>r= | -k -r            | Find virtuals                              |
+" +------------+------------------+--------------------------------------------+
+" TODO fix: rf, rn, rs
+"
 " Toggle language: <C-K>
 "
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
@@ -30,12 +52,12 @@
 "
 " ctags:
 " :help tag
-" :[count]ta[g][!] {ident}  == <C-]>	jump to the definition of {ident}
-" :[count]ta[g][!]		       	Jump to [count] newer entry in tag stack (default 1).
-" :[count]po[p][!]	    == <C-T>	Jump to [count] older entry in tag stack (default 1).
-" :ts[elect][!] [ident]     == g]	list the tags that match [indent]
-" :sts[elect][!] [ident]    == <C-W>g]	Like :ts, but splits the window for the selected tag.
-" :tags		Show the contents of the tag stack.  The active entry is marked with a '>'.
+" :[count]ta[g][!] {ident}  == <C-]> jump to the definition of {ident}
+" :[count]ta[g][!]         Jump to [count] newer entry in tag stack (default 1).
+" :[count]po[p][!]          == <C-T> Jump to [count] older entry in tag stack (default 1).
+" :ts[elect][!] [ident]     == g]    list the tags that match [indent]
+" :sts[elect][!] [ident]    == <C-W>g] Like :ts, but splits the window for the selected tag.
+" :tags  Show the contents of the tag stack.  The active entry is marked with a '>'.
 "
 " cscope:
 " Query types:
@@ -409,7 +431,7 @@ DefineTagFinder Tstruct s
 DefineTagFinder Ttypedef t
 DefineTagFinder Tunion u
 DefineTagFinder Tvariable v
-"DefineTagFinder Tx x		" external and forward variable declarations
+"DefineTagFinder Tx x  " external and forward variable declarations
 
 " Marks:
 let g:showmarks_enable=0
@@ -537,12 +559,12 @@ endfunction
 if has('nvim')
 	" First invoke terminal:
 	nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
-	" In terminal switch to normal mode:
-	tnoremap <Esc> <C-\><C-n>:set number<CR>
+	" Use <C-Space> in terminal to switch to normal mode:
+	tnoremap <C-@> <C-\><C-n>:set number<CR>
 	" In terminal switch back to insert mode:
 	nmap <Leader>ti :set nonumber<CR>:startinsert<CR>
 	" Copy modified file name from git status:
-	function Git_copy_modified_file_name(file_number)
+	function! Git_copy_modified_file_name(file_number)
 		let l:line_1 = search('        modified:   ', 'b')
 		if l:line_1 == 0 " not found
 			:echo 'Error: modified by git files not found'

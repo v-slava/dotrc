@@ -13,7 +13,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
 	openssh-client sshfs fuse \
-	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace \
+	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
 	zip unzip gzip bzip2 p7zip-full cpio unrar \
 	alsa-utils alsaplayer-daemon alsaplayer-common \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \

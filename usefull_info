@@ -1,3 +1,11 @@
+# create JSON file with build commands, used by clang tooling interface (rtags):
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+bear make
+# need additional processing:
+ninja -v
+ninja -t commands
+make VERBOSE=1
+
 # enable failures in libc via LD_PRELOAD (fiu):
 fiu-run -x -c 'enable name=posix/io/*' ls
 
