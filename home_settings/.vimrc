@@ -11,14 +11,15 @@
 " | <Leader>rt | -f               | Follow location open in a new tab          |
 " | <Leader>rp | -U --symbol-info-include-parents      |        Jump to parent |
 " | <Leader>rf | -e -r            | Find references                            |
-" | <Leader>rn | -ae -R           | Find references by name                    |
-" | <Leader>rs | -a -F            | Find symbols by name                       |
-" | <Leader>rr | -V               | Reindex current file                       |
+" | <Leader>rn | -I -ae -R        | Find references by name                    |
+" | <Leader>rN | -ae -R           | Find references by name (case sensitive)   |
+" | <Leader>rs | -a -I -F         | Find symbols by name                       |
+" | <Leader>rS | -a -F            | Find symbols by name (case sensitive)      |
+" | <Leader>rx | -V               | Reindex current file                       |
 " | <Leader>rl | -w               | List all available projects                |
-" | <Leader>rw | -e -r --rename   | Rename symbol under cursor                 |
+" | <Leader>rr | -e -r --rename   | Rename symbol under cursor                 |
 " | <Leader>r= | -k -r            | Find virtuals                              |
 " +------------+------------------+--------------------------------------------+
-" TODO fix: rf, rn, rs
 "
 " Toggle language: <C-K>
 "
@@ -196,6 +197,12 @@ autocmd FileType c,cpp,sh,expect,cmake,vim,python setlocal shiftwidth=4
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80
 
+function! OpenLocation()
+	execute "ll " . line('.')
+	normal zz
+endfunction
+autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
+
 " glanguage mappings:
 " Use <C-i> to insert <shortinfo></shortinfo> and switch language
 autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
@@ -296,8 +303,8 @@ nmap <F7> :call German_mapping_toggle()<CR>
 imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
 
 " Move current tab left and right:
-nnoremap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nnoremap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
+nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Open tags file in $(dirname EDITED_FILE), if not present then in $(dirname EDITED_FILE)/.. and until /
 set tags=./tags;,tags;

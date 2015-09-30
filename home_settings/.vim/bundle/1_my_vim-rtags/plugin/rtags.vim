@@ -22,11 +22,13 @@ if g:rtagsUseDefaultMappings == 1
     noremap <Leader>rt :call rtags#JumpTo("tab")<CR>
     noremap <Leader>rp :call rtags#JumpToParent()<CR>
     noremap <Leader>rf :call rtags#FindRefs()<CR>
-    noremap <Leader>rn :call rtags#FindRefsByName(input("Pattern? ")<CR>
-    noremap <Leader>rs :call rtags#FindSymbols(input("Pattern? "))<CR>
-    noremap <Leader>rr :call rtags#ReindexFile()<CR>
+    noremap <Leader>rn :call rtags#IFindRefsByName(input("Pattern? "))<CR>
+    noremap <Leader>rN :call rtags#FindRefsByName(input("Pattern? "))<CR>
+    noremap <Leader>rs :call rtags#IFindSymbols(input("Pattern? "))<CR>
+    noremap <Leader>rS :call rtags#FindSymbols(input("Pattern? "))<CR>
+    noremap <Leader>rx :call rtags#ReindexFile()<CR>
     noremap <Leader>rl :call rtags#ProjectList()<CR>
-    noremap <Leader>rw :call rtags#RenameSymbolUnderCursor()<CR>
+    noremap <Leader>rr :call rtags#RenameSymbolUnderCursor()<CR>
     noremap <Leader>r= :call rtags#FindVirtuals()<CR>
     noremap 6 :call rtags#CompleteAtCursor()<CR>
 endif
