@@ -21,6 +21,7 @@
 " | <Leader>r= | -k -r            | Find virtuals                              |
 " +------------+------------------+--------------------------------------------+
 "
+" To repeat last colon command (in normal mode): @:, @@, @@, @@, ...
 " Toggle language: <C-K>
 "
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
@@ -134,21 +135,25 @@ let mapleader = "\<Space>"
 " autocmd FileType make set list
 nmap <F2> :set list!<CR>
 
-" Use F3 to set/unset search highlighting:
+" Set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
 
 " Scroll horizontally:
 nmap <C-l> zl
 nmap <C-h> zh
 
-" Reload vimrc:
-nmap <C-m> :source $MYVIMRC<CR>
+" Config reload (vimrc):
+nmap <Leader>cr :source $MYVIMRC<CR>
 
-" Use <ctrl>+D to exit from vim:
+" Exit from vim:
 nmap <C-d> :q<CR>
 
-" Use <Tab> to change focus to another window (split, vsplit):
-nmap <Tab> <C-W>W
+" View next/previous buffer:
+nmap <Leader>vn :bnext<CR>
+nmap <Leader>vp :bprevious<CR>
+
+" Change focus to another window (split, vsplit):
+nmap <Leader><Tab> <C-W>W
 " Use '=' to make windows size equal:
 nmap = <C-W>=
 
@@ -165,7 +170,7 @@ set shellredir=>%s
 " Reformat C/C++ source code:
 nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
 
-" Using vifm in vim as file selector:
+" Use vifm in vim as file selector:
 nmap <C-s> :VsplitVifm<CR>
 " :EditVifm :SplitVifm :DiffVifm :TabVifm
 
