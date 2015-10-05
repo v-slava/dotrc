@@ -885,87 +885,6 @@ ulimit -a
 echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 # now launch executable crashed..
 
-# Debug program with core dump:
-gdb -e PROGRAM -c core.dump
-gdb PROGRAM core.dump
-info proc mappings
-backtrace full
-
-# GDB save value in gdb variable:
-set $var_name = expression
-# GDB overwrite variable in program:
-set var_name = expression
-
-# GDB step out of a function:
-finish
-
-# gdb (tui) refresh screen:
-refresh
-
-# gdb debug threads:
-info thread	# list threads
-thread Id	# switch to thread Id
-
-# gdb: write to process memory from file:
-restore FILE binary START_ADDRESS_IN_MEMORY
-
-# gdb: write to file from process memory [START .. STOP):
-dump binary memory FILE START STOP
-
-# GDB catch syscall:
-catch syscall chroot
-
-# GDB disable/enable breakpoints:
-disable num
-enable num
-
-# GDB conditional breakpoints:
-cond <bnum> <expression> # stop if <expression> == true
-b LOCATION if CONDITION
-ignore <bnum> <count>
-
-# GDB breakpoints on read/write:
-# watch *0xaab12450 [mask 0xfffffff0]
-watch -  only breaks on write
-rwatch - only breaks on read
-awatch - breaks on read/write.
-
-# GDB delete breakpoint
-del <breakpoint number>
-
-# GDB list breakpoints
-info break
-
-# GDB: display an array of values:
-disp {$r0, $r1}
-
-# Write into memory using GDB:
-set *0xAb000000 = 0xcd
-set {int}0xAb000000 = 0xcd
-
-# GDB signals handling:
-handle SIGTRAP nostop
-handle all nostop noprint
-
-# gdb load symbols from file:
-sym FILE
-
-# gdb view source files:
-info sources
-
-# gdb sysroot (to debug shared libraries with gdb-server):
-set sysroot HOST_COPY_OF_DEBUGGIE_ROOT_WITH_LIBS_AND_LD
-set solib-search-path DIR # not recommended, single step doesn't work without ld
-
-# gdb change sources path:
-set substitute-path FROM TO
-
-# gdb view loaded shared libraries:
-info sharedlibrary
-
-# Generate core dump on runtime error:
-ulimit -c unlimited && ./launch_buggy_program
-
 # Restore deleted file:
 mkdir restore
 sudo extundelete --restore-file other/commands --output-dir restore /dev/sda5
@@ -1177,3 +1096,341 @@ cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
 # Launch wi-fi access point:
 wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
 
+# Debug program with core dump:
+gdb -e PROGRAM -c core.dump
+gdb PROGRAM core.dump
+info proc mappings
+backtrace full
+# in gdb:
+(gdb) core-file /home/user/my_core_file
+
+# GDB save value in gdb variable:
+set $var_name = expression
+# GDB overwrite variable in program:
+set var_name = expression
+
+# GDB step out of a function:
+finish
+
+# gdb (tui) refresh screen:
+refresh
+
+# gdb debug threads:
+info thread	# list threads
+thread Id	# switch to thread Id
+
+# gdb: write to process memory from file:
+restore FILE binary START_ADDRESS_IN_MEMORY
+
+# gdb: write to file from process memory [START .. STOP):
+dump binary memory FILE START STOP
+
+# GDB catch syscall:
+catch syscall chroot
+
+# GDB disable/enable breakpoints:
+disable num
+enable num
+
+# GDB conditional breakpoints:
+cond <bnum> <expression> # stop if <expression> == true
+b LOCATION if CONDITION
+ignore <bnum> <count>
+
+# GDB breakpoints on read/write:
+# watch *0xaab12450 [mask 0xfffffff0]
+watch -  only breaks on write
+rwatch - only breaks on read
+awatch - breaks on read/write.
+
+# GDB delete breakpoint
+del <breakpoint number>
+
+# GDB list breakpoints
+info break
+
+# GDB: display an array of values:
+disp {$r0, $r1}
+
+# Write into memory using GDB:
+set *0xAb000000 = 0xcd
+set {int}0xAb000000 = 0xcd
+
+# GDB signals handling:
+handle SIGTRAP nostop
+handle all nostop noprint
+
+# gdb load symbols from file:
+sym FILE
+
+# gdb view source files:
+info sources
+
+# gdb sysroot (to debug shared libraries with gdb-server):
+set sysroot HOST_COPY_OF_DEBUGGIE_ROOT_WITH_LIBS_AND_LD
+set solib-search-path DIR # not recommended, single step doesn't work without ld
+
+# gdb change sources path:
+set substitute-path FROM TO
+
+# gdb view loaded shared libraries:
+info sharedlibrary
+
+# Generate core dump on runtime error:
+ulimit -c unlimited && ./launch_buggy_program
+
+
+
+# Core dump analysis with gdb (till end of file):
+
+
+
+When software crashes, core dump normally appears in root folder of your
+USB stick (which must be inserted in YOUR_DEVICE). Tested on blue USB 3.0 port.
+Install gdb-multiarch on your Linux-powered PC:
+
+$ sudo apt-get install gdb-multiarch
+
+Note: you can use arm-smth-linux-gnueabi-gdb from YOUR_DEVICE toolchain but it
+is not recommended, since it loads shared libraries from toolchain by default,
+which differ with shared libraries used by YOUR_DEVICE software. This can lead to
+confusion in case if crash appeared in shared library: gdb will display wrong
+stack frames (and wrong backtrace).
+Insert USB stick in your pc and copy core dump.
+Extract coredump:
+
+$ ls ~/core_dump
+Coredump.executable.pid.gz
+$ gunzip Coredump.EXECUTABLE_NAME.pid.gz
+$ ls ~/core_dump
+Coredump.EXECUTABLE_NAME.pid
+$
+
+Launch gdb-multiarch:
+
+$ gdb-multiarch
+GNU gdb (Debian 7.7.1+dfsg-5) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+(gdb)
+Set architecture to ARM:
+(gdb) set architecture arm
+The target architecture is assumed to be arm
+(gdb)
+
+Note: this step is not required if you decided to use gdb from YOUR_DEVICE
+toolchain (or any other gdb preconfigured for ARM by default).
+Determine executable file which generated core dump and crash address:
+
+(gdb) core-file Coredump.EXECUTABLE_NAME.pid
+[New LWP 918]
+...
+[New LWP 1557]
+Core was generated by `/bin/EXECUTABLE_NAME -arg1'.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  0xa71116c0 in ?? ()
+(gdb)
+
+Now we knew that core dump was generated by /bin/EXECUTABLE_NAME and crash address is
+0xa71116c0. Check whether crash was in EXECUTABLE_NAME or in some shared library:
+
+(gdb) info proc mappings
+    0xa6e8c000 0xa6e8d000     0x1000        0x0 /dev/shm/sem.AYIbvt (deleted)
+...
+    0xa7092000 0xa71ca000   0x138000        0x0 /bin/lib/libc-2.18.so # <- our crash address is within this range
+...
+    0xa71d0000 0xa71ee000    0x1e000        0x0 /bin/lib/libgcc_s.so.1
+(gdb)
+
+Now we knew that crash was within libc. Note that in this case gdb still doesn't
+have enough information to reconstruct backtrace (it is empty now):
+
+(gdb) bt
+#0  0xa71116c0 in ?? ()
+#1  0x00000000 in ?? () # <- our backtrace should be here, however it is not yet..
+(gdb)
+Exit from gdb:
+(gdb) q
+$
+
+Search for not stripped version of file which generated core dump. Copy it to
+our "core_dump" folder:
+
+$ cd /home/build/Perforce/dir3/dir4
+$ find -type f -name EXECUTABLE_NAME
+$ cp ./BIN/SymbolFiles/bin/EXECUTABLE_NAME ~/core_dump/
+
+Make sure EXECUTABLE_NAME contain debugging info:
+
+$ readelf --sections ~/core_dump/EXECUTABLE_NAME | grep debug
+  [31] .debug_aranges    PROGBITS        00000000 804b590 103188 00      0   0  8
+  [32] .debug_info       PROGBITS        00000000 814e718 36190510 00      0   0  1
+  [33] .debug_abbrev     PROGBITS        00000000 3e2dec28 11ab22e 00      0   0  1
+  [34] .debug_line       PROGBITS        00000000 3f489e56 270d2c1 00      0   0  1
+  [35] .debug_frame      PROGBITS        00000000 41b97118 995ad0 00      0   0  4
+  [36] .debug_str        PROGBITS        00000000 4252cbe8 21fded2 01  MS  0   0  1
+  [37] .debug_loc        PROGBITS        00000000 4472aaba 7b4de56 00      0   0  1
+  [38] .debug_macinfo    PROGBITS        00000000 4c278910 02110e 00      0   0  1
+  [39] .debug_ranges     PROGBITS        00000000 4c299a20 1537ce0 00      0   0  8
+$
+
+If you see output like this, then ELF file contains debugging info. Else (if it
+was stripped or compiled without "-g") the output is empty.
+Now reload gdb, and determine where do we need to put libc by executing gdb
+command "info sharedlibrary" (gdb should use it to reconstruct correct backtrace):
+
+$ cd ~/core_dump
+$ gdb-multiarch
+GNU gdb (Debian 7.7.1+dfsg-5) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+(gdb) set architecture arm
+The target architecture is assumed to be arm
+(gdb) file EXECUTABLE_NAME
+Reading symbols from EXECUTABLE_NAME...done.
+(gdb) core-file Coredump.EXECUTABLE_NAME.pid
+[New LWP 918]
+...
+[New LWP 1557]
+warning: Could not load shared library symbols for 87 libraries, e.g. /dir1/dir2/libSomething.so.
+Use the "info sharedlibrary" command to see the complete listing.
+Do you need "set solib-search-path" or "set sysroot"?
+Core was generated by `/bin/EXECUTABLE_NAME -arg1'.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  0xa71116c0 in ?? ()
+(gdb) info sharedlibrary
+    No          /lib/libgcc_s.so.1
+...
+    No          /lib/libc.so.6 # <- our libc must be in folder "/lib" and must be named as "libc.so.6" (note that gdb command "info proc mappings" reported another path and name: "/bin/lib/libc-2.18.so")
+...
+    No          /lib/ld-linux.so.3
+(gdb)
+
+Search for not stripped version of libc and copy it:
+
+$ cd /home/build/Perforce/dir3/dir4
+$ find -type f -name libc.so.6
+$ # <- no results, try another name:
+$ find -type f -name libc-2.18.so
+$ mkdir -p ~/core_dump/rootfs/lib
+$ cp ./SymbolFiles/bin/lib/libc-2.18.so ~/core_dump/rootfs/lib/libc.so.6 # note: name changed from "libc-2.18.so" to "libc.so.6" 
+
+Make sure libc contains debugging info:
+
+$ readelf --sections ~/core_dump/rootfs/lib/libc.so.6 | grep debug
+  [70] .debug_aranges    PROGBITS        00000000 13b710 00b830 00      0   0  8
+  [71] .debug_info       PROGBITS        00000000 146f40 437354 00      0   0  1
+  [72] .debug_abbrev     PROGBITS        00000000 57e294 0a1625 00      0   0  1
+  [73] .debug_line       PROGBITS        00000000 61f8b9 0caddf 00      0   0  1
+  [74] .debug_frame      PROGBITS        00000000 6ea698 0228b8 00      0   0  4
+  [75] .debug_str        PROGBITS        00000000 70cf50 026d0f 01  MS  0   0  1
+  [76] .debug_loc        PROGBITS        00000000 733c5f 141004 00      0   0  1
+  [77] .debug_ranges     PROGBITS        00000000 874c63 02bc20 00      0   0  1
+$
+
+Libc contains debugging info.
+Reload gdb and use gdb command "set sysroot" to point gdb from where to load
+absolute shared library symbol files:
+
+$ cd ~/core_dump
+$ gdb-multiarch
+GNU gdb (Debian 7.7.1+dfsg-5) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+(gdb) set architecture arm
+The target architecture is assumed to be arm
+(gdb) set sysroot rootfs
+(gdb) file EXECUTABLE_NAME
+Reading symbols from EXECUTABLE_NAME...done.
+(gdb) core-file Coredump.EXECUTABLE_NAME.pid
+warning: exec file is newer than core file.
+[New LWP 918]
+...
+[New LWP 1557]
+warning: Could not load shared library symbols for 86 libraries, e.g. /dir1/dir2/libSomething.so.
+Use the "info sharedlibrary" command to see the complete listing.
+Do you need "set solib-search-path" or "set sysroot"?
+Core was generated by `/bin/EXECUTABLE_NAME -arg1'.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  memcpy () at ../ports/sysdeps/arm/memcpy.S:202
+202    ../ports/sysdeps/arm/memcpy.S: No such file or directory.
+(gdb)
+
+Note that gdb commands order matters. Please follow these steps precisely.
+Check whether gdb loaded our libc:
+
+(gdb) info sharedlibrary
+                        No          /dir1/dir2/libSomething.so
+...
+                        No          /lib/libgcc_s.so.1
+0xa70a7e70  0xa71a60f8  Yes         rootfs/lib/libc.so.6 # <- gdb has loaded our libc successfully
+                        No          /lib/ld-linux.so.3
+...
+                        No          /lib/libflash.so
+(gdb)
+Now we can finally examine backtrace:
+(gdb) bt
+#0  memcpy () at ../ports/sysdeps/arm/memcpy.S:202
+#1  0x02ce050c in some_func (param=0x50743b14, param@entry=0x50743b0c) at /home/build/Perforce/dir3/dir4/dir5/dir6/Src/dir7/Src/some_module/some_module_Init.c:150
+#2  0x02ce1f00 in some_module_Init (type_disc=<optimized out>) at /home/build/Perforce/dir3/dir4/dir5/dir6/Src/dir7/Src/some_module/some_module_Init.c:1320
+#3  0x02cdcd68 in dir7_Init_Disc (disc_type=<optimized out>, pLoader=<optimized out>) at /home/build/Perforce/dir3/dir4/dir5/dir6/Src/dir7/Src/dir7_Init_Disc.c:396
+#4  0xb0e775c4 in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+
+You can use gdb commands "bt full" and "frame" to examine stack in more detail.
+If you have build YOUR_DEVICE software on build server but want to examine
+backtrace on your local PC, you may encounter issue viewing source files in gdb:
+(gdb) l some_func
+136    /home/build/Perforce/dir3/dir4/dir5/dir6/Src/dir7/Src/some_module/some_module_Init.c: No such file or directory.
+
+Assume you have mounted build server to your "/media/build_server" folder. To fix this issue execute gdb command "set substitute-path":
+(gdb) set substitute-path /home/build/Perforce/dir3/dir4 /media/build_server/home/build/Perforce/dir3/dir4
+
+Now you can view sources within gdb:
+(gdb) l some_func
+136
+137    //    comment 1
+138        /* hardcoding... */
+139
+140    //    comment 2
+141        buf_smth = ctx.buf + ctx.pos_some_module;
+142        pos = 0;
+143
+144        func1(param, buf_some_module, pos);
+145        func1(param, buf_some_module, pos);
+(gdb)
+
+# Do not insert anything at the end of the file

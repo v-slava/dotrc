@@ -95,6 +95,30 @@ function! rtags#ExecuteRC(args, ...)
     return split(output, '\n\+')
 endfunction
 
+function! rtags#ExecuteRCGrep(pattern, args, ...)
+    let cmd = rtags#getRcCmd()
+    if a:0 > 0
+        let longArgs = a:1
+        for longArg in longArgs
+            let cmd .= " --".longArg." "
+        endfor
+    endif
+    for [key, value] in items(a:args)
+        let cmd .= " -".key
+        if len(value) > 1
+            let cmd .= " ".value
+        endif
+    endfor
+	echo
+	let l:grep_pattern = substitute(a:pattern, '*', '.*', 'g')
+    let output = system(cmd . ' | ~/os_settings/other_files/rtags_grep.sh ' . l:grep_pattern)
+    if output =~ '^Not indexed'
+        echohl ErrorMsg | echomsg "[vim-rtags] Current file is not indexed!" | echohl None
+        return []
+    endif
+    return split(output, '\n\+')
+endfunction
+
 function! rtags#CreateProject()
 
 endfunction
@@ -301,13 +325,13 @@ function! rtags#FindVirtuals()
 endfunction
 
 function! rtags#FindRefsByName(name)
-    let result = rtags#ExecuteRC({ 'ae' : '', 'R' : a:name })
+    let result = rtags#ExecuteRCGrep(a:name, { 'ae' : '', 'R' : a:name })
     call rtags#DisplayResults(result)
 endfunction
 
 " case insensitive FindRefsByName
 function! rtags#IFindRefsByName(name)
-    let result = rtags#ExecuteRC({ 'ae' : '', 'R' : a:name, 'I' : '' })
+    let result = rtags#ExecuteRCGrep(a:name, { 'ae' : '', 'R' : a:name, 'I' : '' })
     call rtags#DisplayResults(result)
 endfunction
 
@@ -320,13 +344,13 @@ endfunction
 
 """ rc -HF <pattern>
 function! rtags#FindSymbols(pattern)
-    let result = rtags#ExecuteRC({ 'aF' : a:pattern })
+    let result = rtags#ExecuteRCGrep(a:pattern, { 'aF' : a:pattern })
     call rtags#DisplayResults(result)
 endfunction
 
 " case insensitive FindSymbol
 function! rtags#IFindSymbols(pattern)
-    let result = rtags#ExecuteRC({ 'aIF' : a:pattern })
+    let result = rtags#ExecuteRCGrep(a:pattern, { 'aIF' : a:pattern })
     call rtags#DisplayResults(result)
 endfunction
 
