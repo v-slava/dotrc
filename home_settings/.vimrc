@@ -210,6 +210,8 @@ endfunction
 autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
 
 " glanguage mappings:
+" Use <C-p> to insert word from clipboard:
+autocmd FileType glanguage_en,glanguage_de imap <C-p> <Esc>PA<CR>
 " Use <C-i> to insert <shortinfo></shortinfo> and switch language
 autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
 " Use <C-u> to throw away (undo) current word
