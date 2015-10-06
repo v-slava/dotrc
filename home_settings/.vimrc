@@ -143,7 +143,8 @@ nmap <C-l> zl
 nmap <C-h> zh
 
 " Config reload (vimrc):
-nmap <Leader>cr :source $MYVIMRC<CR>
+" nmap <Leader>cr :source $MYVIMRC<CR>
+nmap <Leader>cr :w<CR>: source %<CR>
 
 " Exit from vim:
 nmap <C-d> :q<CR>
@@ -567,6 +568,44 @@ endfunction
 
 " command! -nargs=1 CmdName call Func_name(<f-args>)
 " command! -nargs=0 CmdName call Func_name('arg1')
+
+function! OpenFile(win, cmd) " at least one colon expected
+	let l:line = strpart(getline('.'), col(".") - 1)
+	let l:colon1 = stridx(l:line, ":", 1)
+	if l:colon1 == -1
+		echoerr "Can't find first colon"
+		return
+	endif
+	let l:colon2 = stridx(l:line, ":", l:colon1 + 1)
+	let l:last_file_char = l:colon2
+	let l:column_number = 0
+	if l:colon2 == -1
+		let l:last_file_char = stridx(l:line, " ", l:colon1 + 1)
+		if l:last_file_char == -1
+			let l:last_file_char = stridx(l:line, "\t", l:colon1 + 1)
+			if l:last_file_char == -1
+				let l:last_file_char = col('$')
+			endif
+		endif
+	else
+		let column_number = str2nr(str2nr(strpart(l:line, l:colon2 + 1)))
+	endif
+	let l:ret = strpart(l:line, 0, l:last_file_char)
+	if l:column_number != 0
+		let l:ret = l:ret . ':' . l:column_number
+	endif
+	if a:win == 'prev_win'
+		execute "normal \<c-w>\<c-p>"
+	endif
+	execute a:cmd . ' ' . l:ret
+endfunction
+nmap <Leader>ft :call OpenFile('cur_win', 'tabopen')<CR>
+nmap <Leader>fj :call OpenFile('cur_win', 'e')<CR>
+nmap <Leader>fv :call OpenFile('cur_win', 'vsp')<CR>
+nmap <Leader>fh :call OpenFile('cur_win', 'sp')<CR>
+nmap <Leader>fpj :call OpenFile('prev_win', 'e')<CR>
+nmap <Leader>fpv :call OpenFile('prev_win', 'vsp')<CR>
+nmap <Leader>fph :call OpenFile('prev_win', 'sp')<CR>
 
 if has('nvim')
 	" First invoke terminal:
