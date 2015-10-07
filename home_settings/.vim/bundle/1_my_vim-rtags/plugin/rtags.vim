@@ -20,6 +20,8 @@ if g:rtagsUseDefaultMappings == 1
     noremap <Leader>rh :call rtags#JumpTo(" ")<CR>
     noremap <Leader>rv :call rtags#JumpTo("vert")<CR>
     noremap <Leader>rt :call rtags#JumpTo("tab")<CR>
+    noremap <Leader>re :call rtags#PreprocessFileAndFormat()<CR>
+    noremap <Leader>rE :call rtags#PreprocessFile()<CR>
     noremap <Leader>rp :call rtags#JumpToParent()<CR>
     noremap <Leader>rf :call rtags#FindRefs()<CR>
     noremap <Leader>rn :call rtags#IFindRefsByName(input("Pattern? "))<CR>
@@ -380,9 +382,21 @@ function! rtags#ProjectClose(pattern)
 endfunction
 
 function! rtags#PreprocessFile()
+	let l:orig_filetype = &filetype
     let result = rtags#ExecuteRC({ 'E' : expand("%:p") })
-    vnew
+	execute "vnew " . "/tmp/preprocessed_" . expand("%:t")
     call append(0, result)
+	execute "set filetype=" . l:orig_filetype
+	normal gg
+	write
+endfunction
+
+function! rtags#PreprocessFileAndFormat()
+	call rtags#PreprocessFile()
+	let l:out_file = '/tmp/formatted_' . expand("%:t")
+	execute "write !uncrustify -o " . l:out_file
+	execute "edit " . l:out_file
+	" execute "vnew " . l:out_file
 endfunction
 
 function! rtags#ReindexFile()

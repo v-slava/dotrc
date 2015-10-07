@@ -19,6 +19,8 @@
 " | <Leader>rl | -w               | List all available projects                |
 " | <Leader>rr | -e -r --rename   | Rename symbol under cursor                 |
 " | <Leader>r= | -k -r            | Find virtuals                              |
+" | <Leader>re | -E               | preprocess and reformat                    |
+" | <Leader>rE | -E               | preprocess                                 |
 " +------------+------------------+--------------------------------------------+
 "
 " To repeat last colon command (in normal mode): @:, @@, @@, @@, ...
