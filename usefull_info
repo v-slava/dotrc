@@ -887,7 +887,7 @@ echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 
 # Restore deleted file:
 mkdir restore
-sudo extundelete --restore-file other/commands --output-dir restore /dev/sda5
+sudo extundelete --restore-file other/commands -o restore /dev/sda5
 
 # Linux kernel objdump
 arm-linux-gnueabi-objdump -D -b binary -m arm Image
