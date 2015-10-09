@@ -451,10 +451,10 @@ command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
 " swap panels:
 nmap qs <c-w>x
-nmap qd :winrun ^ !diff.sh %c %C<cr>
-nmap qv :winrun ^ !vimdiff.sh %c %C<cr>
-nmap qg :winrun ^ !diffuse %c %C<cr>
-nmap qh :winrun ^ !dhex %c %C<cr>
+nmap qd :winrun ^ !diff.sh %d/%c %C<cr>
+nmap qv :winrun ^ !vimdiff.sh %d/%c %C<cr>
+nmap qg :winrun ^ !diffuse %d/%c %C<cr>
+nmap qh :winrun ^ !dhex %d/%c %C<cr>
 nmap qm :winrun ^ !mc %d %D<cr>
 nmap qf :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
