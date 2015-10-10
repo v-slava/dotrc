@@ -52,21 +52,6 @@ gcc FILE.c -o FILE.d -MM -MT FILE.o
 # Reformat source file with uncrustify:
 uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 
-# Use doxygen to generate documentation:
-cd OUTPUT_FOLDER
-# generate sample Doxyfile:
-doxygen -g
-# fix Doxyfile (see the following options):
-# PROJECT_NAME INPUT RECURSIVE SOURCE_BROWSER INLINE_SOURCES
-# STRIP_CODE_COMMENTS GENERATE_LATEX GENERATE_DOCBOOK HAVE_DOT CALL_GRAPH
-# CALLER_GRAPH CLASS_GRAPH EXTRACT_ALL EXTRACT_STATIC REFERENCED_BY_RELATION
-# REFERENCED_RELATION MACRO_EXPANSION SKIP_FUNCTION_MACROS
-vim Doxyfile
-# generate documentation:
-doxygen
-# view generated documentation:
-firefox html/index.html
-
 # Use valgrind for dynamic memory analysis:
 valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
 
@@ -237,16 +222,20 @@ gpg --symmetric --cipher-algo AES256 FILE
 # gpg decrypt file:
 gpg --decrypt FILE > OUT_FILE
 
-# doxygen generate info for any C/C++ project:
-# generate doxygen file:
-doxygen -s -g [Doxyfile]
+# Use doxygen to generate documentation:
+cd OUTPUT_FOLDER
+# generate sample Doxyfile:
+doxygen -g
+# fix Doxyfile (see the following options):
+# PROJECT_NAME INPUT RECURSIVE SOURCE_BROWSER INLINE_SOURCES
+# STRIP_CODE_COMMENTS GENERATE_LATEX GENERATE_DOCBOOK HAVE_DOT CALL_GRAPH
+# CALLER_GRAPH CLASS_GRAPH EXTRACT_ALL EXTRACT_STATIC REFERENCED_BY_RELATION
+# REFERENCED_RELATION MACRO_EXPANSION SKIP_FUNCTION_MACROS
 vim Doxyfile
-# Set the following config options to YES:
-# RECURSIVE, HAVE_DOT, CALL_GRAPH, CALLER_GRAPH
-# INPUT = path_to_your_folder
-# Also make sure the path to dot is in your PATH variable.
-# If that still doesn't work, set to YES:
-# EXTRACT_ALL, EXTRACT_STATIC
+# generate documentation:
+doxygen
+# view generated documentation:
+firefox html/index.html
 
 # Display the whole server certificate chain:
 openssl s_client -showcerts -connect developer.mozilla.org:443 </dev/null

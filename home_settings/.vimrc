@@ -116,7 +116,8 @@ set ignorecase
 set incsearch
 set mouse=a
 
-set autoindent
+" set autoindent
+set cindent
 " set cindent " C-style indents (after '{' and so on)
 set number " display line numbers
 " set nowrap " do not wrap long lines
