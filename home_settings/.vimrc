@@ -182,6 +182,7 @@ set clipboard=unnamedplus
 " Preserve copied text in clipboard on exit:
 autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 
+filetype plugin on
 " Set correct filetypes:
 " autocmd BufRead,BufNewFile
 autocmd BufEnter vifmrc setlocal filetype=vifm
@@ -209,35 +210,8 @@ function! OpenLocation()
 	execute "ll " . line('.')
 	normal zz
 endfunction
+" Open location in QuickFix window:
 autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
-
-" glanguage mappings:
-" Use <C-p> to insert word from clipboard:
-autocmd FileType glanguage_en,glanguage_de imap <C-p> <Esc>PA<CR>
-" Use <C-i> to insert <shortinfo></shortinfo> and switch language
-autocmd FileType glanguage_en,glanguage_de imap <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
-" Use <C-u> to throw away (undo) current word
-autocmd FileType glanguage_en,glanguage_de imap <C-u> <Esc>ddk<C-k>S| call Update_status_line('', 'normal')
-function! Translate()
-	" copy line to clipboard
-	execute 'normal! 0y$'
-	" translate line with goldendict
-	call system('goldendict "$(clipboard.sh -o)" &')
-endfunction
-function! Translate_and_say_english()
-	if &iminsert == 0 " If current keyboard layout is not russian
-		call Translate()
-		" say line (if LINE.mp3 is available)
-		call system('~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)" &')
-	endif " else do nothing
-endfunction
-function! Translate_german()
-	if &iminsert == 0 " If current keyboard layout is not russian
-		call Translate()
-	endif
-endfunction
-autocmd FileType glanguage_en imap <CR> <Esc> k :call Translate_and_say_english()<CR><C-k>o
-autocmd FileType glanguage_de imap <CR> <Esc> k :call Translate_german()<CR><C-k>o
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
@@ -308,7 +282,6 @@ function! German_mapping_toggle()
 	call Update_status_line('', 'normal')
 endfunction
 let g:german = 0 " disable german mappings by default
-autocmd FileType glanguage_de call German_mapping_toggle()
 nmap <F7> :call German_mapping_toggle()<CR>
 imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
 
