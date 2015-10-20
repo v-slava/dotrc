@@ -1,6 +1,5 @@
 # This file is sourced by the following scripts:
 
-# volume.sh
 # bluetooth_connected.sh
 # bluetooth_toggle.sh
 

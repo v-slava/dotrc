@@ -10,15 +10,8 @@ if [ -z "$1" ] ; then
 fi
 
 VOLUME="$1"
-
-source ~/.config_xdg/BT_MAC.sh
-
-if ~/os_settings/other_files/bluetooth_connected.sh ; then
-	SINK="$(pactl list sinks | grep 'Name: bluez_sink\.' | cut -d' ' -f2)"
-else
-	SINK="$(pactl list sinks | grep 'Name: alsa_output' | cut -d' ' -f2)"
-fi
+SINK_NAME="$(~/os_settings/other_files/get_sink_name.sh)"
 
 # amixer set Master 3%+
-pactl -- set-sink-volume "$SINK" "$VOLUME"
+pactl -- set-sink-volume "$SINK_NAME" "$VOLUME"
 
