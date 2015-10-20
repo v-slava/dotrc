@@ -66,9 +66,12 @@ EOF
 			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2
 		fi
 	done # while [ $bluetoothctl_RET -ne 1 ]
+	BT_SINK=""
+	while [ "$BT_SINK" = "" ]; do
+		BT_SINK="$(pactl list sinks | grep 'Name: bluez_sink\.' | cut -d' ' -f2)"
+	done
 	set -e
-	BT_SINK=$(pacmd list-sinks | grep -o "bluez_sink\.$(echo $BT_MAC | sed 's/:/\./g')")
-	pacmd set-default-sink $BT_SINK
+	pacmd set-default-sink "$BT_SINK"
 	~/os_settings/other_files/volume.sh 20%
 	echo "Connected to bluetooth headset $(hcitool name $BT_MAC) (MAC = $BT_MAC)."
 fi

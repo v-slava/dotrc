@@ -14,7 +14,7 @@ VOLUME="$1"
 source ~/.config_xdg/BT_MAC.sh
 
 if ~/os_settings/other_files/bluetooth_connected.sh ; then
-	SINK="bluez_sink.$(echo $BT_MAC | sed 's/:/_/g')"
+	SINK="$(pactl list sinks | grep 'Name: bluez_sink\.' | cut -d' ' -f2)"
 else
 	SINK="$(pactl list sinks | grep 'Name: alsa_output' | cut -d' ' -f2)"
 fi
