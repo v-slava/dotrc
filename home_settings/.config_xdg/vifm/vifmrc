@@ -427,10 +427,9 @@ nnoremap ot :! arm-linux-gnueabi-objdump -t ./%c | less<cr>
 nnoremap os :! arm-linux-gnueabi-objdump -S ./%c | less<cr>
 nnoremap ob :! arm-linux-gnueabi-objdump -D -b binary -m arm ./%c | less<cr>
 
-nnoremap xx :! mkdir extracted_%f && cd extracted_%f && $HOME/os_settings/other_files/extract_progress.sh ../%f<cr>
-nnoremap xh :! $HOME/os_settings/other_files/extract_progress.sh %"f<cr>
-vmap xh :! $HOME/os_settings/other_files/extract_progress.sh %"f<cr>
-nmap xc :! $HOME/os_settings/other_files/compress.sh %"f<cr>
+nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
+vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
+nmap xc :! $HOME/os_settings/other_files/compress.sh %f<cr>
 
 " Yank current directory path into the clipboard
 nnoremap yd :!echo -n %d | clipboard.sh<cr>

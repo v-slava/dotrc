@@ -116,9 +116,9 @@ set ignorecase
 set incsearch
 set mouse=a
 
-" set autoindent
-set cindent
+set autoindent
 " set cindent " C-style indents (after '{' and so on)
+" set smartindent
 set number " display line numbers
 " set nowrap " do not wrap long lines
 set linebreak
@@ -205,7 +205,8 @@ autocmd FileType c,cpp,sh,expect,cmake,vim,python setlocal tabstop=4
 autocmd FileType c,cpp,sh,expect,cmake,vim,python setlocal shiftwidth=4
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
-autocmd FileType c,cpp setlocal textwidth=80
+autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
+" autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 
 function! OpenLocation()
 	execute "ll " . line('.')
@@ -440,6 +441,7 @@ call tcomment#DefineType('kconfig', '# %s')
 call tcomment#DefineType('sudoers', '# %s')
 call tcomment#DefineType('inittab', '# %s')
 call tcomment#DefineType('mplayerconf', '# %s')
+call tcomment#DefineType('text', '# %s')
 call tcomment#DefineType('aptconf', '// %s')
 call tcomment#DefineType('jtag_script', '; %s')
 call tcomment#DefineType('claws_mail_menurc', '; %s')
