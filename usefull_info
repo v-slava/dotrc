@@ -1,3 +1,13 @@
+# Create static executable with rust:
+# 1. Emit object file:
+rustc -O --emit obj main.rs
+# 2. Print linker arguments:
+rustc -O -Z print-link-args main.rs
+# Use printed link command with the following modifications:
+# 1) add "-static", "-static-libgcc"
+# 2) change "gcc_s" => "gcc_eh"
+# 3) delete "-pie", "-Wl,-Bdynamic"
+
 # create JSON file with build commands, used by clang tooling interface (rtags):
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 bear make
