@@ -10,3 +10,4 @@ http://ejudge.surc.kiev.ua/cgi-bin/new-client?contest_id=13	ejudge batch #1]	eju
 http://ejudge.surc.kiev.ua/cgi-bin/new-client?contest_id=14	ejudge batch #2]	ejudge new 2
 http://sonar.surc.kiev.ua/	SonarQube	sonar
 https://106.125.34.167/teamCity/login.html	Log in to TeamCity -- TeamCity	teamcity
+file:///usr/local/share/doc/rust/html/book/README.html	The Rust Programming Language	rust

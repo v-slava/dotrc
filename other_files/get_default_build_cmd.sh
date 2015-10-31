@@ -24,6 +24,9 @@ case "$IN" in
 	*.c)
 		echo "gcc \"$IN\" $FLAGS -o \"$OUT\""
 	;;
+	*.rs)
+		echo "rustc \"$IN\" -o \"$OUT\""
+	;;
 	*)
 		echo 'echo "Default build command for this file type is not defined" && false'
 		exit 1

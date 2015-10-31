@@ -1,9 +1,5 @@
 set download-path=~/downloads
 
-# For downloading music via script:
-# set download-path=/media/files/egor_music/mus
-# autocmd DownloadFinished *pleer.com* q
-
 # set home-page=https://www.google.com.ua/
 # set home-page=file:///home/volkov/os_settings/other_files/start_page.html
 set editor-command=x-terminal-emulator -e vim '%s'
@@ -54,6 +50,10 @@ shortcut-add mus=http://pleer.com/search?q=$0#
 # www.audiopoisk.com
 # http://mp3brainz.net/
 # http://epicmusictime.com/ # online radio
+
+# Music recognition service:
+# http://audiotag.info/index.php
+
 # Search for torrent on rutracker.org:
 shortcut-add tor=http://rutracker.org/forum/tracker.php?nm=$0
 # Search for videos on youtube.com:

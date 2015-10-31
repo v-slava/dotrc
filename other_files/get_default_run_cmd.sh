@@ -24,6 +24,9 @@ case "$IN" in
 	*.c)
 		echo "$OUT"
 	;;
+	*.rs)
+		echo "$OUT"
+	;;
 	*)
 		echo 'echo "Default run command for this file type is not defined" && false'
 		exit 1
