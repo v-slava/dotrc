@@ -119,7 +119,8 @@ set mouse=a
 set autoindent
 " set cindent " C-style indents (after '{' and so on)
 " set smartindent
-set number " display line numbers
+" set number " display line numbers
+set relativenumber
 " set nowrap " do not wrap long lines
 set linebreak
 
@@ -306,7 +307,8 @@ let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
 let g:error_index = -1
 let g:warnings = 'w' " change to 'nw' if you want to suppress warnings
 let g:filter = 'nf' " change to shell script name if you want to filter issues
-function! Build_and_run(build_cmd, run_cmd, warnings, filter)
+let g:run_interactive = 'false' " change to 'true' to spawn terminal
+function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	call Update_status_line('Build started...', 'normal')
 	let g:OUT_DIR = '/tmp/vim_ide_dir'
 	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
@@ -314,14 +316,26 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter)
 	let l:src_loc_file = g:OUT_DIR . '/source_locations'
 	let l:issues_found = filereadable(l:src_loc_file)
 	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
-		let l:run_log = g:OUT_DIR . '/run_log'
-		call system('echo -e "Output:\n" > ' . l:run_log)
-		call Update_status_line('Running...', 'normal')
-		call system("echo '" . a:run_cmd . "' | bash 1>>" . l:run_log . ' 2>&1')
-		let l:run_exit_code = v:shell_error
-		call system('echo -en "\nExit code: ' . l:run_exit_code . '" >> ' . l:run_log)
-		execute 'botright pedit ' . l:run_log
-		call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
+		if a:run_interactive == 'false'
+			let l:run_log = g:OUT_DIR . '/run_log'
+			call Update_status_line('Running...', 'normal')
+			call system("echo '" . a:run_cmd . "' | bash 1>" . l:run_log . ' 2>&1')
+			let l:run_exit_code = v:shell_error
+			execute 'botright pedit ' . l:run_log
+			call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
+		else " a:run_interactive == 'true'
+			if !has('nvim')
+				call Update_status_line('Interactive mode is only available in neovim', 'error')
+			else
+				call Update_status_line('Running...', 'normal')
+				execute 'botright split term://' . a:run_cmd
+				startinsert
+
+				" run_interactive exit code:
+				" NVIM_LISTEN_ADDRESS
+				" call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
+			endif
+		endif
 	else " build failed => open error log for first error and goto source location
 		if l:issues_found
 			let g:source_locations = readfile(l:src_loc_file)
@@ -334,9 +348,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter)
 	endif
 endfunction
 " build begin (with warinings):
-nmap <silent> <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <silent> <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 " rebuild begin (with warinings):
-nmap <silent> <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <silent> <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -591,9 +605,9 @@ if has('nvim')
 	" First invoke terminal:
 	nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
 	" Use <C-Space> in terminal to switch to normal mode:
-	tnoremap <C-@> <C-\><C-n>:set number<CR>
+	tnoremap <C-@> <C-\><C-n>:set relativenumber<CR>
 	" In terminal switch back to insert mode:
-	nmap <Leader>ti :set nonumber<CR>:startinsert<CR>
+	nmap <C-@> :set norelativenumber<CR>:startinsert<CR>
 	" Copy modified file name from git status:
 	function! Git_copy_modified_file_name(file_number)
 		let l:line_1 = search('        modified:   ', 'b')
@@ -602,7 +616,7 @@ if has('nvim')
 			return
 		endif
 		let @+ = strpart(getline(l:line_1 - a:file_number + 1), 20)
-		set nonumber
+		set norelativenumber
 		startinsert
 	endfunction
 	command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)

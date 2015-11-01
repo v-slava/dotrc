@@ -9,8 +9,8 @@
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-" set vicmd=nvim
-set vicmd=vim
+set vicmd=nvim
+" set vicmd=vim
 
 " Trash Directory
 " The default is to move files that are deleted with dd or :d to
