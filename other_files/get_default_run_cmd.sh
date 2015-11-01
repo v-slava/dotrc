@@ -26,6 +26,7 @@ case "$IN" in
 	;;
 	*.rs)
 		echo "$OUT"
+		# echo "cargo run"
 	;;
 	*)
 		echo 'echo "Default run command for this file type is not defined" && false'

@@ -334,9 +334,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter)
 	endif
 endfunction
 " build begin (with warinings):
-nmap <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <silent> <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 " rebuild begin (with warinings):
-nmap <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
+nmap <silent> <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -348,7 +348,7 @@ function! Configure(config_cmd)
 	execute 'botright pedit ' . l:config_log
 	call Update_status_line('Config is done. Exit code: ' . l:config_exit_code, 'normal')
 endfunction
-nmap <Leader>bc :w<CR>:call Configure(g:config_cmd)<CR>
+nmap <silent> <Leader>bc :w<CR>:call Configure(g:config_cmd)<CR>
 
 function! Show_error( error_index )
 	let l:current_source_location = get(g:source_locations, a:error_index)

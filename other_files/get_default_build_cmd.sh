@@ -26,6 +26,7 @@ case "$IN" in
 	;;
 	*.rs)
 		echo "rustc \"$IN\" -o \"$OUT\""
+		# echo "cargo build"
 	;;
 	*)
 		echo 'echo "Default build command for this file type is not defined" && false'
