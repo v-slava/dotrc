@@ -200,9 +200,8 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 " Set correct syntax:
 autocmd FileType asm setlocal syntax=armasm
 
-" Set tab width:
-autocmd FileType c,cpp,sh,expect,cmake,vim,python setlocal tabstop=4
-autocmd FileType c,cpp,sh,expect,cmake,vim,python setlocal shiftwidth=4
+" Tab settings:
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python setlocal tabstop=4 | setlocal noexpandtab | setlocal shiftwidth=0
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
