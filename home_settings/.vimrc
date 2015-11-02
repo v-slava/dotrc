@@ -324,17 +324,18 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 			execute 'botright pedit ' . l:run_log
 			call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
 		else " a:run_interactive == 'true'
-			if !has('nvim')
-				call Update_status_line('Interactive mode is only available in neovim', 'error')
-			else
-				call Update_status_line('Running...', 'normal')
-				execute 'botright split term://' . a:run_cmd
-				startinsert
-
-				" run_interactive exit code:
-				" NVIM_LISTEN_ADDRESS
-				" call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
-			endif
+			call Update_status_line('Running started (may be ended now)...', 'normal')
+			call system("x-terminal-emulator -e bash -i -c '" . a:run_cmd . " ; echo -e $? ; vifm-pause' &")
+			" if !has('nvim')
+			" 	call Update_status_line('Interactive mode is only available in neovim', 'error')
+			" else
+			" 	call Update_status_line('Running...', 'normal')
+			" 	execute 'botright split term://' . a:run_cmd
+			" 	startinsert
+			" 	" run_interactive exit code:
+			" 	" NVIM_LISTEN_ADDRESS
+			" 	" call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
+			" endif
 		endif
 	else " build failed => open error log for first error and goto source location
 		if l:issues_found

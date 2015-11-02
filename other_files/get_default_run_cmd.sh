@@ -16,20 +16,20 @@ FLAGS=" -Wall -Wextra "
 
 case "$IN" in
 	*.sh | *.bash | *.py )
-		echo "./$IN"
+		echo -n "./$IN"
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)
-		echo "$OUT"
+		echo -n "$OUT"
 	;;
 	*.c)
-		echo "$OUT"
+		echo -n "$OUT"
 	;;
 	*.rs)
-		echo "$OUT"
-		# echo "cargo run"
+		echo -n "$OUT"
+		# echo -n "cargo run"
 	;;
 	*)
-		echo 'echo "Default run command for this file type is not defined" && false'
+		echo -n 'echo "Default run command for this file type is not defined" && false'
 		exit 1
 esac
 

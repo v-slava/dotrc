@@ -16,20 +16,20 @@ FLAGS=" -Wall -Wextra "
 
 case "$IN" in
 	*.sh | *.bash | *.py )
-		echo "chmod +x \"$IN\""
+		echo -n "chmod +x \"$IN\""
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)
-		echo "g++ \"$IN\" $FLAGS -o \"$OUT\""
+		echo -n "g++ \"$IN\" $FLAGS -o \"$OUT\""
 	;;
 	*.c)
-		echo "gcc \"$IN\" $FLAGS -o \"$OUT\""
+		echo -n "gcc \"$IN\" $FLAGS -o \"$OUT\""
 	;;
 	*.rs)
-		echo "rustc \"$IN\" -o \"$OUT\""
-		# echo "cargo build"
+		echo -n "rustc \"$IN\" -o \"$OUT\""
+		# echo -n "cargo build"
 	;;
 	*)
-		echo 'echo "Default build command for this file type is not defined" && false'
+		echo -n 'echo "Default build command for this file type is not defined" && false'
 		exit 1
 esac
 
