@@ -9,8 +9,8 @@
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-set vicmd=nvim
-" set vicmd=vim
+" set vicmd=nvim
+set vicmd=vim
 
 " Trash Directory
 " The default is to move files that are deleted with dd or :d to
@@ -457,6 +457,7 @@ nmap qh :winrun ^ !dhex %d/%c %C<cr>
 nmap qm :winrun ^ !mc %d %D<cr>
 nmap qf :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
+command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
 command hexedit hed %c
 
