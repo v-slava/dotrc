@@ -473,7 +473,7 @@
   <doubleClickTranslates>1</doubleClickTranslates>
   <selectWordBySingleClick>0</selectWordBySingleClick>
   <escKeyHidesMainWindow>0</escKeyHidesMainWindow>
-  <zoomFactor>1</zoomFactor>
+  <zoomFactor>1.4</zoomFactor>
   <wordsZoomLevel>0</wordsZoomLevel>
   <enableMainWindowHotkey>0</enableMainWindowHotkey>
   <mainWindowHotkey>Ctrl+F11, Ctrl+F11</mainWindowHotkey>
