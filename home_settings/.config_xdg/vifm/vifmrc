@@ -432,15 +432,16 @@ vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
 nmap xc :! $HOME/os_settings/other_files/compress.sh %f<cr>
 
 " Yank current directory path into the clipboard
-nnoremap yd :!echo -n %d | clipboard.sh<cr>
+nnoremap yd :!echo -n "%d" | clipboard.sh<cr>
 " Yank current file (full path) into the clipboard
-nnoremap yf :!echo -n %c:p | clipboard.sh<cr>
+nnoremap yf :!echo -n "%c:p" | clipboard.sh<cr>
 " Yank current file (name only) into the clipboard
-nnoremap yn :!echo -n %c | clipboard.sh<cr>
+nnoremap yn :!echo -n "%c" | clipboard.sh<cr>
 " Rename file: replace spaces with underscores:
-nnoremap ns :!echo -n %c | sed -e 's/ /_/g' | xargs mv %c <cr>
+nnoremap ns :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <cr>
 " Rename file: replace big letters with little ones:
-nnoremap nl :!echo -n %c | tr '[:upper:]' '[:lower:]' | xargs -d\' mv %c <cr>
+nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <cr>
+" nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' && echo<cr>
 
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<cr>
