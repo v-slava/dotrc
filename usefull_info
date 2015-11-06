@@ -85,14 +85,8 @@ progress -wm
 tar cf tar_name.tar ./source_directory/*
 tar czf archive.tar.gz /path/to/directory
 
-# .gitignore file in .git folder:
-.git/info/exclude
-
 # get Makefile directory in Makefile:
 MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-
-# git change author of commit:
-git commit --amend --author "New Author Name <email@address.com>"
 
 #pragma pack(push, 1)
 #pragma pack(pop)
@@ -371,6 +365,30 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# Create patch file:
+git format-patch -1 [-o OUT_DIR]
+# Apply patch file:
+git apply PATCH_FILE
+# Apply patch file and create commit based on it:
+git am < PATCH_FILE
+
+# git change author of commit:
+git commit --amend --author "New Author Name <email@address.com>"
+
+# create bundle:
+git bundle create BUNDLE_FILE COMMIT_FROM..COMMIT_TO
+# verify bundle:
+git bundle verify BUNDLE_FILE
+# view current remotes:
+git remote [-v]
+# add bundle as remote:
+git remote add REMOTE_NAME BUNDLE_FILE
+# fetch new remote:
+git fetch REMOTE_NAME
+
+# .gitignore file in .git folder:
+.git/info/exclude
+
 # do not track changes in commited file:
 git update-index --assume-unchanged FILE
 
@@ -382,10 +400,6 @@ git diff-tree --no-commit-id --name-only -r COMMIT
 git show --name-only COMMIT
 # Show changes introduced by a commit in a single given file:
 git show COMMIT FILE
-
-# Create patch file (use git diff):
-git diff folder1 folder2 --no-prefix > patch_file
-git diff commitid1 commitid2 > patch_file
 
 # Git do not verify ssl certificates:
 git config [--global] http.sslVerify false
@@ -405,20 +419,12 @@ git branch -vv
 git branch -u origin/remote_branch [local_branch]
 # The same for git 1.7 (old):
 git branch --set-upstream local_branch origin/remote_branch
-# gerrit update branch
-git pull --rebase
 
 # gerrit udpate commit (patch set):
 git push origin HEAD:refs/changes/CHANGE_NUMBER
 
 # Gerrit commit:
 git push origin HEAD:refs/for/BRANCH_NAME
-
-# Gerrit sample commit:
-git pull
-git checkout local_branch
-git rebase -i origin/remote_branch
-git push origin local_branch:remote_branch
 
 # Show changes in the cache/index (i.e. staged chenages) against the current HEAD:
 git diff --name-only --cached
