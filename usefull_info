@@ -212,7 +212,7 @@ mplayer -ao alsa:device=btheadset file.mp3
 hdparm -R0 /dev/sdX
 hdparm -r0 /dev/sdX
 
-# Read korean text:
+# Read korean text (locale):
 LANG=ko_KR.EUC-KR gvim file.cpp
 
 # Generate SSH keys:

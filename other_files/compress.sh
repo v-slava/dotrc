@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Extract archive to the current directory
-
 usage()
 {
 	echo "Usage: $(basename $0) FILE ..." 1>&2
