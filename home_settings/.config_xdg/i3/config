@@ -150,10 +150,10 @@ for_window [class="Icedove" title="Search Messages"] floating enable
 bindsym $CTRL+$Alt_L+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym $CTRL+$Alt_L+r exec exec sudo reboot
-bindsym $CTRL+$Alt_L+s exec ~/os_settings/other_files/lock_screen.sh && sudo systemctl suspend
+bindsym $CTRL+$Alt_L+s exec ~/os_settings/other_files/lock_screen.sh && exec sudo systemctl suspend
 # bindsym $CTRL+$Alt_L+h exec sudo poweroff
-bindsym $CTRL+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/shutdown_hotkey.sh
-for_window [class="URxvt" title="shutdown script"] floating enable
+bindsym $CTRL+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/hibernate_hotkey.sh
+for_window [class="URxvt" title="hibernate script"] floating enable
 
 bindsym $WIN+k exec --no-startup-id exec keynav
 
@@ -195,6 +195,9 @@ bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.Att
 # autostart mail client (icedove):
 exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
 bindsym $Alt_L+m exec --no-startup-id exec icedove
+
+# Start goldendict:
+exec --no-startup-id exec goldendict
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
