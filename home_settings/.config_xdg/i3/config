@@ -28,6 +28,7 @@ floating_modifier $Alt_L
 bindsym $Alt_R+Shift+Q kill
 
 # change focus
+# bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
 bindsym $Alt_L+h focus left
 bindsym $Alt_L+j focus down
 bindsym $Alt_L+k focus up

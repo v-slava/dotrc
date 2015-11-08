@@ -11,6 +11,7 @@
 
 " set vicmd=nvim
 set vicmd=vim
+" set vicmd="vim --servername VIM"
 
 " Trash Directory
 " The default is to move files that are deleted with dd or :d to

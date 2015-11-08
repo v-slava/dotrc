@@ -23,6 +23,8 @@
 " | <Leader>rE | -E               | preprocess                                 |
 " +------------+------------------+--------------------------------------------+
 "
+" To reindent json: 1) Make a selection. 2) :!python -m json.tool
+"
 " To repeat last colon command (in normal mode): @:, @@, @@, @@, ...
 " Toggle language: <C-K>
 "
