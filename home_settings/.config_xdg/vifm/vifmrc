@@ -371,8 +371,6 @@ mark s ~/other/my_samples/single_sources
 mark t ~/temporary
 mark w ~/workspace
 mark p ~/workspace/15_UHD_BD
-mark i ~/workspace/uhd_image/p4_workspace
-mark I /media/build_server/home/build/Perforce/402_1/DEV-UDAV15x64-vl.shein_server/PRD/Prd_Hawk/B-HAWKAVWWC/Build/BIN/B-HAWKAVWWC/image
 mark O ~/os_settings
 mark m /media
 mark u /media/sdb1
@@ -380,7 +378,6 @@ mark f /media/files
 mark n /media/files/new_music
 mark M /media/files/music
 mark T /media/files/trash_vifm
-mark B /media/new_build_server/home/bld
 mark E /media/build_server/home/exchange
 mark e /media/new_build_server/home/bld/exchange
 
