@@ -627,6 +627,19 @@ if has('nvim')
 	nmap <Leader>ga :GitCopy 
 endif
 
+function! My_eval_replace()
+	let l:cursor = getpos('.')
+	let l:column = l:cursor[2]
+	let l:line_before = getline('.')
+	let l:evaluated = eval(strpart(l:line_before, 0, l:column))
+	let l:result = l:evaluated . strpart(l:line_before, l:column)
+	call append(line('.'), l:result)
+	normal dd
+	call setpos('.', [l:cursor[0], l:cursor[1], strlen(evaluated), l:cursor[3]])
+endfunction
+
+nmap <Leader>e :call My_eval_replace()<CR>
+
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.
 " <C-o> in insert mode allows you to execute one command in
