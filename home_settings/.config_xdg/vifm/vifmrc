@@ -369,6 +369,7 @@ mark d ~/downloads
 mark o ~/other
 mark s ~/other/my_samples/single_sources
 mark t ~/temporary
+mark T /tmp
 mark w ~/workspace
 mark p ~/workspace/15_UHD_BD
 mark O ~/os_settings
@@ -377,7 +378,7 @@ mark u /media/sdb1
 mark f /media/files
 mark n /media/files/new_music
 mark M /media/files/music
-mark T /media/files/trash_vifm
+mark D /media/files/trash_vifm
 mark E /media/build_server/home/exchange
 mark e /media/new_build_server/home/bld/exchange
 
