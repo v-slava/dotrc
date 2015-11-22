@@ -8,5 +8,5 @@ function! Translate_and_say_english()
 	endif " else do nothing
 endfunction
 
-imap <CR> <Esc> k :call Translate_and_say_english()<CR><C-k>o
+imap <CR> <Esc> k ;call Translate_and_say_english()<CR><C-k>o
 
