@@ -16,6 +16,10 @@ set input-font-error=inconsolata LGC 14
 set status-font=inconsolata LGC 14
 set status-ssl-font=inconsolata LGC 14
 
+# Swap ':' and ';' in normal mode:
+nnoremap ; :
+nnoremap : ;
+
 # Zoom in/out hotkeys:
 nmap + :normal zI<CR>
 nmap - :normal zO<CR>
