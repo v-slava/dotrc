@@ -137,6 +137,14 @@ let mapleader = "\<Space>"
 " inoremap <C-j> <Backspace>
 " imap <Backspace> <nop>
 
+" Swap ':' and ';' in normal mode:
+nnoremap ; :
+nnoremap : ;
+
+" Swap ',' and '<' in normal mode:
+nnoremap , <
+nnoremap < ,
+
 " View invisible characters for makefiles:
 " autocmd FileType make set list
 nmap <F2> :set list!<CR>
@@ -153,7 +161,7 @@ nmap <C-h> zh
 nmap <Leader>cr :w<CR>: source %<CR>
 
 " Exit from vim:
-nmap <C-d> :q<CR>
+nmap <C-d> ;q<CR>
 
 " View next/previous buffer:
 nmap <Leader>vn :bnext<CR>
