@@ -83,4 +83,6 @@ z	я	CYRILLIC SMALL LETTER YA
 \\	ґ	CYRILLIC SMALL LETTER GHE WITH UPTURN
 $	;
 ^	:
+/	.
+?	,
 ~~      <char-0x301>        Stress
