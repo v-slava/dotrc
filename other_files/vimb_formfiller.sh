@@ -44,7 +44,7 @@ fillform() {
     # make sure we are in normal mode and fill in the form data
     # use :: to not save the secrets into vimb command history or into the
     # last ex command register ":
-    echo "<Esc>::e! _vbform.fill($data);<CR>" | socat - unix-connect:"$VIMB_SOCKET"
+    echo "<Esc>;:e! _vbform.fill($data);<CR>" | socat - unix-connect:"$VIMB_SOCKET"
 }
 
 # check if uri is given

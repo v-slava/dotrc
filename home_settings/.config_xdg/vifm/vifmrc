@@ -407,6 +407,10 @@ set trashdir=/media/files/trash_vifm
 " %m run the command in a menu window
 " %i completely ignore command output.
 
+" Swap ':' and ';' in normal mode:
+nnoremap ; :
+nnoremap : ;
+
 " Exit from vifm:
 nnoremap <c-d> :exit<cr>
 vmap <c-d> :exit<cr>

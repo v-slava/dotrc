@@ -16,6 +16,10 @@ set input-font-error=inconsolata LGC 14
 set status-font=inconsolata LGC 14
 set status-ssl-font=inconsolata LGC 14
 
+# Swap ':' and ';' in normal mode:
+nnoremap ; :
+nnoremap : ;
+
 # Zoom in/out hotkeys:
 nmap + :normal zI<CR>
 nmap - :normal zO<CR>
@@ -61,17 +65,17 @@ shortcut-add y=https://www.youtube.com/results?search_query=$0
 
 set strict-ssl=false
 
-# nmap ,t :sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
+# nmap ,t ;sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
 # au LoadFinished http://ejudge.surc.kiev.ua/cgi-bin/new-client?contest_id=* sh ~/os_settings/other_files/vimb_formfiller.sh %
 au LoadFinished https://106.125.46.94/gerrit/login/q/status:open sh ~/os_settings/other_files/vimb_gerrit_login.sh %
-nmap ,l :sh ~/os_settings/other_files/vimb_formfiller.sh %<CR>
+nmap ,l ;sh ~/os_settings/other_files/vimb_formfiller.sh %<CR>
 
 # Open previous command line:
-nmap ,p :<Up>
+nmap ,p ;<Up>
 
 # Search info from clipboard in google:
-nmap ,s :sh ~/os_settings/other_files/vimb_google_clipboard.sh<CR>
+nmap ,s ;sh ~/os_settings/other_files/vimb_google_clipboard.sh<CR>
 
 # Open url from clipboard:
-nmap p :sh ~/os_settings/other_files/vimb_url_clipboard.sh<CR>
+nmap p ;sh ~/os_settings/other_files/vimb_url_clipboard.sh<CR>
 
