@@ -687,6 +687,10 @@ service nfs-kernel-server restart
 
 # Build package from source and do not sign anything:
 dpkg-buildpackage -us -uc
+# View build flags:
+dpkg-buildflags
+# Use -O0 instead of -O2:
+export DEB_BUILD_OPTIONS=noopt
 
 # Install package without root privileges:
 mkdir -p ~/root_dir/var/lib
