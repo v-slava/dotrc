@@ -375,9 +375,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	endif
 endfunction
 " build begin (with warinings):
-nmap <silent> <Leader>bb ;w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>bb ;w<CR>;call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 " rebuild begin (with warinings):
-nmap <silent> <Leader>br ;w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>br ;w<CR>;call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -528,7 +528,7 @@ command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 " doxygen: function begin:
 nmap <Leader>fb i/**<Esc>o * @fn 
 " doxygen: function end:
-nmap <Leader>fe :call End_function()<CR>
+nmap <Leader>fe ;call End_function()<CR>
 function! End_function()
 	let l:fn_line_number = line('.')
 	let l:fn_line = getline('.')
