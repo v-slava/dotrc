@@ -21,13 +21,13 @@ nnoremap ; :
 nnoremap : ;
 
 # Zoom in/out hotkeys:
-nmap + :normal zI<CR>
-nmap - :normal zO<CR>
+nmap + ;normal zI<CR>
+nmap - ;normal zO<CR>
 
 # Push current page to queue for later reading and close it:
-nmap <C-l> :qpush<CR>:q<CR>
+nmap <C-l> ;qpush<CR>;q<CR>
 # Restore first page from queue for later reading in new window:
-nmap <C-r> :tabopen file:///home/volkov/os_settings/other_files/start_page.html<CR>:qpop<CR>
+nmap <C-r> ;tabopen file:///home/volkov/os_settings/other_files/start_page.html<CR>;qpop<CR>
 
 # noob settings begin
 # noob settings end
