@@ -421,6 +421,7 @@ nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>
 nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<cr>
 nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<cr>
 
+nmap V ;!vim
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 
