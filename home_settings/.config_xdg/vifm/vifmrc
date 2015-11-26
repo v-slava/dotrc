@@ -449,7 +449,8 @@ nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <cr>
 
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<cr>
-nnoremap au :! umount /dev/sdb1<cr>
+nnoremap cm :! mount /dev/sdc1 || mount /dev/sdc || mount /dev/sdc1<cr>
+nnoremap au :! umount /media/sdb1<cr>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
