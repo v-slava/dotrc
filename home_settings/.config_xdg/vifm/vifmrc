@@ -376,7 +376,7 @@ mark O ~/os_settings
 mark m /media
 mark u /media/sdb1
 mark f /media/files
-mark n /media/files/new_music
+mark n /media/files/music/new
 mark M /media/files/music
 mark D /media/files/trash_vifm
 mark E /media/build_server/home/exchange
