@@ -204,7 +204,7 @@ exec --no-startup-id exec goldendict
 exec --no-startup-id exec nm-applet
 
 # Start keyboard layout indicator/switcher:
-exec --no-startup-id exec fbxkb
+exec --no-startup-id exec ~/os_settings/other_files/keyboard_layout.sh
 
 # Start alsaplayer:
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &

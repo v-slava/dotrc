@@ -92,6 +92,7 @@
 "
 " set lines=25
 " set columns=83
+" set langmenu=ru_RU.UTF-8
 
 syntax on
 colorscheme molokai

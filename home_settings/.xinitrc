@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# Other keyboard mappings:
-xmodmap ~/.Xmodmap
-# Remap <Caps_Lock> => <Escape>
-xcape -e 'Control_L=Escape'
-
 xrandr --output LVDS1 --mode 1366x768 \
        --output HDMI1 --mode 1920x1080 --right-of LVDS1 --rotate left
 

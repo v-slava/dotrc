@@ -207,6 +207,7 @@ hdparm -R0 /dev/sdX
 hdparm -r0 /dev/sdX
 
 # Read korean text (locale):
+apt-get install fonts-baekmuk
 LANG=ko_KR.EUC-KR gvim file.cpp
 
 # Generate SSH keys:
@@ -254,6 +255,9 @@ openssl x509 -text -in CERTIFICATE_FILE
 cp certificate.crt /usr/share/ca-certificates/
 sudo dpkg-reconfigure ca-certificates
 # see also folder /etc/ssl/certs
+
+# Scan network for NetBIOS name information (with IP):
+nbtscan 192.168.2.3/16
 
 # List services available on server:
 smbclient -U v.volkov -W SURC -L seclab.surc.kiev.ua
