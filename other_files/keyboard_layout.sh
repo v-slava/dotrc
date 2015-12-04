@@ -1,10 +1,12 @@
 #!/bin/bash
 
-set -e
+killall xcape
 
-setxkbmap us,ru
+set -e
 xmodmap ~/.Xmodmap
-# Remap <Caps_Lock> => <Escape>
-xcape -e 'Control_L=Escape'
-fbxkb
+xcape -e 'Control_L=Escape' # Remap <Caps_Lock> => <Escape>
+if ! pgrep fbxkb
+then
+	fbxkb &
+fi
 
