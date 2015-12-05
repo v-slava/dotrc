@@ -134,6 +134,11 @@ set linebreak
 " let mapleader = "\\"
 let mapleader = "\<Space>"
 
+" Disable ex mode:
+map Q <nop>
+" Disable commands history mode:
+map q: <nop>
+
 " Use <C-j> as <Backspace> in insert mode:
 " inoremap <C-j> <Backspace>
 " imap <Backspace> <nop>
