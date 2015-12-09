@@ -16,18 +16,18 @@ set input-font-error=inconsolata LGC 14
 set status-font=inconsolata LGC 14
 set status-ssl-font=inconsolata LGC 14
 
-# Swap ':' and ';' in normal mode:
+# Use ';' as synonym of ':'
 nnoremap ; :
-nnoremap : ;
+# nnoremap : ;
 
 # Zoom in/out hotkeys:
-nmap + ;normal zI<CR>
-nmap - ;normal zO<CR>
+nmap + :normal zI<CR>
+nmap - :normal zO<CR>
 
 # Push current page to queue for later reading and close it:
-nmap <C-l> ;qpush<CR>;q<CR>
+nmap <C-l> :qpush<CR>:q<CR>
 # Restore first page from queue for later reading in new window:
-nmap <C-r> ;tabopen file:///home/volkov/os_settings/other_files/start_page.html<CR>;qpop<CR>
+nmap <C-r> :tabopen file:///home/volkov/os_settings/other_files/start_page.html<CR>:qpop<CR>
 
 # noob settings begin
 # noob settings end
@@ -66,17 +66,17 @@ shortcut-add y=https://www.youtube.com/results?search_query=$0
 
 set strict-ssl=false
 
-# nmap ,t ;sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
+# nmap ,t :sh ~/os_settings/other_files/vimb_translate_ko.sh<CR>
 # au LoadFinished http://ejudge.surc.kiev.ua/cgi-bin/new-client?contest_id=* sh ~/os_settings/other_files/vimb_formfiller.sh %
 au LoadFinished https://106.125.46.94/gerrit/login/q/status:open sh ~/os_settings/other_files/vimb_gerrit_login.sh %
-nmap ,l ;sh ~/os_settings/other_files/vimb_formfiller.sh %<CR>
+nmap ,l :sh ~/os_settings/other_files/vimb_formfiller.sh %<CR>
 
 # Open previous command line:
-nmap ,p ;<Up>
+nmap ,p :<Up>
 
 # Search info from clipboard in google:
-nmap ,s ;sh ~/os_settings/other_files/vimb_google_clipboard.sh<CR>
+nmap ,s :sh ~/os_settings/other_files/vimb_google_clipboard.sh<CR>
 
 # Open url from clipboard:
-nmap p ;sh ~/os_settings/other_files/vimb_url_clipboard.sh<CR>
+nmap p :sh ~/os_settings/other_files/vimb_url_clipboard.sh<CR>
 

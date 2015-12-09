@@ -15,24 +15,24 @@ if !has("g:rtagsUseDefaultMappings")
 endif
 
 if g:rtagsUseDefaultMappings == 1
-    noremap <Leader>ri ;call rtags#SymbolInfo()<CR>
-    noremap <Leader>rj ;call rtags#JumpTo()<CR>
-    noremap <Leader>rh ;call rtags#JumpTo(" ")<CR>
-    noremap <Leader>rv ;call rtags#JumpTo("vert")<CR>
-    noremap <Leader>rt ;call rtags#JumpTo("tab")<CR>
-    noremap <Leader>re ;call rtags#PreprocessFileAndFormat()<CR>
-    noremap <Leader>rE ;call rtags#PreprocessFile()<CR>
-    noremap <Leader>rp ;call rtags#JumpToParent()<CR>
-    noremap <Leader>rf ;call rtags#FindRefs()<CR>
-    noremap <Leader>rn ;call rtags#IFindRefsByName(input("Pattern? "))<CR>
-    noremap <Leader>rN ;call rtags#FindRefsByName(input("Pattern? "))<CR>
-    noremap <Leader>rs ;call rtags#IFindSymbols(input("Pattern? "))<CR>
-    noremap <Leader>rS ;call rtags#FindSymbols(input("Pattern? "))<CR>
-    noremap <Leader>rx ;call rtags#ReindexFile()<CR>
-    noremap <Leader>rl ;call rtags#ProjectList()<CR>
-    noremap <Leader>rr ;call rtags#RenameSymbolUnderCursor()<CR>
-    noremap <Leader>r= ;call rtags#FindVirtuals()<CR>
-    noremap 6 ;call rtags#CompleteAtCursor()<CR>
+    noremap <Leader>ri :call rtags#SymbolInfo()<CR>
+    noremap <Leader>rj :call rtags#JumpTo()<CR>
+    noremap <Leader>rh :call rtags#JumpTo(" ")<CR>
+    noremap <Leader>rv :call rtags#JumpTo("vert")<CR>
+    noremap <Leader>rt :call rtags#JumpTo("tab")<CR>
+    noremap <Leader>re :call rtags#PreprocessFileAndFormat()<CR>
+    noremap <Leader>rE :call rtags#PreprocessFile()<CR>
+    noremap <Leader>rp :call rtags#JumpToParent()<CR>
+    noremap <Leader>rf :call rtags#FindRefs()<CR>
+    noremap <Leader>rn :call rtags#IFindRefsByName(input("Pattern? "))<CR>
+    noremap <Leader>rN :call rtags#FindRefsByName(input("Pattern? "))<CR>
+    noremap <Leader>rs :call rtags#IFindSymbols(input("Pattern? "))<CR>
+    noremap <Leader>rS :call rtags#FindSymbols(input("Pattern? "))<CR>
+    noremap <Leader>rx :call rtags#ReindexFile()<CR>
+    noremap <Leader>rl :call rtags#ProjectList()<CR>
+    noremap <Leader>rr :call rtags#RenameSymbolUnderCursor()<CR>
+    noremap <Leader>r= :call rtags#FindVirtuals()<CR>
+    noremap 6 :call rtags#CompleteAtCursor()<CR>
 endif
 
 " LineCol2Offset {{{

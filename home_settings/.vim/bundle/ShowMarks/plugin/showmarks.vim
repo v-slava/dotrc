@@ -115,18 +115,18 @@ if !exists('g:showmarks_hlline_other') | let g:showmarks_hlline_other = "0"  | e
 let s:all_marks = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.'`^<>[]{}()\""
 
 " Commands
-com! -nargs=0 ShowMarksToggle    ;call <sid>ShowMarksToggle()
-com! -nargs=0 ShowMarksOn        ;call <sid>ShowMarksOn()
-com! -nargs=0 ShowMarksClearMark ;call <sid>ShowMarksClearMark()
-com! -nargs=0 ShowMarksClearAll  ;call <sid>ShowMarksClearAll()
-com! -nargs=0 ShowMarksPlaceMark ;call <sid>ShowMarksPlaceMark()
+com! -nargs=0 ShowMarksToggle    :call <sid>ShowMarksToggle()
+com! -nargs=0 ShowMarksOn        :call <sid>ShowMarksOn()
+com! -nargs=0 ShowMarksClearMark :call <sid>ShowMarksClearMark()
+com! -nargs=0 ShowMarksClearAll  :call <sid>ShowMarksClearAll()
+com! -nargs=0 ShowMarksPlaceMark :call <sid>ShowMarksPlaceMark()
 
 " Mappings (NOTE: Leave the '|'s immediately following the '<cr>' so the mapping does not contain any trailing spaces!)
-if !hasmapto( '<Plug>ShowmarksShowMarksToggle' ) | map <silent> <unique> <leader>mt ;ShowMarksToggle<cr>|    endif
-if !hasmapto( '<Plug>ShowmarksShowMarksOn'     ) | map <silent> <unique> <leader>mo ;ShowMarksOn<cr>|        endif
-if !hasmapto( '<Plug>ShowmarksClearMark'       ) | map <silent> <unique> <leader>mh ;ShowMarksClearMark<cr>| endif
-if !hasmapto( '<Plug>ShowmarksClearAll'        ) | map <silent> <unique> <leader>ma ;ShowMarksClearAll<cr>|  endif
-if !hasmapto( '<Plug>ShowmarksPlaceMark'       ) | map <silent> <unique> <leader>mm ;ShowMarksPlaceMark<cr>| endif
+if !hasmapto( '<Plug>ShowmarksShowMarksToggle' ) | map <silent> <unique> <leader>mt :ShowMarksToggle<cr>|    endif
+if !hasmapto( '<Plug>ShowmarksShowMarksOn'     ) | map <silent> <unique> <leader>mo :ShowMarksOn<cr>|        endif
+if !hasmapto( '<Plug>ShowmarksClearMark'       ) | map <silent> <unique> <leader>mh :ShowMarksClearMark<cr>| endif
+if !hasmapto( '<Plug>ShowmarksClearAll'        ) | map <silent> <unique> <leader>ma :ShowMarksClearAll<cr>|  endif
+if !hasmapto( '<Plug>ShowmarksPlaceMark'       ) | map <silent> <unique> <leader>mm :ShowMarksPlaceMark<cr>| endif
 noremap <unique> <script> \sm m
 noremap <silent> m :exe 'norm \sm'.nr2char(getchar())<bar>call <sid>ShowMarks()<CR>
 

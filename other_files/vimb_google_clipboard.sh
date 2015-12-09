@@ -11,5 +11,5 @@ if [ -z "$VIMB_SOCKET" ] || [ ! -S "$VIMB_SOCKET" ]; then
 fi
 
 REQUEST=$(clipboard.sh -o | sed 's/ /+/g')
-echo ";o http://www.google.com/search?q=$REQUEST<CR>" | socat - unix-connect:"$VIMB_SOCKET"
+echo ":o http://www.google.com/search?q=$REQUEST<CR>" | socat - unix-connect:"$VIMB_SOCKET"
 

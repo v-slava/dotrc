@@ -144,19 +144,19 @@ map q: <nop>
 " imap <Backspace> <nop>
 
 " Swap ':' and ';' in normal mode:
-nnoremap ; :
-nnoremap : ;
+" nnoremap ; :
+" nnoremap : ;
 
 " Swap ',' and '<' in normal mode:
-nnoremap , <
-nnoremap < ,
+" nnoremap , <
+" nnoremap < ,
 
 " View invisible characters for makefiles:
 " autocmd FileType make set list
-nmap <F2> ;set list!<CR>
+nmap <F2> :set list!<CR>
 
 " Set/unset search highlighting:
-nmap <F3> ;set hlsearch!<CR>
+nmap <F3> :set hlsearch!<CR>
 
 " Scroll horizontally:
 nmap <C-l> zl
@@ -164,14 +164,14 @@ nmap <C-h> zh
 
 " Config reload (vimrc):
 " nmap <Leader>cr :source $MYVIMRC<CR>
-nmap <Leader>cr ;w<CR>; source %<CR>
+nmap <Leader>cr :w<CR>: source %<CR>
 
 " Exit from vim:
-nmap <C-d> ;q<CR>
+nmap <C-d> :q<CR>
 
 " View next/previous buffer:
-nmap <Leader>vn ;bnext<CR>
-nmap <Leader>vp ;bprevious<CR>
+nmap <Leader>vn :bnext<CR>
+nmap <Leader>vp :bprevious<CR>
 
 " Change focus to another window (split, vsplit):
 nmap <Leader><Tab> <C-W>W
@@ -189,11 +189,11 @@ vmap 2 :normal @
 set shellredir=>%s
 
 " Reformat C/C++ source code:
-nmap <C-u> ;%d<CR>;r !uncrustify -f %<CR>;1,1d<CR>
+nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
 
 " Use vifm in vim as file selector:
-nmap <C-s> ;VsplitVifm<CR>
-" ;EditVifm ;SplitVifm ;DiffVifm ;TabVifm
+nmap <C-s> :VsplitVifm<CR>
+" :EditVifm :SplitVifm :DiffVifm :TabVifm
 
 " Map clipboard to unnamedplus register '+':
 set clipboard=unnamedplus
@@ -229,7 +229,7 @@ function! OpenLocation()
 	normal zz
 endfunction
 " Open location in QuickFix window:
-autocmd FileType qf nmap <buffer> o ;call OpenLocation()<CR>
+autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
@@ -285,8 +285,8 @@ function! Swap_keyboard_layout()
 	endif
 	call Update_status_line('', 'normal')
 endfunction
-nmap <C-k> ;call Swap_keyboard_layout()<CR>
-imap <C-k> <Esc>;call Swap_keyboard_layout()<CR>gi
+nmap <C-k> :call Swap_keyboard_layout()<CR>
+imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 " German-only letters mapping:
 function! German_mapping_toggle()
@@ -316,21 +316,21 @@ function! German_mapping_toggle()
 	call Update_status_line('', 'normal')
 endfunction
 let g:german = 0 " disable german mappings by default
-nmap <F7> ;call German_mapping_toggle()<CR>
-imap <F7> <Esc>;call German_mapping_toggle()<CR>gi
+nmap <F7> :call German_mapping_toggle()<CR>
+imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
 
 " Move current tab left and right:
-nmap <silent> <S-Left> ;execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nmap <silent> <S-Right> ;execute 'silent! tabmove ' . tabpagenr()<CR>
+nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 " Open tags file in $(dirname EDITED_FILE), if not present then in $(dirname EDITED_FILE)/.. and until /
 set tags=./tags;,tags;
 
 " Add (framework/standard C/C++ library) tags:
-nmap <F8> ;set tags+=~/.vim/tags/std.ctags<CR> ;cs add ~/.vim/tags/std.cscope<CR>
+nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR>
 
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
-nmap <F9> ;SrcIndexOn 
+nmap <F9> :SrcIndexOn 
 
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')
 let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . expand('%:t') . '"')
@@ -381,9 +381,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	endif
 endfunction
 " build begin (with warinings):
-nmap <silent> <Leader>bb ;w<CR>;call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>bb :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 " rebuild begin (with warinings):
-nmap <silent> <Leader>br ;w<CR>;call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>br :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -395,7 +395,7 @@ function! Configure(config_cmd)
 	execute 'botright pedit ' . l:config_log
 	call Update_status_line('Config is done. Exit code: ' . l:config_exit_code, 'normal')
 endfunction
-nmap <silent> <Leader>bc ;w<CR>;call Configure(g:config_cmd)<CR>
+nmap <silent> <Leader>bc :w<CR>:call Configure(g:config_cmd)<CR>
 
 function! Show_error( error_index )
 	let l:current_source_location = get(g:source_locations, a:error_index)
@@ -418,7 +418,7 @@ function! Show_next_error()
 	endif
 endfunction
 " build next error:
-nmap <Leader>bn ;w<CR>;call Show_next_error()<CR>
+nmap <Leader>bn :w<CR>:call Show_next_error()<CR>
 
 function! Show_prev_error()
 	if g:error_index <= 0 " if there is no previous error
@@ -429,7 +429,7 @@ function! Show_prev_error()
 	endif
 endfunction
 " build previous error:
-nmap <Leader>bp ;w<CR>;call Show_prev_error()<CR>
+nmap <Leader>bp :w<CR>:call Show_prev_error()<CR>
 
 function! Copy_location(in_file, strip_part)
 	let l:line_number = line('.')
@@ -441,8 +441,8 @@ function! Copy_location(in_file, strip_part)
 		let @+ = l:full_location
 	endif
 endfunction
-nmap <F12> ;call Copy_location( expand('%:p'), '' )<CR>
-nmap <F11> ;call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
+nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
+nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
 
 
 " Update cscope connection while opening new file:
@@ -534,7 +534,7 @@ command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
 " doxygen: function begin:
 nmap <Leader>fb i/**<Esc>o * @fn 
 " doxygen: function end:
-nmap <Leader>fe ;call End_function()<CR>
+nmap <Leader>fe :call End_function()<CR>
 function! End_function()
 	let l:fn_line_number = line('.')
 	let l:fn_line = getline('.')
@@ -626,21 +626,21 @@ function! OpenFile(win, cmd) " at least one colon expected
 	endif
 	execute a:cmd . ' ' . l:ret
 endfunction
-nmap <Leader>ft ;call OpenFile('cur_win', 'tabopen')<CR>
-nmap <Leader>fj ;call OpenFile('cur_win', 'e')<CR>
-nmap <Leader>fv ;call OpenFile('cur_win', 'vsp')<CR>
-nmap <Leader>fh ;call OpenFile('cur_win', 'sp')<CR>
-nmap <Leader>fpj ;call OpenFile('prev_win', 'e')<CR>
-nmap <Leader>fpv ;call OpenFile('prev_win', 'vsp')<CR>
-nmap <Leader>fph ;call OpenFile('prev_win', 'sp')<CR>
+nmap <Leader>ft :call OpenFile('cur_win', 'tabopen')<CR>
+nmap <Leader>fj :call OpenFile('cur_win', 'e')<CR>
+nmap <Leader>fv :call OpenFile('cur_win', 'vsp')<CR>
+nmap <Leader>fh :call OpenFile('cur_win', 'sp')<CR>
+nmap <Leader>fpj :call OpenFile('prev_win', 'e')<CR>
+nmap <Leader>fpv :call OpenFile('prev_win', 'vsp')<CR>
+nmap <Leader>fph :call OpenFile('prev_win', 'sp')<CR>
 
 if has('nvim')
 	" First invoke terminal:
-	nmap <Leader>tt ;silent w<CR>;e term://bash<CR>;startinsert<CR>
+	nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
 	" Use <C-Space> in terminal to switch to normal mode:
-	tnoremap <C-@> <C-\><C-n>;set relativenumber<CR>
+	tnoremap <C-@> <C-\><C-n>:set relativenumber<CR>
 	" In terminal switch back to insert mode:
-	nmap <C-@> ;set norelativenumber<CR>;startinsert<CR>
+	nmap <C-@> :set norelativenumber<CR>:startinsert<CR>
 	" Copy modified file name from git status:
 	function! Git_copy_modified_file_name(file_number)
 		let l:line_1 = search('        modified:   ', 'b')
@@ -653,8 +653,8 @@ if has('nvim')
 		startinsert
 	endfunction
 	command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)
-	nmap <Leader>gg ;call Git_copy_modified_file_name(1)<CR>
-	nmap <Leader>ga ;GitCopy 
+	nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
+	nmap <Leader>ga :GitCopy 
 endif
 
 function! My_eval_replace()
@@ -668,7 +668,7 @@ function! My_eval_replace()
 	call setpos('.', [l:cursor[0], l:cursor[1], strlen(evaluated), l:cursor[3]])
 endfunction
 
-nmap <Leader>e ;call My_eval_replace()<CR>
+nmap <Leader>e :call My_eval_replace()<CR>
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.

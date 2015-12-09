@@ -11,5 +11,5 @@ if [ -z "$VIMB_SOCKET" ] || [ ! -S "$VIMB_SOCKET" ]; then
 fi
 
 URL_REQUESTED="$(clipboard.sh -o)"
-echo ";o $URL_REQUESTED<CR>" | socat - unix-connect:"$VIMB_SOCKET"
+echo ":o $URL_REQUESTED<CR>" | socat - unix-connect:"$VIMB_SOCKET"
 

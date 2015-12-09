@@ -6,6 +6,6 @@ function! Translate_german()
 	endif
 endfunction
 
-imap <CR> <Esc> k ;call Translate_german()<CR><C-k>o
+imap <CR> <Esc> k :call Translate_german()<CR><C-k>o
 call German_mapping_toggle()
 

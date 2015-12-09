@@ -75,12 +75,12 @@ endif
 " Motion Commands {{{1
 
 " Bind motion commands to support hanging indents
-nnoremap <silent> <buffer> [[ ;call rust#Jump('n', 'Back')<CR>
-nnoremap <silent> <buffer> ]] ;call rust#Jump('n', 'Forward')<CR>
-xnoremap <silent> <buffer> [[ ;call rust#Jump('v', 'Back')<CR>
-xnoremap <silent> <buffer> ]] ;call rust#Jump('v', 'Forward')<CR>
-onoremap <silent> <buffer> [[ ;call rust#Jump('o', 'Back')<CR>
-onoremap <silent> <buffer> ]] ;call rust#Jump('o', 'Forward')<CR>
+nnoremap <silent> <buffer> [[ :call rust#Jump('n', 'Back')<CR>
+nnoremap <silent> <buffer> ]] :call rust#Jump('n', 'Forward')<CR>
+xnoremap <silent> <buffer> [[ :call rust#Jump('v', 'Back')<CR>
+xnoremap <silent> <buffer> ]] :call rust#Jump('v', 'Forward')<CR>
+onoremap <silent> <buffer> [[ :call rust#Jump('o', 'Back')<CR>
+onoremap <silent> <buffer> ]] :call rust#Jump('o', 'Forward')<CR>
 
 " %-matching. <:> is handy for generics.
 set matchpairs+=<:>
@@ -112,9 +112,9 @@ command! -range=% RustPlay :call rust#Play(<count>, <line1>, <line2>, <f-args>)
 " Mappings {{{1
 
 " Bind ⌘R in MacVim to :RustRun
-nnoremap <silent> <buffer> <D-r> ;RustRun<CR>
+nnoremap <silent> <buffer> <D-r> :RustRun<CR>
 " Bind ⌘⇧R in MacVim to :RustRun! pre-filled with the last args
-nnoremap <buffer> <D-R> ;RustRun! <C-r>=join(b:rust_last_rustc_args)<CR><C-\>erust#AppendCmdLine(' -- ' . join(b:rust_last_args))<CR>
+nnoremap <buffer> <D-R> :RustRun! <C-r>=join(b:rust_last_rustc_args)<CR><C-\>erust#AppendCmdLine(' -- ' . join(b:rust_last_args))<CR>
 
 if !exists("b:rust_last_rustc_args") || !exists("b:rust_last_args")
 	let b:rust_last_rustc_args = []
