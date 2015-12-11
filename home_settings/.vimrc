@@ -207,6 +207,7 @@ autocmd BufEnter vifmrc setlocal filetype=vifm
 autocmd BufEnter *vifm/colors/* setlocal filetype=vifm
 autocmd BufEnter *.i setlocal filetype=c
 autocmd BufEnter *.ii setlocal filetype=cpp
+autocmd BufEnter .spacemacs setlocal filetype=lisp
 autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
