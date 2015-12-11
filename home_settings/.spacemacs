@@ -228,28 +228,53 @@ layers configuration. You are free to put any user code."
   (evil-leader/set-key "dM" 'my-display-major-mode)
   (evil-leader/set-key "me" 'eval-last-sexp)
 
+  ;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
+
   ;; tab settings:
-  ;; insert tab when i press <tab> in insert mode:
+  ;; permanently, force TAB to insert just one TAB:
   (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
+  ;; (global-set-key (kbd "TAB") 'self-insert-command);
 
-  ;; show each <tab> as printable string:
-  (standard-display-ascii ?\t "--->")
+  ;; show each <tab> as a string:
+  (standard-display-ascii ?\t "\xBB   ")
+  ;; (standard-display-ascii ?\t "--->")
 
-  (setq c-basic-offset 4) ;; use 4 spaces as indent
+  (setq c-basic-offset 4) ;; use this number of spaces as indent
   (setq c-default-style "linux") ;; see also variable c-style-alist
-  (setq-default tab-width 4) ;; view tab as 4 spaces
+  (setq-default tab-width 4) ;; view tab as this number of spaces
 
-  ;; garbage:
-  ;; (setq-default default-tab-width 4)
+  (setq-default indent-tabs-mode t) ;; use tabs instead of spaces
 
-  ;; (setq-default 'indent-tabs-mode t)
-  ;; (setq indent-tabs-mode t) ; use tabs instead of spaces
-  ;; (setq indent-tabs-mode nil) ; use spaces instead of tabs
+  ;; TODO:
+  ;; write function to handle tabs
+  ;; check tabs for other file types: (c, sh, py, make, text..)
+  ;; smarttabs
+  ;; highlight tabs
+  ;; highlight white space at end of line
 
-  ;; (setq-default indent-tabs-mode nil)
-  ;; (setq-default tab-width 4)
-  ;; (setq indent-line-function 'insert-tab)
+  ;; cl - comment/uncomment lines
+  ;; tn - toggle line numbers
+  ;; wh - move cursor to left window
+  ;; wc - delete window
+  ;; ff - open file
+  ;; feh = help
+  ;; fed = edit .spacemacs file
+  ;; fs - save current file
+  ;; qq - kill emacs
+  ;; qz - kill frame
+  ;; zx - change font
+  ;; zf - change zoom
+  ;; hdk - help key binding
+  ;; hdf - help function
+  ;; bd - kill this buffer
 
+  ;; M-x whitespace-mode  (variable: whitespace-stile)
+  ;; M-x tabify / untabify
+  ;; S-M-: evaluate expression
+
+  ;; .spacemacs:
+  ;; dotspacemacs-smartparens-strict-mode nil
+  ;; dotspacemacs-persistent-server nil
 
   ;; Map opening a link to <Leader> o l only in org-mode
   ;; (evil-leader/set-key-for-mode 'org-mode
