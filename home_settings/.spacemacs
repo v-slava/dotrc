@@ -189,7 +189,7 @@ values."
    ))
 
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
+	"Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
 
@@ -209,76 +209,99 @@ user code."
     (interactive)
     (message "%s" major-mode)
     )
+  (defun my-set-tab-width (tab_width)
+    "Set tab width"
+	(interactive)
+	(if (< tab_width 2)
+		(error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width)
+	  )
+	(setq-default tab-width tab_width) ;; view tab as this number of spaces
+	(setq tab-width tab_width)
+	(setq c-basic-offset tab_width) ;; use this number of spaces as indent
+	;; show each <tab> as a string:
+	;; (standard-display-ascii ?\t "\xBB   ")
+	;; (standard-display-ascii ?\t "--->")
+	(standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))
+	)
 )
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
- This function is called at the very end of Spacemacs initialization after
+	"Configuration function for user code.
+This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-  ;; zoom settings:
-  (zoom-value 5)
-  (global-set-key (kbd "C-=") 'zoom-frm-in)
-  (global-set-key (kbd "C--") 'zoom-frm-out)
-  (global-set-key (kbd "<C-mouse-4>") 'zoom-frm-in)
-  (global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
+	;; zoom settings:
+	(zoom-value 5)
+	(global-set-key (kbd "C-=") 'zoom-frm-in)
+	(global-set-key (kbd "C--") 'zoom-frm-out)
+	(global-set-key (kbd "<C-mouse-4>") 'zoom-frm-in)
+	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
 
-  ;; other hotkeys:
-  (evil-leader/set-key "dm" 'describe-mode)
-  (evil-leader/set-key "dM" 'my-display-major-mode)
-  (evil-leader/set-key "me" 'eval-last-sexp)
+	(spacemacs/toggle-line-numbers-on)
 
-  ;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
+	;; Apply macro to selected lines (vmap 2 :normal @):
+	;; (define-key evil-visual-state-map (kbd "2") (kbd ":'<,'>normal @"))
+	;; (define-key evil-visual-state-map (kbd "2") (kbd ":normal @a"))
 
-  ;; tab settings:
-  ;; permanently, force TAB to insert just one TAB:
-  (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
-  ;; (global-set-key (kbd "TAB") 'self-insert-command);
+	;; other hotkeys:
+	(evil-leader/set-key "dm" 'describe-mode)
+	(evil-leader/set-key "dM" 'my-display-major-mode)
+	(evil-leader/set-key "mee" 'eval-last-sexp)
 
-  ;; show each <tab> as a string:
-  (standard-display-ascii ?\t "\xBB   ")
-  ;; (standard-display-ascii ?\t "--->")
+	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
+	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
 
-  (setq c-basic-offset 4) ;; use this number of spaces as indent
-  (setq c-default-style "linux") ;; see also variable c-style-alist
-  (setq-default tab-width 4) ;; view tab as this number of spaces
+	;; tab settings:
+	;; permanently, force TAB to insert just one TAB:
+	(define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
+	;; (global-set-key (kbd "TAB") 'self-insert-command);
+	(setq c-default-style "linux") ;; see also variable c-style-alist
+	(my-set-tab-width 4)
+	;; use tabs instead of spaces
+	(setq-default indent-tabs-mode t)
+	(setq indent-tabs-mode t)
+	(add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
+	(setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
-  (setq-default indent-tabs-mode t) ;; use tabs instead of spaces
+	;; TODO:
+	;; Apply macro to selected lines (vmap 2 :normal @):
+	;; vim configs
+	;; smarttabs
+	;; highlight tabs
+	;; highlight white space at end of line
 
-  ;; TODO:
-  ;; write function to handle tabs
-  ;; check tabs for other file types: (c, sh, py, make, text..)
-  ;; smarttabs
-  ;; highlight tabs
-  ;; highlight white space at end of line
+	;; SPC SPC	initiate ace jump word mode
+	;; SPC l	initiate ace jump line mode
+	;; SPC `	go back to the previous location (before the jump)
 
-  ;; cl - comment/uncomment lines
-  ;; tn - toggle line numbers
-  ;; wh - move cursor to left window
-  ;; wc - delete window
-  ;; ff - open file
-  ;; feh = help
-  ;; fed = edit .spacemacs file
-  ;; fs - save current file
-  ;; qq - kill emacs
-  ;; qz - kill frame
-  ;; zx - change font
-  ;; zf - change zoom
-  ;; hdk - help key binding
-  ;; hdf - help function
-  ;; bd - kill this buffer
+	;; cl - comment/uncomment lines
+	;; tn - toggle line numbers
+	;; wh - move cursor to left window
+	;; wc - delete window
+	;; ff - open file
+	;; feh = help
+	;; fed = edit .spacemacs file
+	;; fs - save current file
+	;; qq - kill emacs
+	;; qz - kill frame
+	;; zx - change font
+	;; zf - change zoom
+	;; hdk - help key binding
+	;; hdf - help function
+	;; bd - kill this buffer
 
-  ;; M-x whitespace-mode  (variable: whitespace-stile)
-  ;; M-x tabify / untabify
-  ;; S-M-: evaluate expression
+	;; C-c C-l - toggle electric indentation for C/C++
+	;; M-x whitespace-mode  (variable: whitespace-stile)
+	;; M-x tabify / untabify
+	;; S-M-: evaluate expression
 
-  ;; .spacemacs:
-  ;; dotspacemacs-smartparens-strict-mode nil
-  ;; dotspacemacs-persistent-server nil
+	;; .spacemacs:
+	;; dotspacemacs-smartparens-strict-mode nil
+	;; dotspacemacs-persistent-server nil
 
-  ;; Map opening a link to <Leader> o l only in org-mode
-  ;; (evil-leader/set-key-for-mode 'org-mode
-  ;;   "ol" 'org-open-at-point)
+	;; Map opening a link to <Leader> o l only in org-mode
+	;; (evil-leader/set-key-for-mode 'org-mode
+	;;   "ol" 'org-open-at-point)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will

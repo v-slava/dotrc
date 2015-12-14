@@ -173,8 +173,16 @@ nmap <C-d> :q<CR>
 nmap <Leader>vn :bnext<CR>
 nmap <Leader>vp :bprevious<CR>
 
-" Change focus to another window (split, vsplit):
-nmap <Leader><Tab> <C-W>W
+" Split vim window:
+nmap <Leader>ws :split<CR>
+nmap <Leader>wv :vsplit<CR>
+
+" Switch focus to vim window:
+nmap <Leader>wh <C-w>h
+nmap <Leader>wl <C-w>l
+nmap <Leader>wj <C-w>j
+nmap <Leader>wk <C-w>k
+
 " Use '=' to make windows size equal:
 nmap = <C-W>=
 
