@@ -204,11 +204,13 @@ user code."
       (zoom-frm-out)
       )
     )
+
   (defun my-display-major-mode ()
     "Display current major mode"
     (interactive)
     (message "%s" major-mode)
     )
+
   (defun my-set-tab-width (tab_width)
     "Set tab width"
 	(interactive)
@@ -222,6 +224,12 @@ user code."
 	;; (standard-display-ascii ?\t "\xBB   ")
 	;; (standard-display-ascii ?\t "--->")
 	(standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))
+	)
+
+  (defun my-execute-macro (reg)
+	"Execute vim macro from a given register on visualy selected region"
+	(interactive "s:'<,'>normal @")
+	(evil-execute-macro 1 (concat ":normal @" reg))
 	)
 )
 
@@ -243,6 +251,7 @@ layers configuration. You are free to put any user code."
 	;; Apply macro to selected lines (vmap 2 :normal @):
 	;; (define-key evil-visual-state-map (kbd "2") (kbd ":'<,'>normal @"))
 	;; (define-key evil-visual-state-map (kbd "2") (kbd ":normal @a"))
+	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; other hotkeys:
 	(evil-leader/set-key "dm" 'describe-mode)
