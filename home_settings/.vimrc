@@ -186,6 +186,9 @@ nmap <Leader>wk <C-w>k
 " Use '=' to make windows size equal:
 nmap = <C-W>=
 
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+nmap <Leader><Leader> <Plug>(easymotion-s)
+
 " Use :Wq to save file as root (you can change % to another file name):
 " cmap Wq w !sudo tee >/dev/null %
 

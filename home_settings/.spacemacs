@@ -238,6 +238,7 @@ layers configuration. You are free to put any user code."
 	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
 
 	(spacemacs/toggle-line-numbers-on)
+	(with-eval-after-load 'linum (linum-relative-toggle)) ;; Make linums relative by default
 
 	;; Apply macro to selected lines (vmap 2 :normal @):
 	;; (define-key evil-visual-state-map (kbd "2") (kbd ":'<,'>normal @"))
@@ -246,7 +247,8 @@ layers configuration. You are free to put any user code."
 	;; other hotkeys:
 	(evil-leader/set-key "dm" 'describe-mode)
 	(evil-leader/set-key "dM" 'my-display-major-mode)
-	(evil-leader/set-key "mee" 'eval-last-sexp)
+	(evil-leader/set-key "de" 'eval-last-sexp)
+	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
 
 	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
 	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines

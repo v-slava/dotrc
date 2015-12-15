@@ -409,7 +409,7 @@ set trashdir=/media/files/trash_vifm
 " %i completely ignore command output.
 
 " Use ';' as synonym of ':'
-nnoremap ; :
+" nnoremap ; :
 " nnoremap : ;
 
 " Exit from vifm:
