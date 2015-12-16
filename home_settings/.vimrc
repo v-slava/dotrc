@@ -107,6 +107,9 @@ hi StatusLineNC ctermfg=232 ctermbg=252
 " Highlight spaces and tabs in the end of the line as errors:
 autocmd BufRead * match Error /\s\+$/
 
+set listchars=tab:»\ 
+set list
+
 " highlight current line:
 set cursorline
 
