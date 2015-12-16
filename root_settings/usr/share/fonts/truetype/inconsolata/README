@@ -1,4 +1,4 @@
-# Inconsolata LGC
+Inconsolata LGC
 ---------------
 
 Inconsolata is one of the most suitable font for programmers created by Raph
@@ -12,15 +12,12 @@ Greek.
 Inconsolata LGC is licensed under SIL OFL.
 
 
-## Inconsolata LGC changes:
+Inconsolata LGC changes:
 * Cyrillic glyphs added.
 * Italic and Bold font added.
 
-## Changes inherited from Inconsolata Hellenic:
+Changes inherited from Inconsolata Hellenic:
 * Greek glyphs.
 
-## Changes inherited from Inconsolata-dz:
+Changes inherited from Inconsolata-dz:
 * Straight quotation marks.
-
-## Last changes
-* Convert to ttf

@@ -193,7 +193,10 @@ bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.Att
 # bindsym $Alt_L+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
 # bindsym $Alt_L+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
 
-# autostart mail client (icedove):
+# Start emacs daemon:
+exec --no-startup-id exec emacs --daemon
+
+# Start mail client (icedove):
 exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
 bindsym $Alt_L+m exec --no-startup-id exec icedove
 

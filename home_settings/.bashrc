@@ -8,6 +8,7 @@ alias glog='git log --all --graph --decorate'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias e='emacsclient -c -n'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon

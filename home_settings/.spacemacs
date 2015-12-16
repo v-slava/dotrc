@@ -89,11 +89,13 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.1)
+
+   ;; dotspacemacs-default-font '("Inconsolata LGC"
+   ;;                             :size 14
+   ;;                             :weight normal
+   ;;                             :width normal
+   ;;                             :powerline-scale 1.1)
+
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -177,7 +179,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -193,17 +195,28 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
 
-  (defun zoom-value (zoom_factor)
-    "Zoom emacs for a given zoom factor"
-    (while (> zoom_factor 0)
-      (setq zoom_factor (1- zoom_factor))
-      (zoom-frm-in)
-      )
-    (while (< zoom_factor 0)
-      (setq zoom_factor (1+ zoom_factor))
-      (zoom-frm-out)
-      )
-    )
+  ;; (defun zoom-value (zoom_factor)
+  ;;   "Zoom emacs for a given zoom factor"
+  ;;   (while (> zoom_factor 0)
+  ;;     (setq zoom_factor (1- zoom_factor))
+  ;;     (zoom-frm-in)
+  ;;     )
+  ;;   (while (< zoom_factor 0)
+  ;;     (setq zoom_factor (1+ zoom_factor))
+  ;;     (zoom-frm-out)
+  ;;     )
+  ;;   )
+
+  ;; (defun frame-config ()
+	;; "Frame configuration function (should be called for each new frame)"
+	;; (zoom-value 5)
+	;; )
+
+  ;; (defun my-after-make-frame-hook (frame)
+	;; "A hook to be added to after-make-frame-functions. It calls (frame-config)."
+	;; (select-frame frame)
+	;; (frame-config)
+	;; )
 
   (defun my-display-major-mode ()
     "Display current major mode"
@@ -231,6 +244,7 @@ user code."
 	(interactive "s:'<,'>normal @")
 	(evil-execute-macro 1 (concat ":normal @" reg))
 	)
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -238,29 +252,12 @@ user code."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-	;; zoom settings:
-	(zoom-value 5)
-	(global-set-key (kbd "C-=") 'zoom-frm-in)
-	(global-set-key (kbd "C--") 'zoom-frm-out)
-	(global-set-key (kbd "<C-mouse-4>") 'zoom-frm-in)
-	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
+	;; (frame-config)
+	;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
 
+	;; line numbers:
 	(spacemacs/toggle-line-numbers-on)
 	(with-eval-after-load 'linum (linum-relative-toggle)) ;; Make linums relative by default
-
-	;; Apply macro to selected lines (vmap 2 :normal @):
-	;; (define-key evil-visual-state-map (kbd "2") (kbd ":'<,'>normal @"))
-	;; (define-key evil-visual-state-map (kbd "2") (kbd ":normal @a"))
-	(define-key evil-visual-state-map "2" 'my-execute-macro)
-
-	;; other hotkeys:
-	(evil-leader/set-key "dm" 'describe-mode)
-	(evil-leader/set-key "dM" 'my-display-major-mode)
-	(evil-leader/set-key "de" 'eval-last-sexp)
-	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
-
-	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
-	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
 
 	;; tab settings:
 	;; permanently, force TAB to insert just one TAB:
@@ -274,16 +271,26 @@ layers configuration. You are free to put any user code."
 	(add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
 	(setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
-	;; TODO:
+	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
+
+	;; zoom hotkeys:
+	(global-set-key (kbd "C-=") 'zoom-frm-in)
+	(global-set-key (kbd "C--") 'zoom-frm-out)
+	(global-set-key (kbd "<C-mouse-4>") 'zoom-frm-in)
+	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
+
+	;; other hotkeys:
+	(evil-leader/set-key "dm" 'describe-mode)
+	(evil-leader/set-key "dM" 'my-display-major-mode)
+	(evil-leader/set-key "de" 'eval-last-sexp)
+	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
+	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
 	;; Apply macro to selected lines (vmap 2 :normal @):
+	(define-key evil-visual-state-map "2" 'my-execute-macro)
+
+	;; TODO:
 	;; vim configs
 	;; smarttabs
-	;; highlight tabs
-	;; highlight white space at end of line
-
-	;; SPC SPC	initiate ace jump word mode
-	;; SPC l	initiate ace jump line mode
-	;; SPC `	go back to the previous location (before the jump)
 
 	;; cl - comment/uncomment lines
 	;; tn - toggle line numbers
