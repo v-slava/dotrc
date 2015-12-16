@@ -706,6 +706,9 @@ apt-file list <package_name_from_repository>
 dpkg -L <installed_package_name>
 dpkg -c <package>.deb
 
+# Search for a file from installed packages:
+dpkg -S FILE
+
 # Measure disk speed:
 sudo hdparm -t DEVICE
 

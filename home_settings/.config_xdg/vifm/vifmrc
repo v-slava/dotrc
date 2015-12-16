@@ -383,12 +383,12 @@ mark D /media/files/trash_vifm
 mark E /media/build_server/home/exchange
 mark e /media/new_build_server/home/bld/exchange
 
-nnoremap ,c :write | execute ':!~/bin/edit.sh ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
-nnoremap ,v :!~/bin/edit.sh ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
-nnoremap ,e :!~/bin/edit.sh ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
-nnoremap ,b :!~/bin/edit.sh ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
-nnoremap ,i :!~/bin/edit.sh ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<cr>
-nnoremap ,wc :!~/bin/edit.sh ~/os_settings/home_settings/.config_xdg/vimb/config && cp ~/os_settings/home_settings/.config_xdg/vimb/config ~/.config_xdg/vimb/config<cr>
+nnoremap ,c :write | execute ':!~/bin/edit.sh --wait ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
+nnoremap ,v :!~/bin/edit.sh --wait ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
+nnoremap ,e :!~/bin/edit.sh --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<cr>
+nnoremap ,b :!~/bin/edit.sh --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
+nnoremap ,i :!~/bin/edit.sh --wait ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<cr>
+nnoremap ,wc :!~/bin/edit.sh --wait ~/os_settings/home_settings/.config_xdg/vimb/config && cp ~/os_settings/home_settings/.config_xdg/vimb/config ~/.config_xdg/vimb/config<cr>
 nnoremap ,wb :!cp ~/.config_xdg/vimb/bookmark ~/os_settings/home_settings/.config_xdg/vimb/bookmark<cr>
 nnoremap ,u :!~/bin/edit.sh ~/os_settings/usefull_info<cr>
 nnoremap ,r :!~/bin/edit.sh ~/other/remarks<cr>
@@ -424,7 +424,8 @@ nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>
 nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<cr>
 nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<cr>
 
-nmap V ;!vim
+nmap V :!vim
+nmap E :!~/bin/edit.sh
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 
