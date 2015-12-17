@@ -195,8 +195,8 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
 
-  ;; (defun zoom-value (zoom_factor)
-  ;;   "Zoom emacs for a given zoom factor"
+  ;; (defun my-zoom-value (zoom_factor)
+  ;;   "Zoom emacs for a given zoom factor."
   ;;   (while (> zoom_factor 0)
   ;;     (setq zoom_factor (1- zoom_factor))
   ;;     (zoom-frm-in)
@@ -207,25 +207,25 @@ user code."
   ;;     )
   ;;   )
 
-  ;; (defun frame-config ()
-	;; "Frame configuration function (should be called for each new frame)"
-	;; (zoom-value 5)
+  ;; (defun my-frame-config ()
+	;; "Frame configuration function (should be called for each new frame)."
+	;; (my-zoom-value 5)
 	;; )
 
   ;; (defun my-after-make-frame-hook (frame)
-	;; "A hook to be added to after-make-frame-functions. It calls (frame-config)."
+	;; "A hook to be added to after-make-frame-functions. It calls (my-frame-config)."
 	;; (select-frame frame)
-	;; (frame-config)
+	;; (my-frame-config)
 	;; )
 
   (defun my-display-major-mode ()
-    "Display current major mode"
+    "Display current major mode."
     (interactive)
     (message "%s" major-mode)
     )
 
   (defun my-set-tab-width (tab_width)
-    "Set tab width"
+    "My set tab width."
 	(interactive)
 	(if (< tab_width 2)
 		(error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width)
@@ -240,13 +240,13 @@ user code."
 	)
 
   (defun my-execute-macro (reg)
-	"Execute vim macro from a given register on visualy selected region"
+	"Execute vim macro from a given register on visualy selected region."
 	(interactive "s:'<,'>normal @")
 	(evil-execute-macro 1 (concat ":normal @" reg))
 	)
 
   (defun my-ctrl-d ()
-	"My Ctrl-d handler function"
+	"My Ctrl-d handler function."
 	(interactive)
 	(if (buffer-modified-p)
 		(message "No write since last change (buffer is modified)")
@@ -254,6 +254,47 @@ user code."
 	  (evil-execute-macro 1 ":q")
 	  )
 	)
+
+  (defun my-close-bottom-window ()
+	"Close bottom window (compile results, help, etc)."
+	(interactive)
+	(evil-window-down 1)
+	(delete-window)
+	)
+
+  (defun my-build-run-project ()
+	"Build and run project (use projectile)."
+	(interactive)
+	(projectile-save-project-buffers)
+	;; (projectile-compile-project (projectile-project-root)) ;; need to confirm compile command
+	(projectile-compile-project nil)
+	)
+
+  (defun my-build-run-file ()
+	"Build and run single file."
+	(interactive)
+	(message "Build and run single file not implemented")
+	)
+
+  (defun my-build-run ()
+	"Build and run project or single file."
+	(interactive)
+	(if (string= (projectile-project-name) "-")
+		(my-build-run-file)
+	  (my-build-run-project)
+	  )
+	)
+
+  (defun my-notify-compilation-result (buffer msg)
+	"Notify that the compilation is finished.
+Close the *compilation* buffer if the compilation is successful.
+Otherwise show first error."
+	(if (string-match "^finished" msg)
+		(delete-windows-on buffer)
+	  (spacemacs/next-error)
+	  )
+	)
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -261,21 +302,31 @@ user code."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-	;; (frame-config)
+	;; (my-frame-config)
 	;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
+
+	;; show paren match face
+
+	;; (setq custom-theme-directory "your-directory")
+	;; (add-to-list 'custom-theme-load-path "your-directory")
+	;; (load-theme 'theme-name t)
+
+
+	(setq show-paren-style 'expression) ; Highlight eLisp expression (inside braces)
+	(show-paren-mode)
 
 	(switch-to-buffer "*scratch*") ;; less blinking on screen
 	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
 	(setq compilation-read-command nil) ;; do not prompt for compile command
-	;; (setq compilation-scroll-output 'first-error)
-	(setq compilation-scroll-output t)
+	(add-to-list 'compilation-finish-functions 'my-notify-compilation-result)
 
 	;; Put this in .dir-locals.el (also file .projectile may be required):
-	;; ((nil . ((eval .
-	;; 			   (puthash (projectile-project-root)
-	;; 						  "echo \"no compile command defined\""
-	;; 						  projectile-compilation-cmd-map)
-	;; 			   ))))
+	;; ((nil . ((eval . (progn
+	;; 				   (require 'projectile)
+	;; 				   (puthash (projectile-project-root)
+	;; 							"gcc dgrep.c"
+	;; 							projectile-compilation-cmd-map)
+	;; 				   )))))
 
 	(spacemacs/toggle-line-numbers-on)
 	(with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
@@ -302,6 +353,11 @@ layers configuration. You are free to put any user code."
 	(evil-leader/set-key "dm" 'describe-mode)
 	(evil-leader/set-key "dM" 'my-display-major-mode)
 	(evil-leader/set-key "de" 'eval-last-sexp)
+	(evil-leader/set-key "dq" 'my-close-bottom-window)
+	(evil-leader/set-key "ob" 'my-build-run)
+	;; (evil-leader/set-key "or" 'my-rebuild-run)
+	;; (evil-leader/set-key "oc" 'my-configure)
+
 	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
 	(define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
 	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
@@ -309,10 +365,14 @@ layers configuration. You are free to put any user code."
 	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; TODO:
+	;; grep through the project
+	;; rtags
 	;; diff
-	;; vim configs
 	;; smarttabs
+	;; vim configs
 
+	;; en - next error
+	;; ep - previous error
 	;; bR - revert buffer (like :q!, but without exit)
 	;; sc - do not highlight search results
 	;; cl - comment/uncomment lines
@@ -338,11 +398,6 @@ layers configuration. You are free to put any user code."
 
 	;; .spacemacs:
 	;; dotspacemacs-smartparens-strict-mode nil
-	;; dotspacemacs-persistent-server nil
-
-	;; Map opening a link to <Leader> o l only in org-mode
-	;; (evil-leader/set-key-for-mode 'org-mode
-	;;   "ol" 'org-open-at-point)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
