@@ -265,10 +265,20 @@ layers configuration. You are free to put any user code."
 	;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
 
 	(switch-to-buffer "*scratch*") ;; less blinking on screen
+	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
+	(setq compilation-read-command nil) ;; do not prompt for compile command
+	;; (setq compilation-scroll-output 'first-error)
+	(setq compilation-scroll-output t)
 
-	;; line numbers:
+	;; Put this in .dir-locals.el (also file .projectile may be required):
+	;; ((nil . ((eval .
+	;; 			   (puthash (projectile-project-root)
+	;; 						  "echo \"no compile command defined\""
+	;; 						  projectile-compilation-cmd-map)
+	;; 			   ))))
+
 	(spacemacs/toggle-line-numbers-on)
-	(with-eval-after-load 'linum (linum-relative-toggle)) ;; Make linums relative by default
+	(with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
 
 	;; tab settings:
 	;; permanently, force TAB to insert just one TAB:
@@ -281,8 +291,6 @@ layers configuration. You are free to put any user code."
 	(setq indent-tabs-mode t)
 	(add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
 	(setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
-
-	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
 
 	;; zoom hotkeys:
 	(global-set-key (kbd "C-=") 'zoom-frm-in)
