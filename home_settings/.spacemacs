@@ -264,10 +264,12 @@ user code."
   (defun my-close-temporary-windows ()
 	"Close temporary windows (compile results, help, etc)."
 	(interactive)
-	(message "TODO implement")
-	;; (evil-window-down 1)
-	;; (evil-window-next 2)
-	;; (delete-window)
+	(dolist (cur_window (window-list))
+	  (if (not (buffer-file-name (window-buffer cur_window)))
+		  ;; a buffer hasn't associated file name
+		  (delete-window cur_window)
+		)
+	  )
 	)
 
   (defun my-build-run-project ()
@@ -325,15 +327,35 @@ Otherwise show first error."
 	(interactive)
 	(split-window-below-and-focus)
 	(switch-to-buffer (make-temp-name "temp_"))
-	;; TODO find out a better way to write list of packages into buffer
-	(evil-insert 1)
-	(evil-execute-macro 1 (replace-regexp-in-string " " "\n" (message "%s" package-activated-list)))
-	(evil-normal-state)
-	(evil-execute-macro 1 "xggxOInstalled packages:")
-	(evil-normal-state)
-	(evil-execute-macro 1 "o")
-	(evil-normal-state)
-	(evil-execute-macro 1 "gg")
+	(message "See list of installed packages in current buffer")
+	(print package-activated-list (current-buffer))
+	)
+
+  (defun my-delete-help-window-if-any ()
+	"Close help window(s) if any."
+	(if (get-buffer-window "*Help*" t)
+		(delete-window (get-buffer-window "*Help*" t))
+	  )
+	)
+
+  ;; TODO replace with macro
+  (defun my-describe-function ()
+	"Close help window if any and call spacemacs/describe-function."
+	(interactive)
+	(my-delete-help-window-if-any)
+	(spacemacs/describe-function)
+	)
+  (defun my-describe-variable ()
+	"Close help window if any and call spacemacs/describe-variable."
+	(interactive)
+	(my-delete-help-window-if-any)
+	(spacemacs/describe-variable)
+	)
+  (defun my-describe-key ()
+	"Close help window if any and call spacemacs/describe-key."
+	(interactive)
+	(my-delete-help-window-if-any)
+	(spacemacs/describe-key)
 	)
 
 )
@@ -391,6 +413,9 @@ layers configuration. You are free to put any user code."
 	(evil-leader/set-key "dem" 'my-eval-mark-end-of-line)
 	(evil-leader/set-key "dq" 'my-close-temporary-windows)
 	(evil-leader/set-key "ob" 'my-build-run)
+	(evil-leader/set-key "hdf" 'my-describe-function)
+	(evil-leader/set-key "hdv" 'my-describe-variable)
+	(evil-leader/set-key "hdk" 'my-describe-key)
 	;; (evil-leader/set-key "or" 'my-rebuild-run)
 	;; (evil-leader/set-key "oc" 'my-configure)
 	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
@@ -400,8 +425,6 @@ layers configuration. You are free to put any user code."
 	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; TODO:
-	;; implement my-close-temporary-windows
-	;; save marks between sessions
 	;; single file build / run
 	;; project run
 	;; configure
@@ -413,7 +436,11 @@ layers configuration. You are free to put any user code."
 	;; hotkey to wrap selected region in braces / quotes / ...
 	;; smarttabs
 	;; vim configs
-	;; save project session (including frames positions) on exit
+	;; save project session (including frames positions, marks) on exit (see session management)
+	;; always open help in current frame (not in another one where it was opened earlier) and do not close help in another frames:
+	;; (add-to-list 'same-window-buffer-names "*Help*")
+	;; (add-to-list 'same-window-regexps ".*elp.*")
+	;; special-display-buffer-names
 
 	;; en - next error
 	;; ep - previous error
