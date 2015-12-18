@@ -40,7 +40,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -249,18 +249,25 @@ user code."
   (defun my-ctrl-d ()
 	"My Ctrl-d handler function."
 	(interactive)
-	(if (buffer-modified-p)
-		(message "No write since last change (buffer is modified)")
-	  ;; (kill-buffer)
-	  (evil-execute-macro 1 ":q")
+	(if (buffer-file-name)
+		;; a buffer has associated file name
+		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
+			(message "No write since last change (buffer is modified)")
+		  ;; (kill-buffer)
+		  (evil-execute-macro 1 ":q")
+		  )
+	  ;; a buffer hasn't associated file name
+	  (evil-execute-macro 1 ":q!")
 	  )
 	)
 
-  (defun my-close-bottom-window ()
-	"Close bottom window (compile results, help, etc)."
+  (defun my-close-temporary-windows ()
+	"Close temporary windows (compile results, help, etc)."
 	(interactive)
-	(evil-window-down 1)
-	(delete-window)
+	(message "TODO implement")
+	;; (evil-window-down 1)
+	;; (evil-window-next 2)
+	;; (delete-window)
 	)
 
   (defun my-build-run-project ()
@@ -274,7 +281,10 @@ user code."
   (defun my-build-run-file ()
 	"Build and run single file."
 	(interactive)
+	(spacemacs/write-file)
 	(message "Build and run single file not implemented")
+	;; (compilation-start "gcc dgrep.c")
+	;; (display-buffer-pop-up-frame "1.sh" nil)
 	)
 
   (defun my-build-run ()
@@ -296,6 +306,36 @@ Otherwise show first error."
 	  )
 	)
 
+  (defun my-eval-end-of-line ()
+	"Eval lisp expression at the end of current line."
+	(interactive)
+	(evil-execute-macro 1 "$")
+	(evil-execute-macro 1 (kbd "SPC deh"))
+	)
+
+  (defun my-eval-mark-end-of-line ()
+	"Jump to evil mark \"e\", go to end of line and evaluate lisp expression."
+	(interactive)
+	(evil-execute-macro 1 "'e")
+	(my-eval-end-of-line)
+	)
+
+  (defun my-display-installed-packages ()
+	"Show installed (activated) packages."
+	(interactive)
+	(split-window-below-and-focus)
+	(switch-to-buffer (make-temp-name "temp_"))
+	;; TODO find out a better way to write list of packages into buffer
+	(evil-insert 1)
+	(evil-execute-macro 1 (replace-regexp-in-string " " "\n" (message "%s" package-activated-list)))
+	(evil-normal-state)
+	(evil-execute-macro 1 "xggxOInstalled packages:")
+	(evil-normal-state)
+	(evil-execute-macro 1 "o")
+	(evil-normal-state)
+	(evil-execute-macro 1 "gg")
+	)
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -306,18 +346,13 @@ layers configuration. You are free to put any user code."
 	;; (my-frame-config)
 	;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
 
-	;; show paren match face
-
-	;; (setq custom-theme-directory "your-directory")
-	;; (add-to-list 'custom-theme-load-path "your-directory")
-	;; (load-theme 'theme-name t)
-
-
+	(switch-to-buffer "*scratch*") ;; less blinking on screen
 	(setq show-paren-style 'expression) ; Highlight eLisp expression (inside braces)
 	(show-paren-mode)
-
-	(switch-to-buffer "*scratch*") ;; less blinking on screen
 	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
+	(evil-visual-mark-mode)
+	(spacemacs/toggle-line-numbers-on)
+	(with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
 	(setq compilation-read-command nil) ;; do not prompt for compile command
 	(add-to-list 'compilation-finish-functions 'my-notify-compilation-result)
 
@@ -328,9 +363,6 @@ layers configuration. You are free to put any user code."
 	;; 							"gcc dgrep.c"
 	;; 							projectile-compilation-cmd-map)
 	;; 				   )))))
-
-	(spacemacs/toggle-line-numbers-on)
-	(with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
 
 	;; tab settings:
 	;; permanently, force TAB to insert just one TAB:
@@ -351,14 +383,16 @@ layers configuration. You are free to put any user code."
 	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
 
 	;; other hotkeys:
-	(evil-leader/set-key "dm" 'describe-mode)
-	(evil-leader/set-key "dM" 'my-display-major-mode)
-	(evil-leader/set-key "de" 'eval-last-sexp)
-	(evil-leader/set-key "dq" 'my-close-bottom-window)
+	(evil-leader/set-key "dm" 'my-display-major-mode)
+	(evil-leader/set-key "dpi" 'my-display-installed-packages)
+	(evil-leader/set-key "dpl" 'list-packages)
+	(evil-leader/set-key "deh" 'eval-last-sexp)
+	(evil-leader/set-key "dee" 'my-eval-end-of-line)
+	(evil-leader/set-key "dem" 'my-eval-mark-end-of-line)
+	(evil-leader/set-key "dq" 'my-close-temporary-windows)
 	(evil-leader/set-key "ob" 'my-build-run)
 	;; (evil-leader/set-key "or" 'my-rebuild-run)
 	;; (evil-leader/set-key "oc" 'my-configure)
-
 	(evil-leader/set-key "SPC" 'evil-avy-goto-char)
 	(define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
 	(define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
@@ -366,39 +400,60 @@ layers configuration. You are free to put any user code."
 	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; TODO:
+	;; implement my-close-temporary-windows
+	;; save marks between sessions
+	;; single file build / run
+	;; project run
+	;; configure
+	;; rebuild
 	;; grep through the project
 	;; rtags
+	;; ctags / cscope
 	;; diff
+	;; hotkey to wrap selected region in braces / quotes / ...
 	;; smarttabs
 	;; vim configs
+	;; save project session (including frames positions) on exit
 
 	;; en - next error
 	;; ep - previous error
 	;; bR - revert buffer (like :q!, but without exit)
+	;; bd - kill this buffer
 	;; sc - do not highlight search results
 	;; cl - comment/uncomment lines
 	;; tn - toggle line numbers
 	;; wh - move cursor to left window
 	;; wc - delete window
-	;; ff - open file
-	;; feh = help
-	;; fed = edit .spacemacs file
-	;; fs - save current file
 	;; qq - kill emacs
 	;; qz - kill frame
 	;; zx - change font
 	;; zf - change zoom
+	;; ff - open file
+	;; fed = edit .spacemacs file
+	;; fs - save current file
+	;; feh - spacemacs help (layers, etc)
 	;; hdk - help key binding
 	;; hdf - help function
-	;; bd - kill this buffer
+	;; hdv - help variable
+	;; hdm - describe minor mode
 
 	;; C-c C-l - toggle electric indentation for C/C++
 	;; M-x whitespace-mode  (variable: whitespace-stile)
+	;; M-x toggle-truncate-lines - set wrap!
 	;; M-x tabify / untabify
 	;; S-M-: evaluate expression
 
 	;; .spacemacs:
 	;; dotspacemacs-smartparens-strict-mode nil
+
+	;; For available packages see M-x list-packages
+	;; (or package-list-packages)
+
+	;; How to create own color theme based on existed one:
+	;; M-x customize-create-theme
+	;; do not include basic face customization
+	;; press "visit theme" (answer "yes" to all questions)
+	;; change "show paren match face" (use "gray 8")
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
