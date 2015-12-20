@@ -7,6 +7,3 @@ sudo update-pepperflashplugin-nonfree --install
 sudo apt-get update
 sudo apt-get upgrade --yes
 sync
-# sudo poweroff
-sudo systemctl hibernate
-
