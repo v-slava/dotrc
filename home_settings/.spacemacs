@@ -252,7 +252,7 @@ user code."
 	(if (buffer-file-name)
 		;; a buffer has associated file name
 		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
-			(message "No write since last change (buffer is modified)")
+			(error "No write since last change (buffer is modified)")
 		  ;; (kill-buffer)
 		  (evil-execute-macro 1 ":q")
 		  )
@@ -274,25 +274,34 @@ user code."
 
   (defun my-build-run-project ()
 	"Build and run project (use projectile)."
-	(interactive)
 	(projectile-save-project-buffers)
+	(my-reload-dir-locals-for-current-buffer)
 	;; (projectile-compile-project (projectile-project-root)) ;; need to confirm compile command
 	(projectile-compile-project nil)
 	)
 
   (defun my-build-run-file ()
 	"Build and run single file."
-	(interactive)
 	(spacemacs/write-file)
-	(message "Build and run single file not implemented")
-	;; (compilation-start "gcc dgrep.c")
-	;; (display-buffer-pop-up-frame "1.sh" nil)
+	(shell-command-to-string "rm -rf /tmp/vim_ide_dir && mkdir /tmp/vim_ide_dir")
+	(compilation-start (shell-command-to-string (concat
+		"~/os_settings/other_files/get_default_build_cmd.sh "
+		(file-name-nondirectory (buffer-file-name)))))
+	)
+
+  (defun my-single-file-mode ()
+	"Return t if we are in single file build mode and nil otherwise
+(we are in project mode - \"projectile\")."
+	(string= (projectile-project-name) "-")
 	)
 
   (defun my-build-run ()
 	"Build and run project or single file."
 	(interactive)
-	(if (string= (projectile-project-name) "-")
+	(if (not (buffer-file-name))
+		(error "Can't build: current buffer is not associated with any file")
+	  )
+	(if (my-single-file-mode)
 		(my-build-run-file)
 	  (my-build-run-project)
 	  )
@@ -306,6 +315,13 @@ Otherwise show first error."
 		(delete-windows-on buffer)
 	  (spacemacs/next-error)
 	  )
+	;; (display-buffer-pop-up-frame "1.sh" nil)
+	)
+
+  (defun my-reload-dir-locals-for-current-buffer ()
+	"Reload dir locals for the current buffer."
+	(interactive)
+	(let ((enable-local-variables :all)) (hack-dir-local-variables-non-file-buffer))
 	)
 
   (defun my-eval-end-of-line ()
@@ -405,6 +421,7 @@ layers configuration. You are free to put any user code."
 	(global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
 
 	;; other hotkeys:
+	(evil-leader/set-key "dr" 'my-reload-dir-locals-for-current-buffer)
 	(evil-leader/set-key "dm" 'my-display-major-mode)
 	(evil-leader/set-key "dpi" 'my-display-installed-packages)
 	(evil-leader/set-key "dpl" 'list-packages)
@@ -425,6 +442,7 @@ layers configuration. You are free to put any user code."
 	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; TODO:
+	;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
 	;; single file build / run
 	;; project run
 	;; configure
