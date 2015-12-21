@@ -290,8 +290,7 @@ user code."
 	)
 
   (defun my-single-file-mode ()
-	"Return t if we are in single file build mode and nil otherwise
-(we are in project mode - \"projectile\")."
+	"Return t if we are in single file build mode and nil otherwise (we are in project mode - \"projectile\")."
 	(string= (projectile-project-name) "-")
 	)
 
@@ -307,16 +306,66 @@ user code."
 	  )
 	)
 
+
+
+
+
+  (defun my-append-string-to-buffer (string buffer)
+	"Append STRING to the end of BUFFER."
+	(with-current-buffer buffer
+	  (save-excursion
+		(goto-char (point-max))
+		(insert string))))
+
+  (defun my-execute-command-in-run-frame (cmd)
+	"Execute given command in *run_frame*"
+	(my-append-string-to-buffer cmd "*shell*")
+	(switch-to-buffer "*shell*")
+	(comint-send-input)
+	)
+
+  (defun my-create-run-frame ()
+	(make-frame)
+	(set-frame-name "*run_frame*")
+	(shell)
+	)
+
+  (defun my-create-run-frame-if-required ()
+	"Create *run_frame* if it is not alread created."
+	(require 'frame-fns)
+	(when (not (get-a-frame "*run_frame*"))
+	  (my-create-run-frame)
+	  )
+	)
+
   (defun my-notify-compilation-result (buffer msg)
 	"Notify that the compilation is finished.
 Close the *compilation* buffer if the compilation is successful.
 Otherwise show first error."
 	(if (string-match "^finished" msg)
-		(delete-windows-on buffer)
+		(progn
+		  (delete-windows-on buffer)
+		  (my-create-run-frame-if-required)
+		  (my-execute-command-in-run-frame "pwd")
+		  )
 	  (spacemacs/next-error)
 	  )
+
+	;; (start-process "run" "todo_buf" "/bin/bash" "-c" "./interactive.sh")
+	;; (async-shell-command "./interactive.sh")
 	;; (display-buffer-pop-up-frame "1.sh" nil)
 	)
+
+
+
+
+
+
+
+
+
+
+
 
   (defun my-reload-dir-locals-for-current-buffer ()
 	"Reload dir locals for the current buffer."
@@ -384,7 +433,8 @@ layers configuration. You are free to put any user code."
 	;; (my-frame-config)
 	;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
 
-	(switch-to-buffer "*scratch*") ;; less blinking on screen
+	(kill-buffer "*spacemacs*") ;; less blinking on screen
+	;; (switch-to-buffer "*scratch*") ;; less blinking on screen
 	(setq show-paren-style 'expression) ; Highlight eLisp expression (inside braces)
 	(show-paren-mode)
 	;; (setq show-trailing-whitespace nil) ;; do not highlight whitespace at end of lines
