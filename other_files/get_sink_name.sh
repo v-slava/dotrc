@@ -21,7 +21,7 @@ fi
 # Get full sink name:
 SINK_NAME=""
 while [ "$SINK_NAME" = "" ]; do
-	SINK_NAME="$(pactl list sinks | grep "Name: $SINK\." | cut -d' ' -f2)"
+	SINK_NAME="$(LANGUAGE=en pactl list sinks | grep "Name: $SINK\." | cut -d' ' -f2)"
 done
 
 # Print full sink name:

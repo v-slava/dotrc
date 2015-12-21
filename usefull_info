@@ -106,7 +106,7 @@ echo help | bluetoothctl
 pacmd list-sink-inputs
 
 # if no sound:
-$ pacmd list-sinks | grep -i mute
+$ LANGUAGE=en pacmd list-sinks | grep -i mute
        muted: yes
 $ pacmd list-sinks | grep -i index
   * index: 0
@@ -125,7 +125,7 @@ pactl set-sink-port 0 analog-output-speaker
 pactl -- set-sink-volume INDEX +3%
 
 # get volume:
-pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
+LANGUAGE=en pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
 
 # Set time 3 hours back:
 date -s "$(date -R -d '-3 hour')"
