@@ -369,7 +369,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 			call system("echo '" . a:run_cmd . "' | bash 1>" . l:run_log . ' 2>&1')
 			let l:run_exit_code = v:shell_error
 			execute 'botright pedit ' . l:run_log
-			call Update_status_line('Running is done. Exit code: ' . l:run_exit_code, 'normal')
+			call Update_status_line('Running completed. Exit code: ' . l:run_exit_code, 'normal')
 		else " a:run_interactive == 'true'
 			call Update_status_line('Running started (may be ended now)...', 'normal')
 			call system("x-terminal-emulator -e bash -i -c '" . a:run_cmd . " ; echo -e $? ; vifm-pause' &")

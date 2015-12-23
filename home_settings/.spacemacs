@@ -272,21 +272,49 @@ user code."
 	  )
 	)
 
-  (defun my-build-run-project ()
-	"Build and run project (use projectile)."
+  (defun my-modify-run-cmd (orig_cmd)
+	"Modify run command before execution."
+	;; orig_cmd
+	(concat "echo -e \"\\e[32mOutput begin:\\e[0m\" && " orig_cmd " ; echo -e \"\\e[32mRunning completed. Exit code: $?\\e[0m\"")
+	;; (concat "echo -e \"\\e[36mCommand to be executed:\\e[0m\" && echo " orig_cmd " && echo -e \"\\e[32mOutput begin:\\e[0m\" && " orig_cmd " ; echo -e \"\\e[32mRunning completed. Exit code: $?\\e[0m\"")
+	)
+
+  (defun my-build-project ()
+	"Build project (use projectile)."
 	(projectile-save-project-buffers)
 	(my-reload-dir-locals-for-current-buffer)
+	(setq my_final_run_cmd (my-modify-run-cmd my_run_cmd))
 	;; (projectile-compile-project (projectile-project-root)) ;; need to confirm compile command
 	(projectile-compile-project nil)
 	)
 
+  (defun my-system (cmd)
+	"Execute shell command. Exit on failure."
+	(with-temp-buffer
+	  (when (/= 0 (call-process-shell-command cmd nil (current-buffer) nil))
+		(error (buffer-string))
+		)
+	  )
+	)
+
   (defun my-build-run-file ()
-	"Build and run single file."
+	"Build or run single file."
+	(setq my_run_cmd (shell-command-to-string (concat
+		"~/os_settings/other_files/get_default_run_cmd.sh "
+		(file-name-nondirectory (buffer-file-name)))))
+	(setq my_final_run_cmd (my-modify-run-cmd my_run_cmd))
 	(spacemacs/write-file)
-	(shell-command-to-string "rm -rf /tmp/vim_ide_dir && mkdir /tmp/vim_ide_dir")
-	(compilation-start (shell-command-to-string (concat
+	(my-system "rm -rf /tmp/vim_ide_dir && mkdir /tmp/vim_ide_dir")
+	(setq my_build_cmd (shell-command-to-string (concat
 		"~/os_settings/other_files/get_default_build_cmd.sh "
 		(file-name-nondirectory (buffer-file-name)))))
+	(if (string= (concat "chmod +x \"" (file-name-nondirectory (buffer-file-name)) "\"") my_build_cmd)
+		(progn
+		  (my-system my_build_cmd)
+		  (my-execute-command-in-shell-frame my_final_run_cmd)
+		)
+	  (compilation-start my_build_cmd)
+	  )
 	)
 
   (defun my-single-file-mode ()
@@ -302,39 +330,26 @@ user code."
 	  )
 	(if (my-single-file-mode)
 		(my-build-run-file)
-	  (my-build-run-project)
+	  (my-build-project)
 	  )
 	)
 
-
-
-
-
-  (defun my-append-string-to-buffer (string buffer)
-	"Append STRING to the end of BUFFER."
-	(with-current-buffer buffer
-	  (save-excursion
-		(goto-char (point-max))
-		(insert string))))
-
-  (defun my-execute-command-in-run-frame (cmd)
-	"Execute given command in *run_frame*"
-	(my-append-string-to-buffer cmd "*shell*")
-	(switch-to-buffer "*shell*")
-	(comint-send-input)
-	)
-
-  (defun my-create-run-frame ()
-	(make-frame)
-	(set-frame-name "*run_frame*")
-	(shell)
-	)
-
-  (defun my-create-run-frame-if-required ()
-	"Create *run_frame* if it is not alread created."
+  (defun my-create-shell-frame-if-required ()
+	"Create a shell frame if it is not already created."
 	(require 'frame-fns)
-	(when (not (get-a-frame "*run_frame*"))
-	  (my-create-run-frame)
+	(when (not (get-a-frame "*shell*"))
+	  (shell)
+	  (sleep-for 0 100) ;; wait for shell greeting (TODO fix)
+	  )
+	)
+
+  (defun my-execute-command-in-shell-frame (cmd)
+	"Execute given command in a shell frame."
+	(my-create-shell-frame-if-required)
+	(with-current-buffer "*shell*" ;; save-excursion
+	  (goto-char (point-max))
+	  (insert cmd)
+	  (comint-send-input)
 	  )
 	)
 
@@ -343,29 +358,15 @@ user code."
 Close the *compilation* buffer if the compilation is successful.
 Otherwise show first error."
 	(if (string-match "^finished" msg)
+		;; TODO show warnings.
+		;; TODO warnings filter.
 		(progn
 		  (delete-windows-on buffer)
-		  (my-create-run-frame-if-required)
-		  (my-execute-command-in-run-frame "pwd")
+		  (my-execute-command-in-shell-frame my_final_run_cmd)
 		  )
 	  (spacemacs/next-error)
 	  )
-
-	;; (start-process "run" "todo_buf" "/bin/bash" "-c" "./interactive.sh")
-	;; (async-shell-command "./interactive.sh")
-	;; (display-buffer-pop-up-frame "1.sh" nil)
 	)
-
-
-
-
-
-
-
-
-
-
-
 
   (defun my-reload-dir-locals-for-current-buffer ()
 	"Reload dir locals for the current buffer."
@@ -391,7 +392,7 @@ Otherwise show first error."
 	"Show installed (activated) packages."
 	(interactive)
 	(split-window-below-and-focus)
-	(switch-to-buffer (make-temp-name "temp_"))
+	(switch-to-buffer (make-temp-name "temp_")) ;; TODO do not use make-temp-name
 	(message "See list of installed packages in current buffer")
 	(print package-activated-list (current-buffer))
 	)
@@ -443,13 +444,16 @@ layers configuration. You are free to put any user code."
 	(with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
 	(setq compilation-read-command nil) ;; do not prompt for compile command
 	(add-to-list 'compilation-finish-functions 'my-notify-compilation-result)
+	(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-pop-up-frame))) ;; always open shell in new frame
 
 	;; Put this in .dir-locals.el (also file .projectile may be required):
 	;; ((nil . ((eval . (progn
-	;; 				   (require 'projectile)
-	;; 				   (puthash (projectile-project-root)
-	;; 							"gcc dgrep.c"
-	;; 							projectile-compilation-cmd-map)
+	;;     (setq my_run_cmd "/tmp/vim_ide_dir/main.out")
+	;;     (setq my_build_cmd "gcc main.c -Wall -Wextra -o /tmp/vim_ide_dir/main.out")
+	;;     (require 'projectile)
+	;; 	   (puthash (projectile-project-root)
+	;; 	       my_build_cmd
+	;; 	       projectile-compilation-cmd-map)
 	;; 				   )))))
 
 	;; tab settings:
@@ -492,11 +496,12 @@ layers configuration. You are free to put any user code."
 	(define-key evil-visual-state-map "2" 'my-execute-macro)
 
 	;; TODO:
-	;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
-	;; single file build / run
-	;; project run
+	;; show warnings by default
+	;; warnings filter
+	;; compile on build server
 	;; configure
 	;; rebuild
+	;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
 	;; grep through the project
 	;; rtags
 	;; ctags / cscope
