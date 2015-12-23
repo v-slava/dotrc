@@ -348,6 +348,13 @@ user code."
 	  (insert cmd)
 	  (comint-send-input)))
 
+  (defun my-display-compilation-results ()
+	"Display compilation results in new window."
+	(switch-to-buffer-other-window "*compilation*")
+	(other-window -1)
+	(spacemacs/next-error)
+	)
+
   (defun my-compilation-finish (buffer msg)
 	"Executed when compilation process finishes.
 Run my_final_run_cmd if compilation succeeded.
@@ -358,10 +365,10 @@ Otherwise show first error or warning."
 		  ;; Successfully compiled
 		  (if (or (string-match ": warning: " (my-buffer-to-string buffer))
 				  (string-match ": note: " (my-buffer-to-string buffer)))
-			  (spacemacs/next-error)
+			  (my-display-compilation-results)
 			(delete-windows-on buffer))
 		  (my-execute-command-in-shell-frame my_final_run_cmd))
-	  (spacemacs/next-error)))
+	  (my-display-compilation-results)))
 
   (defun my-reload-dir-locals-for-current-buffer ()
 	"Reload dir locals for the current buffer."
@@ -429,7 +436,8 @@ layers configuration. You are free to put any user code."
   (with-eval-after-load 'linum (linum-relative-toggle)) ;; make linums relative by default
   (setq compilation-read-command nil) ;; do not prompt for compile command
   (add-to-list 'compilation-finish-functions 'my-compilation-finish)
-  (setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-pop-up-frame))) ;; always open shell in new frame
+  (add-to-list 'display-buffer-alist '("\\*shell\\*" display-buffer-pop-up-frame)) ;; always open shell in new frame
+  (add-to-list 'display-buffer-alist '("\\*compilation\\*" display-buffer-no-window)) ;; do not display compilation buffer by default
 
   ;; Put this in .dir-locals.el (also file .projectile may be required):
   ;; ((nil . ((eval . (progn
@@ -481,7 +489,7 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
-  ;; warnings filter
+  ;; warnings filter (compilation-filter)
   ;; compile on build server
   ;; configure
   ;; rebuild
