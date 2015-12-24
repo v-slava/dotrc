@@ -264,6 +264,8 @@ filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
+filetype *vimrc,.*vimrc vim %f
+
 " TuDu files
 " filetype *.tudu tudu -f %c
 
@@ -372,7 +374,7 @@ mark s ~/other/my_samples/single_sources
 mark t ~/temporary
 mark T /tmp
 mark w ~/workspace
-mark p ~/workspace/15_UHD_BD
+mark p ~/workspace/15_UHD_BD_root
 mark O ~/os_settings
 mark m /media
 mark u /media/sdb1
@@ -383,8 +385,8 @@ mark D /media/files/trash_vifm
 mark E /media/build_server/home/exchange
 mark e /media/new_build_server/home/bld/exchange
 
-nnoremap ,c :write | execute ':!~/bin/edit.sh --wait ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
-nnoremap ,v :!~/bin/edit.sh --wait ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
+nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
+nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
 nnoremap ,e :!~/bin/edit.sh --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<cr>
 nnoremap ,b :!~/bin/edit.sh --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
 nnoremap ,i :!~/bin/edit.sh --wait ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<cr>

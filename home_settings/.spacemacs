@@ -350,10 +350,10 @@ user code."
 
   (defun my-filter-compilation-results ()
 	"Filter compilation results"
-	(with-current-buffer "*compilation*"
-	  ;; (delete-matching-lines "Compilation started")
-	  ;; (delete-matching-lines "6:2")
-	  )
+	;; (with-current-buffer "*compilation*"
+	;;   (delete-matching-lines "Compilation started")
+	;;   (delete-matching-lines "6:2")
+	;;   )
 	)
 
   (defun my-next-error ()
@@ -517,6 +517,7 @@ layers configuration. You are free to put any user code."
   (evil-leader/set-key "ob" 'my-build-run)
   ;; (evil-leader/set-key "or" 'my-rebuild-run)
   ;; (evil-leader/set-key "oc" 'my-configure)
+  ;; (evil-leader/set-key "os" 'my-select-build-configuration)
   (evil-leader/set-key "SPC" 'evil-avy-goto-char)
   (define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
@@ -531,13 +532,19 @@ layers configuration. You are free to put any user code."
   ;; rebuild
   ;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
   ;; grep through the project
+  ;; (indent-region) visually selected
   ;; rtags
   ;; ctags / cscope
   ;; diff
   ;; hotkey to wrap selected region in braces / quotes / ...
   ;; smarttabs
   ;; vim configs
-  ;; save project session (including frames positions, marks) on exit (see session management)
+  ;; save project session (including frames positions, marks - see (helm-filtered-bookmarks)) on exit (see session management)
+  ;; ALT+i - insert emacs command (minibuffer)
+  ;; , in normal mode - reverse ; (next character)
+  ;; auto-fill-mode - move cursor to next line
+  ;; flyspell-mode - typo correction
+
   ;; always open help in current frame (not in another one where it was opened earlier) and do not close help in another frames:
   ;; (add-to-list 'same-window-buffer-names "*Help*")
   ;; (add-to-list 'same-window-regexps ".*elp.*")
@@ -545,6 +552,7 @@ layers configuration. You are free to put any user code."
 
   ;; en - next error
   ;; ep - previous error
+  ;; ec - current error
   ;; bR - revert buffer (like :q!, but without exit)
   ;; bd - kill this buffer
   ;; sc - do not highlight search results
