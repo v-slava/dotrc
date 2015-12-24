@@ -262,14 +262,14 @@ user code."
 	(evil-execute-macro 1 (concat ":normal @" reg)))
 
   (defun my-ctrl-d ()
-	"My Ctrl-d handler function."
+    "My Ctrl-d handler function."
 	(interactive)
 	(if (buffer-file-name)
 		;; a buffer has associated file name
 		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
 			(error "No write since last change (buffer is modified)")
-		  ;; (kill-buffer)
-		  (evil-execute-macro 1 ":q")
+		  ;; (evil-execute-macro 1 ":q") ;; causes accidental hangs (especially if shell is opened)
+		  (condition-case nil (delete-window) (error (delete-frame)))
 		  )
 	  ;; a buffer hasn't associated file name
 	  (evil-execute-macro 1 ":q!")))
