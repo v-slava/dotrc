@@ -348,12 +348,42 @@ user code."
 	  (insert cmd)
 	  (comint-send-input)))
 
+  (defun my-filter-compilation-results ()
+	"Filter compilation results"
+	(with-current-buffer "*compilation*"
+	  ;; (delete-matching-lines "Compilation started")
+	  ;; (delete-matching-lines "6:2")
+	  )
+	)
+
+  (defun my-next-error ()
+	"Visit next error in source code."
+	(interactive)
+	(switch-to-buffer-other-window "*compilation*")
+	(condition-case nil (spacemacs/next-error) (error (evil-goto-error nil))))
+
+  (defun my-previous-error ()
+	"Visit previous error in source code."
+	(interactive)
+	(switch-to-buffer-other-window "*compilation*")
+	(condition-case nil (spacemacs/previous-error) (error (evil-goto-error nil))))
+
+  (defun my-current-error()
+	"Visit current error in source code."
+	(interactive)
+	(switch-to-buffer-other-window "*compilation*")
+	(evil-goto-error nil))
+
+  (defun my-first-error ()
+	"Visit first error in source code."
+	(my-next-error))
+
   (defun my-display-compilation-results ()
 	"Display compilation results in new window."
+	(my-filter-compilation-results)
 	(switch-to-buffer-other-window "*compilation*")
 	(other-window -1)
-	(spacemacs/next-error)
-	)
+	(my-first-error))
 
   (defun my-compilation-finish (buffer msg)
 	"Executed when compilation process finishes.
@@ -467,6 +497,14 @@ layers configuration. You are free to put any user code."
   (global-set-key (kbd "<C-mouse-4>") 'zoom-frm-in)
   (global-set-key (kbd "<C-mouse-5>") 'zoom-frm-out)
 
+  ;; overloaded spacemacs functions:
+  (evil-leader/set-key "en" 'my-next-error)
+  (evil-leader/set-key "ep" 'my-previous-error)
+  (evil-leader/set-key "ec" 'my-current-error)
+  (evil-leader/set-key "hdf" 'my-describe-function)
+  (evil-leader/set-key "hdv" 'my-describe-variable)
+  (evil-leader/set-key "hdk" 'my-describe-key)
+
   ;; other hotkeys:
   (evil-leader/set-key "dr" 'my-reload-dir-locals-for-current-buffer)
   (evil-leader/set-key "dm" 'my-display-major-mode)
@@ -477,9 +515,6 @@ layers configuration. You are free to put any user code."
   (evil-leader/set-key "dem" 'my-eval-mark-end-of-line)
   (evil-leader/set-key "dq" 'my-close-temporary-windows)
   (evil-leader/set-key "ob" 'my-build-run)
-  (evil-leader/set-key "hdf" 'my-describe-function)
-  (evil-leader/set-key "hdv" 'my-describe-variable)
-  (evil-leader/set-key "hdk" 'my-describe-key)
   ;; (evil-leader/set-key "or" 'my-rebuild-run)
   ;; (evil-leader/set-key "oc" 'my-configure)
   (evil-leader/set-key "SPC" 'evil-avy-goto-char)
@@ -491,6 +526,7 @@ layers configuration. You are free to put any user code."
   ;; TODO:
   ;; warnings filter (compilation-filter)
   ;; compile on build server
+  ;; multiple configurations (use configuration names, helm to select by name)
   ;; configure
   ;; rebuild
   ;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el

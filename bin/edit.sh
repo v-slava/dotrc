@@ -5,7 +5,7 @@ if ! pgrep emacs 1>/dev/null ; then
 fi
 
 CMD="emacsclient -c"
-if [ "$1" = "--wait" ]; then
+if [ "$1" = "--wait" ] || [ "$1" = "--nofork" ]; then
 	shift
 else
 	CMD="$CMD -n"
