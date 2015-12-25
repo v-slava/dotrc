@@ -272,7 +272,7 @@ user code."
 		  (condition-case nil (delete-window) (error (delete-frame)))
 		  )
 	  ;; a buffer hasn't associated file name
-	  (evil-execute-macro 1 ":q!")))
+	  (condition-case nil (delete-window) (error (delete-frame)))))
 
   (defun my-close-temporary-windows ()
 	"Close temporary windows (compile results, help, etc)."
@@ -343,10 +343,7 @@ user code."
   (defun my-execute-command-in-shell-frame (cmd)
 	"Execute given command in a shell frame."
 	(my-create-shell-frame-if-required)
-	(with-current-buffer "*shell*" ;; save-excursion
-	  (goto-char (point-max))
-	  (insert cmd)
-	  (comint-send-input)))
+	(comint-send-string "*shell*" (concat cmd "\n")))
 
   (defun my-filter-compilation-results ()
 	"Filter compilation results"
@@ -525,6 +522,10 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
+  ;; emacs hangs while running command in shell
+  ;; next error shouldn't point on "from file"..
+  ;; error position isn't precise because of tabs
+  ;; do not run built program next time if previous run hasn't been finished
   ;; warnings filter (compilation-filter)
   ;; compile on build server
   ;; multiple configurations (use configuration names, helm to select by name)
