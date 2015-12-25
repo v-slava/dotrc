@@ -326,9 +326,22 @@ user code."
 	"Return t if we are in single file build mode and nil otherwise (we are in project mode - \"projectile\")."
 	(string= (projectile-project-name) "-"))
 
+  (defun my-get-build-error-index-string ()
+	"Return a string for modeline, which contains my build error index."
+	(format "Error index: %d" my_build_error_index))
+  (defun my-increment-build-error-index ()
+	"Increment build error index."
+	(setq my_build_error_index (1+ my_build_error_index))
+	)
+  (defun my-decrement-build-error-index ()
+	"Decrement build error index."
+	(setq my_build_error_index (1- my_build_error_index))
+	)
+
   (defun my-build-run ()
 	"Build and run project or single file."
 	(interactive)
+	(setq my_build_error_index -1)
 	(when (not (buffer-file-name)) (error "Can't build: current buffer is not associated with any file"))
 	(if (my-single-file-mode) (my-build-run-file) (my-build-project)))
 
@@ -357,13 +370,13 @@ user code."
 	"Visit next error in source code."
 	(interactive)
 	(switch-to-buffer-other-window "*compilation*")
-	(condition-case nil (spacemacs/next-error) (error (evil-goto-error nil))))
+	(condition-case nil (progn (spacemacs/next-error) (my-increment-build-error-index)) (error (evil-goto-error nil))))
 
   (defun my-previous-error ()
 	"Visit previous error in source code."
 	(interactive)
 	(switch-to-buffer-other-window "*compilation*")
-	(condition-case nil (spacemacs/previous-error) (error (evil-goto-error nil))))
+	(condition-case nil (progn (spacemacs/previous-error) (my-decrement-build-error-index)) (error (evil-goto-error nil))))
 
   (defun my-current-error()
 	"Visit current error in source code."
@@ -373,6 +386,7 @@ user code."
 
   (defun my-first-error ()
 	"Visit first error in source code."
+	(setq my_build_error_index 0) ;; first error will be '1' however (see (my-next-error) below)
 	(my-next-error))
 
   (defun my-display-compilation-results ()
@@ -465,6 +479,10 @@ layers configuration. You are free to put any user code."
   (add-to-list 'compilation-finish-functions 'my-compilation-finish)
   (add-to-list 'display-buffer-alist '("\\*shell\\*" display-buffer-pop-up-frame)) ;; always open shell in new frame
   (add-to-list 'display-buffer-alist '("\\*compilation\\*" display-buffer-no-window)) ;; do not display compilation buffer by default
+  ;; Modify modeline (display build error index):
+  (setq my_build_error_index -1)
+  (spacemacs|define-mode-line-segment my-mode-line-segment-build-error-index (my-get-build-error-index-string) :when (/= -1 my_build_error_index))
+  (add-to-list 'spacemacs-mode-line-left 'my-mode-line-segment-build-error-index)
 
   ;; Put this in .dir-locals.el (also file .projectile may be required):
   ;; ((nil . ((eval . (progn
@@ -514,6 +532,7 @@ layers configuration. You are free to put any user code."
   (evil-leader/set-key "ob" 'my-build-run)
   ;; (evil-leader/set-key "or" 'my-rebuild-run)
   ;; (evil-leader/set-key "oc" 'my-configure)
+  ;; (evil-leader/set-key "od" 'my-distclean)
   ;; (evil-leader/set-key "os" 'my-select-build-configuration)
   (evil-leader/set-key "SPC" 'evil-avy-goto-char)
   (define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
@@ -522,8 +541,10 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
-  ;; emacs hangs while running command in shell
+  ;; search selection color (yellow) is inappropriate
+  ;; pass line:column to emacsclient in command line
   ;; next error shouldn't point on "from file"..
+  ;; compile project even if current buffer is README
   ;; error position isn't precise because of tabs
   ;; do not run built program next time if previous run hasn't been finished
   ;; warnings filter (compilation-filter)
@@ -538,6 +559,7 @@ layers configuration. You are free to put any user code."
   ;; ctags / cscope
   ;; diff
   ;; hotkey to wrap selected region in braces / quotes / ...
+  ;; display "error number 1 of 34" in modeline
   ;; smarttabs
   ;; vim configs
   ;; save project session (including frames positions, marks - see (helm-filtered-bookmarks)) on exit (see session management)

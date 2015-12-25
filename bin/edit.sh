@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# exec vim "$@"
+
 if ! pgrep emacs 1>/dev/null ; then
 	emacs --daemon
 fi
