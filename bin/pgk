@@ -14,6 +14,6 @@ else
 	ARGS="$@"
 fi
 
-PGID=$(head -n 1 | cut -d' ' -f1)
+PGID=$(head -n 1 | awk '{print $1}')
 kill "$ARGS" "-${PGID}"
 
