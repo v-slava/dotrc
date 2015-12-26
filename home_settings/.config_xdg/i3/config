@@ -214,7 +214,7 @@ exec --no-startup-id exec ~/os_settings/other_files/keyboard_layout.sh
 exec --no-startup-id exec rm -rf /tmp/system_update_lock_dir
 
 # Autostart sleep_on_idle.sh:
-# exec --no-startup-id exec ~/os_settings/other_files/sleep_on_idle.sh &
+# exec --no-startup-id exec ~/os_settings/other_files/suspend_on_idle.sh &
 
 # Start alsaplayer:
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
