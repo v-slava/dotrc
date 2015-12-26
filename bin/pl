@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# List all processes:
+
+# Usage:
+# pl | grep record | pk
+# pl | grep record | grep wav | pk -9
+
+set -e
+ps -e -o pgrp,pid,cmd | grep -v "/bin/$(basename $0)" | grep -v ' grep '
+

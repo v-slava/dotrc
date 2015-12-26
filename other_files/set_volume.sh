@@ -1,8 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-USAGE="Usage:\n\n\
-$(basename $0) VOLUME\n\n\
-VOLUME must be in pactl(1) format. VOLUME examples:\n20%\n+3%\n-5%"
+USAGE="Usage: $(basename $0) VOLUME
+
+VOLUME must be in pactl(1) format. VOLUME examples:
+20%
++3%
+-5%
+"
 
 if [ -z "$1" ] ; then
 	echo -e "$USAGE" 1>&2

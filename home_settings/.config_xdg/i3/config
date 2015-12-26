@@ -43,9 +43,6 @@ bindsym $Alt_L+Shift+l move right
 # split in horizontal orientation
 bindsym $Alt_R+h split h
 
-# offline translate with goldendict:
-bindsym $Alt_R+t exec --no-startup-id exec ~/os_settings/other_files/translate_hotkey.sh
-
 # split in vertical orientation
 bindsym $Alt_R+v split v
 
@@ -167,6 +164,9 @@ bindsym $Alt_L+Tab focus left
 # bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
 bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm'
 
+# offline translate with goldendict:
+bindsym $Alt_R+t exec --no-startup-id exec ~/os_settings/other_files/translate_hotkey.sh
+
 # translator
 bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
@@ -210,6 +210,12 @@ exec --no-startup-id exec nm-applet
 # Start keyboard layout indicator/switcher:
 exec --no-startup-id exec ~/os_settings/other_files/keyboard_layout.sh
 
+# Delete system update lock directory:
+exec --no-startup-id exec rm -rf /tmp/system_update_lock_dir
+
+# Autostart sleep_on_idle.sh:
+# exec --no-startup-id exec ~/os_settings/other_files/sleep_on_idle.sh &
+
 # Start alsaplayer:
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
 
@@ -226,11 +232,11 @@ bindsym $WIN+l        exec --no-startup-id alsaplayer --relative +3
 bindsym $WIN+0        exec --no-startup-id alsaplayer --seek 0
 
 # volume hotkeys:
-bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/volume.sh 0%
-bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/volume.sh +3%
-bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/volume.sh +3%
-bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
-bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/volume.sh -3%
+bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh 0%
+bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +3%
+bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +3%
+bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -3%
+bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -3%
 
 # toggle sound output (bluetooth headset / built-in audio):
 bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh

@@ -17,6 +17,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	zip unzip gzip bzip2 p7zip-full cpio unrar \
 	alsa-utils alsaplayer-daemon alsaplayer-common \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
+	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
 	expect mpg321 lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd
@@ -41,7 +42,7 @@ apt-get install network-manager-gnome gnome-keyring notification-daemon
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xdotool xclip xinput scrot zenity xcape
+apt-get install wmctrl xdotool xclip xinput scrot zenity xcape xprintidle
 # keynav
 
 # Install vim instance, which is able to access X clipboard:
