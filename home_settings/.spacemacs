@@ -78,14 +78,16 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark-modified
-                         spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+   dotspacemacs-themes '(
+                         spacemacs-dark-modified
+                         ;; spacemacs-dark
+                         ;; spacemacs-light
+                         ;; solarized-light
+                         ;; solarized-dark
+                         ;; leuven
+                         ;; monokai
+                         ;; zenburn
+                        )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -208,16 +210,18 @@ user code."
   ;;     )
   ;;   )
 
-  ;; (defun my-frame-config ()
-  ;; "Frame configuration function (should be called for each new frame)."
-  ;; (my-zoom-value 5)
-  ;; )
+  (defun my-frame-config ()
+	"Frame configuration function (should be called for each new frame)."
+	;; (my-zoom-value 5)
+	(spacemacs/cycle-spacemacs-theme) ;; needed to fix highlighting of searched text
+	;; (without this call it gets yellow - #ffff00). Correct color is #333c45.
+	;; The problem is only in server mode. TODO find out what exactly is wrong.
+	)
 
-  ;; (defun my-after-make-frame-hook (frame)
-  ;; "A hook to be added to after-make-frame-functions. It calls (my-frame-config)."
-  ;; (select-frame frame)
-  ;; (my-frame-config)
-  ;; )
+  (defun my-after-make-frame-hook (frame)
+	"A hook to be added to after-make-frame-functions. It calls (my-frame-config)."
+	(select-frame frame)
+	(my-frame-config))
 
   (defun my-indent-buffer ()
 	(interactive)
@@ -465,7 +469,7 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
   ;; (my-frame-config)
-  ;; (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
+  (add-hook 'after-make-frame-functions 'my-after-make-frame-hook)
 
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   ;; (switch-to-buffer "*scratch*") ;; less blinking on screen
@@ -541,8 +545,7 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
-  ;; search selection color (yellow) is inappropriate
-  ;; pass line:column to emacsclient in command line
+  ;; helm delete bookmark
   ;; next error shouldn't point on "from file"..
   ;; compile project even if current buffer is README
   ;; error position isn't precise because of tabs
