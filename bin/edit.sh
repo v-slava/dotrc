@@ -27,11 +27,11 @@ fi
 for arg in "$@" ; do
 	line="$(echo "$arg" | cut -d':' -f2)"
 	if [ "$line" = "$arg" ] ; then
-		CMD="$CMD $arg"
+		$CMD $arg
 		continue
 	fi
 	if ! is_a_number "$line" ; then
-		CMD="$CMD $arg"
+		$CMD $arg
 		continue
 	fi
 	column="$(echo "$arg" | cut -d':' -f3)"
@@ -39,13 +39,11 @@ for arg in "$@" ; do
 		column=1 # then assume it equals to 1
 	fi
 	if ! is_a_number "$column" ; then
-		CMD="$CMD $arg"
+		$CMD $arg
 		continue
 	fi
 	file="$(echo "$arg" | cut -d':' -f1)"
-	CMD="$CMD +${line}:${column} $file"
-done
 
-# execute final command:
-$CMD
+	$CMD -e "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+done
 

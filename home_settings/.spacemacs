@@ -483,10 +483,15 @@ layers configuration. You are free to put any user code."
   (add-to-list 'compilation-finish-functions 'my-compilation-finish)
   (add-to-list 'display-buffer-alist '("\\*shell\\*" display-buffer-pop-up-frame)) ;; always open shell in new frame
   (add-to-list 'display-buffer-alist '("\\*compilation\\*" display-buffer-no-window)) ;; do not display compilation buffer by default
+  (setq compilation-error-screen-columns nil) ;; treat column numbers as character positions instead of screen columns in compilation errors
   ;; Modify modeline (display build error index):
   (setq my_build_error_index -1)
   (spacemacs|define-mode-line-segment my-mode-line-segment-build-error-index (my-get-build-error-index-string) :when (/= -1 my_build_error_index))
   (add-to-list 'spacemacs-mode-line-left 'my-mode-line-segment-build-error-index)
+  ;; Avoid matching "from file:line:column:" as a warning.
+  ;; For details see http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
+  (require 'compile)
+  (setf (nth 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
 
   ;; Put this in .dir-locals.el (also file .projectile may be required):
   ;; ((nil . ((eval . (progn
@@ -545,14 +550,11 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
-  ;; helm delete bookmark
-  ;; next error shouldn't point on "from file"..
-  ;; compile project even if current buffer is README
-  ;; error position isn't precise because of tabs
   ;; do not run built program next time if previous run hasn't been finished
   ;; warnings filter (compilation-filter)
   ;; compile on build server
   ;; multiple configurations (use configuration names, helm to select by name)
+  ;; on jump to any error, highlighted line (where the cursor is) remains on previous line (not updated)
   ;; configure
   ;; rebuild
   ;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
@@ -565,6 +567,8 @@ layers configuration. You are free to put any user code."
   ;; display "error number 1 of 34" in modeline
   ;; smarttabs
   ;; vim configs
+  ;; helm delete bookmark
+  ;; helm bookmark preserve position after editing file
   ;; save project session (including frames positions, marks - see (helm-filtered-bookmarks)) on exit (see session management)
   ;; ALT+i - insert emacs command (minibuffer)
   ;; , in normal mode - reverse ; (next character)

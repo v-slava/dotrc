@@ -400,6 +400,10 @@ nmap <silent> <Leader>ob :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:war
 " rebuild begin (with warinings):
 nmap <silent> <Leader>or :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
+" function Close_temporary_windows()
+" endfunction
+" nmap <silent> <Leader>dq :call Close_temporary_windows()<CR>
+
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
 	let l:config_log = '/tmp/vim_config_log'
