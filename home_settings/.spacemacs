@@ -87,7 +87,7 @@ values."
                          ;; leuven
                          ;; monokai
                          ;; zenburn
-                        )
+						 )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -227,6 +227,10 @@ user code."
 	(interactive)
 	(save-excursion
 	  (indent-region (point-min) (point-max) nil)))
+
+  (defun my-empty-function ()
+	"Do nothing."
+	)
 
   (defun my-write-string-to-file (str file_name)
 	"Write given string to a file."
@@ -370,35 +374,37 @@ user code."
 	;;   )
 	)
 
+  (defun my-goto-error (func-error func-build-error-index)
+	"Visit either next or previous error in source code."
+	(with-current-buffer "*compilation*"
+	  (switch-to-buffer-other-window "*compilation*")
+	  (condition-case nil (progn
+							(funcall func-error)
+							(helm-highlight-current-line)
+							(funcall my-build-error-index)
+							)
+		(error (evil-goto-error nil)))))
+
   (defun my-next-error ()
 	"Visit next error in source code."
 	(interactive)
-	(switch-to-buffer-other-window "*compilation*")
-	(condition-case nil (progn (spacemacs/next-error) (my-increment-build-error-index)) (error (evil-goto-error nil))))
+	(my-goto-error 'spacemacs/next-error 'my-increment-build-error-index))
 
   (defun my-previous-error ()
 	"Visit previous error in source code."
 	(interactive)
-	(switch-to-buffer-other-window "*compilation*")
-	(condition-case nil (progn (spacemacs/previous-error) (my-decrement-build-error-index)) (error (evil-goto-error nil))))
+	(my-goto-error 'spacemacs/previous-error 'my-decrement-build-error-index))
 
   (defun my-current-error()
 	"Visit current error in source code."
 	(interactive)
-	(switch-to-buffer-other-window "*compilation*")
-	(evil-goto-error nil))
-
-  (defun my-first-error ()
-	"Visit first error in source code."
-	(setq my_build_error_index 0) ;; first error will be '1' however (see (my-next-error) below)
-	(my-next-error))
+	(my-goto-error '(evil-goto-error nil) 'my-empty-function))
 
   (defun my-display-compilation-results ()
 	"Display compilation results in new window."
 	(my-filter-compilation-results)
-	(switch-to-buffer-other-window "*compilation*")
-	(other-window -1)
-	(my-first-error))
+	(setq my_build_error_index 0) ;; first error will be '1' however (see (my-next-error) below)
+	(my-next-error))
 
   (defun my-compilation-finish (buffer msg)
 	"Executed when compilation process finishes.
@@ -550,7 +556,6 @@ layers configuration. You are free to put any user code."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
   ;; TODO:
-  ;; do not run built program next time if previous run hasn't been finished
   ;; warnings filter (compilation-filter)
   ;; compile on build server
   ;; multiple configurations (use configuration names, helm to select by name)
@@ -574,6 +579,7 @@ layers configuration. You are free to put any user code."
   ;; , in normal mode - reverse ; (next character)
   ;; auto-fill-mode - move cursor to next line
   ;; flyspell-mode - typo correction
+  ;; do not run built program next time if previous run hasn't been finished
 
   ;; always open help in current frame (not in another one where it was opened earlier) and do not close help in another frames:
   ;; (add-to-list 'same-window-buffer-names "*Help*")
