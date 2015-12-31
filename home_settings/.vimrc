@@ -23,6 +23,8 @@
 " | <Leader>rE | -E               | preprocess                                 |
 " +------------+------------------+--------------------------------------------+
 "
+" :help string-functions
+"
 " To reindent json: 1) Make a selection. 2) :!python -m json.tool
 "
 " To repeat last colon command (in normal mode): @:, @@, @@, @@, ...
@@ -191,6 +193,7 @@ nmap = <C-W>=
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 nmap <Leader><Leader> <Plug>(easymotion-s)
+vmap <Leader><Leader> <Plug>(easymotion-s)
 
 " Use :Wq to save file as root (you can change % to another file name):
 " cmap Wq w !sudo tee >/dev/null %
@@ -396,13 +399,18 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	endif
 endfunction
 " build begin (with warinings):
-nmap <silent> <Leader>ob :w<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>ob :wa<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 " rebuild begin (with warinings):
-nmap <silent> <Leader>or :w<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
-" function Close_temporary_windows()
-" endfunction
-" nmap <silent> <Leader>dq :call Close_temporary_windows()<CR>
+function Close_window_if_temporary()
+	let l:dir_name=expand('%:p:h')
+	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir'
+		execute ':q'
+	endif
+endfunction
+command! CloseWindowIfTemporary call Close_window_if_temporary()
+nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -414,7 +422,7 @@ function! Configure(config_cmd)
 	execute 'botright pedit ' . l:config_log
 	call Update_status_line('Config is done. Exit code: ' . l:config_exit_code, 'normal')
 endfunction
-nmap <silent> <Leader>oc :w<CR>:call Configure(g:config_cmd)<CR>
+nmap <silent> <Leader>oc :wa<CR>:call Configure(g:config_cmd)<CR>
 
 function! Show_error( error_index )
 	let l:current_source_location = get(g:source_locations, a:error_index)
@@ -422,6 +430,8 @@ function! Show_error( error_index )
 	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . a:error_index
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
+
+nmap <Leader>ec :wa<CR>:call Show_error(g:error_index)<CR>
 
 function! Show_next_error()
 	if g:error_index == -1 " if there was no build
@@ -436,8 +446,7 @@ function! Show_next_error()
 		endif
 	endif
 endfunction
-" build next error:
-nmap <Leader>en :w<CR>:call Show_next_error()<CR>
+nmap <Leader>en :wa<CR>:call Show_next_error()<CR>
 
 function! Show_prev_error()
 	if g:error_index <= 0 " if there is no previous error
@@ -447,8 +456,7 @@ function! Show_prev_error()
 		call Show_error(g:error_index)
 	endif
 endfunction
-" build previous error:
-nmap <Leader>ep :w<CR>:call Show_prev_error()<CR>
+nmap <Leader>ep :wa<CR>:call Show_prev_error()<CR>
 
 function! Copy_location(in_file, strip_part)
 	let l:line_number = line('.')

@@ -264,7 +264,7 @@ filextype *.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
-filetype *vimrc,.*vimrc vim %f
+filetype *.gl,*.vim,*vimrc,.*vimrc vim %f
 
 " TuDu files
 " filetype *.tudu tudu -f %c

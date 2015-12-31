@@ -555,11 +555,14 @@ layers configuration. You are free to put any user code."
   ;; Apply macro to selected lines (vmap 2 :normal @):
   (define-key evil-visual-state-map "2" 'my-execute-macro)
 
-  ;; TODO:
+  ;; TODO main:
+  ;; (info) (info "elisp")
+  ;; make ctrl-d exit from *help* and *compilation*
+  ;; make .projectile unnecessary if .dir-locals.el exists
   ;; warnings filter (compilation-filter)
   ;; compile on build server
-  ;; multiple configurations (use configuration names, helm to select by name)
-  ;; on jump to any error, highlighted line (where the cursor is) remains on previous line (not updated)
+  ;; multiple configurations (use configuration names, helm to select by name).
+  ;; Save current configuration to .dir-locals.el (so that it will be selected on new build/run)
   ;; configure
   ;; rebuild
   ;; load dir-locals.el without prompt http://emacs.stackexchange.com/questions/14753/white-list-of-dir-locals-el
@@ -576,6 +579,7 @@ layers configuration. You are free to put any user code."
   ;; helm bookmark preserve position after editing file
   ;; save project session (including frames positions, marks - see (helm-filtered-bookmarks)) on exit (see session management)
   ;; ALT+i - insert emacs command (minibuffer)
+  ;; insert function from help to minibuffer
   ;; , in normal mode - reverse ; (next character)
   ;; auto-fill-mode - move cursor to next line
   ;; flyspell-mode - typo correction
