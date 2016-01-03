@@ -27,6 +27,9 @@ floating_modifier $Alt_L
 # kill focused window
 bindsym $Alt_R+Shift+Q kill
 
+# switch to virtual console 1
+bindsym $CTRL+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
+
 # change focus
 # bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
 bindsym $Alt_L+h focus left
