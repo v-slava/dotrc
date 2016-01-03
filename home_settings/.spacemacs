@@ -557,6 +557,7 @@ layers configuration. You are free to put any user code."
 
   ;; TODO main:
   ;; (info) (info "elisp")
+  ;; do not clear clipboard when frame is closed.
   ;; make ctrl-d exit from *help* and *compilation*
   ;; make .projectile unnecessary if .dir-locals.el exists
   ;; warnings filter (compilation-filter)
