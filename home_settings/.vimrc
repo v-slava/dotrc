@@ -132,8 +132,8 @@ set relativenumber
 " set nowrap " do not wrap long lines
 set linebreak
 
-" Use jk instead of <esc> to exit from insert mode:
-" inoremap jk <esc>
+" Use fd instead of <esc> to exit from insert mode:
+" inoremap fd <esc>
 " imap <esc> <nop>
 
 " let mapleader = "\\"
@@ -192,6 +192,10 @@ nmap <Leader>wk <C-w>k
 nmap = <C-W>=
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Jump to character within current line:
+" nmap <Leader>l <Plug>(easymotion-sl)
+" vmap <Leader>l <Plug>(easymotion-sl)
+" Jump to character within screen:
 nmap <Leader><Leader> <Plug>(easymotion-s)
 vmap <Leader><Leader> <Plug>(easymotion-s)
 

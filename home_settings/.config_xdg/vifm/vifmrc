@@ -419,6 +419,8 @@ set trashdir=/media/files/trash_vifm
 " Exit from vifm:
 nnoremap <c-d> :exit<cr>
 vmap <c-d> :exit<cr>
+nnoremap ii :exit<cr>
+
 " Launch programs:
 nnoremap rg :!./%c %i &<cr>
 nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>

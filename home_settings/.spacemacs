@@ -550,6 +550,7 @@ layers configuration. You are free to put any user code."
   ;; (evil-leader/set-key "od" 'my-distclean)
   ;; (evil-leader/set-key "os" 'my-select-build-configuration)
   (evil-leader/set-key "SPC" 'evil-avy-goto-char)
+  ;; (evil-leader/set-key "dl" 'avy-goto-char-in-line)
   (define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   ;; Apply macro to selected lines (vmap 2 :normal @):
