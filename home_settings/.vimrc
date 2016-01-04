@@ -133,7 +133,7 @@ set relativenumber
 set linebreak
 
 " Use fd instead of <esc> to exit from insert mode:
-" inoremap fd <esc>
+inoremap fd <esc>
 " imap <esc> <nop>
 
 " let mapleader = "\\"

@@ -1,0 +1,10 @@
+# Control-o: "> output"
+# "ab": "exit\n"
+# "ab": kill-whole-line
+
+# close shell:
+" qm": "\C-d"
+
+# grep shortcut:
+" gp": " | grep -i"
+
