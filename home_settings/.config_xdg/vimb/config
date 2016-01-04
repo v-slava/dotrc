@@ -16,9 +16,11 @@ set input-font-error=inconsolata LGC 14
 set status-font=inconsolata LGC 14
 set status-ssl-font=inconsolata LGC 14
 
-# Use ';' as synonym of ':'
-nnoremap ; :
+# nnoremap ; :
 # nnoremap : ;
+
+# Use '<Space>qm' to close current page:
+nnoremap \ qm :q<CR>
 
 # Zoom in/out hotkeys:
 nmap + :normal zI<CR>

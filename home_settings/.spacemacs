@@ -269,8 +269,8 @@ user code."
 	(interactive "s:'<,'>normal @")
 	(evil-execute-macro 1 (concat ":normal @" reg)))
 
-  (defun my-ctrl-d ()
-    "My Ctrl-d handler function."
+  (defun my-close-window-or-frame ()
+    "Close current window or frame."
 	(interactive)
 	(if (buffer-file-name)
 		;; a buffer has associated file name
@@ -551,7 +551,9 @@ layers configuration. You are free to put any user code."
   ;; (evil-leader/set-key "os" 'my-select-build-configuration)
   (evil-leader/set-key "SPC" 'evil-avy-goto-char)
   ;; (evil-leader/set-key "dl" 'avy-goto-char-in-line)
-  (define-key evil-normal-state-map (kbd "C-d") 'my-ctrl-d)
+  ;; (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-leader/set-key "qm" 'my-close-window-or-frame)
+
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   ;; Apply macro to selected lines (vmap 2 :normal @):
   (define-key evil-visual-state-map "2" 'my-execute-macro)

@@ -1,5 +1,8 @@
 set font "Inconsolata LGC 14"
-# set incremental-search false
-# set incremental-search true
 set selection-clipboard clipboard
+
+unmap q
+unmap <Space>
+" map <Space>qm quit " doesn't work (bug?)
+map qm quit
 

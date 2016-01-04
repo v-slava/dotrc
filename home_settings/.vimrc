@@ -172,7 +172,8 @@ nmap <C-h> zh
 nmap <Leader>cr :w<CR>: source %<CR>
 
 " Exit from vim:
-nmap <C-d> :q<CR>
+" nmap <C-d> :q<CR>
+nmap <Leader>qm :q<CR>
 
 " View next/previous buffer:
 nmap <Leader>vn :bnext<CR>
