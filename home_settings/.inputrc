@@ -4,7 +4,9 @@
 
 # close shell:
 " qm": "\C-d"
+# switch to normal mode:
+"fd": "\C-["
 
 # grep shortcut:
-" gp": " | grep -i"
+"\\": " | grep -i "
 
