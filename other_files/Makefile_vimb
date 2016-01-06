@@ -6,7 +6,7 @@ all: download_git
 PHONY += download_git
 download_git:
 	git clone https://github.com/fanglingsu/vimb.git
-	cd vimb && git tag && git checkout 2.10
+	cd vimb && git tag && git checkout 2.11
 
 PHONY += clean
 clean:

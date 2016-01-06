@@ -269,6 +269,23 @@ user code."
 	(interactive "s:'<,'>normal @")
 	(evil-execute-macro 1 (concat ":normal @" reg)))
 
+  (defun my-copy-to-clipboard (data)
+	"Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
+	(let* ((process-connection-type nil) (proc (cond ((getenv "DISPLAY")
+	  (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
+	  (when proc
+		(process-send-string proc data)
+		(process-send-eof proc))
+	  data))
+
+  (defun my-delete-frame ()
+	"Preserve clipboard contents (using clipboard.sh) and delete frame."
+	(when (x-get-clipboard)
+	  (when (not (get-text-property 0 'foreign-selection (x-get-clipboard)))
+		(my-copy-to-clipboard (x-get-clipboard))))
+	(delete-frame)
+	)
+
   (defun my-close-window-or-frame ()
     "Close current window or frame."
 	(interactive)
@@ -277,10 +294,10 @@ user code."
 		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
 			(error "No write since last change (buffer is modified)")
 		  ;; (evil-execute-macro 1 ":q") ;; causes accidental hangs (especially if shell is opened)
-		  (condition-case nil (delete-window) (error (delete-frame)))
+		  (condition-case nil (delete-window) (error (my-delete-frame)))
 		  )
 	  ;; a buffer hasn't associated file name
-	  (condition-case nil (delete-window) (error (delete-frame)))))
+	  (condition-case nil (delete-window) (error (my-delete-frame)))))
 
   (defun my-close-temporary-windows ()
 	"Close temporary windows (compile results, help, etc)."
@@ -498,6 +515,7 @@ layers configuration. You are free to put any user code."
   ;; For details see http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
   (require 'compile)
   (setf (nth 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
+  ;; add new settings here
 
   ;; Put this in .dir-locals.el (also file .projectile may be required):
   ;; ((nil . ((eval . (progn
@@ -561,7 +579,6 @@ layers configuration. You are free to put any user code."
   ;; TODO main:
   ;; (info) (info "elisp")
   ;; do not clear clipboard when frame is closed.
-  ;; make ctrl-d exit from *help* and *compilation*
   ;; make .projectile unnecessary if .dir-locals.el exists
   ;; warnings filter (compilation-filter)
   ;; compile on build server
@@ -574,6 +591,7 @@ layers configuration. You are free to put any user code."
   ;; (indent-region) visually selected
   ;; rtags
   ;; ctags / cscope
+  ;; remap hotkeys for other modes (list-packages, compilation, help, info, ...).
   ;; diff
   ;; hotkey to wrap selected region in braces / quotes / ...
   ;; display "error number 1 of 34" in modeline
