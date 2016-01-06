@@ -578,7 +578,6 @@ layers configuration. You are free to put any user code."
 
   ;; TODO main:
   ;; (info) (info "elisp")
-  ;; do not clear clipboard when frame is closed.
   ;; make .projectile unnecessary if .dir-locals.el exists
   ;; warnings filter (compilation-filter)
   ;; compile on build server
