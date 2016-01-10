@@ -8,34 +8,16 @@ http://www.immobilienscout24.de/
 http://www.null-provision.de/
 
 
-
 # Found wohnung:
-# 540 EUR + EUR Waldbüttelbrunn, möblierte. Not available any more?
+# 655 EUR (+80 EUR in the end) Waldbuttelbrunn, 2 rooms (52 m2). Microwelle, Waschmaschine, Trockener, Spulmachine. 2016-02-01
+http://www.immobilienscout24.de/expose/82856261
+
+# 540 EUR Waldbuttelbrunn, basement. 2016-02-01
 http://www.immobilienscout24.de/expose/82856336
-http://www.immowelt.de/expose/27SZF46
 
-# 585 EUR + strom, Höchberg, möblierte, Kühlschrank. Gibt es eine Waschmaschine??
-http://www.immobilienscout24.de/expose/82856494?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
-http://www.immowelt.de/expose/274ZF46
+# 535 EUR (+100 EUR in the end) Hoechberg, 2 rooms (75 m2). Waschmaschine, Spulmachine, Internet. 2016-01-18
+http://www.immobilienscout24.de/expose/82856544
 
-# 420 EUR + strom, Würzburg, not far from Höchberg. Möblierte, mit Mikrowelle, Kaffeemaschine, Wasserkocher, Kühlschrank.
-http://www.immobilienscout24.de/expose/83944130?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
-
-# 500 EUR + Heizkosten, Würzburg, not far from Höchberg, möblierte, Kühlschrank.
-http://www.immobilienscout24.de/expose/82856330?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
-
-# 610 EUR [+30 EUR {Oktober; März}] + strom, Waldbüttelbrunn, möblierte. Gibt es eine Waschmaschine??
-http://www.immobilienscout24.de/expose/82856220
-
-# 595 EUR Würzburg, not far from Höchberg, möblierte, Waschmaschine zur Münznutzung.
-http://www.immobilienscout24.de/expose/83117983?referrer=SCOUT_ID_SEARCH&ftc=5799NPEXP
-
-# 695 EUR + strom, Waldbüttelbrunn, möblierte, 2 Zimmer. Waschmaschine, trockener (nach Absprache mitgenutzen).
-http://www.immobilienscout24.de/expose/82955463
-http://www.immowelt.de/expose/27EYF46
-
-# Hoechberg 01.10.2015, 360+ EUR, with furniture. Common dusche and kueche. Max 1 year.
-http://www.immobilienscout24.de/expose/82856291?referrer=RELATED_EXPOSE
 
 
 
