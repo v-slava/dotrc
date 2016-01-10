@@ -8,5 +8,5 @@
 "fd": "\C-["
 
 # grep shortcut:
-"\\": " | grep -i "
+Control-g: " | grep -i "
 
