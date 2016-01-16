@@ -376,6 +376,7 @@ mark T /tmp
 mark w ~/workspace
 mark p ~/workspace/15_UHD_BD_root
 mark O ~/os_settings
+mark v /home/volkov/os_settings/other_files/vimium custom_key_mappings
 mark m /media
 mark u /media/sdb1
 mark f /media/files

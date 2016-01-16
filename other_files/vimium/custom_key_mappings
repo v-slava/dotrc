@@ -1,3 +1,6 @@
+unmap `
+map ' Marks.activateGotoMode
+
 unmap x
 unmap X
 map q removeTab
