@@ -1,0 +1,26 @@
+unmap x
+unmap X
+map q removeTab
+map Q restoreTab
+
+unmap K
+unmap J
+unmap H
+unmap L
+map J goForward
+map K goBack
+map H previousTab
+map L nextTab
+
+unmap <<
+unmap >>
+map < moveTabLeft
+map > moveTabRight
+
+unmap f
+unmap F
+unmap <a-f>
+map ff LinkHints.activateMode
+map fj LinkHints.activateModeToOpenInNewTab
+map fm LinkHints.activateModeWithQueue
+

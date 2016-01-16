@@ -1,0 +1,27 @@
+s: https://www.google.com/search?q=%s Google
+we: https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (en)
+wr: https://ru.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (ru)
+y: https://www.youtube.com/results?search_query=%s Youtube
+map: https://www.google.com/maps?q=%s GoogleMaps
+tor: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
+
+# Google translate: 'phrase_to_translate'
+ter: https://translate.google.com/?hl=en#en/ru/%s GoogleTranslate en -> ru
+tre: https://translate.google.com/?hl=en#ru/en/%s GoogleTranslate ru -> en
+trd: https://translate.google.com/?hl=en#ru/de/%s GoogleTranslate ru -> de
+tdr: https://translate.google.com/?hl=en#de/ru/%s GoogleTranslate de -> ru
+# Google translate (any->any language): 'en/ru/phrase_to_translate' (de, uk, ko)
+to: https://translate.google.com/?hl=en#%s GoogleTranslate specify languages
+
+
+# Search for music:
+mus: http://spaces.ru/files/?r=main/search&Gs=1&Slist=61&link_id=80753&word=%s Music
+# mus: http://pleer.com/search?q=%s Music
+# https://myzuka.org
+# www.audiopoisk.com
+# http://mp3brainz.net/
+# http://epicmusictime.com/ # online radio
+
+# Music recognition service:
+# http://audiotag.info/index.php
+

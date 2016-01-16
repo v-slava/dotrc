@@ -176,8 +176,8 @@ bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
 
 # browser
-bindsym XF86HomePage exec exec vimb -s ~/os_settings/other_files/start_page.html
-bindsym $Alt_L+b exec exec vimb -s ~/os_settings/other_files/start_page.html
+bindsym XF86HomePage exec exec chromium ~/os_settings/other_files/start_page.html
+bindsym $Alt_L+b exec exec chromium ~/os_settings/other_files/start_page.html
 # bindsym $Alt_L+b exec DMENU_FONT='Inconsolata LGC-14:monospace' uzbl
 
 # windows guest
