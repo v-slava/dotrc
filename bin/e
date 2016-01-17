@@ -2,7 +2,10 @@
 
 # Edit file
 
-# exec vim "$@"
+if [ "$1" = "--wait" ]; then
+	shift
+fi
+exec vim "$@"
 
 if ! pgrep emacs 1>/dev/null ; then
 	emacs --daemon

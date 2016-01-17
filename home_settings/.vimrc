@@ -702,6 +702,24 @@ endfunction
 
 nmap <Leader>e :call My_eval_replace()<CR>
 
+function! My_insert_numbers(first_number)
+	let l:first_num = str2nr(a:first_number)
+	let l:num_digits = strlen(a:first_number)
+	let l:format = printf("%%0%dd_%%s", l:num_digits)
+	let l:num_lines = line('$')
+	let l:cur_line_num = 1
+	while l:cur_line_num <= l:num_lines
+		let l:cur_line_contents = getline(l:cur_line_num)
+		let l:cur_num = l:first_num + l:cur_line_num - 1
+		let l:modified_line_contents = printf(l:format, l:cur_num, l:cur_line_contents)
+		call setline(l:cur_line_num, l:modified_line_contents)
+		let l:cur_line_num = l:cur_line_num + 1
+	endwhile
+endfunction
+command! -nargs=1 InsertNumbers call My_insert_numbers(<f-args>)
+nmap <Leader>dn :InsertNumbers 
+
+
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.
 " <C-o> in insert mode allows you to execute one command in

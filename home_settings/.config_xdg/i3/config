@@ -197,7 +197,7 @@ bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.Att
 # bindsym $Alt_L+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
 
 # Start emacs daemon:
-exec --no-startup-id exec emacs --daemon
+# exec --no-startup-id exec emacs --daemon
 
 # Start mail client (icedove):
 exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
