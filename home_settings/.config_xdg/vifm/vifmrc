@@ -420,8 +420,8 @@ set trashdir=/media/files/trash_vifm
 " vmap <c-d> :exit<cr>
 " nnoremap ii
 nnoremap e <nop>
-nnoremap <Space>qm :exit<cr>
-vmap <Space>qm :exit<cr>
+nnoremap q :exit<cr>
+vmap q :exit<cr>
 
 " Launch programs:
 nnoremap rg :!./%c %i &<cr>
@@ -465,13 +465,13 @@ nnoremap au :! umount /media/sdb1<cr>
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
 " swap panels:
-nmap qs <c-w>x
-nmap qd :winrun ^ !diff.sh %d/%c %C<cr>
-nmap qv :winrun ^ !vimdiff.sh %d/%c %C<cr>
-nmap qg :winrun ^ !diffuse %d/%c %C<cr>
-nmap qh :winrun ^ !dhex %d/%c %C<cr>
-nmap qm :winrun ^ !mc %d %D<cr>
-nmap qf :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
+nmap is <c-w>x
+nmap id :winrun ^ !diff.sh %d/%c %C<cr>
+nmap iv :winrun ^ !vimdiff.sh %d/%c %C<cr>
+nmap ig :winrun ^ !diffuse %d/%c %C<cr>
+nmap ix :winrun ^ !dhex %d/%c %C<cr>
+nmap im :winrun ^ !mc %d %D<cr>
+nmap if :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less

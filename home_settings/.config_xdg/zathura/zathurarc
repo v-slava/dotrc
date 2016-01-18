@@ -1,8 +1,8 @@
 set font "Inconsolata LGC 14"
 set selection-clipboard clipboard
 
-unmap q
-unmap <Space>
-" map <Space>qm quit " doesn't work (bug?)
-map qm quit
+" unmap q
+" unmap <Space>
+" " map <Space>qm quit " doesn't work (bug?)
+" map qm quit
 
