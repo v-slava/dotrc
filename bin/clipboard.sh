@@ -9,12 +9,14 @@
 # CLIPBOARD_CMD="xsel -p"
 # works for vim clipboard preserving in st (* register):
 # CLIPBOARD_CMD="xclip -selection primary"
+
 CLIPBOARD_CMD="xclip -selection clipboard"
 
 case "$1" in
 	("-o") $CLIPBOARD_CMD -o ;;
 	("-n") cat | tr -d '\n' | $CLIPBOARD_CMD ;;
-	("-copy") $CLIPBOARD_CMD -o | xclip -selection primary ;;
+	("--clipboard-2-primary") xclip -selection clipboard -o | xclip -selection primary ;;
+	("--primary-2-clipboard") xclip -selection primary -o | xclip -selection clipboard ;;
 	(*) $CLIPBOARD_CMD -i ;;
 esac
 

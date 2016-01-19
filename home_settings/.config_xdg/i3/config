@@ -172,6 +172,7 @@ bindsym $Alt_R+t exec --no-startup-id exec ~/os_settings/other_files/translate_h
 
 # translator
 bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
+bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec goldendict "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
 bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
 

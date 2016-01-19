@@ -41,6 +41,7 @@ set -o pipefail
 # use firetray addon
 http://forums.mozillazine.org/viewtopic.php?f=48&t=72994
 http://mozilla.dorando.at/keyconfig.xpi
+# See file .icedove/PROFILE/mimeTypes.rdf for default browser
 
 # Add authorization without password:
 ssh-copy-id user@hostname
