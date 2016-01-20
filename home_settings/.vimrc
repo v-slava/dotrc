@@ -246,6 +246,7 @@ autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python setlocal tabstop=4 | setl
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
+" Use gq in normal or visual mode to force textwidth
 
 function! OpenLocation()
 	execute "ll " . line('.')
