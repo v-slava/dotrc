@@ -243,6 +243,7 @@ bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh
 
 # toggle sound output (bluetooth headset / built-in audio):
 bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_L+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
 # toggle touchpad:
 bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh

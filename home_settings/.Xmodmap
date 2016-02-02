@@ -6,9 +6,10 @@
 ! add Lock = Caps_Lock
 ! add Control = Control_L
 
-remove Lock = Caps_Lock
-keysym Caps_Lock = BackSpace
-keycode 22 = NoSymbol
+! remove Lock = Caps_Lock
+! keysym Caps_Lock = BackSpace
+! keycode 22 = NoSymbol
+
 ! keycode 22 = Caps_Lock
 ! add Lock = Caps_Lock
 

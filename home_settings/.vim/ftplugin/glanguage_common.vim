@@ -6,11 +6,11 @@ function! Translate()
 endfunction
 
 " Insert word from clipboard:
-imap <buffer> <Leader>fp <Esc>PA<CR>
+imap <buffer> <C-p> <Esc>PA<CR>
 " Insert <shortinfo></shortinfo> and switch language
-imap <buffer> <Leader>fi <shortinfo></shortinfo><Esc><C-k>F<i
+imap <buffer> <C-i> <shortinfo></shortinfo><Esc><C-k>F<i
 " Throw away (undo) current word
-imap <buffer> <Leader>fu <Esc>ddk<C-k>S
+imap <buffer> <C-u> <Esc>ddk<C-k>S
 " Fix previous word/translation:
-imap <buffer> <Leader>fj <Esc><C-k>ddk
+imap <buffer> <C-j> <Esc><C-k>ddk
 

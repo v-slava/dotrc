@@ -3,9 +3,9 @@
 # "ab": kill-whole-line
 
 # close shell:
-" qm": "\C-d"
+# " qm": "\C-d"
 # switch to normal mode:
-"fd": "\C-["
+# "fd": "\C-["
 
 # grep shortcut:
 Control-g: " | grep -i "
