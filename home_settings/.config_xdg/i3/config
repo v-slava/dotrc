@@ -186,9 +186,6 @@ bindsym $CTRL+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
 # start downloading .torrent file from ~/downloads:
 bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
 
-# Attendance:
-bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.AttendanceControl/MyAttendance.aspx
-
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
 # Hotkey to open mail client:
@@ -201,7 +198,7 @@ bindsym $WIN+a exec --no-startup-id exec chromium http://myspot/_layouts/SRK.Att
 # exec --no-startup-id exec emacs --daemon
 
 # Start mail client (icedove):
-exec --no-startup-id exec i3-msg 'workspace 1; exec exec icedove'
+exec --no-startup-id exec icedove
 bindsym $Alt_L+m exec --no-startup-id exec icedove
 
 # Start goldendict:
