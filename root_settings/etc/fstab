@@ -3,7 +3,7 @@
 /dev/sda5              none          swap      defaults              0      0
 /dev/sda6              /media/files  ext4      defaults,noatime      0      2
 
-# Mount /dev/sdb1:
+# Mount /media/usb:
 /dev/sdb1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0
 /dev/sdc1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0
 
