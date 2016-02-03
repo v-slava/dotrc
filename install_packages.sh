@@ -75,10 +75,6 @@ apt-get install libreoffice
 # Install pdf viewer:
 apt-get install zathura
 
-# Build and install vimb:
-apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
-make -f ~/os_settings/other_files/Makefile_vimb
-
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
 apt-get install chromium chromium-l10n pepperflashplugin-nonfree
@@ -98,9 +94,14 @@ make -f ~/os_settings/other_files/Makefile_vifm
 
 dpkg --add-architecture i386
 apt-get update
+
 # Download skype.deb via browser
 # dpkg -i skype.deb # install skype
 # apt-get -f install # fix missing dependencies
+
+# Build and install vimb:
+# apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
+# make -f ~/os_settings/other_files/Makefile_vimb
 
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11

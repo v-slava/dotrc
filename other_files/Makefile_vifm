@@ -7,7 +7,7 @@ all: download_git
 PHONY += download_git
 download_git:
 	git clone https://github.com/vifm/vifm
-	cd vifm && git tag && git checkout v0.8
+	cd vifm && git tag && git checkout v0.8.1
 
 PHONY += clean
 clean:
