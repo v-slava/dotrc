@@ -14,6 +14,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
 	openssh-client sshfs fuse silversearcher-ag kbd \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
+	g++ gdb gdb-doc gdbserver gdb-multiarch \
 	zip unzip gzip bzip2 p7zip-full cpio unrar \
 	alsa-utils alsaplayer-daemon alsaplayer-common \
 	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
