@@ -370,6 +370,9 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# Show stash contents:
+git stash show -p [stash@{1}]
+
 # Create patch file:
 git format-patch -1 [-o OUT_DIR]
 # Apply patch file:
