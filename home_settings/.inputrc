@@ -10,3 +10,6 @@
 # grep shortcut:
 Control-g: " | grep -i "
 
+# less shortcut:
+Control-l: " | less -i\n"
+

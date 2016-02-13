@@ -1,3 +1,17 @@
+# Compose key sequences:
+# 1) add the following contents:
+# <Multi_key> <a> : "ä"
+# <Multi_key> <b> <r> : "Best regards," # email ending
+# to file '/usr/share/X11/locale/en_US.UTF-8/Compose'
+# 2) set Alt_R as compose key:
+xmodmap -e 'keycode 108 = Multi_key'
+# 3) press sequentially <Caps_lock>, <a> to produce <ä>
+
+# Use Mode_switch to type characters from alternative keyboard:
+xmodmap -e 'keycode 108 = Mode_switch'
+# Press Alt_R+s to produce 'ы'
+# See xmodmap -pke for symbols assigned
+
 # Create static executable with rust:
 # 1. Emit object file:
 rustc -O --emit obj main.rs
