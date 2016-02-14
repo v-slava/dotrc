@@ -31,7 +31,7 @@ for FILE in "$@" ; do
 	echo "Extracting \"$FILE\" to \"$DIR\"..."
 
 	case "$FILE_FULL_PATH" in
-		*.a) ar x "$FILE_FULL_PATH" ;;
+		*.a | *.deb) ar x "$FILE_FULL_PATH" ;;
 		*.tar)				pv "$FILE_FULL_PATH" | tar x ;;
 		*.tgz | *.tar.gz)	pv "$FILE_FULL_PATH" | tar xz ;;
 		*.tar.bz2 | *.tbz2)	pv "$FILE_FULL_PATH" | tar xj ;;
