@@ -15,6 +15,9 @@ OUT="${OUT_DIR}/${IN}.out"
 FLAGS=" -Wall -Wextra "
 
 case "$IN" in
+	*.html)
+		echo -n "x-www-browser $IN"
+	;;
 	*.sh | *.bash | *.py )
 		echo -n "./$IN"
 	;;
