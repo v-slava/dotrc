@@ -189,6 +189,8 @@ nmap <Leader>wl <C-w>l
 nmap <Leader>wj <C-w>j
 nmap <Leader>wk <C-w>k
 
+nmap <Leader>oe $d0x
+
 " Use '=' to make windows size equal:
 nmap = <C-W>=
 

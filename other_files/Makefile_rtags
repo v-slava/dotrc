@@ -8,11 +8,11 @@ all: download_git install_dependencies
 PHONY += download_git
 download_git:
 	git clone --recursive https://github.com/Andersbakken/rtags.git
-	cd rtags && git tag # && git checkout 'v2.0'
+	cd rtags && git tag # && git checkout 'v2.1'
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c 'apt-get install libssl-dev libclang-dev llvm-dev'
+	su -c 'apt-get install cmake libssl-dev libclang-dev llvm-dev'
 
 PHONY += clean
 clean:
