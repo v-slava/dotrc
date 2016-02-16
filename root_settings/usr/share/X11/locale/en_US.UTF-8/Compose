@@ -12,3 +12,11 @@
 <Multi_key> <e> : "€"
 <Multi_key> <m> : "μ"
 
+<Multi_key> <Cyrillic_yeru>     : "і"   # ы
+<Multi_key> <Cyrillic_YERU>     : "І"   # Ы
+<Multi_key> <Cyrillic_hardsign> : "ї"   # ъ
+<Multi_key> <Cyrillic_HARDSIGN> : "Ї"   # Ъ
+<Multi_key> <Cyrillic_e>        : "є"   # э
+<Multi_key> <Cyrillic_E>        : "Є"   # Э
+<Multi_key> <Cyrillic_io>       : "’"   # ё
+
