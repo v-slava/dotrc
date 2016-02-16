@@ -25,3 +25,7 @@
 remove mod1 = Alt_R
 add mod3 = Alt_R
 
+! Use Caps_Lock for key combination like <Caps_Lock> -> a => ä
+remove Lock = Caps_Lock
+keycode 66 = Multi_key
+

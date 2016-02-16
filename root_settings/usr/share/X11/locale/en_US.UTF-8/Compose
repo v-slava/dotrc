@@ -1,0 +1,14 @@
+<Multi_key> <a> : "ä"
+<Multi_key> <A> : "Ä"
+<Multi_key> <u> : "ü"
+<Multi_key> <U> : "Ü"
+<Multi_key> <o> : "ö"
+<Multi_key> <O> : "Ö"
+<Multi_key> <s> : "ß"
+
+<Multi_key> <S> : "ẞ"
+
+<Multi_key> <4> : "§"
+<Multi_key> <e> : "€"
+<Multi_key> <m> : "μ"
+

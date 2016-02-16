@@ -1,4 +1,4 @@
-# Compose key sequences:
+# Compose key sequences (not works for some apps):
 # 1) add the following contents:
 # <Multi_key> <a> : "ä"
 # <Multi_key> <b> <r> : "Best regards," # email ending
