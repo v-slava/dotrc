@@ -235,8 +235,7 @@ autocmd BufEnter .spacemacs setlocal filetype=lisp
 autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
-autocmd BufEnter *_en.gl setlocal filetype=glanguage_en " my filetype
-autocmd BufEnter *_de.gl setlocal filetype=glanguage_de " my filetype
+autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
@@ -259,34 +258,13 @@ autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
-let g:ukrainian = 0 " use russian by default
 set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
-function! Ukrainian_mapping_toggle()
-	if g:ukrainian == 1
-		let g:ukrainian = 0
-		set keymap=russian-jcuken
-	else
-		let g:ukrainian = 1
-		set keymap=ukrainian-jcuken-modified
-	endif
-	call Update_status_line('', 'normal')
-endfunction
-command! Ukr call Ukrainian_mapping_toggle()
-
 function! Update_status_line(message, status)
 	if &iminsert == 1
-		if g:ukrainian == 1
-			let l:lang='UA'
-		else
-			let l:lang='RU'
-		endif
+		let l:lang='RU'
 	else
-		if g:german == 1
-			let l:lang='DE'
-		else
-			let l:lang='EN'
-		endif
+		let l:lang='EN'
 	endif
 	let &statusline=l:lang . '   file: %f   ' . a:message
 	if a:status == 'error'
@@ -313,37 +291,6 @@ function! Swap_keyboard_layout()
 endfunction
 nmap <C-k> :call Swap_keyboard_layout()<CR>
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
-
-" German-only letters mapping:
-function! German_mapping_toggle()
-	if &iminsert == 0 " If current layout is english
-		if g:german == 1 " If german mapping is enabled
-			iunmap `o
-			iunmap `O
-			iunmap `a
-			iunmap `A
-			iunmap `u
-			iunmap `U
-			iunmap `s
-			iunmap `S
-			let g:german = 0
-		else " if german mapping is disabled
-			imap `o ö
-			imap `O Ö
-			imap `a ä
-			imap `A Ä
-			imap `u ü
-			imap `U Ü
-			imap `s ß
-			imap `S ẞ
-			let g:german = 1
-		endif " if german mapping is enabled
-	endif " if current layout is english
-	call Update_status_line('', 'normal')
-endfunction
-let g:german = 0 " disable german mappings by default
-nmap <F7> :call German_mapping_toggle()<CR>
-imap <F7> <Esc>:call German_mapping_toggle()<CR>gi
 
 " Move current tab left and right:
 nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
@@ -727,7 +674,4 @@ nmap <Leader>dn :InsertNumbers
 " You can use <C-o>q to finish recording while in insert mode.
 " <C-o> in insert mode allows you to execute one command in
 " normal mode, and then returns to insert mode (see :help i^O).
-
-" Insert <shortinfo> tags (for glanguage):
-" let @s = 'A<shortinfo></shortinfo>F<i'
 
