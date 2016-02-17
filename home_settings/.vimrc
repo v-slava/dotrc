@@ -360,7 +360,7 @@ nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:
 
 function Close_window_if_temporary()
 	let l:dir_name=expand('%:p:h')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir' || &l:buftype == 'help' || &l:buftype == 'quickfix'
 		execute ':q'
 	endif
 endfunction
@@ -381,6 +381,7 @@ nmap <silent> <Leader>oc :wa<CR>:call Configure(g:config_cmd)<CR>
 
 function! Show_error( error_index )
 	let l:current_source_location = get(g:source_locations, a:error_index)
+	let l:current_source_location = g:src_loc_prefix . l:current_source_location
 	execute ':edit ' . l:current_source_location
 	execute 'botright pedit ' . g:OUT_DIR . '/message_error_' . a:error_index
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
