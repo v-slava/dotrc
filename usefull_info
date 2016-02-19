@@ -384,6 +384,11 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# To revert branch from some commit, first find a commit in logs:
+cat REPO_ROOT/.git/logs/refs/heads/*
+# Create new branch pointing to this commit:
+git checkout -b BRANCH_NAME SHA
+
 # Show stash contents:
 git stash show -p [stash@{1}]
 
