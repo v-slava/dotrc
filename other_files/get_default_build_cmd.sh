@@ -12,7 +12,7 @@ source ~/os_settings/other_files/vim_ide_common.sh
 IN="$1"
 OUT="${OUT_DIR}/${IN}.out"
 # FLAGS=" -Wall -Wextra -Werror "
-FLAGS=" -Wall -Wextra "
+FLAGS=" -Wall -Wextra -std=c++11 "
 
 case "$IN" in
 	*.html)

@@ -309,6 +309,7 @@ let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' 
 let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . expand('%:t') . '"')
 let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
+let g:src_loc_prefix = ''
 let g:error_index = -1
 let g:warnings = 'w' " change to 'nw' if you want to suppress warnings
 let g:filter = 'nf' " change to shell script name if you want to filter issues
