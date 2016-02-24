@@ -12,7 +12,7 @@ download_git:
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c 'apt-get install cmake libssl-dev libclang-dev llvm-dev'
+	su -c 'apt-get install cmake libncurses5-dev libssl-dev libclang-dev llvm-dev'
 
 PHONY += clean
 clean:
