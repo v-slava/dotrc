@@ -18,9 +18,9 @@ fi
 if [ ! -L ~/os_settings ]; then
 	ln -s $PWD ~/os_settings
 fi
-if [ ! -d ~/terminal ]; then
-	mkdir ~/terminal
-fi
+# if [ ! -d ~/terminal ]; then
+# 	mkdir ~/terminal
+# fi
 
 MEDIA_FILES=/media/files
 DIRS="downloads other temporary workspace"
