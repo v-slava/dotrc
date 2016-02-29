@@ -1144,6 +1144,11 @@ cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
 # Launch wi-fi access point:
 wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
 
+# use backtrace(3) with addr2line(1):
+# copy code from example in backtrace(3):
+gcc -O0 -g3 backtrace_example.c -o backtrace_exe
+./backtrace_exe 4 | grep -o '\[0x.\+\]' | cut -d'[' -f2 | cut -d']' -f1 | addr2line -p -f -e ./backtrace_exe
+
 # Debug program with core dump:
 gdb -e PROGRAM -c core.dump
 gdb PROGRAM core.dump
