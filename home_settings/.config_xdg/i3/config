@@ -176,6 +176,9 @@ bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && e
 # pronounce (say) word from clipboard:
 bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
 
+# anki
+bindsym $WIN+a exec --no-startup-id exec anki -b ~/.anki
+
 # browser
 bindsym XF86HomePage exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
 bindsym $Alt_L+b exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
