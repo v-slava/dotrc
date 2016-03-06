@@ -1,0 +1,367 @@
+# TODO:
+# Open multiple links in new windows at once:
+# echo "spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX google.com " > uzbl_fifo_xxxx
+# echo "@< uzbl.follow.clearHints() >@" > uzbl_fifo_xxxx
+# echo '@< uzbl.follow.clearHints() >@' | socat - unix-connect:uzbl_socket_xxxx
+
+# undo closed window: http://www.uzbl.org/wiki/undo https://github.com/vincentkriek/dotfiles/blob/master/uzbl/config
+# implement read_it_later_queue
+# formfiller rutracker.org (forbid js?)
+# torrent
+# do not use files in /usr/share/uzbl folder
+
+# === Core settings ==========================================================
+
+# common directory locations
+set prefix      = @(echo $PREFIX)@
+set data_home   = @(echo $XDG_DATA_HOME)@
+set cache_home  = @(echo $XDG_CACHE_HOME)@
+set config_home = @(echo $XDG_CONFIG_HOME)@
+
+# Interface paths.
+set fifo_dir   = /tmp
+set socket_dir = /tmp
+
+set shell_cmd = sh -c
+
+# Spawn path shortcuts.
+# In spawn the first dir+path match is used in "dir1:dir2:dir3:executable"
+set scripts_dir = @data_home/uzbl:@prefix/share/uzbl/examples/data:scripts
+
+# === Hardcoded handlers =====================================================
+
+# These handlers can't be moved to the new event system yet as we don't
+# support events that can wait for a response from a script.
+set scheme_handler = sync_spawn @scripts_dir/scheme.py
+#set request_handler = sync_spawn @scripts_dir/request.py
+set authentication_handler = sync_spawn @scripts_dir/auth.py
+set download_handler = sync_spawn @scripts_dir/download.sh
+
+# === Dynamic event handlers =================================================
+
+#   What to do when a website wants to open a new window:
+# Open link in new window
+request ON_EVENT NEW_WINDOW sh 'uzbl-browser ${1:+-u "$1"}' %r
+# Open in current window (also see the REQ_NEW_WINDOW event handler below)
+# request ON_EVENT NEW_WINDOW uri %s
+
+# What to do when the user requests a new window:
+# If your the NEW_WINDOW handler opens the uri in the current window, you'll
+# probably want to change this handler to open a new window or tab.
+request ON_EVENT  REQ_NEW_WINDOW event NEW_WINDOW %s
+
+# Load start handler
+request ON_EVENT LOAD_START set status_message = <span foreground="khaki">wait</span>
+# Reset the keycmd on navigation
+request ON_EVENT LOAD_START set mode =
+
+# Load commit handlers
+request ON_EVENT LOAD_COMMIT set status_message = <span foreground="green">recv</span>
+
+# Add some javascript to the page for other 'js' and 'script' commands to access later.
+request ON_EVENT LOAD_COMMIT js uzbl = {};
+request ON_EVENT LOAD_COMMIT script @scripts_dir/formfiller.js
+request ON_EVENT LOAD_COMMIT script @scripts_dir/follow.js
+
+# Userscripts/per-site-settings. See the script and the example configuration for details
+#request ON_EVENT   LOAD_COMMIT    spawn @scripts_dir/per-site-settings.py @data_home/uzbl/per-site-settings
+
+# Load finish handlers
+request ON_EVENT LOAD_FINISH set status_message = <span foreground="gold">done</span>
+request ON_EVENT LOAD_FINISH spawn @scripts_dir/history.sh
+
+# Switch to insert mode if a (editable) html form is clicked
+# request ON_EVENT   FOCUS_ELEMENT  sh 'if [ "$1" = INPUT -o "$1" = TEXTAREA -o "$1" = SELECT ]; then echo "set mode = insert" > $UZBL_FIFO; fi' %s
+# Switch to command mode if anything else is clicked
+request ON_EVENT ROOT_ACTIVE set mode = command
+
+# Scroll percentage calculation
+request ON_EVENT SCROLL_VERT set scroll_message = \@<(function(curr, min, max, size){if(max == size) return '--'; var p=(curr/(max - size)); return Math.round(10000*p)/100;})(%1,%2,%3,%4)>\@%
+
+# === Behaviour and appearance ===============================================
+
+# Custom CSS can be defined here, including link follower hint styles
+set stylesheet_uri    = file://@config_home/uzbl/style.css
+
+set show_status       = 1
+set status_top        = 0
+set status_background = #303030
+
+set modcmd_style      = weight="bold" foreground="red"
+set keycmd_style      = weight="light" foreground="red"
+set prompt_style      = foreground="grey"
+set cursor_style      = underline="single"
+set completion_style  = foreground="green"
+set hint_style        = weight="bold"
+
+set mode_section      = <span background="khaki" foreground="black">[\@[\@mode_indicator]\@]</span>
+set keycmd_section    = [<span \@prompt_style>\@[\@keycmd_prompt]\@</span><span \@modcmd_style>\@modcmd</span><span \@keycmd_style>\@keycmd</span><span \@completion_style>\@completion_list</span>]
+set progress_section  = <span foreground="#606060">\@[\@progress.output]\@</span>
+set scroll_section    = <span foreground="#606060">\@[\@scroll_message]\@</span>
+set uri_section       = <span foreground="#99FF66">\@[\@uri]\@</span>
+set name_section      = <span foreground="khaki">\@[\@NAME]\@</span>
+set status_section    = <span foreground="orange">\@status_message</span>
+set selected_section  = <span foreground="#606060">\@[\@SELECTED_URI]\@</span>
+
+set download_section  = <span foreground="white">\@downloads</span>
+
+set status_format       = <span font_desc="Inconsolata LGC 14">@mode_section @keycmd_section @progress_section @name_section @status_section @scroll_section @selected_section @download_section</span>
+set status_format_right = <span font_desc="Inconsolata LGC 14"><span foreground="#666">uri:</span> @uri_section</span>
+
+set title_format_long = \@keycmd_prompt \@raw_modcmd \@raw_keycmd \@TITLE - Uzbl browser <\@NAME> \@SELECTED_URI
+
+# Progress bar config
+# %d = done, %p = pending %c = percent done, %i = int done, %s = spinner,
+# %t = percent pending, %o = int pending, %r = sprite scroll
+set progress.width   = 8
+set progress.format  = [%d>%p]%c
+set progress.done    = =
+set progress.pending =
+
+# === Useragent setup ========================================================
+
+set useragent = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname -sm)@ [@ARCH_UZBL])
+# set useragent = Mozilla/5.0 (X11; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0
+# set useragent = Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36
+
+# === Configure cookie blacklist ========================================================
+
+# Accept 'session cookies' from uzbl.org (when you have a whitelist all other cookies are dropped)
+#request WHITELIST_COOKIE domain 'uzbl.org$' expires '^$'
+
+# Drop google analytics tracking cookies (applied after whitelists if any)
+#request BLACKLIST_COOKIE name '^__utm.$'
+
+# === SSL related configuration ==============================================
+# Set it to certificates store of your distribution, or your own CAfile.
+set ssl_ca_file = /etc/ssl/certs/ca-certificates.crt
+set ssl_verify = 1
+# Command to toggle ssl_verify value:
+request MODE_BIND command !ssl = chain 'toggle ssl_verify' 'reload'
+# Example SSL error handler:
+request ON_EVENT LOAD_ERROR js var patt=new RegExp('SSL handshake failed'); if (patt.test('%3')) {alert ('%3');}
+
+# --- Global & keycmd editing binds ------------------------------------------
+# === Key binding configuration ==============================================
+request IGNORE_KEY <ISO_*>
+request IGNORE_KEY <Shift>
+request IGNORE_KEY <Multi_key>
+request IGNORE_KEY <Mod2>
+request IGNORE_KEY <Mod1>
+# Some keys available:
+# <space> <ISO_Left_Tab> <KP_Enter>
+
+# Resets keycmd and returns to default mode.
+request ON_EVENT ESCAPE set mode =
+request ON_EVENT ESCAPE event KEYCMD_CLEAR
+request ON_EVENT ESCAPE js uzbl.follow.clearHints()
+request ON_EVENT ESCAPE search_clear
+request ON_EVENT ESCAPE js window.getSelection().removeAllRanges()
+request MODE_BIND global <Escape> = event ESCAPE
+
+# Commands for editing and traversing the keycmd.
+request MODE_BIND global,-insert <Return>    = event KEYCMD_EXEC_CURRENT
+request MODE_BIND global,-insert <Home>      = event SET_CURSOR_POS 0
+request MODE_BIND global,-insert <End>       = event SET_CURSOR_POS -1
+request MODE_BIND global,-insert <Left>      = event SET_CURSOR_POS -
+request MODE_BIND global,-insert <Right>     = event SET_CURSOR_POS +
+request MODE_BIND global,-insert <BackSpace> = event KEYCMD_BACKSPACE
+request MODE_BIND global,-insert <Delete>    = event KEYCMD_DELETE
+request MODE_BIND global,-insert <Tab>       = event START_COMPLETION
+
+# Middle mouse click open in new window
+request MODE_BIND global <Button2> = sh 'if [ "$1" ]; then echo "event REQ_NEW_WINDOW $1" > "$UZBL_FIFO"; else echo "uri $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"; fi' '\@SELECTED_URI'
+
+# With this command you can enter in any command at runtime when prefixed with
+# a colon.
+request MODE_BIND command :_ = %s
+
+# no need:
+# request MODE_BIND command w = event REQ_NEW_WINDOW
+
+# Page movement binds
+request MODE_BIND command j           = scroll vertical 20
+request MODE_BIND command <Down>      = scroll vertical 20
+request MODE_BIND command k           = scroll vertical -20
+request MODE_BIND command <Up>        = scroll vertical -20
+request MODE_BIND command h           = scroll horizontal -20
+request MODE_BIND command <Left>      = scroll horizontal -20
+request MODE_BIND command l           = scroll horizontal 20
+request MODE_BIND command <Right>     = scroll horizontal 20
+request MODE_BIND command <Page_Up>   = scroll vertical -100%
+request MODE_BIND command <Ctrl>b     = scroll vertical -100%
+request MODE_BIND command <Page_Down> = scroll vertical 100%
+request MODE_BIND command <Ctrl>f     = scroll vertical 100%
+request MODE_BIND command ^           = scroll horizontal begin
+request MODE_BIND command $           = scroll horizontal end
+request MODE_BIND command gg          = scroll vertical begin
+request MODE_BIND command G           = scroll vertical end
+# no need:
+# request MODE_BIND command  G<Go To:>_   = scroll vertical %r!
+# request MODE_BIND command  _G<Go To:>_  = scroll horizontal %r!
+# Navigation binds
+request MODE_BIND command <Ctrl>o = back
+request MODE_BIND command <Ctrl>i = forward
+request MODE_BIND command S       = stop
+request MODE_BIND command r       = reload
+request MODE_BIND command R       = reload_ign_cache
+# Zoom binds
+request MODE_BIND command + = zoom_in
+request MODE_BIND command - = zoom_out
+request MODE_BIND command 1 = set zoom_level = 1.0
+# Appearance binds (no need):
+# request MODE_BIND command  t   = toggle show_status
+# Page searching binds
+request MODE_BIND command /* = search %s
+request MODE_BIND command ?* = search_reverse %s
+# Jump to next and previous items
+request MODE_BIND command n = search
+request MODE_BIND command N = search_reverse
+# Print pages to a printer
+request MODE_BIND command <Ctrl>p = hardcopy page
+
+# Uri opening prompts
+request MODE_BIND command ou<o uri:>_ = uri %s
+request MODE_BIND command tu<t uri:>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX %s
+# Or have it load the current uri into the keycmd for editing
+request MODE_BIND command oU<o uri:\@uri>_ = uri %s
+request MODE_BIND command tU<t uri:\@uri>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX %s
+# Web searching binds
+request MODE_BIND command os<o Google:>_ = uri http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
+request MODE_BIND command ts<t Google:>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
+request MODE_BIND command ods<o DuckDuckGo:>_    = uri http://duckduckgo.com/?q=%s
+request MODE_BIND command tds<t DuckDuckGo:>_    = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX http://duckduckgo.com/?q=%s
+request MODE_BIND command ot<o translate en-ru:>_ = uri https://translate.google.com/?hl=en#en/ru/%s
+request MODE_BIND command tt<t translate en-ru:>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX https://translate.google.com/?hl=en#en/ru/%s
+request MODE_BIND command o1t<o translate (e.g. en/uk/word_to_translate):>_ = uri https://translate.google.com/?hl=en#%s
+request MODE_BIND command t1t<t translate (e.g. en/uk/word_to_translate):>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX https://translate.google.com/?hl=en#%s
+request MODE_BIND command omap<o route from:>_<route to:>_ = uri https://maps.google.com/maps?saddr=%1&daddr=%2
+request MODE_BIND command tmap<t route from:>_<route to:>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX https://maps.google.com/maps?saddr=%1&daddr=%2
+request MODE_BIND command omus<o music search (pleer.com):>_ = uri http://pleer.com/search?q=%s#
+request MODE_BIND command tmus<t music search (pleer.com):>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX http://pleer.com/search?q=%s#
+request MODE_BIND command o1mus<o music search (zaycev.net):>_ = uri http://go.mail.ru/search_site?p=1&aux=Kd7dJd&q=%s
+# request MODE_BIND command txmus<t music search (zaycev.net):>_ = spawn @scripts_dir/follow.sh XXXNEW_WINDOWXXX http://go.mail.ru/search_site?p=1&aux=Kd7dJd&q=%s
+request MODE_BIND command t1mus<t music search (zaycev.net):>_ = sh 'echo "event REQ_NEW_WINDOW http://go.mail.ru/search_site?p=1&aux=Kd7dJd&q=%s" > "$UZBL_FIFO"'
+
+# Handy binds (no need):
+# Set function shortcut
+# request MODE_BIND command  assign<var:>_<value:>_  = set %1 = %2
+# Exit binding
+# request MODE_BIND command  ZZ                 = exit
+# Use socat to directly inject commands into uzbl-core and view events
+# raised by uzbl-core:
+request MODE_BIND command <Ctrl><Mod1>s = sh 'x-terminal-emulator -e socat unix-connect:"$UZBL_SOCKET" -'
+request MODE_BIND command <Ctrl><Mod1>t = sh 'x-terminal-emulator'
+
+# Mode setting binds
+request MODE_BIND command i = set mode = insert
+
+# Hard-bound bookmarks (no need):
+# request MODE_BIND command gh = uri http://www.uzbl.org
+# request MODE_BIND command gh = uri file:///media/files/os_settings/other_files/start_page.html
+
+# SSL-ify bindings
+request MODE_BIND command zs = uri \@(echo "$UZBL_URI" | sed -e 's/^http:/https:/')\@
+request MODE_BIND command zS = event REQ_NEW_WINDOW \@(echo "$UZBL_URI" | sed -e 's/^http:/https:/')\@
+
+# Yanking & pasting binds
+request MODE_BIND command yu = sh 'echo -n "$UZBL_URI" | xclip'
+request MODE_BIND command yt = sh 'echo -n "$UZBL_TITLE" | xclip'
+# doesn't work:
+# request MODE_BIND command yU = sh 'echo -n "$1" | xclip' '\@SELECTED_URI'
+# request MODE_BIND command ys = spawn @scripts_dir/follow.sh \@< uzbl.follow.followSelection('returnuri') >\@ clipboard
+
+# Clone current window (no need):
+# request MODE_BIND command c = event REQ_NEW_WINDOW \@uri
+# Go the page from primary selection
+request MODE_BIND command op = sh 'echo "uri $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
+# Start a new uzbl instance from the page in primary selection
+request MODE_BIND command tp = sh 'echo "event REQ_NEW_WINDOW $(xclip -o)" > "$UZBL_FIFO"'
+# Go to the page in clipboard (no need):
+# sh 'echo "uri $(xclip -selection clipboard -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
+# paste primary selection into keycmd at the cursor position
+request MODE_BIND global <Shift><Insert> = sh 'echo "event INJECT_KEYCMD $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
+
+# Bookmark inserting binds
+request MODE_BIND command <Ctrl>m<tags:>_ = sh 'echo "$UZBL_URI $1" >> "$XDG_DATA_HOME"/uzbl/bookmarks' '%s'
+# Or use a script to insert a bookmark (doesn't work).
+# request MODE_BIND command M = spawn @scripts_dir/insert_bookmark.sh
+
+# Bookmark/history loading
+request MODE_BIND command U = spawn @scripts_dir/load_url_from_history.sh
+request MODE_BIND command u = spawn @scripts_dir/load_url_from_bookmarks.sh
+
+# Link following (similar to vimperator and konqueror)
+# Set custom keys you wish to use for navigation. Some common examples:
+set follow_hint_keys = 0123456789
+#set follow_hint_keys = qwerty
+#set follow_hint_keys = asdfghjkl;
+#set follow_hint_keys = thsnd-rcgmvwb/;789aefijkopquxyz234
+request MODE_BIND command ok* = spawn @scripts_dir/follow.sh \@< uzbl.follow("\@follow_hint_keys", "%s", 'click') >\@
+request MODE_BIND command tk* = spawn @scripts_dir/follow.sh \@< uzbl.follow("\@follow_hint_keys", "%s", 'newwindow') >\@
+request MODE_BIND command of* = spawn @scripts_dir/follow.sh \@< uzbl.follow.followTextContent("%s", 'click') >\@
+request MODE_BIND command tf* = spawn @scripts_dir/follow.sh \@< uzbl.follow.followTextContent("%s", 'newwindow') >\@
+request MODE_BIND command fi  = spawn @scripts_dir/go_input.sh
+
+
+# Form filler binds
+# This script allows you to configure (per domain) values to fill in form
+# fields (eg login information) and to fill in these values automatically.
+# This implementation allows you to save multiple profiles for each form
+# (think about multiple accounts on some website).
+request MODE_BIND command ze = spawn @scripts_dir/formfiller.sh edit
+request MODE_BIND command zn = spawn @scripts_dir/formfiller.sh new
+request MODE_BIND command zl = spawn @scripts_dir/formfiller.sh load
+request MODE_BIND command zo = spawn @scripts_dir/formfiller.sh once
+
+# === Context menu items =====================================================
+
+# Default context menu (no need):
+# menu_add Google = set uri = http://google.com
+# menu_add Go Home = set uri = http://uzbl.org
+# menu_separator separator_1
+# menu_add Quit uzbl = exit
+
+# Link context menu (no need):
+# menu_link_add Print Link = print \@SELECTED_URI
+
+# === Mode configuration =====================================================
+
+# Command mode config.
+request MODE_CONFIG command keycmd_style      = foreground="red"
+request MODE_CONFIG command status_background = #202020
+request MODE_CONFIG command mode_indicator    = Cmd
+request MODE_CONFIG command keycmd_events     = 1
+request MODE_CONFIG command forward_keys      = 0
+request MODE_CONFIG command modcmd_updates    = 1
+
+# Insert mode config.
+request MODE_CONFIG insert status_background = #303030
+request MODE_CONFIG insert mode_indicator    = Ins
+request MODE_CONFIG insert forward_keys      = 1
+request MODE_CONFIG insert keycmd_events     = 0
+request MODE_CONFIG insert modcmd_updates    = 0
+
+# Multi-stage-binding mode config.
+request MODE_CONFIG stack keycmd_style      = foreground="red"
+request MODE_CONFIG stack status_background = #202020
+request MODE_CONFIG stack mode_indicator    = Bnd
+request MODE_CONFIG stack prompt_style      = foreground="#888" weight="light"
+request MODE_CONFIG stack keycmd_events     = 1
+request MODE_CONFIG stack modcmd_updates    = 1
+request MODE_CONFIG stack forward_keys      = 0
+
+# === Post-load misc commands ================================================
+sync_spawn_exec @scripts_dir/load_cookies.sh
+sync_spawn_exec @scripts_dir/load_cookies.sh @data_home/uzbl/session-cookies.txt
+
+# Some settings:
+toggle zoom_type
+set default_mode = command
+# home page:
+set uri = file:///media/files/os_settings/other_files/start_page.html
+# set uri = uzbl.org/doesitwork/@COMMIT
+# Font size for text on web-pages
+# (works on duckduckgo, doesn't work on google):
+set font_size = 14
+

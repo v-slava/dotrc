@@ -78,7 +78,7 @@ apt-get install zathura
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
-apt-get install chromium chromium-l10n pepperflashplugin-nonfree
+apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl
 # On wheezy: chromium-browser-l10n
 
 # dmenu:

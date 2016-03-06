@@ -1,4 +1,0 @@
-# This config is tailored for downloading images for anki.
-
-set download-path=~/.anki_images
-

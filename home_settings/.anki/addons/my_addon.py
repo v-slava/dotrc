@@ -16,7 +16,7 @@ def fill_button_pressed(self):
 	# Settings:
 	HOME = "/home/volkov"
 	SOUNDS = HOME + "/other/GoldenDict/sound_en/sound_en.dsl.files.zip"
-	# MEDIA = HOME + "/other/anki/slava/collection.media"
+	# MEDIA = HOME + "/.anki/slava/collection.media"
 	MEDIA = HOME + "/downloads"
 
 	# Read english word:
@@ -24,7 +24,7 @@ def fill_button_pressed(self):
 	self.web.eval("focusField(%d);" % 0)
 	english_word = self.note.fields[0]
 
-	# Translate word:
+	# Translate english word:
 	call(["goldendict", english_word])
 
 	# Copy english word to newly created data:
@@ -46,8 +46,8 @@ def fill_button_pressed(self):
 	data.append(("audio", audio_field_content))
 	self.note.fields[3] = audio_field_content
 
-	# Launch browser (vimb) in order to search for the image:
-	ret = call(["vimb", "https://www.google.com/search?tbm=isch&q=" + english_word])
+	# Launch browser (uzbl) in order to search for the image:
+	ret = call(["uzbl", "https://www.google.com/search?tbm=isch&q=" + english_word])
 
 	# data.append(("image", "<img src=\"father.jpg\" />"))
 	# self.note.fields[4] = "<img src=\"father.jpg\" />"
