@@ -43,7 +43,7 @@ apt-get install network-manager-gnome gnome-keyring notification-daemon
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xdotool xclip xinput scrot zenity xcape xprintidle ibus
+apt-get install wmctrl xdotool xclip xinput scrot zenity xcape xprintidle uim-gtk2.0
 # keynav
 
 # Install vim instance, which is able to access X clipboard:
