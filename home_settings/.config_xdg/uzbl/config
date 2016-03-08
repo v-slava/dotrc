@@ -22,7 +22,7 @@ set config_home = @(echo $XDG_CONFIG_HOME)@
 set fifo_dir   = /tmp
 set socket_dir = /tmp
 
-set shell_cmd = sh -c
+set shell_cmd = bash -c
 
 # Spawn path shortcuts.
 # In spawn the first dir+path match is used in "dir1:dir2:dir3:executable"
@@ -169,8 +169,8 @@ request MODE_BIND global,-insert <BackSpace> = event KEYCMD_BACKSPACE
 request MODE_BIND global,-insert <Delete>    = event KEYCMD_DELETE
 request MODE_BIND global,-insert <Tab>       = event START_COMPLETION
 
-# Middle mouse click open in new window
-request MODE_BIND global <Button2> = sh 'if [ "$1" ]; then echo "event REQ_NEW_WINDOW $1" > "$UZBL_FIFO"; else echo "uri $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"; fi' '\@SELECTED_URI'
+# Middle mouse click to select an image:
+request MODE_BIND global <Button2> = sh '~/os_settings/other_files/get_image_url.py \@SELECTED_URI ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
 
 # With this command you can enter in any command at runtime when prefixed with
 # a colon.
@@ -219,6 +219,10 @@ request MODE_BIND command n = search
 request MODE_BIND command N = search_reverse
 # Print pages to a printer
 request MODE_BIND command <Ctrl>p = hardcopy page
+
+request MODE_BIND command q = exit
+request MODE_BIND command oi<o Google image:>_ = uri https://www.google.com/search?tbm=isch&q=\@<encodeURIComponent(%r)>\@
+
 
 # Uri opening prompts
 request MODE_BIND command ou<o uri:>_ = uri %s
