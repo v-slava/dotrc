@@ -92,7 +92,7 @@ workspace 6 output HDMI1
 workspace 7 output LVDS1
 workspace 8 output HDMI1
 workspace 9 output LVDS1
-workspace 0 output HDMI1
+workspace 10 output HDMI1
 
 # Focus initial workspace:
 exec --no-startup-id exec i3-msg "workspace 1"
