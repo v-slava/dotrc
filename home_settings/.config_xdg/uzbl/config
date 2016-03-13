@@ -170,7 +170,12 @@ request MODE_BIND global,-insert <Delete>    = event KEYCMD_DELETE
 request MODE_BIND global,-insert <Tab>       = event START_COMPLETION
 
 # Middle mouse click to select an image:
-request MODE_BIND global <Button2> = sh '~/os_settings/other_files/get_image_url.py \@SELECTED_URI ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
+request MODE_BIND global <Button2> = sync_sh '~/os_settings/other_files/get_image_url.py \@SELECTED_URI ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
+# "q" to quit (cancel image selection):
+request MODE_BIND command q = sync_sh '~/os_settings/other_files/get_image_url.py quit ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
+# "n" to request next page with images:
+request MODE_BIND command n = sync_sh '~/os_settings/other_files/get_image_url.py next ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
+request MODE_BIND command oi<o Google image:>_ = uri https://www.google.com/search?tbm=isch&q=\@<encodeURIComponent(%r)>\@
 
 # With this command you can enter in any command at runtime when prefixed with
 # a colon.
@@ -215,13 +220,11 @@ request MODE_BIND command 1 = set zoom_level = 1.0
 request MODE_BIND command /* = search %s
 request MODE_BIND command ?* = search_reverse %s
 # Jump to next and previous items
-request MODE_BIND command n = search
-request MODE_BIND command N = search_reverse
+# request MODE_BIND command n = search
+# request MODE_BIND command N = search_reverse
 # Print pages to a printer
 request MODE_BIND command <Ctrl>p = hardcopy page
 
-request MODE_BIND command q = exit
-request MODE_BIND command oi<o Google image:>_ = uri https://www.google.com/search?tbm=isch&q=\@<encodeURIComponent(%r)>\@
 
 
 # Uri opening prompts

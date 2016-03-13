@@ -12,6 +12,11 @@ import sys
 TMP_DIR = "/tmp/anki"
 IMAGE_WEB_PAGE = TMP_DIR + "/web_page.html"
 TMP_DIR_IMAGE_FILE = TMP_DIR + "/image.jpg"
+TMP_DIR_STATUS_FILE = TMP_DIR + "/status"
+
+# Report script start:
+with open(TMP_DIR_STATUS_FILE, 'a') as f:
+	f.write("script start\n")
 
 def error(*objs):
 	print("Error: ", *objs, file=sys.stderr)
@@ -19,6 +24,22 @@ def error(*objs):
 
 if len(sys.argv) < 2:
 	error('SELECTED_URL is expected as command line argument')
+
+# Process "quit" (cancel image selection):
+if (sys.argv[1] == "quit"):
+	with open(TMP_DIR_STATUS_FILE, 'w') as f:
+		f.write("quit")
+	exit(0)
+
+# Process "next" (request next page with images):
+if (sys.argv[1] == "next"):
+	with open(TMP_DIR_STATUS_FILE, 'w') as f:
+		f.write("next")
+	exit(0)
+
+# Report args are ok:
+with open(TMP_DIR_STATUS_FILE, 'a') as f:
+	f.write("args are ok\n")
 
 ORIG_SELECTED_URL = sys.argv[1]
 print(ORIG_SELECTED_URL)
@@ -40,4 +61,13 @@ content = content[src_idx + len(' src="'):]
 end_idx = content.index('"')
 out_link = content[:end_idx]
 
+# Report wget start:
+with open(TMP_DIR_STATUS_FILE, 'a') as f:
+	f.write("wget start\n")
+
 check_call(["wget", "-O", TMP_DIR_IMAGE_FILE, out_link])
+
+# Report done:
+with open(TMP_DIR_STATUS_FILE, 'w') as f:
+	f.write("done")
+

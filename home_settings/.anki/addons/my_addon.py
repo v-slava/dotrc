@@ -1,5 +1,6 @@
-# fill = ctrl+j
-# add  = ctrl+enter
+# fill  = ctrl+j
+# clear = ctrl+k
+# add   = ctrl+enter
 
 from anki.hooks import wrap
 from aqt.editor import Editor
@@ -10,51 +11,81 @@ from anki.utils import json
 from shutil import rmtree,move
 import os.path
 
-# from subprocess import call
-# from subprocess import check_output
+# from subprocess import *
+from subprocess import call,check_call
 
-from subprocess import *
-
-def get_image(english_word, MEDIA):
+def add_image(self, english_word):
 	TMP_DIR = "/tmp/anki"
 	TMP_DIR_IMAGE_FILE = TMP_DIR + "/image.jpg"
 	FILE_NAME = english_word + ".jpg"
-	MEDIA_IMAGE_FILE = MEDIA + "/" + FILE_NAME
+	TMP_DIR_OUT_FILE = TMP_DIR + "/" + FILE_NAME
+	TMP_DIR_STATUS_FILE = TMP_DIR + "/status"
 	IMAGE_WEB_PAGE = TMP_DIR + "/web_page.html"
 	# Delete old temporary folder contents:
 	if os.path.exists(TMP_DIR):
 		rmtree(TMP_DIR)
 	# Create empty temporary folder:
 	os.makedirs(TMP_DIR)
-	# Download images web-page:
-	check_call(["wget", "--user-agent=Mozilla/5.0", "-O", IMAGE_WEB_PAGE, "https://www.google.com/search?tbm=isch&q=" + english_word])
-	# Launch browser (uzbl) in order to select an image:
-	check_call(["uzbl", "file://" + IMAGE_WEB_PAGE])
-	# As a selection result, uzbl calls external python script, which extracts
-	# selected image link from IMAGE_WEB_PAGE, download appropriate image
-	# and names it TMP_DIR_IMAGE_FILE. If user hasn't selected an image (just
-	# closed uzbl), than IMAGE_FILE will be absent. In this case we will return
-	# empty string.
-	if os.path.isfile(TMP_DIR_IMAGE_FILE):
-		# Copy file to MEDIA:
-		move(TMP_DIR_IMAGE_FILE, MEDIA_IMAGE_FILE)
-		return "<img src=\"" + FILE_NAME + "\" />" # "<img src="father.jpg" />"
-	return ""
+	# Start from first google search result:
+	num = 0
+	while (True):
+		# Download images web-page:
+		check_call(["wget", "--user-agent=Mozilla/5.0", "-O", IMAGE_WEB_PAGE,
+			"https://www.google.com/search?tbm=isch&start=" + str(num) + "&q=" + english_word])
+		# Launch browser (uzbl) in order to select an image:
+		check_call(["uzbl", "file://" + IMAGE_WEB_PAGE])
+		# There are three possible scenarios:
+		#
+		# 1) User selects an image (middle mouse click on image selected):
+		#      as a selection result, uzbl calls external python script, which
+		#      extracts selected image link from IMAGE_WEB_PAGE, downloads
+		#      appropriate image and names it TMP_DIR_IMAGE_FILE.
+		#
+		#      On the very begin of execution the script writes "downloading" to
+		#      TMP_DIR_STATUS_FILE. At the end (in case of success) it writes
+		#      "done" to TMP_DIR_STATUS_FILE.
+		#
+		# 2) User requests next page (hotkey "n"):
+		#      uzbl calls external python script with argument "next", which in
+		#      turn writes word "next" in TMP_DIR_STATUS_FILE.
+		#
+		# 3) User requests termination without image (hotkey "q"):
+		#      uzbl calls external python script with argument "quit", which in
+		#      turn writes word "quit" in TMP_DIR_STATUS_FILE.
+		#
+		if not os.path.isfile(TMP_DIR_STATUS_FILE):
+			showInfo("No status file found (uzbl has been terminated abnormally?). Please check " + TMP_DIR_STATUS_FILE)
+			return
+		with open(TMP_DIR_STATUS_FILE, 'r') as f:
+			content = f.read()
+		if (content == "done"):
+			if os.path.isfile(TMP_DIR_IMAGE_FILE):
+				move(TMP_DIR_IMAGE_FILE, TMP_DIR_OUT_FILE)
+				# Need to place focus on field #4 (image):
+				# self.web.eval("focusField(%d);" % 4)
+				self.addMedia(TMP_DIR_OUT_FILE, True)
+			else:
+				showInfo("No image found although " + TMP_DIR_STATUS_FILE + " reports done")
+			return
+		elif (content == "quit"):
+			return
+		elif (content != "next"):
+			showInfo("Unexpected contents of " + TMP_DIR_STATUS_FILE + ": |" + content + "|")
+			return
+		else:
+			num = num + 20
 
 def fill_button_pressed(self):
 	# Settings:
 	HOME = "/home/volkov"
 	SOUNDS = HOME + "/other/GoldenDict/sound_en/sound_en.dsl.files.zip"
 	MEDIA = HOME + "/.anki/slava/collection.media"
-
 	# Read english word:
 	self.web.eval("focusField(%d);" % 1)
 	self.web.eval("focusField(%d);" % 0)
 	english_word = self.note.fields[0]
-
 	# Translate english word:
 	check_call(["goldendict", english_word])
-
 	# Copy english word to newly created data:
 	data = []
 	data.append(("english", english_word))
@@ -63,28 +94,33 @@ def fill_button_pressed(self):
 	self.note.fields[1] = ""
 	data.append(("usage_example", ""))
 	self.note.fields[2] = ""
-
 	# Add audio if available:
-	if os.path.isfile(MEDIA + "/" + english_word + ".mp3"):
+	audio_file = MEDIA + "/" + english_word + ".mp3"
+	if os.path.isfile(audio_file):
 		ret = 0
 	else:
 		ret = call(["unzip", SOUNDS, english_word + ".mp3", "-d", MEDIA])
 	if ret == 0:
 		audio_field_content = "[sound:" + english_word + ".mp3]"
+		check_call(["mpg321", audio_file])
 	else:
 		audio_field_content = ""
 		showInfo("No audio found")
 	data.append(("audio", audio_field_content))
 	self.note.fields[3] = audio_field_content
-
-	# Add image (may be empty):
-	image_field_content = get_image(english_word, MEDIA)
-	data.append(("image", image_field_content))
-	self.note.fields[4] = image_field_content
-
-	# Refresh fields:
-	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 1)) # 1 = field to place cursor to
+	# Add empty image:
+	data.append(("image", self.note.fields[4]))
+	# Refresh all fields:
+	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 4)) # 4 = field to place cursor to (image)
 	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
+	# Add image (if any):
+	add_image(self, english_word)
+	# Set focus on translation:
+	self.web.eval("focusField(%d);" % 1)
+
+def setup_my_buttons(self):
+	setup_fill_button(self)
+	setup_clear_button(self)
 
 def setup_fill_button(self):
 	# size=False tells Anki not to use a small button
@@ -93,14 +129,28 @@ def setup_fill_button(self):
 	fill_button.setShortcut(QKeySequence(fill_shortcut))
 	fill_button.setToolTip("Fill all fields: " + fill_shortcut)
 
-Editor.setupButtons = wrap(Editor.setupButtons, setup_fill_button)
+def clear_button_pressed(self):
+	data = []
+	data.append(("english", ""))
+	self.note.fields[0] = ""
+	data.append(("russian", ""))
+	self.note.fields[1] = ""
+	data.append(("usage_example", ""))
+	self.note.fields[2] = ""
+	data.append(("audio", ""))
+	self.note.fields[3] = ""
+	data.append(("image", ""))
+	self.note.fields[4] = ""
+	# Refresh fields:
+	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 0)) # 0 = field to place cursor to
+	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
 
-# def my_add_card():
-# 	my_note = mw.col.newNote()
-# 	my_note.fields[0] = "mother"
-# 	my_note.fields[1] = "mother_translation"
-# 	my_note.fields[2] = "mother_example"
-# 	my_note.fields[3] = "[sound:sludge.mp3]"
-# 	my_note.fields[4] = "<img src=\"allegiance.jpg\" />"
-# 	mw.col.addNote(my_note)
+def setup_clear_button(self):
+	# size=False tells Anki not to use a small button
+	clear_button = self._addButton("clear_button", lambda s=self: clear_button_pressed(self), text="Clear", size=False)
+	clear_shortcut = "Ctrl+k"
+	clear_button.setShortcut(QKeySequence(clear_shortcut))
+	clear_button.setToolTip("Clear all fields: " + clear_shortcut)
+
+Editor.setupButtons = wrap(Editor.setupButtons, setup_my_buttons)
 
