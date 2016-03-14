@@ -18,7 +18,7 @@ case "$IN" in
 	*.html)
 		echo -n ""
 	;;
-	*.sh | *.bash | *.py )
+	*.sh | *.bash | *.py | *.pl )
 		echo -n "chmod +x \"$IN\""
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)

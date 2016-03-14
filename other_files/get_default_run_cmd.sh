@@ -18,7 +18,7 @@ case "$IN" in
 	*.html)
 		echo -n "x-www-browser $IN"
 	;;
-	*.sh | *.bash | *.py )
+	*.sh | *.bash | *.py | *.pl )
 		echo -n "./$IN"
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)
