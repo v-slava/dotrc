@@ -11,6 +11,7 @@ alias egrep='egrep --color=auto'
 alias gs="git status"
 alias gd="git diff"
 alias gb="~/temporary/beautify.sh"
+alias gp="~/temporary/push.sh"
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
