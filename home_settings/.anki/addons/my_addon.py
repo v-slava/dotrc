@@ -34,7 +34,7 @@ def add_image(self, english_word):
 			"https://www.google.com/search?tbm=isch&start=" + str(num) + "&q=" + english_word])
 		# Launch browser (uzbl) in order to select an image:
 		check_call(["uzbl", "file://" + IMAGE_WEB_PAGE])
-		# There are three possible scenarios:
+		# There are four possible scenarios:
 		#
 		# 1) User selects an image (middle mouse click on image selected):
 		#      as a selection result, uzbl calls external python script, which
@@ -53,6 +53,11 @@ def add_image(self, english_word):
 		#      uzbl calls external python script with argument "quit", which in
 		#      turn writes word "quit" in TMP_DIR_STATUS_FILE.
 		#
+		# 4) User specifies different search request (hotkey "d"):
+		#      uzbl calls external python script with arguments
+		#      "request NEW_REQEUST", which in turn writes line
+		#      "request: NEW_REQUEST" in TMP_DIR_STATUS_FILE.
+		#
 		if not os.path.isfile(TMP_DIR_STATUS_FILE):
 			showInfo("No status file found (uzbl has been terminated abnormally?). Please check " + TMP_DIR_STATUS_FILE)
 			return
@@ -69,6 +74,9 @@ def add_image(self, english_word):
 			return
 		elif (content == "quit"):
 			return
+		elif (content[:len("request: ")] == "request: "):
+			english_word = content[len("request: "):]
+			num = 0
 		elif (content != "next"):
 			showInfo("Unexpected contents of " + TMP_DIR_STATUS_FILE + ": |" + content + "|")
 			return

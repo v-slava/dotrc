@@ -37,6 +37,12 @@ if (sys.argv[1] == "next"):
 		f.write("next")
 	exit(0)
 
+# Process "request":
+if (sys.argv[1] == "request"):
+	with open(TMP_DIR_STATUS_FILE, 'w') as f:
+		f.write("request: " + sys.argv[2])
+	exit(0)
+
 # Report args are ok:
 with open(TMP_DIR_STATUS_FILE, 'a') as f:
 	f.write("args are ok\n")
