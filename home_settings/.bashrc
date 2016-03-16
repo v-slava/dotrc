@@ -11,6 +11,7 @@ alias egrep='egrep --color=auto'
 alias glog='git log --all --graph --decorate'
 alias ga="git add"
 alias gs="git status"
+alias gsh="git show HEAD"
 alias gd="git diff"
 alias gco="git commit"
 alias gch="git checkout"
