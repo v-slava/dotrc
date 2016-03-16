@@ -3,18 +3,20 @@ alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -al'
 alias bc='cat ~/os_settings/other_files/bc_library_my && bc -l ~/os_settings/other_files/bc_library_my'
-alias glog='git log --all --graph --decorate'
 # export GREP_OPTIONS=--color=auto
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # Git aliases:
+alias glog='git log --all --graph --decorate'
+alias ga="git add"
 alias gs="git status"
 alias gd="git diff"
 alias gco="git commit"
 alias gch="git checkout"
 alias gb="~/temporary/beautify.sh"
-alias gp="~/temporary/push.sh"
+alias gph="~/temporary/push.sh"
+alias gpl="git pull"
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
