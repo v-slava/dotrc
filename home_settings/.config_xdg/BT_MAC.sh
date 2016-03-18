@@ -7,7 +7,7 @@ if [ -z "$BT_MAC" ]; then
 	# Sony MDR-10RBT:
 	export BT_MAC=57:D3:98:0C:4A:2F
 
-	# Genius HS-980BT:
-	# export BT_MAC=34:DF:2A:07:71:E8
+	# T909S
+	# export BT_MAC=30:07:14:25:02:55
 fi
 

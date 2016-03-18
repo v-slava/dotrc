@@ -176,7 +176,7 @@ request MODE_BIND command q = sync_sh '~/os_settings/other_files/get_image_url.p
 # "n" to request next page with images:
 request MODE_BIND command n = sync_sh '~/os_settings/other_files/get_image_url.py next ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
 # "d" for different search request:
-request MODE_BIND command d<Google image:>_ = sync_sh '~/os_settings/other_files/get_image_url.py request %r ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
+request MODE_BIND command d<Google image:>_ = sync_sh '~/os_settings/other_files/get_image_url.py request \@<encodeURIComponent(%r)>\@ ; echo exit | socat unix-connect:"$UZBL_SOCKET" -'
 
 # With this command you can enter in any command at runtime when prefixed with
 # a colon.
