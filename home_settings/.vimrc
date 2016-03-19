@@ -244,6 +244,41 @@ autocmd FileType asm setlocal syntax=armasm
 " Tab settings:
 autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl setlocal tabstop=4 | setlocal noexpandtab | setlocal shiftwidth=0
 
+function! Backspace_handler()
+	let l:cursor = getpos('.')
+	let l:column = l:cursor[2]
+	if l:column < 4 " if string is not long enough
+		" then execute simple backspace
+		call feedkeys("", "insert")
+		return
+	endif
+	let l:line = getline('.')
+	let l:line_before_cursor = strpart(l:line, 0, l:column)
+	" Check if we have non-empty symbols in string before cursor:
+	let l:i = 0
+	while l:i < l:column
+		let l:symbol = strpart(l:line_before_cursor, l:i, 1)
+		if l:symbol != "	" && l:symbol != " "
+			" We have non-empty symbols: execute simple backspace.
+			call feedkeys("", "insert")
+			return
+		endif
+		let l:i += 1
+	endwhile
+	" Check if we have at least four contigious spaces in front of cursor:
+	let l:four_symbols = strpart(l:line_before_cursor, l:column - 4)
+	if l:four_symbols != "    "
+		call feedkeys("", "insert")
+		return
+	endif
+	" Delete 4 spaces at once:
+	call feedkeys("", "insert")
+	call feedkeys("", "insert")
+	call feedkeys("", "insert")
+	call feedkeys("", "insert")
+endfunction
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl imap <Backspace> <Esc>:call Backspace_handler()<CR>gi
+
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
