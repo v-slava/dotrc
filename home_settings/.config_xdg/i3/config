@@ -26,6 +26,10 @@ floating_modifier $Alt_L
 
 # kill focused window
 bindsym $Alt_R+Shift+Q kill
+bindsym $WIN+Escape kill
+
+# "minimize" window (moove to workspace 10):
+bindsym $WIN+Tab move container to workspace 10
 
 # switch to virtual console 1
 bindsym $CTRL+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
