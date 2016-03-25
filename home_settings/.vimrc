@@ -277,7 +277,12 @@ function! Backspace_handler()
 	call feedkeys("", "insert")
 	call feedkeys("", "insert")
 endfunction
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl imap <Backspace> <Esc>:call Backspace_handler()<CR>gi
+" The above function fails to work with autoindent mode and 'o', 'O' normal
+" mode hotkeys:
+" First we use <Esc> to go to normal mode. In this case autoindent deletes
+" indentation (the problem). Solution: need to disable standard
+" autoindentation, and implement it by myself.
+" autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl imap <Backspace> <Esc>:call Backspace_handler()<CR>gi
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
