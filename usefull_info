@@ -1,3 +1,8 @@
+# smplayer hotkeys:
+j - loop subtitle (e.g. none, rus, eng, ...)
+v - switch subtitle visibility
+a - change aspect ratio
+
 # Compose key sequences (not works for some apps):
 # 1) add the following contents:
 # <Multi_key> <a> : "ä"
