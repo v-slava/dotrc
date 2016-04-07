@@ -63,14 +63,8 @@ fi
 export PATH=$ORIG_PATH
 export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
 # Toolchains:
-# Golf TV:
-# export PATH=$PATH:$HOME/other/toolchains/arm-v7a15v4r3-20131011/bin/
-# Tizen:
-# export PATH=$PATH:$HOME/other/toolchains/armv7l-tizen-20140701/opt/cross/bin
-# UHD_BD NWD:
-export PATH=$PATH:$HOME/other/toolchains/arm-v7a15a7v5r2-x86_64-20140701/bin
-# UHD_BD SWD:
-export PATH=$PATH:$HOME/other/toolchains/build_arm_nofpu/staging_dir/bin
+# Atmel:
+export PATH=$PATH:$HOME/other/toolchains/arm-none-eabi/bin
 
 # Use bash's vi editing mode:
 set -o vi
