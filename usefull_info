@@ -1,3 +1,10 @@
+# Search only in files, that match regex:
+ag SEARCH_REGEX -G FILE_PATH_REGEX
+# Search only in *.h and *.cpp files:
+ag SEARCH_REGEX -G '(\.h$|\.cpp)'
+# Search only in *.cpp files, which path contains "tools":
+ag SEARCH_REGEX -G '(?=.*tools)(?=.*\.cpp$)'
+
 # smplayer hotkeys:
 j - loop subtitle (e.g. none, rus, eng, ...)
 v - switch subtitle visibility
