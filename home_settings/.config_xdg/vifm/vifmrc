@@ -433,11 +433,15 @@ nmap E :!e
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 
-nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | less<cr>
-nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | less<cr>
-nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | less<cr>
-nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less<cr>
-nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm ./%c | less<cr>
+nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | less -i<cr>
+nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | less -i<cr>
+nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | less -i<cr>
+nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | less -i<cr>
+nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less -i<cr>
+nnoremap ops :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -S ./%c | less -i<cr>
+nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<cr>
+nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<cr>
+nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | less -i<cr>
 
 nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
 vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
