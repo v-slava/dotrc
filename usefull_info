@@ -1,3 +1,10 @@
+# read the whole content of the chip flash:
+edbg -t atmel_cm7 -r -f full_flash.bin
+# erase flash memory:
+edbg -t atmel_cm7 -e
+# write binary to flash memory:
+edbg -t atmel_cm7 -bpv -f some_flash.bin
+
 # Search only in files, that match regex:
 ag SEARCH_REGEX -G FILE_PATH_REGEX
 # Search only in *.h and *.cpp files:

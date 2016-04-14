@@ -25,8 +25,8 @@ if [ -f "$2" ]; then
 else
 	echo "$2" >> $ROOT_FOLDER/code.s
 fi
-arm-linux-gnueabi-as $ROOT_FOLDER/code.s -o $ROOT_FOLDER/code.o
-arm-linux-gnueabi-objcopy -O binary $ROOT_FOLDER/code.o $ROOT_FOLDER/code.bin
+${CROSS_COMPILE}as $ROOT_FOLDER/code.s -o $ROOT_FOLDER/code.o
+${CROSS_COMPILE}objcopy -O binary $ROOT_FOLDER/code.o $ROOT_FOLDER/code.bin
 if [ "$1" = "-a" ]; then
 	#hexdump -v -e '/4 "%08_ax:   "' -e '/4 "%08x\n"' $ROOT_FOLDER/code.bin
 	hexdump -v -e '/4 "%08x\n"' $ROOT_FOLDER/code.bin

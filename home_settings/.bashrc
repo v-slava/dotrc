@@ -64,6 +64,7 @@ export PATH=$ORIG_PATH
 export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
 # Toolchains:
 # Atmel:
+export CROSS_COMPILE=arm-none-eabi-
 export PATH=$PATH:$HOME/other/toolchains/arm-none-eabi/bin
 
 # Use bash's vi editing mode:
@@ -95,14 +96,9 @@ export QUILT_PATCHES=debian/patches
 # IP:
 export IP_PC=106.125.38.23
 export IP_BUILD_SERVER=106.125.52.218
-export IP_NEW_BUILD_SERVER=106.125.34.189
 
-# Perforce (Tizen TV):
-# export P4PORT=10.41.130.122:1888
-# Perforce (UHD BD):
-# export P4PORT=10.41.131.67:1666
-export P4PORT=pfproxy.surc.kiev.ua:1666
-
+# Perforce:
+export P4PORT=106.125.19.19:1666
 export P4USER=USER_NAME
 # export P4PASSWD=
 

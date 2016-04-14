@@ -27,5 +27,5 @@ else
 fi
 
 xxd -r -p "$IN_FILE" "$TMP_FILE"
-arm-linux-gnueabi-objdump -D -b binary "$2" -marm "$THUMB" "$TMP_FILE" | tail -n +8
+${CROSS_COMPILE}objdump -D -b binary "$2" -marm "$THUMB" "$TMP_FILE" | tail -n +8
 
