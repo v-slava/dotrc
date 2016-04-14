@@ -6,37 +6,40 @@
 
 usage()
 {
-	echo "Usage $(basename $0) {-a|-t} {-EB|-EL} {FILE|INSTRUCTION_EL}" 1>&2
+	echo "Usage $(basename $0) {-a|-t} {-EB|-EL} [-b] {FILE|INSTRUCTION}" 1>&2
 	exit 1
 }
 
-if [ $# -ne 3 ]; then
-    usage
+if [ $# -lt 3 ]; then
+	usage
 fi
 
 if [ "$1" = "-t" ]; then
 	THUMB="-Mforce-thumb"
 else
-    if [ "$1" != "-a" ]; then
-        usage
-    fi
+	if [ "$1" != "-a" ]; then
+		usage
+	fi
 fi
 if [ "$2" != "-EB" ] && [ "$2" != "-EL" ]; then
-    usage
+	usage
 fi
 ENDIANESS="$2"
-
-TMP_FILE=/tmp/disassemble_sh_tmp
 set -e
-rm -f "$TMP_FILE"
 
-if [ -f "$3" ]; then
-	IN_FILE="$3"
+if [ "$3" = "-b" ]; then
+	OUT_FILE="$4"
 else
-	IN_FILE=/tmp/disassemble_sh_in
-	echo "$3" > "$IN_FILE"
+	OUT_FILE=/tmp/disassemble_sh_out
+	rm -f "$OUT_FILE"
+	if [ -f "$3" ]; then
+		IN_FILE="$3"
+	else
+		IN_FILE=/tmp/disassemble_sh_in
+		echo "$3" > "$IN_FILE"
+	fi
+	xxd -r -p "$IN_FILE" "$OUT_FILE"
 fi
 
-xxd -r -p "$IN_FILE" "$TMP_FILE"
-${CROSS_COMPILE}objdump -D -b binary $ENDIANESS -marm $THUMB "$TMP_FILE" | tail -n +8
+${CROSS_COMPILE}objdump -D -b binary -marm $ENDIANESS $THUMB "$OUT_FILE" | tail -n +8
 
