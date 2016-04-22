@@ -30,6 +30,9 @@ for dir in $DIRS ; do
 	fi
 done
 
+if [ ! -d /media/files/workspace/dotrc_s/home_settings ]; then
+	exit
+fi
 cd /media/files/workspace/dotrc_s/home_settings
 FILES_LIST=$(find -type f)
 for FILE in $FILES_LIST ; do
