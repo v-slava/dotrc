@@ -31,6 +31,9 @@ case "$IN" in
 		echo -n "rustc \"$IN\" -o \"$OUT\""
 		# echo -n "cargo build"
 	;;
+	*.S)
+		echo -n "assemble.sh -t \"$IN\" > /tmp/assemble_sh_text"
+	;;
 	*)
 		echo -n 'echo "Default build command for this file type is not defined" && false'
 		exit 1

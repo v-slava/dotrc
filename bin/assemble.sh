@@ -16,16 +16,17 @@ if [ ! -d $ROOT_FOLDER ]; then
 fi
 
 if [ "$1" = "-a" ]; then
-	echo ".code 32" > $ROOT_FOLDER/code.s
+	echo ".code 32" > $ROOT_FOLDER/code.S
 else
-	echo ".code 16" > $ROOT_FOLDER/code.s
+	echo ".code 16" > $ROOT_FOLDER/code.S
 fi
 if [ -f "$2" ]; then
-	cat "$2" >> $ROOT_FOLDER/code.s
+	cat "$2" >> $ROOT_FOLDER/code.S
 else
-	echo "$2" >> $ROOT_FOLDER/code.s
+	echo "$2" >> $ROOT_FOLDER/code.S
 fi
-${CROSS_COMPILE}as $ROOT_FOLDER/code.s -o $ROOT_FOLDER/code.o
+${CROSS_COMPILE}gcc -c $ROOT_FOLDER/code.S -o $ROOT_FOLDER/code.o
+# ${CROSS_COMPILE}as $ROOT_FOLDER/code.S -o $ROOT_FOLDER/code.o
 ${CROSS_COMPILE}objcopy -O binary $ROOT_FOLDER/code.o $ROOT_FOLDER/code.bin
 if [ "$1" = "-a" ]; then
 	#hexdump -v -e '/4 "%08_ax:   "' -e '/4 "%08x\n"' $ROOT_FOLDER/code.bin

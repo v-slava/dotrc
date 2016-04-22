@@ -1,3 +1,21 @@
+# Set setuid bit in order to dump packages as non-root user
+# (this doesn't work for usb dumping with dumpcap):
+chmod u+s /usr/sbin/tcpdump
+# Dump packets and feed them to wireshark through unnamed pipe:
+tcpdump -i usbmon1 -w - -U | wireshark -k -i -
+
+# List interfaces available:
+dumpcap -D
+# Dump packets to file:
+dumpcap -i eth0 -w FILE
+# Display captured packets from file:
+wireshark -r FILE
+# Dump packets to stdout:
+dumpcap -i eth0 -w -
+# Dump packets and feed them to wireshark through unnamed pipe
+# (doesn't work for usb unless you are root, setuid doesn't help):
+dumpcap -i eth0 -w - -P | wireshark -k -i -
+
 # read the whole content of the chip flash:
 edbg -t atmel_cm7 -r -f full_flash.bin
 # erase flash memory:

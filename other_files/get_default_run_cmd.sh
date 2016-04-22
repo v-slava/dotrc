@@ -31,6 +31,9 @@ case "$IN" in
 		echo -n "$OUT"
 		# echo -n "cargo run"
 	;;
+	*.S)
+		echo -n "cat /tmp/assemble_sh_text"
+	;;
 	*)
 		echo -n 'echo "Default run command for this file type is not defined" && false'
 		exit 1

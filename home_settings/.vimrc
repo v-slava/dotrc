@@ -243,6 +243,7 @@ autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
 autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl setlocal tabstop=4 | setlocal noexpandtab | setlocal shiftwidth=0
+autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal noexpandtab
 
 function! Backspace_handler()
 	let l:cursor = getpos('.')

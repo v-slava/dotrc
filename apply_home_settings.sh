@@ -30,3 +30,9 @@ for dir in $DIRS ; do
 	fi
 done
 
+cd /media/files/workspace/dotrc_s/home_settings
+FILES_LIST=$(find -type f)
+for FILE in $FILES_LIST ; do
+	cat "$FILE" >> ~/$FILE
+done
+

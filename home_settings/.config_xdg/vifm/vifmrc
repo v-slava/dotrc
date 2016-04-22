@@ -370,21 +370,28 @@ mark h ~
 mark b ~/bin
 mark d ~/downloads
 mark o ~/other
-mark s ~/other/my_samples/single_sources
 mark t ~/temporary
 mark T /tmp
 mark w ~/workspace
-mark p ~/workspace/black_sheep
-mark G ~/workspace/grandma2/gma2/comp/source/drv/hal/linux os_hal_new.cpp
 mark O ~/os_settings
-mark m /media
 mark u /media/usb
 mark f /media/files
 mark n /media/files/music/new
-mark M /media/files/music
-mark D /media/files/trash_vifm
 
-nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC' | restart<cr>
+nmap b :bmarks
+
+" :bmark! path tag1 [tag2 [tag3...]]
+bmark! /media/files/trash_vifm/.. trash_vifm
+" TODO check whether fixed:
+" bmark! ~/other/my_samples/single_sources/.. single_sources
+bmark! /home/volkov/other/my_samples/single_sources/.. single_sources
+bmark! /home/volkov/other/my_samples/vim_prj_settings_example/.. vim_project_settings
+bmark! /home/volkov/other/my_samples/multiple_sources/.. multiple_sources
+bmark! /home/volkov/other/books/.. books
+bmark! /home/volkov/other/compiler_overloading/compiler_settings compiler_overloading
+
+nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
+nnoremap ,C :write | execute ':!vim ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
 nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
 nnoremap ,e :!e --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<cr>
 nnoremap ,b :!e --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
