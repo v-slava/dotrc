@@ -169,7 +169,7 @@ bindsym $Alt_L+Tab focus left
 # terminal
 # bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm
 # bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
-bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm'
+bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm ~ ~'
 
 # offline translate with goldendict:
 bindsym $Alt_R+t exec --no-startup-id exec ~/os_settings/other_files/translate_hotkey.sh

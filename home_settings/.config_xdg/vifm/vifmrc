@@ -328,6 +328,7 @@ set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
 " windo filter! /^.*\.(lo|o|d|class|py[co])$|.*~$/
 
 " ------------------------------------------------------------------------------
+" winrun % normal gg
 
 " Sample mappings
 
@@ -378,7 +379,7 @@ mark u /media/usb
 mark f /media/files
 mark n /media/files/music/new
 
-nmap b :bmarks
+nmap b :bmarks<space>
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/.. trash_vifm
@@ -389,6 +390,8 @@ bmark! /home/volkov/other/my_samples/vim_prj_settings_example/.. vim_project_set
 bmark! /home/volkov/other/my_samples/multiple_sources/.. multiple_sources
 bmark! /home/volkov/other/books/.. books
 bmark! /home/volkov/other/compiler_overloading/compiler_settings compiler_overloading
+
+bmark! /var/lib/usbutils/usb.ids usb.ids lsusb
 
 nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
 nnoremap ,C :write | execute ':!vim ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
@@ -435,8 +438,8 @@ nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>
 nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<cr>
 nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<cr>
 
-nmap V :!vim
-nmap E :!e
+nmap V :!vim<space>
+nmap E :!e<space>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
 
@@ -473,6 +476,7 @@ nnoremap au :! umount /media/usb<cr>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
+nmap as :sync!<cr>
 " swap panels:
 nmap is <c-w>x
 nmap id :winrun ^ !diff.sh %d/%c %C<cr>
