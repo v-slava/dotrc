@@ -23,6 +23,9 @@ edbg -t atmel_cm7 -e
 # write binary to flash memory:
 edbg -t atmel_cm7 -bpv -f some_flash.bin
 
+# gtypist in russian:
+gtypist ru.typ
+
 # Search only in files, that match regex:
 ag SEARCH_REGEX -G FILE_PATH_REGEX
 # Search only in *.h and *.cpp files:
