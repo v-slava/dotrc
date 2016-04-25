@@ -464,6 +464,8 @@ nnoremap yd :!echo -n "%d" | clipboard.sh<cr>
 nnoremap yf :!echo -n "%c:p" | clipboard.sh<cr>
 " Yank current file (name only) into the clipboard
 nnoremap yn :!echo -n "%c" | clipboard.sh<cr>
+" Yank current file's size (in bytes) into the clipboard
+nnoremap yb :!du -b "%c" | cut -f1 | clipboard.sh -n<cr>
 " Rename file: replace spaces with underscores:
 nnoremap ns :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <cr>
 " Rename file: replace big letters with little ones:

@@ -1,6 +1,8 @@
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
+# Enable USB monitoring:
+su -c 'modprobe usbmon'
 # Dump packets and feed them to wireshark through unnamed pipe:
 tcpdump -i usbmon1 -w - -U | wireshark -k -i -
 
@@ -314,9 +316,21 @@ sudo dpkg-reconfigure ca-certificates
 # Scan network for NetBIOS name information (with IP):
 nbtscan 192.168.2.3/16
 
+# Mount folder over SSH:
+sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
+
 # List services available on server:
 smbclient -U v.volkov -W SURC -L seclab.surc.kiev.ua
 smbclient -U v.volkov -W SURC -L s-file.surc.kiev.ua
+# mount smb share with cifs-utils with separate credentials file:
+mount -t cifs -o credentials=/file/with/smb_credentials //server_name/share_name /mount/point
+# Create file with smb credentials:
+cat << EOF > /file/with/smb_credentials
+username=SomeUserName
+password=SomePassword
+EOF
+# mount smb share with cifs-utils without separate credentials file:
+mount -t cifs -o username=SomeUserName,password=SomePassword,domain=SomeDomain //server_name/share_name /mount/point
 # See also mount shared folder via smb (package=smbnetfs|fusesmb, no root required)
 
 # Restart nfs server (ubuntu):
