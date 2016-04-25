@@ -349,6 +349,7 @@ vnoremap w :view<cr>gv
 nnoremap I cw<c-a>
 nnoremap A cw
 nnoremap cc cw<c-u>
+nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<cr>
 " nnoremap A cw<c-w>
