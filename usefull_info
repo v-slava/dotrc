@@ -1222,9 +1222,19 @@ finish
 # gdb (tui) refresh screen:
 refresh
 
-# gdb debug threads:
-info thread	# list threads
-thread Id	# switch to thread Id
+# GDB debug threads.
+# Make CTRL-C / breakpoints affect only currently selected thread:
+set non-stop on
+# Allow GDB to control inferior in asynchronous mode:
+set target-async on
+# List threads:
+info thread
+# Switch to thread specified by a given number (ID, see "info thread"):
+thread ID
+# Interrupt current thread (doesn't work if target-async is off):
+interrupt
+# Interrupt all threads (doesn't work if target-async is off):
+interrupt -a
 
 # gdb: write to process memory from file:
 restore FILE binary START_ADDRESS_IN_MEMORY
