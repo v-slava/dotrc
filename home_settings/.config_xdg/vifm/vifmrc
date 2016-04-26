@@ -264,7 +264,9 @@ filextype *.rtf,*.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx libreoffice %
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
-filetype *.gl,*.vim,*vimrc,.*vimrc vim %f
+filetype *.pcapng wireshark %f &
+
+" filetype *.gl,*.vim,*vimrc,.*vimrc vim %f
 
 " TuDu files
 " filetype *.tudu tudu -f %c
