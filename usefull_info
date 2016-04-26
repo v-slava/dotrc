@@ -64,6 +64,40 @@ rustc -O -Z print-link-args main.rs
 # 2) change "gcc_s" => "gcc_eh"
 # 3) delete "-pie", "-Wl,-Bdynamic"
 
+# Disable GNU Make builtin rules:
+.SUFFIXES:
+MAKEFLAGS += --no-builtin-rules
+export MAKEFLAGS
+
+# get Makefile directory in Makefile:
+MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Debug Makefile:
+make -d
+# Variables "V" or "VERBOSE" are normally analysed by Makefiles:
+make V=1
+make VERBOSE=1
+# Create linux man pages (docs):
+make mandocs
+make installmandocs # installs in /usr/local/man/man9
+# Get info about all targets (linux kernel only):
+make help
+
+# gcc output rules for make describing dependencies:
+gcc FILE.c -o FILE.d -MM -MT FILE.o
+# In Makefile:
+-include FILE.d
+
+# Exclude an option from variable in Makefile:
+OPTS += SomeOption
+OPTS := $(filter-out SomeOption,$(OPTS))
+
+# Cmake: generate project for eclipse:
+cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
+
+# Specify install directory for cmake:
+cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
+
 # create JSON file with build commands, used by clang tooling interface (rtags):
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 bear make
@@ -102,19 +136,9 @@ http://mozilla.dorando.at/keyconfig.xpi
 # Add authorization without password:
 ssh-copy-id user@hostname
 
-# Disable GNU Make builtin rules:
-.SUFFIXES:
-MAKEFLAGS += --no-builtin-rules
-export MAKEFLAGS
-
 # Determine unit tests coverage:
 gcc UNIT_TESTS.c -o UNIT_TESTS.out --coverage
 gcov UNIT_TESTS.out
-
-# gcc output rules for make describing dependencies:
-gcc FILE.c -o FILE.d -MM -MT FILE.o
-# In Makefile:
--include FILE.d
 
 # Reformat source file with uncrustify:
 uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
@@ -141,9 +165,6 @@ progress -wm
 # Compress folder by tar:
 tar cf tar_name.tar ./source_directory/*
 tar czf archive.tar.gz /path/to/directory
-
-# get Makefile directory in Makefile:
-MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 #pragma pack(push, 1)
 #pragma pack(pop)
@@ -881,13 +902,6 @@ bind -P
 # Canonicalize PATH:
 readlink -f PATH
 
-# Debug Makefile:
-make -d
-# Create linux man pages (docs):
-make mandocs
-make installmandocs # installs in /usr/local/man/man9
-# Use "make help" to get info about all targets
-
 # Create uImage from raw binary:
 mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
 
@@ -1019,8 +1033,6 @@ xset dpms force off
 # Display stack size
 ulimit -all
 man 2 getrlimit
-
-cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
 
 # Print hex dump (format - big endian):
 xxd
@@ -1196,9 +1208,6 @@ genisoimage -r -J -o cd_image.iso <folder> # create iso image
 # Check (paranoidal) image correctness:
 sudo mount -t iso9660 -o ro cd_image.iso /media/cd_mount_point
 sudo wodim -v -eject dev=/dev/sr0 /home/user/img.iso # -multi
-
-# Cmake: generate project for eclipse:
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
 
 # Launch wi-fi access point:
 wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
