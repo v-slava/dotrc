@@ -656,6 +656,11 @@ tail -n +K
 
 # Documentation browser: zeal (depends on latest qt5)
 
+# Man pages local path:
+/usr/share/man
+# Find a package, MAN_PAGE belongs to:
+apt-file search -x 'man[0-9]/MAN_PAGE.*\.gz'
+
 # Search man pages description for keyword:
 apropos KEYWORD
 man -k KEYWORD

@@ -479,9 +479,9 @@ nnoremap au :! umount /media/usb<cr>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
-nmap as :sync!<cr>
+nmap isy :sync!<cr>
 " swap panels:
-nmap is <c-w>x
+nmap isw <c-w>x
 nmap id :winrun ^ !diff.sh %d/%c %C<cr>
 nmap iv :winrun ^ !vimdiff.sh %d/%c %C<cr>
 nmap ig :winrun ^ !diffuse %d/%c %C<cr>
