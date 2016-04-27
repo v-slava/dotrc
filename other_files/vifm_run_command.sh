@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-	echo "Usage: $(basename $0) \"COMMAND_TO_RUN\"" 1>&2
+	echo "Usage: $(basename $0) [--pause] \"COMMAND_TO_RUN\"" 1>&2
 	exit 1
+fi
+if [ "$1" = "--pause" ]; then
+	PAUSE=true
+	shift
 fi
 COMMAND_TO_RUN="$1"
 
@@ -23,4 +27,8 @@ else
 	echo -e "${VIFM_EXIT_CODE_FAIL}Command failed (exit code = $EXIT_CODE)"
 fi
 echo -en "${VIFM_END}"
+
+if [ ! -z "$PAUSE" ]; then
+	vifm-pause
+fi
 

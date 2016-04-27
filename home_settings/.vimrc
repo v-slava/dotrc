@@ -373,7 +373,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 			call Update_status_line('Running completed. Exit code: ' . l:run_exit_code, 'normal')
 		else " a:run_interactive == 'true'
 			call Update_status_line('Running started (may be ended now)...', 'normal')
-			call system("x-terminal-emulator -e bash -i -c '" . a:run_cmd . " ; echo -e $? ; vifm-pause' &")
+			call system("x-terminal-emulator -e $HOME/os_settings/other_files/vifm_run_command.sh --pause " . a:run_cmd)
 			" if !has('nvim')
 			" 	call Update_status_line('Interactive mode is only available in neovim', 'error')
 			" else
