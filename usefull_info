@@ -477,6 +477,10 @@ git am < PATCH_FILE
 # git change author of commit:
 git commit --amend --author "New Author Name <email@address.com>"
 
+# git delete branch from the remote repository:
+git push origin --delete BRANCH
+git push origin :BRANCH
+
 # create bundle:
 git bundle create BUNDLE_FILE COMMIT_FROM..COMMIT_TO
 # verify bundle:
@@ -487,6 +491,13 @@ git remote [-v]
 git remote add REMOTE_NAME BUNDLE_FILE
 # fetch new remote:
 git fetch REMOTE_NAME
+
+# View branches tracking information:
+git branch -vv
+# Add tracking information to git branch:
+git branch -u origin/remote_branch [local_branch]
+# The same for git 1.7 (old):
+git branch --set-upstream local_branch origin/remote_branch
 
 # .gitignore file in .git folder:
 .git/info/exclude
@@ -514,13 +525,6 @@ git -c http.sslCAInfo=FILE.cer clone URL
 
 # Add all untracked files:
 git add -A
-
-# View branches tracking information:
-git branch -vv
-# Add tracking information to git branch:
-git branch -u origin/remote_branch [local_branch]
-# The same for git 1.7 (old):
-git branch --set-upstream local_branch origin/remote_branch
 
 # gerrit udpate commit (patch set):
 git push origin HEAD:refs/changes/CHANGE_NUMBER
