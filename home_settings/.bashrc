@@ -8,7 +8,8 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # Git aliases:
-alias glog='git log --all --graph --decorate'
+# alias glog='git log --all --graph --decorate'
+alias glog='git log --all --graph --decorate | cless -i'
 alias ga="git add"
 alias gs="git status"
 alias gsh="git show HEAD"
