@@ -489,6 +489,8 @@ git bundle verify BUNDLE_FILE
 git remote [-v]
 # add bundle as remote:
 git remote add REMOTE_NAME BUNDLE_FILE
+# delete remote:
+git remote remove REMOTE_NAME
 # fetch new remote:
 git fetch REMOTE_NAME
 
