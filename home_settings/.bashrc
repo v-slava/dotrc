@@ -2,7 +2,7 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -al'
-alias bc='cat ~/os_settings/other_files/bc_library_my && bc -l ~/os_settings/other_files/bc_library_my'
+alias mbc='cat ~/os_settings/other_files/bc_library_my && bc -l ~/os_settings/other_files/bc_library_my'
 # export GREP_OPTIONS=--color=auto
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
