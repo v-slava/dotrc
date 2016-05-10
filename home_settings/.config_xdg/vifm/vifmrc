@@ -490,6 +490,7 @@ nmap ig :winrun ^ !diffuse %d/%c %C<cr>
 nmap ix :winrun ^ !dhex %d/%c %C<cr>
 nmap im :winrun ^ !mc %d %D<cr>
 nmap if :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
+nmap it :!touch %c<cr>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
