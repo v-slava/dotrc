@@ -213,7 +213,8 @@ vmap 2 :normal @
 set shellredir=>%s
 
 " Reformat C/C++ source code:
-nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
+" nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
+nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
 
 " Use vifm in vim as file selector:
 nmap <C-s> :VsplitVifm<CR>

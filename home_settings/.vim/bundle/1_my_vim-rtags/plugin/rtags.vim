@@ -393,8 +393,10 @@ endfunction
 
 function! rtags#PreprocessFileAndFormat()
 	call rtags#PreprocessFile()
+	let l:in_file = expand("%:p")
 	let l:out_file = '/tmp/formatted_' . expand("%:t")
-	execute "write !uncrustify -o " . l:out_file
+	" execute "write !uncrustify -o " . l:out_file
+	execute "write !astyle.sh < " . l:in_file . " > " . l:out_file
 	execute "edit " . l:out_file
 	" execute "vnew " . l:out_file
 endfunction
