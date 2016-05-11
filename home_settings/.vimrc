@@ -410,10 +410,35 @@ endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
 nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
 
+let g:Complete_line___start_column = 58
+let g:Complete_line___text_to_add = '\'
+function Complete_line(start_column, text_to_add)
+	let l:cur_line = getline('.')
+	let l:cur_line_len = strlen(l:cur_line)
+	if l:cur_line_len > a:start_column - 1
+		echohl WarningMsg
+		echo 'Can''t complete line: current line is too long'
+		echohl None
+		return
+	endif
+	" Now we can insert at least one space and text_to_add. Calculate line_ending:
+	let l:line_ending = a:text_to_add
+	let l:i = l:cur_line_len
+	while l:i < a:start_column
+		let l:line_ending = ' ' . l:line_ending
+		let l:i = l:i + 1
+	endwhile
+	" Update line:
+	call setline('.', l:cur_line . l:line_ending)
+	echom 'Line has been completed by: "' . l:line_ending . '"'
+	" execute 'normal! $'
+endfunction
+nmap <silent> <Leader>df :call Complete_line(g:Complete_line___start_column, g:Complete_line___text_to_add)<CR>
+
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
-	let l:config_log = '/tmp/vim_config_log'
-	let l:full_config_cmd = "echo '" . a:config_cmd . "' | bash 1>" . l:config_log . ' 2>&1'
+	let l:config_log = '/tmp/vim_ide_dir/vim_config_log'
+	let l:full_config_cmd = "mkdir -p /tmp/vim_ide_dir && echo '" . a:config_cmd . "' | bash 1>" . l:config_log . ' 2>&1'
 	call system(l:full_config_cmd)
 	let l:config_exit_code = v:shell_error
 	call system('echo -en "\nExit code: ' . l:config_exit_code . '" >> ' . l:config_log)
