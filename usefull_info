@@ -764,6 +764,21 @@ apt-rdepends --state-show NotInstalled --state-follow NotInstalled <package_name
 # Show reverse dependencies:
 apt-cache rdepends <package_name>
 
+# Run arm executable using qemu-arm:
+sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
+sudo apt-get install libc6-dev-armel-cross # arm C library development files
+arm-linux-gnueabi-gcc -static 1.c
+qemu-arm a.out
+
+# Install nfs server package:
+sudo apt-get install nfs-kernel-server
+# Rootfs via nfs - kernel cmdline options:
+KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
+# Restart nfs service:
+service nfs-kernel-server restart
+# nfs server config (/etc/exports):
+/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
+
 # Download sources for a package:
 apt-get source --download-only <package_name>
 
@@ -781,21 +796,6 @@ sudo dpkg --add-architecture <arch>
 dpkg --print-foreign-architectures
 sudo apt-get update
 dpkg --remove-architecture <arch>
-
-# Run arm executable using qemu-arm:
-sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
-sudo apt-get install libc6-dev-armel-cross # arm C library development files
-arm-linux-gnueabi-gcc -static 1.c
-qemu-arm a.out
-
-# Install nfs server package:
-sudo apt-get install nfs-kernel-server
-# Rootfs via nfs - kernel cmdline options:
-KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
-# Restart nfs service:
-service nfs-kernel-server restart
-# nfs server config (/etc/exports):
-/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
 
 # Build package from source and do not sign anything:
 dpkg-buildpackage -us -uc
