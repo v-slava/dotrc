@@ -217,6 +217,9 @@ exec --no-startup-id exec nm-applet
 # Start keyboard layout indicator/switcher:
 exec --no-startup-id exec ~/os_settings/other_files/keyboard_layout.sh
 
+# Switch en <--> de keyboard layout:
+bindsym $WIN+s exec --no-startup-id exec ~/os_settings/other_files/switch_us_de_keyboard_layout.sh
+
 # Delete system update lock directory:
 exec --no-startup-id exec rm -rf /tmp/system_update_lock_dir
 

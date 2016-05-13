@@ -411,10 +411,11 @@ endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
 nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
 
-let g:Complete_line___start_column = 58
-let g:Complete_line___text_to_add = '\'
-function Complete_line(start_column, text_to_add)
-	let l:cur_line = getline('.')
+let g:Modify_line___text_to_prepend = '       '
+let g:Modify_line___start_column = 58
+let g:Modify_line___text_to_append = '\'
+function Modify_line(text_to_prepend, start_column, text_to_append)
+	let l:cur_line = a:text_to_prepend . getline('.')
 	let l:cur_line_len = strlen(l:cur_line)
 	if l:cur_line_len > a:start_column - 1
 		echohl WarningMsg
@@ -423,7 +424,7 @@ function Complete_line(start_column, text_to_add)
 		return
 	endif
 	" Now we can insert at least one space and text_to_add. Calculate line_ending:
-	let l:line_ending = a:text_to_add
+	let l:line_ending = a:text_to_append
 	let l:i = l:cur_line_len
 	while l:i < a:start_column
 		let l:line_ending = ' ' . l:line_ending
@@ -432,9 +433,9 @@ function Complete_line(start_column, text_to_add)
 	" Update line:
 	call setline('.', l:cur_line . l:line_ending)
 	echom 'Line has been completed by: "' . l:line_ending . '"'
-	" execute 'normal! $'
+	execute 'normal! 0'
 endfunction
-nmap <silent> <Leader>df :call Complete_line(g:Complete_line___start_column, g:Complete_line___text_to_add)<CR>
+nmap <silent> <Leader>dm :call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)<CR>
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
