@@ -411,19 +411,16 @@ endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
 nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
 
-let g:Modify_line___text_to_prepend = '       '
-let g:Modify_line___start_column = 58
-let g:Modify_line___text_to_append = '\'
+let g:Modify_line___text_to_prepend = '        '
+let g:Modify_line___start_column = 78
+let g:Modify_line___text_to_append = ' \'
 function Modify_line(text_to_prepend, start_column, text_to_append)
-	let l:cur_line = a:text_to_prepend . getline('.')
-	let l:cur_line_len = strlen(l:cur_line)
-	if l:cur_line_len > a:start_column - 1
-		echohl WarningMsg
-		echo 'Can''t complete line: current line is too long'
-		echohl None
-		return
+	let l:cur_line = getline('.')
+	let l:cur_line_begin = strpart(l:cur_line, 0, strlen(a:text_to_prepend))
+	if l:cur_line_begin != a:text_to_prepend
+		let l:cur_line = a:text_to_prepend . l:cur_line
 	endif
-	" Now we can insert at least one space and text_to_add. Calculate line_ending:
+	let l:cur_line_len = strlen(l:cur_line)
 	let l:line_ending = a:text_to_append
 	let l:i = l:cur_line_len
 	while l:i < a:start_column
@@ -432,10 +429,9 @@ function Modify_line(text_to_prepend, start_column, text_to_append)
 	endwhile
 	" Update line:
 	call setline('.', l:cur_line . l:line_ending)
-	echom 'Line has been completed by: "' . l:line_ending . '"'
-	execute 'normal! 0'
 endfunction
-nmap <silent> <Leader>dm :call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)<CR>
+nmap <silent> <Leader>dm :call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)<CR>0
+command! -range ModifyLine <line1>,<line2> call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
@@ -577,7 +573,7 @@ function! Split_lines() range
 	let l:words_array = split(l:orig_text)
 	let l:failed = append(l:first_line - 1, l:words_array)
 endfunction
-command! -range -nargs=* Slines <line1>,<line2> call Split_lines()
+command! -range Slines <line1>,<line2> call Split_lines()
 function! Merge_lines() range
 	let l:first_line = a:firstline
 	let l:last_line = a:lastline
@@ -587,7 +583,7 @@ function! Merge_lines() range
 	execute l:first_line ',' l:last_line 'delete z'
 	let l:failed = append(l:first_line - 1, l:orig_text)
 endfunction
-command! -range -nargs=* Mlines <line1>,<line2> call Merge_lines()
+command! -range Mlines <line1>,<line2> call Merge_lines()
 
 " doxygen: function begin:
 nmap <Leader>fb i/**<Esc>o * @fn 
@@ -649,7 +645,7 @@ endfunction
 " 	silent execute 'r /tmp/qwe'
 " 	execute 'redraw!'
 " endfunction
-" command! -range -nargs=* MyIndent <line1>,<line2> call MyCIndent()
+" command! -range MyIndent <line1>,<line2> call MyCIndent()
 
 " command! -nargs=1 CmdName call Func_name(<f-args>)
 " command! -nargs=0 CmdName call Func_name('arg1')
