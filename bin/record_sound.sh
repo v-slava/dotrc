@@ -25,7 +25,7 @@ FILE="$2"
 
 case "$1" in
 	("--wav") parec -d "$SINK_NAME.monitor" --file-format=wav "${FILE}.wav" ;;
-	("--mp3") parec -d "$SINK_NAME.monitor" | lame -r - "${FILE}.mp3" ;;
+	("--mp3") parec -d "$SINK_NAME.monitor" | lame -r - "${FILE}.mp3" ;; # --cbr -b 320
 	("--ogg") parec -d "$SINK_NAME.monitor" | oggenc -b 192 -o "${FILE}.ogg" --raw - ;;
 	(*) usage ;;
 esac
