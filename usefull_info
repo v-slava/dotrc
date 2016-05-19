@@ -1,3 +1,6 @@
+# i3wm turn off monitor (move workspaces to LVDS1):
+xrandr --output HDMI1 --off
+
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
