@@ -399,6 +399,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 endfunction
 " build begin (with warinings):
 nmap <silent> <Leader>ob :wa<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>of :wa<CR>:call Build_and_run(g:build_cmd_fail, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 " rebuild begin (with warinings):
 nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 

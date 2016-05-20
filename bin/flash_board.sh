@@ -23,8 +23,8 @@ JLINK=~/other/programs/JLink_Linux_V512a_x86_64/JLinkExe
 JLINK_SCRIPT=/tmp/flash_board_sh.jlink
 cat << EOF > $JLINK_SCRIPT
 h
-loadbin $FILE_TO_FLASH $FLASH_START_ADDRESS
-SetPC $FLASH_START_ADDRESS
+loadbin $FILE_TO_FLASH 0x$FLASH_START_ADDRESS
+SetPC 0x$FLASH_START_ADDRESS
 g
 exit
 EOF
