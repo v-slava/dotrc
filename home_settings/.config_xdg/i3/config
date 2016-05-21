@@ -209,7 +209,7 @@ exec --no-startup-id exec icedove
 bindsym $Alt_L+m exec --no-startup-id exec icedove
 
 # Start goldendict:
-exec --no-startup-id exec goldendict
+# exec --no-startup-id exec goldendict
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
