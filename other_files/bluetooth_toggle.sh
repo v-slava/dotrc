@@ -67,6 +67,7 @@ EOF
 		fi
 	done # while [ $bluetoothctl_RET -ne 1 ]
 	set -e
+	echo "Attempting to get full sink name for pattern bluez_sink.* ..."
 	BT_SINK="$(~/os_settings/other_files/get_sink_name.sh bluez_sink)"
 	pacmd set-default-sink "$BT_SINK"
 	~/os_settings/other_files/set_volume.sh 20%

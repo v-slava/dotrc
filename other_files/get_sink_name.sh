@@ -20,8 +20,13 @@ fi
 
 # Get full sink name:
 SINK_NAME=""
+ITERATION_NUM=0
 while [ "$SINK_NAME" = "" ]; do
 	SINK_NAME="$(LANGUAGE=en pactl list sinks | grep "Name: $SINK\." | cut -d' ' -f2)"
+	((ITERATION_NUM++))
+	if [ $ITERATION_NUM -gt 50 ]; then
+		exit 1
+	fi
 done
 
 # Print full sink name:

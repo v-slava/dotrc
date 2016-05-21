@@ -16,8 +16,6 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
 	g++ gdb gdb-doc gdbserver gdb-multiarch \
 	zip unzip gzip bzip2 p7zip-full cpio unrar \
-	alsa-utils alsaplayer-daemon alsaplayer-common \
-	bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
@@ -39,6 +37,13 @@ apt-get install -t jessie-backports i3-wm i3status i3lock fbxkb
 # Install network manager:
 apt-get install network-manager-gnome gnome-keyring notification-daemon
 
+# Install PulseAudio:
+apt-get install -t jessie-backports pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
+apt-get install bluez pavucontrol
+
+# Install audio player:
+apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
+
 # Install qemu:
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
@@ -51,9 +56,6 @@ apt-get install vim-gtk
 
 # Install email client (thunderbird):
 apt-get install icedove
-
-# Install PulseAudio tools:
-apt-get install pulseaudio-utils pavucontrol
 
 # Install video player:
 apt-get install mplayer2 smplayer
