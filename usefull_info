@@ -1,6 +1,10 @@
 # Switch to russian language (add to ~/.bashrc):
 export LANG=ru_RU.UTF-8
 export LANGUAGE=ru
+# See also /etc/default/locale
+
+# Setup desktop wallpaper (i3wm):
+feh --bg-center ~/os_settings/other_files/desktop_wallpaper.png
 
 # Pulseaudio verbose output:
 pulseaudio -k && pulseaudio -vvvv

@@ -335,17 +335,17 @@ set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
 " Sample mappings
 
 " Start shell in current directory
-nnoremap s :shell<cr>
+nnoremap s :shell<CR>
 
 " Display sorting dialog
-nnoremap S :sort<cr>
+nnoremap S :sort<CR>
 
 " Toggle visibility of preview window
-nnoremap w :view<cr>
-vnoremap w :view<cr>gv
+nnoremap w :view<CR>
+vnoremap w :view<CR>gv
 
 " Open file in the background using its default program
-" nnoremap gb :file &<cr>l
+" nnoremap gb :file &<CR>l
 
 " Mappings for faster renaming
 nnoremap I cw<c-a>
@@ -353,19 +353,19 @@ nnoremap A cw
 nnoremap cc cw<c-u>
 nnoremap cn cW<c-u>
 " rename using vim:
-nnoremap cv :rename<cr>
+nnoremap cv :rename<CR>
 " nnoremap A cw<c-w>
 
 " Toggle wrap setting on ,w key
-" nnoremap ,w :set wrap!<cr>
+" nnoremap ,w :set wrap!<CR>
 
 " Example of standard two-panel file managers mappings
-" nnoremap <f3> :!less %f<cr>
-" nnoremap <f4> :edit<cr>
-" nnoremap <f5> :copy<cr>
-" nnoremap <f6> :move<cr>
+" nnoremap <f3> :!less %f<CR>
+" nnoremap <f4> :edit<CR>
+" nnoremap <f5> :copy<CR>
+" nnoremap <f6> :move<CR>
 " nnoremap <f7> :mkdir<space>
-" nnoremap <f8> :delete<cr>
+" nnoremap <f8> :delete<CR>
 
 " ------------------------------------------------------------------------------
 
@@ -382,7 +382,7 @@ mark u /media/usb
 mark f /media/files
 mark n /media/files/music/new
 
-nmap b :bmarks<cr>/
+nmap b :bmarks<CR>/
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/.. trash_vifm
@@ -396,15 +396,15 @@ bmark! /home/volkov/other/compiler_overloading/compiler_settings compiler_overlo
 
 bmark! /var/lib/usbutils/usb.ids usb.ids lsusb
 
-nnoremap ,c :write | execute ':!vim ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
-nnoremap ,C :write | execute ':!vim ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] && cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC' | restart<cr>
-nnoremap ,v :!vim ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<cr>
-nnoremap ,e :!e --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<cr>
-nnoremap ,b :!e --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<cr>
-nnoremap ,i :!e --wait ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<cr>
-nnoremap ,u :!e ~/os_settings/usefull_info<cr>
-nnoremap ,r :!e ~/other/remarks<cr>
-nnoremap ,g :!e /media/usb/glanguage_lessons/20/20_en.gl<cr>
+nnoremap ,c :write | execute ':!e ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && if [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] ; then cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC ; fi' | restart<CR>
+nnoremap ,C :write | execute ':!mkdir -p ~/workspace/dotrc_s/home_settings/.config_xdg/vifm && e ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && if [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] ; then cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC ; fi' | restart<CR>
+nnoremap ,v :!e ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<CR>
+nnoremap ,e :!e --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<CR>
+nnoremap ,b :!e --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<CR>
+nnoremap ,i :!e --wait ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<CR>
+nnoremap ,u :!e ~/os_settings/usefull_info<CR>
+nnoremap ,r :!e ~/other/remarks<CR>
+nnoremap ,g :!e /media/usb/glanguage_lessons/20/20_en.gl<CR>
 
 set syscalls
 set trashdir=/media/files/trash_vifm
@@ -427,70 +427,70 @@ set trashdir=/media/files/trash_vifm
 " nnoremap : ;
 
 " Exit from vifm:
-nnoremap <c-d> :exit<cr>
-vmap <c-d> :exit<cr>
+nnoremap <c-d> :exit<CR>
+vmap <c-d> :exit<CR>
 " nnoremap ii
 nnoremap e <nop>
-nnoremap q :exit<cr>
-vmap q :exit<cr>
+nnoremap q :exit<CR>
+vmap q :exit<CR>
 
 " Launch programs:
-nnoremap rg :!./%c %i &<cr>
-nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<cr>
+nnoremap rg :!./%c %i &<CR>
+nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<CR>
 " Launch make:
-nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<cr>
-nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<cr>
+nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<CR>
+nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<CR>
 
 nmap V :!vim<space>
 nmap E :!e<space>
-nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
-vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<cr>
+nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
+vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 
-nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | less -i<cr>
-nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | less -i<cr>
-nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | less -i<cr>
-nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | less -i<cr>
-nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less -i<cr>
-nnoremap ops :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -S ./%c | less -i<cr>
-nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<cr>
-nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<cr>
-nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | less -i<cr>
+nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | less -i<CR>
+nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | less -i<CR>
+nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | less -i<CR>
+nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | less -i<CR>
+nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less -i<CR>
+nnoremap ops :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -S ./%c | less -i<CR>
+nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
+nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
+nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | less -i<CR>
 
-nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
-vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<cr>
-nmap xc :! $HOME/os_settings/other_files/compress.sh %f<cr>
+nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
+vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
+nmap xc :! $HOME/os_settings/other_files/compress.sh %f<CR>
 
 " Yank current directory path into the clipboard
-nnoremap yd :!echo -n "%d" | clipboard.sh<cr>
+nnoremap yd :!echo -n "%d" | clipboard.sh<CR>
 " Yank current file (full path) into the clipboard
-nnoremap yf :!echo -n "%c:p" | clipboard.sh<cr>
+nnoremap yf :!echo -n "%c:p" | clipboard.sh<CR>
 " Yank current file (name only) into the clipboard
-nnoremap yn :!echo -n "%c" | clipboard.sh<cr>
+nnoremap yn :!echo -n "%c" | clipboard.sh<CR>
 " Yank current file's size (in bytes) into the clipboard
-nnoremap yb :!du -b "%c" | cut -f1 | clipboard.sh -n<cr>
+nnoremap yb :!du -b "%c" | cut -f1 | clipboard.sh -n<CR>
 " Rename file: replace spaces with underscores:
-nnoremap ns :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <cr>
+nnoremap ns :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <CR>
 " Rename file: replace big letters with little ones:
-nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <cr>
-" nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' && echo<cr>
+nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <CR>
+" nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' && echo<CR>
 
 " Mount / umount:
-nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<cr>
-nnoremap cm :! mount /dev/sdc1 || mount /dev/sdc || mount /dev/sdc1<cr>
-nnoremap au :! umount /media/usb<cr>
+nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<CR>
+nnoremap cm :! mount /dev/sdc1 || mount /dev/sdc || mount /dev/sdc1<CR>
+nnoremap au :! umount /media/usb<CR>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
-nmap isy :sync!<cr>
+nmap isy :sync!<CR>
 " swap panels:
 nmap isw <c-w>x
-nmap id :winrun ^ !diff.sh %d/%c %C<cr>
-nmap iv :winrun ^ !vimdiff.sh %d/%c %C<cr>
-nmap ig :winrun ^ !diffuse %d/%c %C<cr>
-nmap ix :winrun ^ !dhex %d/%c %C<cr>
-nmap im :winrun ^ !mc %d %D<cr>
-nmap if :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<cr>
-nmap it :!touch %c<cr>
+nmap id :winrun ^ !diff.sh %d/%c %C<CR>
+nmap iv :winrun ^ !vimdiff.sh %d/%c %C<CR>
+nmap ig :winrun ^ !diffuse %d/%c %C<CR>
+nmap ix :winrun ^ !dhex %d/%c %C<CR>
+nmap im :winrun ^ !mc %d %D<CR>
+nmap if :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<CR>
+nmap it :!touch %c<CR>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
