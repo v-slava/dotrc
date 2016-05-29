@@ -373,11 +373,11 @@ nnoremap cv :rename<cr>
 mark h ~
 mark b ~/bin
 mark d ~/downloads
-mark o ~/other
+" mark o ~/other
 mark t ~/temporary
 mark T /tmp
 mark w ~/workspace
-mark O ~/os_settings
+mark o ~/os_settings
 mark u /media/usb
 mark f /media/files
 mark n /media/files/music/new

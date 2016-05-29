@@ -138,6 +138,8 @@ fc-cache -fv
 
 # cut pages range from pdf:
 pdftk A=in_1.pdf input_pw='PASSWORD' B=in_2.pdf cat A3-5 B3left A2right output out.pdf
+# Create pdf file from images (jpg/png):
+convert page*.png mydoc.pdf
 
 # Set the pipeline's return status to the value of the  last  (right‐most)
 # command to exit with a non-zero status, or zero if all commands exit
@@ -1250,6 +1252,12 @@ backtrace full
 
 # Stop on writing to stderr (x86_64 only):
 b write if 2==$rdi
+
+# Do not stop on signal SIGUSR1:
+handle SIGUSR1 noprint nostop
+
+# Answer "yes" on "No source file named FILE.c. Make breakpoint pending on future shared library load? (y or [n])":
+set breakpoint pending on
 
 # GDB save value in gdb variable:
 set $var_name = expression
