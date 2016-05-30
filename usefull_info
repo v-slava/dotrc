@@ -6,6 +6,13 @@ export LANGUAGE=ru
 # Setup desktop wallpaper (i3wm):
 feh --bg-center ~/os_settings/other_files/desktop_wallpaper.png
 
+# Convert elf to binary:
+objcopy -O binary IN_FILE.elf OUT_FILE.bin
+# List targets, acceptable by objcopy:
+objdump -i
+# Dump single section into binary from object file:
+arm-none-eabi-objcopy --only-section=.MySection -I elf32-littlearm -O binary IN_FILE.o OUT_FILE.bin
+
 # Pulseaudio verbose output:
 pulseaudio -k && pulseaudio -vvvv
 # Do not respawn pulseaudio: in file /etc/pulse/client.conf
