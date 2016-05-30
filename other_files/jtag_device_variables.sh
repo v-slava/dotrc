@@ -12,25 +12,27 @@ if [ $# -lt 1 ]; then
 	usage
 fi
 
-if [ "$1" = "big" ]; then
+case $1 in
+	big)
 	DEVICE=ATSAM4E16E
 	INTERFACE=JTAG
 	SRAM_START_ADDRESS="20000000"
 	SRAM_END_ADDRESS="20400000"
 	FLASH_START_ADDRESS="00400000"
-	FLASH_END_ADDRESS="00800000"
-else
-	if [ "$1" = "small" ] || [ "$1" = "little" ]; then
+	FLASH_END_ADDRESS="00500000"
+	;;
+	small|little)
 		DEVICE=ATSAMV71Q21
 		INTERFACE=SWD
 		SRAM_START_ADDRESS="20400000"
 		SRAM_END_ADDRESS="20C00000"
 		FLASH_START_ADDRESS="00400000"
-		FLASH_END_ADDRESS="00800000"
-	else
+		FLASH_END_ADDRESS="00600000"
+	;;
+	*)
 		usage
-	fi
-fi
+	;;
+esac
 # shift
 SRAM_SIZE=$(echo "ibase=16; $SRAM_END_ADDRESS - $SRAM_START_ADDRESS" | bc)
 FLASH_SIZE=$(echo "ibase=16; $FLASH_END_ADDRESS - $FLASH_START_ADDRESS" | bc)
