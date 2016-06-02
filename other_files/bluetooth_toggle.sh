@@ -66,6 +66,14 @@ EOF
 			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2
 		fi
 	done # while [ $bluetoothctl_RET -ne 1 ]
+	# Set bluetooth profile
+	CARD_NAME=$(~/os_settings/other_files/get_card_name.sh bluez_card)
+	RET=1
+	set -x
+	while [ $RET -ne 0 ]; do
+		pactl set-card-profile "$CARD_NAME" a2dp_sink
+		RET=$?
+	done
 	set -e
 	echo "Attempting to get full sink name for pattern bluez_sink.* ..."
 	BT_SINK="$(~/os_settings/other_files/get_sink_name.sh bluez_sink)"
