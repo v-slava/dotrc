@@ -5,7 +5,7 @@
 
 usage()
 {
-	echo "Usage: $(basename $0) DIR SYMBOL [NM_FLAGS]" 1>&2
+	echo "Usage: $(basename $0) DIR SYMBOL [-flto] [NM_FLAGS]" 1>&2
 	exit 1
 }
 
@@ -17,6 +17,12 @@ DIR="$1"
 SYMBOL="$2"
 shift
 shift
+NM=nm
+if [ "$1" = "-flto" ]; then
+	# NM=gcc-nm
+	NM=${CROSS_COMPILE}gcc-nm
+	shift
+fi
 NM_FLAGS="$@"
 
 if [ ! -d "$DIR" ]; then
@@ -25,13 +31,13 @@ fi
 set -e
 DIR="$(realpath "$DIR")"
 
-echo ">>> Object files:"
+echo ">>> Objs:"
 objs=$(find "$DIR" -name "*.o")
 for obj in $objs; do
-	if nm $NM_FLAGS $obj | grep -q "$SYMBOL" ; then
+	if $NM $NM_FLAGS $obj | grep -q "$SYMBOL" ; then
 		# symbol was found
 		echo "> Obj: $obj"
-		nm $NM_FLAGS $obj | grep "$SYMBOL"
+		$NM $NM_FLAGS $obj | grep "$SYMBOL"
 	fi
 done
 
@@ -43,7 +49,7 @@ echo ">>> Libs:"
 libs=$(find "$DIR" -name "*.a")
 for lib in $libs; do
 	rm -f $TMP_DIR/*
-	nm $NM_FLAGS $lib | sed -e "s/^$/$SEPARATOR/g" | awk -v RS="$SEPARATOR" "{ print \$0 > \"$TMP_DIR/obj\" NR }"
+	$NM $NM_FLAGS $lib | sed -e "s/^$/$SEPARATOR/g" | awk -v RS="$SEPARATOR" "{ print \$0 > \"$TMP_DIR/obj\" NR }"
 	rm $TMP_DIR/obj1
 	txt_files=$(ls $TMP_DIR/obj*)
 	for txt_file in $txt_files ; do
