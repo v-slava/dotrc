@@ -5,7 +5,7 @@
 
 usage()
 {
-	echo "Usage: $(basename $0) DIR SYMBOL [-flto] [NM_FLAGS]" 1>&2
+	echo "Usage: $(basename $0) [-flto] DIR SYMBOL [NM_FLAGS]" 1>&2
 	exit 1
 }
 
@@ -13,16 +13,16 @@ if [ $# -lt 2 ]; then
 	usage
 fi
 
-DIR="$1"
-SYMBOL="$2"
-shift
-shift
 NM=nm
 if [ "$1" = "-flto" ]; then
 	# NM=gcc-nm
 	NM=${CROSS_COMPILE}gcc-nm
 	shift
 fi
+DIR="$1"
+shift
+SYMBOL="$1"
+shift
 NM_FLAGS="$@"
 
 if [ ! -d "$DIR" ]; then
