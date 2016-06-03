@@ -862,6 +862,7 @@ syn keyword armasmDirective	FUNC GLOBAL TYPE SKIP FILL SECTION ARCH_EXTENSION
 
 " GAS supports one type of multi line comments:
 syn region asmComment		start="/\*" end="\*/" contains=asmTodo
+syn region asmComment		start="#" end="$" keepend contains=asmTodo
 
 " GAS (undocumentedly?) supports C++ style comments. Unlike in C/C++ however,
 " a backslash ending a C++ style comment does not extend the comment to the
