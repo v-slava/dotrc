@@ -69,7 +69,6 @@ EOF
 	# Set bluetooth profile
 	CARD_NAME=$(~/os_settings/other_files/get_card_name.sh bluez_card)
 	RET=1
-	set -x
 	while [ $RET -ne 0 ]; do
 		pactl set-card-profile "$CARD_NAME" a2dp_sink
 		RET=$?
