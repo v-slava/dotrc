@@ -11,9 +11,14 @@ if [ $# -ne 1 ] ; then
 fi
 CARD_PREFIX="$1"
 
-set -e
 # Get full sink name:
-CARD_NAME="$(LANGUAGE=en pacmd list cards | grep "name: <$CARD_PREFIX\." | cut -d'<' -f2 | cut -d'>' -f1)"
+RET=1
+while [ $RET -ne 0 ]; do
+	RESULT=$(LANGUAGE=en pacmd list card | grep "name: <$CARD_PREFIX\.")
+	RET=$?
+done
+CARD_NAME="$(echo "$RESULT" | cut -d'<' -f2 | cut -d'>' -f1)"
+
 # Print full card name:
 echo "$CARD_NAME"
 
