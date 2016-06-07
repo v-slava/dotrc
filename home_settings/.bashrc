@@ -103,3 +103,7 @@ export P4PORT=106.125.19.19:1666
 export P4USER=USER_NAME
 # export P4PASSWD=
 
+BASHRC_S=$HOME/workspace/dotrc_s/home_settings/.bashrc
+if [ -f $BASHRC_S ] ; then
+	source $BASHRC_S
+fi

@@ -401,6 +401,7 @@ nnoremap ,C :write | execute ':!mkdir -p ~/workspace/dotrc_s/home_settings/.conf
 nnoremap ,v :!e --wait ~/os_settings/home_settings/.vimrc && cp ~/os_settings/home_settings/.vimrc ~/.vimrc<CR>
 nnoremap ,e :!e --wait ~/os_settings/home_settings/.spacemacs && cp ~/os_settings/home_settings/.spacemacs ~/.spacemacs<CR>
 nnoremap ,b :!e --wait ~/os_settings/home_settings/.bashrc && cp ~/os_settings/home_settings/.bashrc ~/.bashrc<CR>
+nnoremap ,B :!e --wait ~/workspace/dotrc_s/home_settings/.bashrc<CR>
 nnoremap ,i :!e --wait ~/os_settings/home_settings/.config_xdg/i3/config && cp ~/os_settings/home_settings/.config_xdg/i3/config ~/.config_xdg/i3/config && i3-msg reload<CR>
 nnoremap ,u :!e ~/os_settings/usefull_info<CR>
 nnoremap ,r :!e ~/other/remarks<CR>
@@ -445,15 +446,16 @@ nmap E :!e<space>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 
-nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | less -i<CR>
-nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | less -i<CR>
-nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | less -i<CR>
-nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | less -i<CR>
+nnoremap ocd :! ${CROSS_COMPILE}objdump -D ./%c | less -i<CR>
+nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | c++filt | less -i<CR>
+nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | c++filt | less -i<CR>
+nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | c++filt | less -i<CR>
+nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | c++filt | less -i<CR>
 nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less -i<CR>
 nnoremap ops :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -S ./%c | less -i<CR>
 nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
 nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
-nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | less -i<CR>
+nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | c++filt | less -i<CR>
 
 nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
 vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
@@ -490,6 +492,7 @@ nmap ix :winrun ^ !dhex %d/%c %C<CR>
 nmap im :winrun ^ !mc %d %D<CR>
 nmap if :winrun ^ !$HOME/os_settings/other_files/open_terminal.sh vifm %d %D &<CR>
 nmap it :!touch %c<CR>
+nmap ib :!beautify_file.sh %d/%c<CR>
 command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
