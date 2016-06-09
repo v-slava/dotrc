@@ -87,6 +87,9 @@ xmodmap -e 'keycode 108 = Mode_switch'
 # Press Alt_R+s to produce 'ы'
 # See xmodmap -pke for symbols assigned
 
+# Verbose linking (linker: print linker script, linked objects, libraries, etc.):
+gcc 1.o 2.o -o out.elf -Wl,--verbose
+
 # Create static executable with rust:
 # 1. Emit object file:
 rustc -O --emit obj main.rs
@@ -183,6 +186,15 @@ valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
 
 # Use clang's static analysis:
 scan-build BUILD_COMMAND
+
+# Find *.c files only in specified path:
+find -path './some/path*' -name '*.c
+
+# Execute command for each element found:
+find -exec CMD args_before {} args_after \;
+
+# Find symbol in directory with libraries / object files:
+find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
@@ -866,12 +878,6 @@ sudo hdparm -t DEVICE
 
 # All info elf:
 readelf -a FILE
-
-# Find *.c files only in specified path:
-find -path './some/path*' -name '*.c
-
-# Execute command for each element found:
-find -exec CMD args_before {} args_after \;
 
 # Show video mode resolution ModeLine:
 xvidtune -show

@@ -67,6 +67,7 @@ export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
 # Atmel:
 export CROSS_COMPILE=arm-none-eabi-
 export PATH=$PATH:$HOME/other/toolchains/atmel_gnu_arm-none-eabi/bin
+# export PATH=$PATH:$HOME/other/toolchains/gcc-linaro-4.9-2014.11-x86_64_arm-eabi/bin
 
 # Use bash's vi editing mode:
 set -o vi
