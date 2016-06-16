@@ -100,6 +100,23 @@ rustc -O -Z print-link-args main.rs
 # 2) change "gcc_s" => "gcc_eh"
 # 3) delete "-pie", "-Wl,-Bdynamic"
 
+# get line with specified number from file:
+sed -n '<line number>p' < file
+
+# Delete specified lines interval from file:
+sed -i OLD_FILE -e '<start line>,<end line>d'
+
+# Insert specified line into text file under a given line number:
+sed -i OLD_FILE -e '<line number>i<text to be inserted>'
+# A line, which is currently under <line number> will be
+# under <line number>+1 after execution.
+
+# Replace string by regex:
+cat file_before | sed -e 's/REGEX/STRING_AFTER/g' > file_after
+
+# Delete strings by regex:`
+cat file_before | sed -e '/REGEX/d' > file_after
+
 # Disable GNU Make builtin rules:
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables --no-print-directory
 export MAKEFLAGS
@@ -1024,23 +1041,6 @@ data.dump 0x12345678
 break.set 0x12345678 /condition register(r0)==0x12345678
 go.till register(r0)==0x12
 r.s r4 <value>
-
-# get line with specified number from file:
-sed -n '<line number>p' < file
-
-# Delete specified lines interval from file:
-sed -i OLD_FILE -e '<start line>,<end line>d'
-
-# Insert specified line into text file under a given line number:
-sed -i OLD_FILE -e '<line number>i<text to be inserted>'
-# A line, which is currently under <line number> will be
-# under <line number>+1 after execution.
-
-# Replace string by regex:
-cat file_before | sed -e 's/REGEX/STRING_AFTER/g' > file_after
-
-# Delete strings by regex:`
-cat file_before | sed -e '/REGEX/d' > file_after
 
 # Core dump:
 # grep core_pattern linux_src/Documentation/sysctl/kernel.txt
