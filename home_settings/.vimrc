@@ -342,7 +342,7 @@ nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 set tags=./tags;,tags;
 
 " Add (framework/standard C/C++ library) tags:
-nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR> :cs add ~/.vim/tags/std.cscope<CR>
+nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR>:cs add ~/.vim/tags/std.cscope<CR>
 
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 

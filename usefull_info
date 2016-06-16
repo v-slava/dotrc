@@ -1305,7 +1305,7 @@ interrupt
 # Interrupt all threads (doesn't work if target-async is off):
 interrupt -a
 
-# gdb: write to process memory from file:
+# gdb: write to process memory from file (read from file):
 restore FILE binary START_ADDRESS_IN_MEMORY
 
 # gdb: write to file from process memory [START .. STOP):

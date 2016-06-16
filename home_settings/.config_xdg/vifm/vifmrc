@@ -260,7 +260,7 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
 " fileviewer *.7z 7z l %c
 
 " Office files
-filextype *.rtf,*.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx libreoffice %f %i &
+filextype *.rtf,*.fodt,*.odt,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
