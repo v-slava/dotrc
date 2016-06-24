@@ -1,1 +1,4 @@
-https?://(banking.postbank.de|kreditkarten-banking.lbb.de|accounts.google.com)/*
+https?://accounts.google.com/* gmail
+https?://banking.postbank.de/* postbank
+https?://kreditkarten-banking.lbb.de/* lbb
+https?://www.amazon.de/* amazon
