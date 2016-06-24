@@ -127,6 +127,7 @@ MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Debug Makefile:
 make -d
+make -p
 # Variables "V" or "VERBOSE" are normally analysed by Makefiles:
 make V=1
 make VERBOSE=1

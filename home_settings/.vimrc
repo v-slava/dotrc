@@ -748,6 +748,8 @@ endfunction
 command! -nargs=1 InsertNumbers call My_insert_numbers(<f-args>)
 nmap <Leader>dn :InsertNumbers 
 
+" To insert echo (for Makefile) use the following macro:
+let @e = 'i	@echo "|$()|"hhi'
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.
