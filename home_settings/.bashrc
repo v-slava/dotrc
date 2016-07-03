@@ -8,19 +8,20 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # Git aliases:
+source /usr/share/bash-completion/completions/git
 # alias glog='git log --all --graph --decorate'
 alias glog='git log --all --graph --decorate | cless -i'
-alias ga="git add"
-alias gs="git status"
-alias gsh="git show HEAD"
-alias gd="git diff"
-alias gco="git commit"
-alias gch="git checkout"
-source /usr/share/bash-completion/completions/git
+alias ga='git add'
+alias gs='git status'
+alias gsh='~/os_settings/other_files/git_show_HEAD.sh'
+alias gd='git diff'
+__git_complete gd _git_diff
+alias gco='git commit'
+alias gch='git checkout'
 __git_complete gch _git_checkout
-alias gb="~/temporary/beautify.sh"
-alias gph="~/temporary/push.sh"
-alias gpl="git pull"
+alias gb='~/temporary/beautify.sh'
+alias gph='~/temporary/push.sh'
+alias gpl='git pull'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
