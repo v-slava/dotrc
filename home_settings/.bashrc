@@ -16,6 +16,8 @@ alias gsh="git show HEAD"
 alias gd="git diff"
 alias gco="git commit"
 alias gch="git checkout"
+source /usr/share/bash-completion/completions/git
+__git_complete gch _git_checkout
 alias gb="~/temporary/beautify.sh"
 alias gph="~/temporary/push.sh"
 alias gpl="git pull"
