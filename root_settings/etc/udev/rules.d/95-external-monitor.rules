@@ -1,0 +1,1 @@
+SUBSYSTEM=="drm", ACTION=="change", RUN+="/media/files/workspace/dotrc/other_files/external_monitor.sh"

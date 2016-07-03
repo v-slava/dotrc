@@ -23,4 +23,6 @@ cp /usr/share/vim/addons/plugin/vifm.vim /usr/share/vim/vim74/plugin/
 
 # update fonts cache:
 fc-cache -fv
+# restart udev:
+service udev restart
 

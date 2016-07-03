@@ -31,6 +31,9 @@ case "$IN" in
 		echo -n "$OUT"
 		# echo -n "cargo run"
 	;;
+	*.nim)
+		echo -n "$OUT"
+	;;
 	*.S)
 		echo -n "cat /tmp/assemble_sh_text"
 	;;

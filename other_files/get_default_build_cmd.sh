@@ -31,6 +31,10 @@ case "$IN" in
 		echo -n "rustc \"$IN\" -o \"$OUT\""
 		# echo -n "cargo build"
 	;;
+	*.nim)
+		echo -n "/usr/local/bin/nim/bin/nim -d:release --opt:size c -o:\"$OUT\" --nimcache:\"${OUT_DIR}/nimcache\" \"$IN\""
+		# --debuginfo --opt:speed
+	;;
 	*.S)
 		echo -n "assemble.sh -t \"$IN\" > /tmp/assemble_sh_text"
 	;;
