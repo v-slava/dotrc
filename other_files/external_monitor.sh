@@ -8,6 +8,6 @@ if [ $id = "0" ]; then
 	exit
 fi
 
-DISPLAY=:0 zenity --info --title "$(basename $0)" --text "$0 has been called due to /etc/udev/rules.d/95-external-monitor.rules"
-
+export DISPLAY=:0
 ~/os_settings/other_files/xrandr.sh external_monitor.sh
+zenity --info --title "$(basename $0)" --text "$0 has been called due to /etc/udev/rules.d/95-external-monitor.rules"
