@@ -1324,6 +1324,9 @@ cond <bnum> <expression> # stop if <expression> == true
 b LOCATION if CONDITION
 ignore <bnum> <count>
 
+# GDB set a breakpoint for all functions matching REGEXP:
+rbreak func_prefix_*
+
 # GDB breakpoints on read/write:
 # watch *0xaab12450 [mask 0xfffffff0]
 watch -  only breaks on write
