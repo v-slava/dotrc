@@ -1048,9 +1048,9 @@ r.s r4 <value>
 # cat /proc/sys/kernel/core_pattern
 # man core
 # man bash # search for ulimit
+echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 ulimit -c unlimited
 ulimit -a
-echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 # now launch executable crashed..
 
 # Restore deleted file:
