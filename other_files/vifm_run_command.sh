@@ -19,7 +19,7 @@ VIFM_END='\x1b[36m'
 
 echo -e "${VIFM_COMMAND_PREFIX}Command:${VIFM_RESET_COLORS}\n${COMMAND_TO_RUN}\n${VIFM_OUTPUT_PREFIX}Command output:${VIFM_RESET_COLORS}"
 
-${COMMAND_TO_RUN}
+echo "${COMMAND_TO_RUN}" | bash
 EXIT_CODE=$?
 if [ $EXIT_CODE -eq 0 ]; then
 	echo -e "${VIFM_EXIT_CODE_SUCCESS}Command succeeded (exit code = $EXIT_CODE)"

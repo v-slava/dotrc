@@ -436,10 +436,10 @@ vmap q :exit<CR>
 
 " Launch programs:
 nnoremap rg :!./%c %i &<CR>
-nnoremap rs :!! $HOME/os_settings/other_files/vifm_run_command.sh "./%c"<CR>
+nnoremap rs :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "./%c"<CR>
 " Launch make:
-nnoremap rm :!! $HOME/os_settings/other_files/vifm_run_command.sh "make"<CR>
-nnoremap rc :!! $HOME/os_settings/other_files/vifm_run_command.sh "make clean"<CR>
+nnoremap rm :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make"<CR>
+nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make clean"<CR>
 
 nmap V :!vim<space>
 nmap E :!e<space>
