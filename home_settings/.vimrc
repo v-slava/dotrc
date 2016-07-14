@@ -397,10 +397,9 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 		endif
 	endif
 endfunction
-" build begin (with warinings):
 nmap <silent> <Leader>ob :wa<CR>:call Build_and_run(g:build_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
-nmap <silent> <Leader>of :wa<CR>:call Build_and_run(g:build_cmd_fail, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
-" rebuild begin (with warinings):
+nmap <silent> <Leader>of :wa<CR>:call Build_and_run(g:build_cmd_fast, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
+nmap <silent> <Leader>oa :wa<CR>:call Build_and_run(g:build_cmd_all, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
 function Close_window_if_temporary()
