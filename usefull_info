@@ -1,3 +1,15 @@
+# Icecream:
+sudo apt-get install icecc icecc-monitor
+# kill icecc-scheduler, if present
+sudo service iceccd restart
+# create symlinks "clang" and "clang++" in "/usr/lib/icecc/bin"
+cd $HOME/other/toolchains/icecc
+/usr/lib/icecc/icecc-create-env --gcc /usr/bin/gcc /usr/bin/g++
+/usr/lib/icecc/icecc-create-env --clang /usr/bin/clang /usr/bin/clang++
+# Icecream GUI monitor:
+icemon
+# for environment settings see .bashrc
+
 # Switch to russian language (add to ~/.bashrc):
 export LANG=ru_RU.UTF-8
 export LANGUAGE=ru
