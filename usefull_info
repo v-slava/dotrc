@@ -417,7 +417,7 @@ nbtscan 192.168.2.3/16
 # Mount folder over SSH:
 sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
 
-# List services available on server:
+# List samba services available on server:
 smbclient -U USER_NAME[%PASSWORD] -W DOMAIN -L SERVER
 # mount smb share with cifs-utils with separate credentials file:
 mount -t cifs -o credentials=/file/with/smb_credentials //server_name/share_name /mount/point
