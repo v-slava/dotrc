@@ -39,6 +39,8 @@ pactl set-card-profile CARD_INDEX PROFILE_NAME
 pactl list sinks
 # Get list of input devices (microphone):
 pactl list sources
+# Get list of application producing sound:
+pacmd list-sink-inputs
 
 # i3wm turn off monitor (move workspaces to LVDS1):
 xrandr --output HDMI1 --off

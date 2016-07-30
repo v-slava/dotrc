@@ -78,6 +78,11 @@ EOF
 	BT_SINK="$(~/os_settings/other_files/get_sink_name.sh bluez_sink)"
 	pacmd set-default-sink "$BT_SINK"
 	~/os_settings/other_files/set_volume.sh 20%
+	# Move application producing sound to bluetooth headset:
+	SINK_INPUT_INDICES=$(pacmd list-sink-inputs | grep 'index: ' | cut -d':' -f2 | cut -d' ' -f2)
+	for sink_input_index in $SINK_INPUT_INDICES ; do
+		pacmd move-sink-input $sink_input_index $BT_SINK
+	done
 	echo "Connected to bluetooth headset $(hcitool name $BT_MAC) (MAC = $BT_MAC)."
 fi
 
