@@ -1,5 +1,8 @@
 # Write your default config options here!
 
+# For console mp3 playing instead of mpg321:
+volume=80
+
 # Audio stream ID:
 # aid=2
 double=yes
