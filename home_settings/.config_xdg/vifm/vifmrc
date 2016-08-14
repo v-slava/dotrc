@@ -165,7 +165,7 @@ filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
 " fileviewer *.flac soxi
 
 " Video
-filextype *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
+filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
 	\ smplayer %f &,
 	\ mplayer %f &,
 	\ ffplay -fs %c,
