@@ -16,5 +16,5 @@ set -e
 if [ ! -f "$FILE_PATH" ]; then
 	unzip $SOUNDS "$FILE_NAME" -d "$DIR"
 fi
-mpg321 "$FILE_PATH"
+mplayer "$FILE_PATH"
 

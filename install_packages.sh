@@ -19,7 +19,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect mpg321 lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd
+	expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd
 
 apt-file update
 
