@@ -197,6 +197,8 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
 	\ sxiv %f,
 	\ gpicview %c,
 
+filextype *.xcf
+	\ gimp %f,
 
 " fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm convert -identify %f -verbose /dev/null
 
