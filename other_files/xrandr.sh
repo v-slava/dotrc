@@ -12,3 +12,11 @@ else
 	fi
 fi
 
+if xrandr | grep -q 'VGA1 connected' ; then
+	xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1
+else
+	if [ "$1" = "external_monitor.sh" ]; then
+		xrandr --output VGA1 --off
+	fi
+fi
+
