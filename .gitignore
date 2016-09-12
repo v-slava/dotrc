@@ -3,3 +3,10 @@
 /bin/teamviewer
 /bin/tup
 /bin/idea.sh
+
+# second:
+/bin/xterm
+/bin/vs
+/bin/edbg
+/bin/beautify_file.sh
+
