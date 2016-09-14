@@ -2,7 +2,7 @@
 
 usage()
 {
-	echo "Usage: $(basename $0) [-h] [-s] REGEX
+	echo "Usage: $(basename $0) [-h] [-s] REGEX [ADDITIONAL_ag_ARGUMENTS]
 Use \"-h\" to search in headers only, \"-s\" to search in source files only." 1>&2
 	exit 1
 }
@@ -26,6 +26,7 @@ else
 	fi
 fi
 REGEX="$1"
+shift
 
-ag "$REGEX" -G "$FILES"
+ag "$REGEX" -G "$FILES" $@
 

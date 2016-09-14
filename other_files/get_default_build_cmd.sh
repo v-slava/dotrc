@@ -12,7 +12,7 @@ source ~/os_settings/other_files/vim_ide_common.sh
 IN="$1"
 OUT="${OUT_DIR}/${IN}.out"
 # FLAGS=" -Wall -Wextra -Werror "
-FLAGS=" -Wall -Wextra -std=c++11 "
+FLAGS=" -Wall -Wextra "
 
 case "$IN" in
 	*.html)
@@ -22,7 +22,7 @@ case "$IN" in
 		echo -n "chmod +x \"$IN\""
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)
-		echo -n "g++ \"$IN\" $FLAGS -o \"$OUT\""
+		echo -n "g++ \"$IN\" $FLAGS -std=c++11 -o \"$OUT\""
 	;;
 	*.c)
 		echo -n "gcc \"$IN\" $FLAGS -o \"$OUT\""
