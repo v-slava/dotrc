@@ -127,7 +127,7 @@ set mouse=a
 set autoindent
 " set cindent " C-style indents (after '{' and so on)
 " set smartindent
-" set number " display line numbers
+set number " display line numbers
 set relativenumber
 " set nowrap " do not wrap long lines
 set linebreak
