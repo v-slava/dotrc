@@ -39,3 +39,6 @@ for FILE in $FILES_LIST ; do
 	cat "$FILE" >> ~/$FILE
 done
 
+cd ~/.vim/bundle
+vim -u NONE -c "helptags vim-fugitive/doc" -c q
+

@@ -686,13 +686,32 @@ function! OpenFile(win, cmd) " at least one colon expected
 	endif
 	execute a:cmd . ' ' . l:ret
 endfunction
-nmap <Leader>ft :call OpenFile('cur_win', 'tabopen')<CR>
+nmap <Leader>ft :call OpenFile('cur_win', 'tabedit')<CR>
 nmap <Leader>fj :call OpenFile('cur_win', 'e')<CR>
 nmap <Leader>fv :call OpenFile('cur_win', 'vsp')<CR>
 nmap <Leader>fh :call OpenFile('cur_win', 'sp')<CR>
 nmap <Leader>fpj :call OpenFile('prev_win', 'e')<CR>
 nmap <Leader>fpv :call OpenFile('prev_win', 'vsp')<CR>
 nmap <Leader>fph :call OpenFile('prev_win', 'sp')<CR>
+
+" Fugitive (git):
+" :copen - open quickfix window
+nmap <Leader>gs :Gstatus<CR>
+" In status window use:
+" g?    show help
+" "-" to "git add" or "git reset" file (depending on where your cursor is).
+" <c-n> to go to next file, <c-p> to go to previous file.
+" <Enter> to open current file in window below.
+" ca    :Gcommit --amend
+nmap <Leader>gb :Gblame<CR>
+" Diff against index:
+nmap <Leader>gdi :Gvdiff<CR>
+" Diff against HEAD:
+nmap <Leader>gdh :Gvdiff HEAD<CR>
+nmap <Leader>gw :Gwrite<CR>
+nmap <Leader>gr :Gread<CR>
+nmap <Leader>gc :Gcommit<CR>
+nmap <Leader>ga :Gcommit --amend<CR>
 
 if has('nvim')
 	" First invoke terminal:
@@ -713,8 +732,8 @@ if has('nvim')
 		startinsert
 	endfunction
 	command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)
-	nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
-	nmap <Leader>ga :GitCopy 
+	" nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
+	" nmap <Leader>ga :GitCopy 
 endif
 
 function! My_eval_replace()

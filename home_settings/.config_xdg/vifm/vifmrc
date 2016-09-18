@@ -356,6 +356,7 @@ nnoremap cc cw<c-u>
 nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
+vmap cv :rename<CR>
 " nnoremap A cw<c-w>
 
 " Toggle wrap setting on ,w key
@@ -378,8 +379,10 @@ mark d ~/downloads
 " mark o ~/other
 mark t ~/temporary
 mark T /tmp
-mark w ~/workspace
-mark o ~/os_settings
+" mark w ~/workspace
+mark w /media/files/workspace
+" mark o ~/os_settings
+mark o /media/files/workspace/dotrc
 mark u /media/usb
 mark f /media/files
 mark n /media/files/music/new
