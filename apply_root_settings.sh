@@ -15,7 +15,7 @@ if systemctl is-enabled systemd-networkd.service ; then
 	systemctl disable systemd-networkd.service
 fi
 # systemctl status wpa_supplicant
-systemctl set-default volkov.target
+systemctl set-default native.target
 
 # apply vifm settings to vim:
 cp /usr/share/vim/syntax/vifm.vim /usr/share/vim/vim74/syntax/

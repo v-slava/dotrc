@@ -2,7 +2,12 @@
 After=systemd-user-sessions.service
 
 [Service]
-ExecStart=/bin/su %i -l -c /usr/bin/startx -- VT06
+ExecStart=/bin/su volkov -l -c "/home/volkov/os_settings/other_files/apply_i3_config.sh ; exec /usr/bin/startx -- -configdir %i"
+# ExecStart=/bin/su volkov -l -c "exec /usr/bin/startx -- -configdir %i"
+
+# %i means input argument (either from native.target or virtual.target)
+# passing vt0X works from second time only (why?) -> do not use.
+# ExecStart=/bin/su USER_NAME -l -c "/usr/bin/startx -- vt06"
 
 [Install]
 WantedBy=multi-user.target

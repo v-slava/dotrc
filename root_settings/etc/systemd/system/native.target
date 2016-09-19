@@ -1,7 +1,7 @@
 # A target to run startx from user 'noob'
 
 [Unit]
-Description=startx noob
+Description=startx native
 Requires=multi-user.target
 Conflicts=rescue.target
 

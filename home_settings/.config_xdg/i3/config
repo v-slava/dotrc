@@ -31,8 +31,8 @@ bindsym $WIN+Escape kill
 # "minimize" window (moove to workspace 10):
 bindsym $WIN+Tab move container to workspace 10
 
-# switch to virtual console 1
-bindsym $CTRL+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
+# switch to virtual console 2
+bindsym $CTRL+$ALT_L+F2 exec --no-startup-id exec sudo chvt 2
 
 # change focus
 # bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
@@ -87,6 +87,7 @@ bindsym $Alt_L+9 workspace 9
 bindsym $Alt_L+0 workspace 10
 
 # Workspace-output assignments:
+# SED workspace native begin
 workspace 1 output LVDS1
 workspace 2 output HDMI1
 workspace 3 output LVDS1
@@ -97,6 +98,33 @@ workspace 7 output LVDS1
 workspace 8 output HDMI1
 workspace 9 output LVDS1
 workspace 10 output HDMI1
+# Start i3bar:
+bar {
+	# status_command exec i3status
+	status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
+	tray_output LVDS1
+}
+# SED workspace native end
+
+# SED workspace virtual begin
+workspace 1 output VGA-1
+workspace 2 output VGA-0
+workspace 3 output VGA-2
+workspace 4 output VGA-1
+workspace 5 output VGA-0
+workspace 6 output VGA-2
+workspace 7 output VGA-1
+workspace 8 output VGA-0
+workspace 9 output VGA-2
+workspace 10 output VGA-0
+# Start i3bar:
+bar {
+	status_command exec i3status
+	# status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
+	tray_output VGA-0
+}
+exec --no-startup-id sleep 1 && exec ~/os_settings/other_files/xrandr.sh xinitrc
+# SED workspace virtual end
 
 # Focus initial workspace:
 exec --no-startup-id exec i3-msg "workspace 1"
@@ -134,13 +162,6 @@ mode "resize" {
 }
 
 bindsym $Alt_L+r mode "resize"
-
-# Start i3bar:
-bar {
-	# status_command exec i3status
-	status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
-	tray_output LVDS1
-}
 
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen

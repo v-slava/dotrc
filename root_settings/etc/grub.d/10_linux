@@ -328,9 +328,9 @@ while [ "x$list" != "x" ] ; do
   fi
 
   # My code begin:
-  if [ "x${ENABLE_NOOB_LINUX}" = "xtrue" ]; then
-    linux_entry "Noob ${OS}" "${version}" simple \
-      "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT} ${CMDLINE_NOOB_LINUX}"
+  if [ "x${ENABLE_MY_GRUB_MENU_ENTRY}" = "xtrue" ]; then
+    linux_entry "My entry: ${OS}" "${version}" simple \
+      "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT} ${CMDLINE_MY_GRUB_MENU_ENTRY}"
   fi
   # My code end
 
