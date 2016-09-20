@@ -545,6 +545,14 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git repository as shared folder:
+# Write:
+git push -f REMOTE BRANCH
+# Read:
+git fetch REMOTE
+git checkout -B BRANCH
+git reset REMOTE/BRANCH --hard
+
 # To revert branch from some commit, first find a commit in logs:
 cat REPO_ROOT/.git/logs/refs/heads/*
 # Create new branch pointing to this commit:
@@ -633,6 +641,9 @@ git rebase --continue
 
 git log --graph --pretty=format:"%d %h %ai %an %s"
 git log --graph --all --decorate
+
+# rsync example:
+rsync -avP --delete --exclude=.git/* --exclude=obj/* --exclude=*.opendb --exclude=.vs/* SRC_DIR DESTINATION_DIR
 
 # Alsa sound recording (tee plugin):
 aplay -v -Dtee:\'plughw:0,0\',./raw_samples_file,raw FILE.wav
