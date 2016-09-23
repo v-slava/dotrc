@@ -705,13 +705,18 @@ nmap <Leader>gs :Gstatus<CR>
 " ca    :Gcommit --amend
 nmap <Leader>gb :Gblame<CR>
 " Diff against index:
-nmap <Leader>gdi :Gvdiff<CR>
+nmap <Leader>gdi :Gdiff<CR>
 " Diff against HEAD:
-nmap <Leader>gdh :Gvdiff HEAD<CR>
+nmap <Leader>gdh :Gdiff HEAD<CR>
 nmap <Leader>gw :Gwrite<CR>
 nmap <Leader>gr :Gread<CR>
-nmap <Leader>gc :Gcommit<CR>
-nmap <Leader>ga :Gcommit --amend<CR>
+nmap <Leader>gco :Gcommit<CR>
+nmap <Leader>gca :Gcommit --amend<CR>
+nmap <Leader>ga <C-w>k-
+" Need for "fugitive-:Gdiff":
+set diffopt+=vertical
+" Search for next unstaged file (TODO):
+" nmap <C-j>/Changes not staged for commit:<CR>
 
 if has('nvim')
 	" First invoke terminal:

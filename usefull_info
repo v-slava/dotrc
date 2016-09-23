@@ -203,9 +203,6 @@ http://forums.mozillazine.org/viewtopic.php?f=48&t=72994
 http://mozilla.dorando.at/keyconfig.xpi
 # See file .icedove/PROFILE/mimeTypes.rdf for default browser
 
-# Add authorization without password:
-ssh-copy-id user@hostname
-
 # Determine unit tests coverage:
 gcc UNIT_TESTS.c -o UNIT_TESTS.out --coverage
 gcov UNIT_TESTS.out
@@ -377,7 +374,8 @@ LANG=ko_KR.EUC-KR gvim file.cpp
 
 # Generate SSH keys:
 ssh-keygen -t rsa -C "user@email.com"
-# SSH no password:
+# Add authorization without password:
+ssh-copy-id user@hostname
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 # check signature:
