@@ -17,4 +17,5 @@ if [ ! -f "$FILE_PATH" ]; then
 	unzip $SOUNDS "$FILE_NAME" -d "$DIR"
 fi
 mplayer "$FILE_PATH"
+# mplayer --volume=70 "$FILE_PATH"
 

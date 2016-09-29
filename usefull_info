@@ -225,6 +225,9 @@ find -exec CMD args_before {} args_after \;
 # Find symbol in directory with libraries / object files:
 find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
+# Display symbols, exported by a shared library (even stripped one):
+nm -D /path/to/libSOMETHING.so
+
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
 
@@ -404,6 +407,9 @@ vim Doxyfile
 doxygen
 # view generated documentation:
 firefox html/index.html
+
+# OpenGL: use software rendering:
+LIBGL_ALWAYS_SOFTWARE=1 glxinfo
 
 # Display the whole server certificate chain:
 openssl s_client -showcerts -connect developer.mozilla.org:443 </dev/null

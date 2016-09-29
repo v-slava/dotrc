@@ -110,7 +110,7 @@ def fill_button_pressed(self):
 		ret = call(["unzip", SOUNDS, english_word + ".mp3", "-d", MEDIA])
 	if ret == 0:
 		audio_field_content = "[sound:" + english_word + ".mp3]"
-		check_call(["mplayer", audio_file])
+		check_call(["mplayer", "--volume=70", audio_file])
 	else:
 		audio_field_content = ""
 		showInfo("No audio found")

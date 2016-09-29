@@ -13,3 +13,4 @@ sudo apt-get update
 sudo apt-get upgrade --yes
 sync
 rm -rf "$LOCK_DIR"
+sleep 10
