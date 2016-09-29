@@ -19,17 +19,20 @@ if [ $FILE_SIZE -gt $FLASH_SIZE ]; then
 	exit 2
 fi
 
-JLINK=~/other/programs/JLink_Linux_V512a_x86_64/JLinkExe
+JLINK=~/other/programs/JLink_Linux_V610a_x86_64/JLinkExe
 JLINK_SCRIPT=/tmp/flash_board_sh.jlink
 cat << EOF > $JLINK_SCRIPT
-h
+r
 loadbin $FILE_TO_FLASH 0x$FLASH_START_ADDRESS
-SetPC 0x$FLASH_START_ADDRESS
-g
+r
 exit
 EOF
-# h = halt, g = go, ? = help, speed 2000
-# exec Device $DEVICE
+# h
+# loadbin $FILE_TO_FLASH 0x$FLASH_START_ADDRESS
+# SetPC 0x$PC
+# g
+# h = halt, g = go, r = Reset target (RESET), ? = help
+
 
 set -x
 cat $JLINK_SCRIPT
