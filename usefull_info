@@ -10,6 +10,76 @@ cd $HOME/other/toolchains/icecc
 icemon
 # for environment settings see .bashrc
 
+# Show which packages can be upgraded from backports:
+apt-get -s -t jessie-backports dist-upgrade
+
+# install package from backports:
+apt-get -t jessie-backports install PACKAGE
+
+# install package of specified version:
+apt-get install PACKAGE=VERSION
+
+# Debian packaging from source:
+# Debian download source package:
+apt-get source PACKAGE
+Got sources with patches applied.
+
+# Install build dependencies:
+apt-get build-dep PACKAGE
+
+# Clear out the local repository of retrieved package files:
+apt-get clean
+
+# Show dependencies to be installed for a package:
+apt-get install -s <package_name>
+apt-rdepends --state-show NotInstalled --state-follow NotInstalled <package_name>
+# Show reverse dependencies:
+apt-cache rdepends <package_name>
+
+# Download sources for a package:
+apt-get source --download-only <package_name>
+
+# Download package from repository:
+apt-get download <package_name>
+
+# list installed packages by installation date:
+ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
+
+# dpkg restore broken installation:
+dpkg --configure -a
+
+# dpkg apt-get add architecture x86-64 x86_64:
+sudo dpkg --add-architecture <arch>
+dpkg --print-foreign-architectures
+sudo apt-get update
+dpkg --remove-architecture <arch>
+
+# Build package from source and do not sign anything:
+dpkg-buildpackage -us -uc
+# View build flags:
+dpkg-buildflags
+# Use -O0 instead of -O2:
+export DEB_BUILD_OPTIONS=noopt
+
+# Install package without root privileges:
+mkdir -p ~/root_dir/var/lib
+cp -r /var/lib/dpkg ~/root_dir/var/lib/
+dpkg --force-not-root --root=$HOME/root_dir --log=$HOME/var_log_dpkg.log -i <package_name>
+
+# Show files in package:
+apt-file list <package_name_from_repository>
+dpkg -L <installed_package_name>
+dpkg -c <package>.deb
+
+# Extract files from package:
+ar xv <package>.deb
+
+# Search for a file from installed packages:
+dpkg -S FILE
+
+# Find all packages that provide www-browser:
+aptitude search '~Pwww-browser'
+
 # Switch to russian language (add to ~/.bashrc):
 export LANG=ru_RU.UTF-8
 export LANGUAGE=ru
@@ -843,84 +913,11 @@ pmemsave <address> <size> <file>
 # Switch to qemu's console:
 <Ctrl> + A     <pause>     C
 
-# Show which packages can be upgraded from backports:
-apt-get -s -t jessie-backports dist-upgrade
-
-# install package from backports:
-apt-get -t jessie-backports install PACKAGE
-
-# Debian packaging from source:
-# Debian download source package:
-apt-get source PACKAGE
-Got sources with patches applied.
-
-# Install build dependencies:
-apt-get build-dep PACKAGE
-
-# Clear out the local repository of retrieved package files:
-apt-get clean
-
-# Show dependencies to be installed for a package:
-apt-get install -s <package_name>
-apt-rdepends --state-show NotInstalled --state-follow NotInstalled <package_name>
-# Show reverse dependencies:
-apt-cache rdepends <package_name>
-
 # Run arm executable using qemu-arm:
 sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
 sudo apt-get install libc6-dev-armel-cross # arm C library development files
 arm-linux-gnueabi-gcc -static 1.c
 qemu-arm a.out
-
-# Install nfs server package:
-sudo apt-get install nfs-kernel-server
-# Rootfs via nfs - kernel cmdline options:
-KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
-# Restart nfs service:
-service nfs-kernel-server restart
-# nfs server config (/etc/exports):
-/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
-
-# Download sources for a package:
-apt-get source --download-only <package_name>
-
-# Download package from repository:
-apt-get download <package_name>
-
-# list installed packages by installation date:
-ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
-
-# dpkg restore broken installation:
-dpkg --configure -a
-
-# dpkg apt-get add architecture x86-64 x86_64:
-sudo dpkg --add-architecture <arch>
-dpkg --print-foreign-architectures
-sudo apt-get update
-dpkg --remove-architecture <arch>
-
-# Build package from source and do not sign anything:
-dpkg-buildpackage -us -uc
-# View build flags:
-dpkg-buildflags
-# Use -O0 instead of -O2:
-export DEB_BUILD_OPTIONS=noopt
-
-# Install package without root privileges:
-mkdir -p ~/root_dir/var/lib
-cp -r /var/lib/dpkg ~/root_dir/var/lib/
-dpkg --force-not-root --root=$HOME/root_dir --log=$HOME/var_log_dpkg.log -i <package_name>
-
-# Show files in package:
-apt-file list <package_name_from_repository>
-dpkg -L <installed_package_name>
-dpkg -c <package>.deb
-
-# Extract files from package:
-ar xv <package>.deb
-
-# Search for a file from installed packages:
-dpkg -S FILE
 
 # Extract .jar file (java library):
 jar xf FILE.jar
@@ -930,6 +927,15 @@ javap -p FILE.class
 
 # Measure disk speed:
 sudo hdparm -t DEVICE
+
+# Install nfs server:
+sudo apt-get install nfs-kernel-server
+# Rootfs via nfs - kernel cmdline options:
+KERNEL_CMDLINE:root=/dev/nfs nfsroot=192.168.1.1:/path/to/rootfs_mnt rw ip=dhcp console=ttyS0,115200n8 sdp_hwaddr=SOME_MAC
+# Restart nfs service:
+service nfs-kernel-server restart
+# nfs server config (/etc/exports):
+/path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
 
 # All info elf:
 readelf -a FILE
@@ -1173,9 +1179,6 @@ lsblk
 #                        can cd to folder, can't ls folder contents.
 # Folder write access:   can create new files,
 #                        can delete existed ones if execute folder access available.
-
-# Find all packages that provide www-browser:
-aptitude search '~Pwww-browser'
 
 # Format partition as a swap:
 mkswap -L linux_swap /dev/sdaX
