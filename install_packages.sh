@@ -108,10 +108,7 @@ apt-get update
 
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
-# libreoffice-pdfimport abiword gnumeric mupdf zathura suckless-tools # (dmenu)
-# gliv kolourpaint4 vlc apvlv fonts-inconsolata
+# libreoffice-pdfimport abiword gnumeric mupdf suckless-tools # (dmenu)
+# kolourpaint4 vlc apvlv fonts-inconsolata
 # claws-mail-multi-notifier claws-mail # On wheezy: claws-mail-trayicon
-
-# On wheezy: iproute2 conflicts with iproute, but ifupdown depends on iproute
-# Wheezy-only packages: iproute ifupdown dhcpcd5 rsyslog uncrustify
 
