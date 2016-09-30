@@ -87,7 +87,7 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl
 make -f ~/os_settings/other_files/Makefile_dmenu
 
 # Coreutils viewer:
-apt-get install libncurses5-dev
+apt-get install libncurses5-dev pkg-config
 make -f ~/os_settings/other_files/Makefile_coreutils_viewer
 
 # vifm:

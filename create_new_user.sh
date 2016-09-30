@@ -23,4 +23,5 @@ echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
 
 usermod -a -G audio,video,systemd-journal,bluetooth,netdev,plugdev,vboxsf $USER_NAME
 # usermod -a -G fuse $USER_NAME
+passwd $USER_NAME
 
