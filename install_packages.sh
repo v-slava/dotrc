@@ -84,7 +84,6 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl
 # On wheezy: chromium-browser-l10n
 
 # dmenu:
-apt-get install libx11-dev libxinerama-dev libxft-dev libxmu-dev
 make -f ~/os_settings/other_files/Makefile_dmenu
 
 # Coreutils viewer:

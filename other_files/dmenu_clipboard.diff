@@ -1,27 +1,42 @@
 diff -urp a/config.mk b/config.mk
 --- a/config.mk
 +++ b/config.mk
-@@ -18,13 +18,13 @@ XFTLIBS  = -lXft -lXrender -lfreetype -l
- 
+@@ -5,12 +5,12 @@ VERSION = 4.6
+ PREFIX = /usr/local
+ MANPREFIX = ${PREFIX}/share/man
+
+-X11INC = /usr/X11R6/include
++X11INC = /usr/include
+ X11LIB = /usr/X11R6/lib
+
+ # Xinerama, comment if you don't want it
+-XINERAMALIBS  = -lXinerama
+-XINERAMAFLAGS = -DXINERAMA
++# XINERAMALIBS  = -lXinerama
++# XINERAMAFLAGS = -DXINERAMA
+
+ # freetype
+ FREETYPELIBS = -lfontconfig -lXft
+@@ -20,12 +20,12 @@ FREETYPEINC = ${X11INC}/freetype2
+
  # includes and libs
- INCS = -I${X11INC} ${XFTINC}
--LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS}
-+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS} -lXmu
- 
+ INCS = -I${X11INC} -I${FREETYPEINC}
+-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
++LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXmu
+
  # flags
- CPPFLAGS = -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
- #CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
--CFLAGS   = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+-CPPFLAGS = -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
++CPPFLAGS = -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} -O2 -flto
+ CFLAGS   = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
 -LDFLAGS  = -s ${LIBS}
-+CFLAGS   = -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS} -O2 -flto
 +LDFLAGS  = -s ${LIBS} -O2 -flto
- 
+
  # compiler and linker
  CC = cc
 diff -urp a/dmenu.1 b/dmenu.1
 --- a/dmenu.1
 +++ b/dmenu.1
-@@ -10,6 +10,8 @@ dmenu \- dynamic menu
+@@ -12,6 +12,8 @@ dmenu \- dynamic menu
  .IR lines ]
  .RB [ \-p
  .IR prompt ]
@@ -30,7 +45,7 @@ diff -urp a/dmenu.1 b/dmenu.1
  .RB [ \-fn
  .IR font ]
  .RB [ \-nb
-@@ -137,11 +139,8 @@ Delete line left
+@@ -152,11 +154,8 @@ Delete line left
  C\-w
  Delete word left
  .TP
@@ -47,7 +62,7 @@ diff -urp a/dmenu.1 b/dmenu.1
 diff -urp a/dmenu.c b/dmenu.c
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -8,6 +8,7 @@
+@@ -10,6 +10,7 @@
  #include <X11/Xlib.h>
  #include <X11/Xatom.h>
  #include <X11/Xutil.h>
@@ -55,49 +70,33 @@ diff -urp a/dmenu.c b/dmenu.c
  #ifdef XINERAMA
  #include <X11/extensions/Xinerama.h>
  #endif
-@@ -68,6 +69,13 @@ static XIC xic;
- static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
- static char *(*fstrstr)(const char *, const char *) = strstr;
+@@ -28,6 +29,13 @@
+ /* enums */
+ enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
  
 +enum CLIPBOARD
 +{
 +	PRIMARY,
 +	SECONDARY,
-+	CLIPBOARD
++	CLIPBOARD,
 +} clipboard = CLIPBOARD;
 +
- int
- main(int argc, char *argv[]) {
- 	Bool fast = False;
-@@ -90,6 +98,16 @@ main(int argc, char *argv[]) {
- 		else if(i+1 == argc)
- 			usage();
- 		/* these options take one argument */
-+		else if(!strcmp(argv[i], "-selection"))
-+		{
-+			++i;
-+			if(!strcmp(argv[i], "primary"))
-+				clipboard = PRIMARY;
-+			else if(!strcmp(argv[i], "secondary"))
-+				clipboard = SECONDARY;
-+			else
-+				clipboard = CLIPBOARD;
-+		}
- 		else if(!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
- 			lines = atoi(argv[++i]);
- 		else if(!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
-@@ -287,10 +305,6 @@ keypress(XKeyEvent *ev) {
- 			while(cursor > 0 && text[nextrune(-1)] != ' ')
+ struct item {
+ 	char *text;
+ 	struct item *left, *right;
+@@ -319,11 +327,6 @@ keypress(XKeyEvent *ev)
+ 			while (cursor > 0 && text[nextrune(-1)] != ' ')
  				insert(NULL, nextrune(-1) - cursor);
  			break;
 -		case XK_y: /* paste selection */
--			XConvertSelection(dc->dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
+-		case XK_Y:
+-			XConvertSelection(dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
 -			                  utf8, utf8, win, CurrentTime);
 -			return;
- 		default:
- 			return;
- 		}
-@@ -302,6 +316,18 @@ keypress(XKeyEvent *ev) {
+ 		case XK_Return:
+ 		case XK_KP_Enter:
+ 			break;
+@@ -341,6 +344,18 @@ keypress(XKeyEvent *ev)
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
@@ -108,11 +107,26 @@ diff -urp a/dmenu.c b/dmenu.c
 +			{
 +				case PRIMARY: sel = XA_PRIMARY; break;
 +				case SECONDARY: sel = XA_SECONDARY; break;
-+				case CLIPBOARD: sel = XA_CLIPBOARD(dc->dpy); break;
++				case CLIPBOARD: sel = XA_CLIPBOARD(dpy); break;
 +			}
-+			XConvertSelection(dc->dpy, sel, utf8, utf8, win, CurrentTime);
++			XConvertSelection(dpy, sel, utf8, utf8, win, CurrentTime);
 +			return;
 +		}
  		default:
  			return;
  		}
+@@ -623,6 +638,14 @@ main(int argc, char *argv[])
+ 		if (!strcmp(argv[i], "-v")) {      /* prints version information */
+ 			puts("dmenu-"VERSION);
+ 			exit(0);
++		} else if (!strcmp(argv[i], "-selection")) {
++			++i;
++			if(!strcmp(argv[i], "primary"))
++				clipboard = PRIMARY;
++			else if(!strcmp(argv[i], "secondary"))
++				clipboard = SECONDARY;
++			else
++				clipboard = CLIPBOARD;
+ 		} else if (!strcmp(argv[i], "-b")) /* appears at the bottom of the screen */
+ 			topbar = 0;
+ 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */

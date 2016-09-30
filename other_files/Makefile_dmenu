@@ -1,23 +1,25 @@
 OUT := $(PWD)/dmenu_out
-DMENU_VERSION := dmenu-4.5
+DMENU_VERSION := dmenu-4.6
 DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
 DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
-PATCH_NAME := dmenu-4.5-xft-debian.diff
-PATCH_URL := tools.suckless.org/dmenu/patches/$(PATCH_NAME)
 CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_clipboard.diff
 
+# Generate CLIPBOARD_PATCH:
+# diff -urn dmenu_orig_folder dmenu_modified_folder > dmenu.diff
+# Fix in vim (compare with old version).
+
 PHONY := all
-all: apply_patch
+all: apply_patch install_dependencies
 	make -C $(OUT)/$(DMENU_VERSION)
 	su -c "make -C $(OUT)/$(DMENU_VERSION) install"
 
-PHONY += apply_patch
-apply_patch: $(OUT)/$(DMENU_VERSION) $(OUT)/$(PATCH_NAME)
-	patch -N -d $< -p 1 < $(OUT)/$(PATCH_NAME) || true
-	patch -N -d $< -p 1 < $(CLIPBOARD_PATCH)
+PHONY += install_dependencies
+install_dependencies:
+	su -c "apt-get install libx11-dev libxft-dev libfreetype6-dev libxmu-dev"
 
-$(OUT)/$(PATCH_NAME): | $(OUT)
-	wget -P $| $(PATCH_URL)
+PHONY += apply_patch
+apply_patch: $(OUT)/$(DMENU_VERSION) $(CLIPBOARD_PATCH)
+	patch -N -d $< -p 1 < $(CLIPBOARD_PATCH)
 
 $(OUT)/$(DMENU_VERSION): $(OUT)/$(DMENU_ARCHIVE_NAME)
 	tar xf $< -C $(OUT)
