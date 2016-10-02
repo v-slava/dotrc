@@ -19,11 +19,12 @@ __git_complete gd _git_diff
 alias gco='git commit'
 alias gch='git checkout'
 __git_complete gch _git_checkout
-alias gb='~/temporary/beautify.sh'
+alias gb='git branch'
 alias gph='~/temporary/push.sh'
 alias gpl='git pull'
 alias gpush_test_commit='~/temporary/exchange_push_test_commit.sh'
 alias gfetch_test_commit='~/temporary/exchange_fetch_test_commit.sh'
+alias beautify='~/temporary/beautify.sh'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon

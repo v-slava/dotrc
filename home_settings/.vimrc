@@ -413,8 +413,9 @@ nmap <silent> <Leader>oa :wa<CR>:call Build_and_run(g:build_cmd_all, g:run_cmd, 
 nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:warnings, g:filter, g:run_interactive)<CR>
 
 function Close_window_if_temporary()
-	let l:dir_name=expand('%:p:h')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir' || &l:buftype == 'help' || &l:buftype == 'quickfix'
+	let l:dir_name = expand('%:p:h')
+	let l:file_name = expand('%:t')
+	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
 		execute ':q'
 	endif
 endfunction
@@ -727,6 +728,28 @@ nmap <Leader>ga <C-w>k-
 set diffopt+=vertical
 " Search for next unstaged file (TODO):
 " nmap <C-j>/Changes not staged for commit:<CR>
+
+" Search using ag (silverlight searcher):
+nmap <Leader>ags :Ags 
+" Kill running ag instance:
+nmap <Leader>agk :!~/os_settings/other_files/kill_process_by_unique_name.sh ag<CR><CR>
+" let g:ags_agmaxcount = 2000
+" In search results window press "u" for usage (mappings) information.
+let g:ags_agargs = {
+                \ '--break'             : [ '', '' ],
+                \ '--color'             : [ '', '' ],
+                \ '--color-line-number' : [ '"1;30"', '' ],
+                \ '--color-match'       : [ '"32;40"', '' ],
+                \ '--color-path'        : [ '"1;31"', '' ],
+                \ '--column'            : [ '', '' ],
+                \ '--context'           : [ 'g:ags_agcontext', '-C' ],
+                \ '--group'             : [ '', '' ],
+                \ '--heading'           : [ '', '-H' ],
+                \ '--max-count'         : [ 'g:ags_agmaxcount', '-m' ],
+                \ }
+" Deleted unsupported options:
+                " \ '--filename'          : [ '', '' ],
+                " \ '--numbers'           : [ '', '' ]
 
 if has('nvim')
 	" First invoke terminal:

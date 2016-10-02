@@ -1,0 +1,249 @@
+*ags.txt* Ag search plugin for Vim                          *Ags*
+
+=============================================================
+#                                                           #
+#                  _____     ____  ______                   #
+#                 \__  \   / ___\/  ___/                    #
+#                  / __ \_/ /_/  >___ \                     #
+#                 (____  /\___  /____  >                    #
+#                      \//_____/     \/                     #
+#                                                           #
+=============================================================
+
+CONTENTS                                         *ags-contents*
+
+    1. Intro.............................|ags-intro|
+    2. EditMode..........................|ags-edit-mode|
+    2. Options...........................|ags-options|
+    3. Commands..........................|ags-commands|
+    4. Mappings..........................|ags-mappings|
+    5. Statusline........................|ags-statusline|
+    5. Limitations.......................|ags-limitations|
+
+=============================================================
+INTRO                                               *ags-intro*
+
+Ags is a plugin that allows accessing the search
+functionality of the silver searcher (AG) from Vim.
+It focuses on displaying the search results in a clear
+format and provides several key mappings for easy
+navigation through them. In addition there is an edit
+mode that allows for search and replace in multiple
+files.
+
+=============================================================
+EDIT MODE                                       *ags-edit-mode*
+
+The edit mode can be triggered by pressing E in the search
+window after running a search, or by invoking the
+|:AgsEditSearchResults| command. This will make the results
+window editable and can be used for example to do a search
+and replace in multiple files. Writing the search
+buffer will cause the changes to be written to files. To undo
+any changes first undo them in the search window and then
+write the search buffer again.
+
+=============================================================
+OPTIONS                                           *ags-options*
+
+|ags_loaded|.....................Disable the plugin
+|ags_agexe|......................The ag executable path
+|ags_agmaxcount|.................The --max-count ag param
+|ags_agcontext|..................The --context ag param
+|ags_enable_async|...............Enable async search if supported
+|ags_no_stats|...................Disable showing statistics
+                               in the command bar
+|ags_stats_max_ln|...............The maximum number of lines
+                               before disabling statistics
+|ags_agargs|.....................The predefined ag args
+|ags_edit_show_line_numbers|.....Show line numbers in edit mode
+|ags_edit_skip_if_file_changed|..In edit mode skip write of any
+                               lines that changed outside vim
+|g:ags_winheight|................The search results window
+                               height
+
+-------------------------------------------------------------
+Detailed options:~
+
+                                                    *ags_agexe*
+This is the ag executable path
+>
+    let g:ags_agexe = 'ag'
+<
+
+                                               *ags_agmaxcount*
+This is the max-count parameter to be passed to ag
+>
+    let g:ags_agmaxcount = 2000
+<
+
+                                                *ags_agcontext*
+This is the context parameter to be passed to ag
+>
+    let g:ags_agcontext = 3
+<
+
+                                              *ags_enable_async*
+This is a flag that determines whether to run the ag search
+asynchronously when supported (currently only in neovim)
+>
+    let g:ags_enable_async = 1
+<
+
+                                                 *ags_no_stats*
+Flag to disable showing statistics in the command bar. This
+could be used when displaying statistics in a status line plugin
+such as lightline. In that case use ags#get_status_string to get
+status line information.
+>
+    let g:ags_no_stats = 0
+<
+
+                                             *ags_stats_max_ln*
+This is the maximum number of lines before disabling the
+statistics info that shows when navigating results in the
+search results window. When the number of lines returned by
+ag is larger than the value of this variable the statistics
+are disabled to improve performance.
+>
+    let g:ags_stats_max_ln = 5000
+<
+
+                                   *ags_edit_show_line_numbers*
+This enables showing file line numbers in edit mode as visual
+cues. The file numbers as well as file paths in edit mode are
+not meant to be edited and could result in unwanted changes if
+removed.
+>
+    let g:ags_edit_show_line_numbers = 0
+<
+
+                                *ags_edit_skip_if_file_changed*
+When writing files from edit mode this allows to skip writing
+lines that have changed from outside vim. This could have
+mixed results as some lines will be changed and others not.
+However, the search results window will be updated with the
+file lines exactly as they appear in the file.
+>
+    let g:ags_edit_skip_if_file_changed = 0
+<
+
+                                                *ags_winheight*
+This determines the search results window height. It defaults
+to half the screen.
+>
+    let g:ags_winheight = ''
+<
+
+                                                   *ags_agargs*
+This variable contains the predefined search arguments
+used to ensure that the search results are highlighted
+properly in Vim. Any of these arguments can be overwritten
+when entering the search command.
+>
+    let g:ags_agargs = {
+                \ '--break'             : [ '', '' ],
+                \ '--color'             : [ '', '' ],
+                \ '--color-line-number' : [ '"1;30"', '' ],
+                \ '--color-match'       : [ '"32;40"', '' ],
+                \ '--color-path'        : [ '"1;31"', '' ],
+                \ '--column'            : [ '', '' ],
+                \ '--context'           : [ 'g:ags_agcontext', '-C' ],
+                \ '--filename'          : [ '', '' ],
+                \ '--group'             : [ '', '' ],
+                \ '--heading'           : [ '', '-H' ],
+                \ '--max-count'         : [ 'g:ags_agmaxcount', '-m' ],
+                \ '--numbers'           : [ '', '' ]
+                \ }
+<
+
+=============================================================
+COMMANDS                                         *ags-commands*
+
+                                                         *:Ags*
+:Ags [{file-type}] [{options}] {pattern} [{directory}]
+
+    Runs a recursive search in {directory} for
+    {pattern}. If {pattern} is not specified it
+    will be set to the word under cursor. The
+    {directory} will default to the current directory.
+    {options} and {file-type} are passed directly to
+    the ag executable. In addition a few other options,
+    as set in |ags_agargs|, will be specified for display purposes.
+
+                                                      *:AgsAdd*
+:AgsAdd [{file-type}] [{options}] {pattern} [{directory}]
+
+    Like |:Ags| but the matches are appended to the
+    current search results.
+
+                                                     *:AgsLast*
+:AgsLast
+    Runs the last search. This could be used after entering
+    edit mode to return to view mode.
+
+                                                     *:AgsQuit*
+:AgsQuit
+
+    Closes the search results window whether in edit or
+    view mode.
+
+                                        *:AgsEditSearchResults*
+:AgsEditSearchResults
+
+    Enters edit mode if the search results is open in
+    view mode.
+
+                                          *:AgsShowLastCommand*
+:AgsShowLastCommand
+
+    Displays the command for the last search.
+
+=============================================================
+MAPPINGS                                         *ags-mappings*
+
+Once inside the search results window:~
+
+    p    - navigate file paths forward
+    P    - navigate files paths backwards
+    r    - navigate results forward
+    R    - navigate results backwards
+    a    - display the file path for current results
+    c    - copy to clipboard the file path for current results
+    E    - enter edit mode
+
+    oa   - open file above the results window
+    ob   - open file below the results window
+    ol   - open file to the left of the results window
+    or   - open file to the right of the results window
+    os   - open file in the results window
+    ou   - open file in a previously opened window
+    xu   - open file in a previously opened window and close the search results
+    <CR> - open file in a previously opened window
+
+    q    - close the search results window
+    u    - displays these key mappings
+
+=============================================================
+STATUSLINE                                     *ags-statusline*
+
+To display search results info in the status line use ags#get_status_string()
+See also |ags_no_stats| and |ags_stats_max_ln|
+
+=============================================================
+LIMITATIONS                                   *ags-limitations*
+
+Performing a search could be slow if the search returns too many
+lines. To improve performance in such cases set the context argument to 0 or 1.
+
+For example
+:Ags -C 0 search-pattern
+
+The default is 3 and can be overwritten via |g:ags_agcontext| setting.
+
+In edit mode lines can be changed but no lines can be added or removed.
+Also entering edit mode may lag if there are too many lines in the
+search results window. The context argument mentioned above will help here as well.
+
+=============================================================
+vim:tw=78:et:ft=help:norl:

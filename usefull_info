@@ -619,6 +619,10 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git delete remote branch (from remote repository):
+git push REMOTE --delete BRANCH
+git push REMOTE :BRANCH
+
 # git repository as shared folder:
 # Write:
 git push -f REMOTE BRANCH
@@ -644,10 +648,6 @@ git am < PATCH_FILE
 
 # git change author of commit:
 git commit --amend --author "New Author Name <email@address.com>"
-
-# git delete branch from the remote repository:
-git push origin --delete BRANCH
-git push origin :BRANCH
 
 # create bundle:
 git bundle create BUNDLE_FILE COMMIT_FROM..COMMIT_TO
