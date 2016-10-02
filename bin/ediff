@@ -15,6 +15,8 @@ LEFT="$(realpath "$1")"
 RIGHT="$(realpath "$2")"
 cd
 
+EDIFF_COMMAND='e -d'
+
 # echo "LEFT = |$LEFT|"
 # echo "RIGTH = |$RIGHT|"
 # exit
@@ -32,7 +34,7 @@ if [ ! -d "$LEFT" ]; then
 		usage
 	fi
 	# both files
-	vimdiff -c "set titlestring=vimdiff" "$LEFT" "$RIGHT"
+	$EDIFF_COMMAND "$LEFT" "$RIGHT"
 else
 	if [ ! -d "$RIGHT" ]; then
 		usage
@@ -46,12 +48,11 @@ else
 		echo "line = $line"
 		if [[ $line =~ $reg_exp ]]; then
 			exec 0<&6 # restore original stdin
-			vimdiff -c "set titlestring=vimdiff" "/${BASH_REMATCH[1]}" "/${BASH_REMATCH[2]}"
+			$EDIFF_COMMAND "/${BASH_REMATCH[1]}" "/${BASH_REMATCH[2]}"
 			exec 0<&7 # restore stdin for reading from grep
 		fi
 	done
 	exec 6<&-
 	exec 7<&-
 fi
-
 
