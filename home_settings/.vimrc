@@ -23,7 +23,17 @@
 " | <Leader>rE | -E               | preprocess                                 |
 " +------------+------------------+--------------------------------------------+
 "
+" Generate helptags:
+" cd ~/.vim/bundle/SOME_PLUGIN
+" vim -c "helptags doc | q"
+"
 " :help string-functions
+"
+" Open quickfix window:
+" :copen
+"
+" Open location list window:
+" :lopen
 "
 " To reindent json: 1) Make a selection. 2) :!python -m json.tool
 "
@@ -33,7 +43,6 @@
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
 " In normal mode: 'gq' + motion
 "
-" <C-W>=           - make split windows equal (diff)
 " ]c               - advance to the next block with differences
 " [c               - reverse search for the previous block with differences
 " do (diff obtain) - bring changes from the other file to the current file
@@ -80,8 +89,6 @@
 " :cs  find {querytype} {name}  ==  <C-\>{querytype}
 " :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
 " :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
-"
-" Make windows equal (vsplit): <C-w>= (standard) or '=' (my)
 "
 " reload file: :edit
 "
@@ -131,6 +138,9 @@ set number " display line numbers
 set relativenumber
 " set nowrap " do not wrap long lines
 set linebreak
+
+" Fix backspace befavior:
+set backspace=2
 
 " Use fd instead of <esc> to exit from insert mode:
 inoremap fd <esc>
@@ -183,16 +193,12 @@ nmap <Leader>vp :bprevious<CR>
 nmap <Leader>ws :split<CR>
 nmap <Leader>wv :vsplit<CR>
 
-" Switch focus to vim window:
-nmap <Leader>wh <C-w>h
-nmap <Leader>wl <C-w>l
-nmap <Leader>wj <C-w>j
-nmap <Leader>wk <C-w>k
+" Switch focus to vim window <Leader>w{h|l|j|k}:
+nmap <Leader>w <C-w>
+" <Leader>w=           - make split windows equal (diff)
 
+" Clear current line:
 nmap <Leader>oe $d0x
-
-" Use '=' to make windows size equal:
-nmap = <C-W>=
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to character within current line:
@@ -236,7 +242,7 @@ autocmd BufEnter .spacemacs setlocal filetype=lisp
 autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
-autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
+" autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
@@ -292,7 +298,11 @@ autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " Use gq in normal or visual mode to force textwidth
 
 function! OpenLocation()
-	execute "ll " . line('.')
+	if &l:buftype == 'quickfix'
+		execute "cc " . line('.')
+	else
+		execute "ll " . line('.')
+	endif
 	normal zz
 endfunction
 " Open location in QuickFix window:

@@ -1,0 +1,14 @@
+PHONY := all
+all: download_git
+	make -C neovim CMAKE_BUILD_TYPE=Release -j 9
+	su -c "make -C neovim install"
+
+PHONY += download_git
+download_git:
+	git clone https://github.com/neovim/neovim
+	cd neovim && git tag
+
+PHONY += clean
+clean:
+	rm -rf neovim
+

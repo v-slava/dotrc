@@ -41,6 +41,3 @@ done
 
 ~/os_settings/other_files/apply_i3_config.sh
 
-cd ~/.vim/bundle
-vim -u NONE -c "helptags vim-fugitive/doc" -c q
-
