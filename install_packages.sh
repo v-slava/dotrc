@@ -10,7 +10,7 @@ apt-get upgrade --yes
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	vim vifm less bash-completion python youtube-dl cclive bvi \
 	apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
-	wpasupplicant iputils-ping iproute2 wireless-tools iptables traceroute wget \
+	wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
 	openssh-client sshfs fuse silversearcher-ag kbd \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
