@@ -74,7 +74,8 @@ export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
 export PATH=/usr/lib/icecc/bin:$PATH
 export ICECC_CC=/usr/bin/clang
 export ICECC_CXX=/usr/bin/clang++
-export ICECC_VERSION=$HOME/other/toolchains/icecc/clang-3.5-slava_482bb6f7e16f79546cd92e1769942263.tar.gz
+export ICECC_VERSION=$HOME/other/toolchains/icecc/clang-3.5-slava_f07eb13ba0ccf7554cb64725c5c308a0.tar.gz
+
 # Atmel:
 export CROSS_COMPILE=arm-none-eabi-
 export PATH=$PATH:$HOME/other/toolchains/atmel_gnu_arm-none-eabi/bin
