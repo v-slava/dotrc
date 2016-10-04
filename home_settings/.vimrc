@@ -297,11 +297,27 @@ autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 " Use gq in normal or visual mode to force textwidth
 
-function! OpenLocation()
-	if &l:buftype == 'quickfix'
-		execute "cc " . line('.')
+function! IsLocationList()
+	exec 'redir @x | silent ls | redir END'
+	if match(@x,'%a-  "\[Location List\]"') >= 0
+		return 1
+	elseif match(@x,'%a-  "\[Quickfix List\]"') >= 0
+		return 0
 	else
+		return -1
+	endif
+endfunction
+
+function! OpenLocation()
+	let l:locationList = IsLocationList()
+	if l:locationList == -1
+		exec 'echoerr "Neither Location nor Quickfix List focused."'
+		return
+	endif
+	if l:locationList == 1
 		execute "ll " . line('.')
+	else
+		execute "cc " . line('.')
 	endif
 	normal zz
 endfunction

@@ -67,7 +67,7 @@ if [ -z "$ORIG_PATH" ]; then
 fi
 
 export PATH=$ORIG_PATH
-export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
+export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
 # Toolchains:
 # Icecream (distributed compiler):
 export PATH=/usr/lib/icecc/bin:$PATH
