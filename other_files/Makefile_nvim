@@ -1,7 +1,11 @@
 PHONY := all
-all: download_git
+all: download_git install_packages
 	make -C neovim CMAKE_BUILD_TYPE=Release -j 9
 	su -c "make -C neovim install"
+
+PHONY += install_packages
+install_packages:
+	su -c "apt-get install cmake libtool"
 
 PHONY += download_git
 download_git:
