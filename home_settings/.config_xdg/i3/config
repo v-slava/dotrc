@@ -114,6 +114,13 @@ workspace 8 output $OUTPUT_RIGHT
 workspace 9 output $OUTPUT_CENTRAL
 workspace 10 output $OUTPUT_RIGHT
 
+# Start i3bar:
+bar {
+	status_command exec i3status
+	status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
+	tray_output $OUTPUT_CENTRAL
+}
+
 # Focus initial workspace:
 exec --no-startup-id exec i3-msg "workspace 1"
 
