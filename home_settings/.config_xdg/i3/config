@@ -31,8 +31,13 @@ floating_modifier $Alt_L
 bindsym $Alt_R+$Shift_R+Q kill
 bindsym $WIN+Escape kill
 
-# "minimize" window (moove to workspace 10):
+# "minimize" window (move to workspace 10):
 bindsym $WIN+Tab move container to workspace 10
+
+# mark window with label for further fast access:
+bindsym $Alt_L+m exec --no-startup-id exec ~/os_settings/other_files/i3_mark_window.sh
+# goto window by mark (label name):
+bindcode $Alt_L+48 exec --no-startup-id exec ~/os_settings/other_files/i3_goto_marked_window.sh
 
 # switch to virtual console 1
 bindsym $Ctrl_L+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
@@ -215,7 +220,7 @@ bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
 # Hotkey to open mail client:
-# bindsym $Alt_L+m exec --no-startup-id exec claws-mail
+# bindsym $WIN+m exec --no-startup-id exec claws-mail
 # Hotkeys to open specified folders:
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
 # bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
@@ -225,7 +230,7 @@ bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
 
 # Start mail client (icedove):
 exec --no-startup-id exec icedove
-bindsym $Alt_L+m exec --no-startup-id exec icedove
+bindsym $WIN+m exec --no-startup-id exec icedove
 
 # Start goldendict:
 # exec --no-startup-id exec goldendict
