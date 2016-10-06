@@ -6,6 +6,7 @@
 " +------------+------------------+--------------------------------------------+
 " | <Leader>ri | -U               | Symbol info                                |
 " | <Leader>rj | -f               | Follow location (jump)                     |
+" | <Leader>rJ | -f --declarations-only | Follow location only declarations    |
 " | <Leader>rh | -f               | Follow location (open in horizontal split) |
 " | <Leader>rv | -f               | Follow location (open in vertical split)   |
 " | <Leader>rt | -f               | Follow location open in a new tab          |

@@ -5,7 +5,6 @@ Vim bindings for rtags.
 https://github.com/Andersbakken/rtags
 
 # Requirements
-1. Vim built with ```+python```.
 
 # Installation
 ## Vundle
@@ -35,7 +34,7 @@ then while in vim run:
 # Configuration
 This plugin interacts with RTags by invoking ```rc``` commands and interpreting
 their results.  You can override the path to ```rc``` binary by setting
-```g:rcCmd``` variable.  By default, it is set to ```rc```, expecting it to be
+```g:rtagsRcCmd``` variable.  By default, it is set to ```rc```, expecting it to be
 found in the $PATH.
 
 Out of box this plugin provides mappings. In order to use custom mappings the
@@ -49,6 +48,11 @@ shared between all windows, set:
 
     let g:rtagsUseLocationList = 0
 
+To implement 'return to previous location after jump' feature, internal stack is used.
+It is possible to set its maximum size (number of entries), default is 100:
+
+    let g:rtagsJumpStackMaxSize = 100
+
 # Usage
 
 ## Mappings
@@ -56,6 +60,7 @@ shared between all windows, set:
 |------------------|----------------------------------|--------------------------------------------|
 | &lt;Leader&gt;ri | -U                               | Symbol info                                |
 | &lt;Leader&gt;rj | -f                               | Follow location                            |
+| &lt;Leader&gt;rJ | -f --declaration-only            | Follow declaration location                |
 | &lt;Leader&gt;rS | -f                               | Follow location (open in horizontal split) |
 | &lt;Leader&gt;rV | -f                               | Follow location (open in vertical split)   |
 | &lt;Leader&gt;rT | -f                               | Follow location open in a new tab          |
@@ -67,6 +72,7 @@ shared between all windows, set:
 | &lt;Leader&gt;rl | -w                               | List all available projects                |
 | &lt;Leader&gt;rw | -e -r --rename                   | Rename symbol under cursor                 |
 | &lt;Leader&gt;rv | -k -r                            | Find virtuals                              |
+| &lt;Leader&gt;rb | N/A                              | Jump to previous location                  |
 
 ## Unite sources
 
@@ -83,9 +89,33 @@ unstable, but if you want to try it you will have to set ```completefunc``` by
 
     set completefunc=RtagsCompleteFunc
 
+Also ```RtagsCompleteFunc``` can be used as omnifunc. For example, you can use
+such approach with [neocomplete](https://github.com/Shougo/neocomplete.vim)(for more details read it's docs):
+
+```
+function! SetupNeocomleteForCppWithRtags()
+    " Enable heavy omni completion.
+    setlocal omnifunc=RtagsCompleteFunc
+
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    let l:cpp_patterns='[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+    let g:neocomplete#sources#omni#input_patterns.cpp = l:cpp_patterns 
+    set completeopt+=longest,menuone
+endfunction
+
+autocmd FileType cpp,c call SetupNeocomleteForCppWithRtags()
+
+```
+Such config provides automatic calls, of omnicompletion on c and cpp entity accessors.
+
+### Current limitations
+* There are no support for ovveriden functions and methods
+* Thre are no support for function's arguments completion
+
 # Notes
 1. This plugin is wip.
-1. Code completion with rtags is not done yet. Completion does not work when invoked right after '.' (dot), '::' (scope resolution operator), therefore requires typing at least one character before invocation.
 
 # Development
 Unit tests for some plugin functions can be found in ```tests``` directory.
