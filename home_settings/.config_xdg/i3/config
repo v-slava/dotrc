@@ -14,7 +14,10 @@
 set $Alt_L Mod1
 set $Alt_R Mod3
 set $WIN Mod4
-set $CTRL Control
+set $Ctrl_L Control
+set $Ctrl_R Control
+set $Shift_L Shift
+set $Shift_R Shift
 # Print: 107 - PrintScreen
 # Menu: 135
 
@@ -25,14 +28,14 @@ font pango:Inconsolata LGC 8
 floating_modifier $Alt_L
 
 # kill focused window
-bindsym $Alt_R+Shift+Q kill
+bindsym $Alt_R+$Shift_R+Q kill
 bindsym $WIN+Escape kill
 
 # "minimize" window (moove to workspace 10):
 bindsym $WIN+Tab move container to workspace 10
 
 # switch to virtual console 1
-bindsym $CTRL+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
+bindsym $Ctrl_L+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
 
 # change focus
 # bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
@@ -42,10 +45,10 @@ bindsym $Alt_L+k focus up
 bindsym $Alt_L+l focus right
 
 # move focused window
-bindsym $Alt_L+Shift+h move left
-bindsym $Alt_L+Shift+j move down
-bindsym $Alt_L+Shift+k move up
-bindsym $Alt_L+Shift+l move right
+bindsym $Alt_L+$Shift_L+h move left
+bindsym $Alt_L+$Shift_L+j move down
+bindsym $Alt_L+$Shift_L+k move up
+bindsym $Alt_L+$Shift_L+l move right
 
 # split in horizontal orientation
 bindsym $Alt_R+h split h
@@ -62,7 +65,7 @@ bindsym $Alt_L+w layout tabbed
 bindsym $Alt_L+e layout default
 
 # toggle tiling / floating
-bindsym $Alt_L+Shift+space floating toggle
+bindsym $Alt_L+$Shift_L+space floating toggle
 
 # change focus between tiling / floating windows
 bindsym $Alt_L+space focus mode_toggle
@@ -125,23 +128,24 @@ bar {
 exec --no-startup-id exec i3-msg "workspace 1"
 
 # move focused container to workspace
-bindsym $Alt_R+Shift+exclam move container to workspace 1
-bindsym $Alt_R+Shift+at move container to workspace 2
-bindsym $Alt_R+Shift+numbersign move container to workspace 3
-bindsym $Alt_R+Shift+dollar move container to workspace 4
-bindsym $Alt_R+Shift+percent move container to workspace 5
-bindsym $Alt_L+Shift+asciicircum move container to workspace 6
-bindsym $Alt_L+Shift+ampersand move container to workspace 7
-bindsym $Alt_L+Shift+asterisk move container to workspace 8
-bindsym $Alt_L+Shift+parenleft move container to workspace 9
-bindsym $Alt_L+Shift+parenright move container to workspace 10
+bindsym $Alt_R+$Shift_R+exclam move container to workspace 1
+bindsym $Alt_R+$Shift_R+at move container to workspace 2
+bindsym $Alt_R+$Shift_R+numbersign move container to workspace 3
+bindsym $Alt_R+$Shift_R+dollar move container to workspace 4
+bindsym $Alt_R+$Shift_R+percent move container to workspace 5
+bindsym $Alt_R+$Shift_R+asciicircum move container to workspace 6
+bindsym $Alt_L+$Shift_L+asciicircum move container to workspace 6
+bindsym $Alt_L+$Shift_L+ampersand move container to workspace 7
+bindsym $Alt_L+$Shift_L+asterisk move container to workspace 8
+bindsym $Alt_L+$Shift_L+parenleft move container to workspace 9
+bindsym $Alt_L+$Shift_L+parenright move container to workspace 10
 
 # reload the configuration file
-bindsym $Alt_R+Shift+C reload
+bindsym $Alt_R+$Shift_R+C reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $Alt_R+Shift+R restart
+bindsym $Alt_R+$Shift_R+R restart
 # exit i3 (logs you out of your X session)
-bindsym $Alt_R+Shift+E exit
+bindsym $Alt_R+$Shift_R+E exit
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -168,12 +172,11 @@ for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 
-bindsym $CTRL+$Alt_L+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
-bindsym $CTRL+$Alt_L+r exec --no-startup-id exec sudo reboot
-bindsym $CTRL+$Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/suspend_hotkey.sh
-# bindsym $CTRL+$Alt_L+h exec sudo poweroff
-bindsym $CTRL+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/hibernate_hotkey.sh
+bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
+bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/suspend_hotkey.sh
+# bindsym $Ctrl_L+$Alt_L+h exec sudo poweroff
+bindsym $Ctrl_l+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/hibernate_hotkey.sh
 for_window [class="URxvt" title="hibernate script"] floating enable
 for_window [class="URxvt" title="suspend script"] floating enable
 
@@ -204,7 +207,7 @@ bindsym XF86HomePage exec --no-startup-id exec chromium ~/os_settings/other_file
 bindsym $Alt_L+b exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
 
 # windows guest
-bindsym $CTRL+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
+# bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
 
 # start downloading .torrent file from ~/downloads:
 bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
@@ -214,8 +217,8 @@ bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
 # Hotkey to open mail client:
 # bindsym $Alt_L+m exec --no-startup-id exec claws-mail
 # Hotkeys to open specified folders:
-# bindsym $Alt_L+Shift+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
-# bindsym $Alt_L+Shift+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
+# bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
+# bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
 
 # Start emacs daemon:
 # exec --no-startup-id exec emacs --daemon
@@ -265,8 +268,8 @@ bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files
 bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -3%
 
 # toggle sound output (bluetooth headset / built-in audio):
-bindsym $Alt_R+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
-bindsym $Alt_L+Shift+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
 # toggle touchpad:
 bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
