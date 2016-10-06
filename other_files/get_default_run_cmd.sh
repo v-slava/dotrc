@@ -15,24 +15,27 @@ OUT="${OUT_DIR}/${IN}.out"
 FLAGS=" -Wall -Wextra "
 
 case "$IN" in
+	*.mk | Makefile)
+		echo -n "make -f \"$IN\""
+	;;
 	*.html)
-		echo -n "x-www-browser $IN"
+		echo -n "x-www-browser \"$IN\""
 	;;
 	*.sh | *.bash | *.py | *.pl )
-		echo -n "./$IN"
+		echo -n "\"./$IN\""
 	;;
 	*.cc | *.cp | *.cxx | *.cpp | *.CPP | *.c++ | *.C)
-		echo -n "$OUT"
+		echo -n "\"$OUT\""
 	;;
 	*.c)
-		echo -n "$OUT"
+		echo -n "\"$OUT\""
 	;;
 	*.rs)
-		echo -n "$OUT"
+		echo -n "\"$OUT\""
 		# echo -n "cargo run"
 	;;
 	*.nim)
-		echo -n "$OUT"
+		echo -n "\"$OUT\""
 	;;
 	*.S)
 		echo -n "cat /tmp/assemble_sh_text"

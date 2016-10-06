@@ -15,6 +15,9 @@ OUT="${OUT_DIR}/${IN}.out"
 FLAGS=" -Wall -Wextra "
 
 case "$IN" in
+	*.mk | Makefile)
+		echo -n "true"
+	;;
 	*.html)
 		echo -n ""
 	;;
