@@ -1,31 +1,27 @@
-! remove Lock = Caps_Lock
-! remove Control = Control_L
-! keycode 37 = Escape
-! keycode 9 = Caps_Lock
-! keycode 66 = Control_L
-! add Lock = Caps_Lock
-! add Control = Control_L
-
+! Use <Caps_Lock> as <BackSpace>:
 ! remove Lock = Caps_Lock
 ! keysym Caps_Lock = BackSpace
 ! keycode 22 = NoSymbol
-
+! Use <BackSpace> as <Caps_Lock>:
 ! keycode 22 = Caps_Lock
 ! add Lock = Caps_Lock
 
-! Remap <Caps_Lock+key> => <Control_L+key>
-! remove Lock = Caps_Lock
-! remove Control = Control_L
-! keysym Control_L = Caps_Lock
-! keysym Caps_Lock = Control_L
-! add Lock = Caps_Lock
-! add Control = Control_L
-
-! Allow usage of Alt_R as mod3 in i3wm:
+! Allow usage of <Alt_R> as mod3 in i3wm:
 remove mod1 = Alt_R
 add mod3 = Alt_R
 
-! Use Caps_Lock for key combination like <Caps_Lock> -> a => ä
+! TODO Allow usage of Alt_R as "hyper" in emacs:
+! (global-set-key (kbd "H-g") (message "hello world!"))
+! keycode 108 = Hyper_L
+! remove mod4 = Hyper_L
+! add mod3 = Hyper_L
+
+! Remap <Caps_Lock+key> => <Control_L+key>, Control_L => Multi_Key.
 remove Lock = Caps_Lock
-keycode 66 = Multi_key
+remove Control = Control_L
+keysym Control_L = Multi_key
+keysym Caps_Lock = Control_L
+! add Lock = Caps_Lock
+add Control = Control_L
+! Now we can use Control_L (Multi_Key) for key combination like <Multi_Key> -> a => ä
 
