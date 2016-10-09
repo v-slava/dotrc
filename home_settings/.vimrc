@@ -24,6 +24,9 @@
 " | <Leader>rE | -E               | preprocess                                 |
 " +------------+------------------+--------------------------------------------+
 "
+" " View man page in vim:
+" :Man 2 read
+"
 " Generate helptags:
 " cd ~/.vim/bundle/SOME_PLUGIN
 " vim -c "helptags doc | q"
@@ -119,6 +122,19 @@ autocmd BufRead * match Error /\s\+$/
 
 set listchars=tab:»\ 
 set list
+
+" View list all sourced script names:
+" :scriptnames
+"
+" Disable some unused standart plugins:
+let g:loaded_getscriptPlugin = 1
+let g:loaded_gzip = 1
+let g:loaded_2html_plugin = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_rrhelper = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_vimballPlugin = 1
 
 " highlight current line:
 set cursorline
@@ -466,6 +482,15 @@ function Modify_line(text_to_prepend, start_column, text_to_append)
 endfunction
 nmap <silent> <Leader>dm :call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)<CR>0
 command! -range ModifyLine <line1>,<line2> call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)
+
+function! ViewInNewBuffer(cmd)
+	redir @z
+	execute 'silent ' . a:cmd
+	redir END
+	tabnew
+	put z
+endfunction
+command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
