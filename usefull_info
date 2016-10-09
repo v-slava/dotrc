@@ -1,3 +1,6 @@
+# Print properties of window (find PID by clicking):
+xprop
+
 # Icecream:
 sudo apt-get install icecc icecc-monitor
 # kill icecc-scheduler, if present

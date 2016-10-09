@@ -156,7 +156,7 @@ filextype *.djvu
 
 " Audio
 filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
-	\ /home/volkov/os_settings/other_files/alsaplayer.sh %f,
+	\ /home/volkov/os_settings/other_files/alsaplayer_play_files.sh %f,
 	\ ffplay -nodisp %c,
 	\ mplayer %f,
 	\ ffplay %c,
