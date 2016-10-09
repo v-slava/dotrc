@@ -93,6 +93,10 @@ def add_image(self, english_word):
 		else:
 			num = num + 20
 
+def refresh_all_fields(self, data, cursor_position):
+	self.web.eval("setFields(%s, %d);" % (json.dumps(data), cursor_position))
+	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
+
 def fill_button_pressed(self):
 	# Settings:
 	HOME = "/home/volkov"
@@ -128,9 +132,7 @@ def fill_button_pressed(self):
 	self.note.fields[3] = audio_field_content
 	# Add empty image:
 	data.append(("image", self.note.fields[4]))
-	# Refresh all fields:
-	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 4)) # 4 = field to place cursor to (image)
-	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
+	refresh_all_fields(self, data, 4) # 4 = field to place cursor to (image)
 	# Add image (if any):
 	add_image(self, english_word)
 	# Set focus on translation:
@@ -148,12 +150,36 @@ def clear_button_pressed(self):
 	self.note.fields[3] = ""
 	data.append(("image", ""))
 	self.note.fields[4] = ""
-	# Refresh fields:
-	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 0)) # 0 = field to place cursor to
-	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
+	refresh_all_fields(self, data, 0)
+
+def add_prefix(self, prefix):
+	field_0 = prefix + self.note.fields[0]
+	data = []
+	data.append(("english", field_0))
+	self.note.fields[0] = field_0
+	data.append(("russian", self.note.fields[1]))
+	data.append(("usage_example", self.note.fields[2]))
+	data.append(("audio", self.note.fields[3]))
+	data.append(("image", self.note.fields[4]))
+	refresh_all_fields(self, data, 0)
+
+def der_button_pressed(self):
+	add_prefix(self, "der ")
+
+def die_button_pressed(self):
+	add_prefix(self, "die ")
+
+def das_button_pressed(self):
+	add_prefix(self, "das ")
 
 def to_button_pressed(self):
-	showInfo("to_button_pressed: " + self.note.fields[0])
+	add_prefix(self, "to ")
+
+def a_button_pressed(self):
+	add_prefix(self, "a ")
+
+def an_button_pressed(self):
+	add_prefix(self, "an ")
 
 def setup_my_button(self, text, tooltip, shortcut, handler):
 	# size=False tells Anki not to use a small button
@@ -164,7 +190,12 @@ def setup_my_button(self, text, tooltip, shortcut, handler):
 def setup_all_my_buttons(self):
 	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+f', fill_button_pressed)
 	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+Alt+c', clear_button_pressed)
-	setup_my_button(self, 'to', 'Add prefix "to "', 'Ctrl+Alt+t', to_button_pressed)
+	setup_my_button(self, 'der', 'Add prefix "der " (Maskulinum)', 'Ctrl+Alt+m', der_button_pressed)
+	setup_my_button(self, 'die', 'Add prefix "die " (Femininum)', 'Ctrl+Alt+f', die_button_pressed)
+	setup_my_button(self, 'das', 'Add prefix "das " (Neutrum)', 'Ctrl+Alt+n', das_button_pressed)
+	setup_my_button(self, 'to', 'Add prefix "to " (verb)', 'Ctrl+Alt+t', to_button_pressed)
+	setup_my_button(self, 'a', 'Add prefix "a " (noun)', 'Ctrl+Alt+a', a_button_pressed)
+	setup_my_button(self, 'an', 'Add prefix "an " (noun)', 'Alt+Shift+a', an_button_pressed)
 
 Editor.setupButtons = wrap(Editor.setupButtons, setup_all_my_buttons)
 
