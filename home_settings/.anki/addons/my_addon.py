@@ -1,6 +1,11 @@
-# fill  = ctrl+j
-# clear = ctrl+k
-# add   = ctrl+enter
+# fill             = ctrl+j
+# clear            = ctrl+c
+# submit card      = ctrl+enter
+# add "to " prefix = ctrl+t
+# # For german language (maskulinum, femininum, neutrum):
+# add "der " prefix = ctrl+m
+# add "die " prefix = ctrl+f
+# add "das " prefix = ctrl+n
 
 from anki.hooks import wrap
 from aqt.editor import Editor
@@ -126,17 +131,6 @@ def fill_button_pressed(self):
 	# Set focus on translation:
 	self.web.eval("focusField(%d);" % 1)
 
-def setup_my_buttons(self):
-	setup_fill_button(self)
-	setup_clear_button(self)
-
-def setup_fill_button(self):
-	# size=False tells Anki not to use a small button
-	fill_button = self._addButton("fill_button", lambda s=self: fill_button_pressed(self), text="Fill", size=False)
-	fill_shortcut = "Ctrl+j"
-	fill_button.setShortcut(QKeySequence(fill_shortcut))
-	fill_button.setToolTip("Fill all fields: " + fill_shortcut)
-
 def clear_button_pressed(self):
 	data = []
 	data.append(("english", ""))
@@ -153,12 +147,19 @@ def clear_button_pressed(self):
 	self.web.eval("setFields(%s, %d);" % (json.dumps(data), 0)) # 0 = field to place cursor to
 	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
 
-def setup_clear_button(self):
-	# size=False tells Anki not to use a small button
-	clear_button = self._addButton("clear_button", lambda s=self: clear_button_pressed(self), text="Clear", size=False)
-	clear_shortcut = "Ctrl+k"
-	clear_button.setShortcut(QKeySequence(clear_shortcut))
-	clear_button.setToolTip("Clear all fields: " + clear_shortcut)
+def to_button_pressed(self):
+	showInfo("to_button_pressed")
 
-Editor.setupButtons = wrap(Editor.setupButtons, setup_my_buttons)
+def setup_my_button(self, text, tooltip, shortcut, handler):
+	# size=False tells Anki not to use a small button
+	button = self._addButton(text, lambda s=self: handler(self), text=text, size=False)
+	button.setShortcut(QKeySequence(shortcut))
+	button.setToolTip(tooltip + ': ' + shortcut)
+
+def setup_all_my_buttons(self):
+	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+j', fill_button_pressed)
+	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+c', clear_button_pressed)
+	setup_my_button(self, 'to', 'Add prefix "to "', 'Ctrl+t', to_button_pressed)
+
+Editor.setupButtons = wrap(Editor.setupButtons, setup_all_my_buttons)
 
