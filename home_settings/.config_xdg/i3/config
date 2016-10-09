@@ -37,7 +37,7 @@ bindsym $WIN+Tab move container to workspace 10
 # mark window with label for further fast access:
 bindsym $Alt_L+m exec --no-startup-id exec ~/os_settings/other_files/i3_mark_window.sh
 # goto window by mark (label name):
-bindcode $Alt_L+48 exec --no-startup-id exec ~/os_settings/other_files/i3_goto_marked_window.sh
+bindcode $Alt_L+48 exec --no-startup-id exec ~/os_settings/other_files/i3_goto_marked_window.py
 
 # switch to virtual console 1
 bindsym $Ctrl_L+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
