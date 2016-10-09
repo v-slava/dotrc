@@ -1,11 +1,16 @@
-# fill             = ctrl+j
-# clear            = ctrl+c
-# submit card      = ctrl+enter
-# add "to " prefix = ctrl+t
-# # For german language (maskulinum, femininum, neutrum):
-# add "der " prefix = ctrl+m
-# add "die " prefix = ctrl+f
-# add "das " prefix = ctrl+n
+# fill              = Ctrl+f
+# clear             = Ctrl+Alt+c
+# submit card       = Ctrl+enter
+
+# # Prefixes german (maskulinum, femininum, neutrum):
+# add "der " prefix = Ctrl+Alt+m
+# add "die " prefix = Ctrl+Alt+f
+# add "das " prefix = Ctrl+Alt+n
+
+# # Prefixes for english:
+# add "to "  prefix = Ctrl+Alt+t
+# add "a "   prefix = Ctrl+Alt+a
+# add "an "  prefix = Alt+Shift+a
 
 from anki.hooks import wrap
 from aqt.editor import Editor
@@ -148,7 +153,7 @@ def clear_button_pressed(self):
 	self.web.eval("setFonts(%s);" % (json.dumps(self.fonts())))
 
 def to_button_pressed(self):
-	showInfo("to_button_pressed")
+	showInfo("to_button_pressed: " + self.note.fields[0])
 
 def setup_my_button(self, text, tooltip, shortcut, handler):
 	# size=False tells Anki not to use a small button
@@ -157,9 +162,9 @@ def setup_my_button(self, text, tooltip, shortcut, handler):
 	button.setToolTip(tooltip + ': ' + shortcut)
 
 def setup_all_my_buttons(self):
-	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+j', fill_button_pressed)
-	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+c', clear_button_pressed)
-	setup_my_button(self, 'to', 'Add prefix "to "', 'Ctrl+t', to_button_pressed)
+	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+f', fill_button_pressed)
+	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+Alt+c', clear_button_pressed)
+	setup_my_button(self, 'to', 'Add prefix "to "', 'Ctrl+Alt+t', to_button_pressed)
 
 Editor.setupButtons = wrap(Editor.setupButtons, setup_all_my_buttons)
 
