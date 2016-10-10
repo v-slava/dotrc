@@ -39,5 +39,4 @@ else
 		tail "$in_file" -n +$NATIVE_END >> "$out_file"
 	done
 fi
-# i3-msg reload
 
