@@ -95,21 +95,21 @@ bindsym $Alt_L+9 workspace 9
 bindsym $Alt_L+0 workspace 10
 
 # Workspace-output assignments:
-# SED workspace native begin
+# SED native begin
 
 set $OUTPUT_CENTRAL LVDS1
 set $OUTPUT_RIGHT HDMI1
 # set $OUTPUT_LEFT
 
-# SED workspace native end
-# SED workspace virtual begin
+# SED native end
+# SED virtual begin
 
 set $OUTPUT_CENTRAL VGA-1
 set $OUTPUT_RIGHT VGA-2
 set $OUTPUT_LEFT VGA-0
 
 exec --no-startup-id sleep 1 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
-# SED workspace virtual end
+# SED virtual end
 
 workspace 1 output $OUTPUT_CENTRAL
 workspace 2 output $OUTPUT_RIGHT

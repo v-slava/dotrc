@@ -2,7 +2,7 @@
 After=systemd-user-sessions.service
 
 [Service]
-ExecStart=/bin/su volkov -l -c "/home/volkov/os_settings/other_files/apply_i3_config.sh ; exec /usr/bin/startx -- -configdir %i"
+ExecStart=/bin/su volkov -l -c "/home/volkov/os_settings/other_files/generate_configs.sh ; exec /usr/bin/startx -- -configdir %i"
 # ExecStart=/bin/su volkov -l -c "exec /usr/bin/startx -- -configdir %i"
 
 # %i means input argument (either from native.target or virtual.target)

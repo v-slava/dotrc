@@ -39,5 +39,5 @@ for FILE in $FILES_LIST ; do
 	cat "$FILE" >> ~/$FILE
 done
 
-~/os_settings/other_files/apply_i3_config.sh
+~/os_settings/other_files/generate_configs.sh
 
