@@ -110,7 +110,7 @@ set $OUTPUT_CENTRAL VGA-1
 set $OUTPUT_RIGHT VGA-2
 set $OUTPUT_LEFT VGA-0
 
-exec --no-startup-id sleep 1 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
+exec --no-startup-id sleep 3 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 # SED virtual end
 
 workspace 1 output $OUTPUT_CENTRAL

@@ -61,6 +61,14 @@
 " <C-L> - scroll right (my binding)
 " <C-H> - scroll left (my binding)
 "
+" zt - make cursor position first line on a screen.
+" zb - make cursor position last line on a screen.
+" zz - make cursor position central line on a screen.
+"
+" H - move cursor to the first line on a screen (high).
+" L - move cursor to the last line on a screen (low).
+" M - move cursor to the middle line on a screen (middle).
+"
 " <F12> - copy full source location into clipboard
 " <F11> - copy stripped source location into clipboard
 "
@@ -213,6 +221,8 @@ nmap <Leader>wv :vsplit<CR>
 " Switch focus to vim window <Leader>w{h|l|j|k}:
 nmap <Leader>w <C-w>
 " <Leader>w=           - make split windows equal (diff)
+" Focus previous window:
+nmap <Leader>wp <C-w><C-p>
 
 " Clear current line:
 nmap <Leader>oe $d0x
@@ -448,7 +458,7 @@ nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:
 function Close_window_if_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == '/tmp/vim_ide_dir' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv' || l:file_name == '1.fugitiveblame'
 		execute ':q'
 	endif
 endfunction
@@ -709,35 +719,24 @@ endfunction
 " command! -nargs=1 CmdName call Func_name(<f-args>)
 " command! -nargs=0 CmdName call Func_name('arg1')
 
+function! GetFileName(line)
+	let l:last_file_char = stridx(a:line, " ", 1)
+	if l:last_file_char == -1
+		let l:last_file_char = stridx(a:line, "\t", 1)
+	endif
+	if l:last_file_char != -1
+		return strpart(a:line, 0, l:last_file_char)
+	endif
+	return a:line
+endfunction
+
 function! OpenFile(win, cmd) " at least one colon expected
 	let l:line = strpart(getline('.'), col(".") - 1)
-	let l:colon1 = stridx(l:line, ":", 1)
-	if l:colon1 == -1
-		echoerr "Can't find first colon"
-		return
-	endif
-	let l:colon2 = stridx(l:line, ":", l:colon1 + 1)
-	let l:last_file_char = l:colon2
-	let l:column_number = 0
-	if l:colon2 == -1
-		let l:last_file_char = stridx(l:line, " ", l:colon1 + 1)
-		if l:last_file_char == -1
-			let l:last_file_char = stridx(l:line, "\t", l:colon1 + 1)
-			if l:last_file_char == -1
-				let l:last_file_char = col('$')
-			endif
-		endif
-	else
-		let column_number = str2nr(str2nr(strpart(l:line, l:colon2 + 1)))
-	endif
-	let l:ret = strpart(l:line, 0, l:last_file_char)
-	if l:column_number != 0
-		let l:ret = l:ret . ':' . l:column_number
-	endif
+	let l:file = GetFileName(l:line)
 	if a:win == 'prev_win'
 		execute "normal \<c-w>\<c-p>"
 	endif
-	execute a:cmd . ' ' . l:ret
+	execute a:cmd . ' ' . l:file
 endfunction
 nmap <Leader>ft :call OpenFile('cur_win', 'tabedit')<CR>
 nmap <Leader>fj :call OpenFile('cur_win', 'e')<CR>
