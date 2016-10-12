@@ -16,5 +16,6 @@ POSITION=$(tail -n 1 last_played_position.txt)
 POSITION=$((POSITION - REPLAY_LAST_SECONDS))
 
 ~/os_settings/other_files/alsaplayer_play_files.sh "$FILE"
+sleep 1
 alsaplayer --seek $POSITION
 
