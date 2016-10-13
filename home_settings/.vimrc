@@ -167,6 +167,12 @@ set linebreak
 " Fix backspace befavior:
 set backspace=2
 
+" Use spelling:
+" See spell files in /usr/share/vim/vim74/spell.
+" http://ftp.vim.org/pub/vim/runtime/spell/{ru|en|de}.utf-8.spl
+" set spell spelllang=en_us,de,ru
+set spell spelllang=en_us
+
 " Use fd instead of <esc> to exit from insert mode:
 inoremap fd <esc>
 " imap <esc> <nop>
