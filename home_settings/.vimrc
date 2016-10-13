@@ -71,6 +71,9 @@
 "
 " <F12> - copy full source location into clipboard
 " <F11> - copy stripped source location into clipboard
+" <F9>  - index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
+" <F7> - set spell checking (expects {en|de|ru|en,ru|...}
+" <F6> - disable spell checking.
 "
 " in visual mode '=' - fix identation
 " Tcomment block comment:
@@ -134,7 +137,7 @@ set list
 " View list all sourced script names:
 " :scriptnames
 "
-" Disable some unused standart plugins:
+" Disable some unused standard plugins:
 let g:loaded_getscriptPlugin = 1
 let g:loaded_gzip = 1
 let g:loaded_2html_plugin = 1
@@ -170,8 +173,9 @@ set backspace=2
 " Use spelling:
 " See spell files in /usr/share/vim/vim74/spell.
 " http://ftp.vim.org/pub/vim/runtime/spell/{ru|en|de}.utf-8.spl
-" set spell spelllang=en_us,de,ru
-set spell spelllang=en_us
+" set spell spelllang=en,de,ru,en_us
+nmap <F7> :setlocal spell spelllang=
+nmap <F6> :set nospell<CR>
 
 " Use fd instead of <esc> to exit from insert mode:
 inoremap fd <esc>
