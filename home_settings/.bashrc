@@ -26,6 +26,7 @@ alias gpush_test_commit='~/temporary/exchange_push_test_commit.sh'
 alias gfetch_test_commit='~/temporary/exchange_fetch_test_commit.sh'
 alias beautify='~/temporary/beautify.sh'
 alias rc_clear='rc --clear'
+alias rc_quit='rc --quit-rdm'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon

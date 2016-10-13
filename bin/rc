@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Sometimes when I use rc from vim plugin, I get errors like:
+
+# [vim-rtags] Error: rc: unrecognized option '--tc/rc'
+# Try 'rc --help' for more information
+
+# This simple wrapper over rc fixes such errors. The real cause is unknown by now.
+
+# echo "rc $@" > /tmp/rc_last_command
+/usr/local/bin/rc $@
+
