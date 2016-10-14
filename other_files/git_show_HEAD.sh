@@ -1,8 +1,14 @@
 #!/bin/bash
 
+CMD="git show"
+if [ "$1" = "-n" ]; then
+	CMD="$CMD --name-only"
+	shift
+fi
+
 if [ -z "$1" ]; then
-	git show HEAD
+	$CMD HEAD
 else
-	git show HEAD~$1
+	$CMD HEAD~$1
 fi
 
