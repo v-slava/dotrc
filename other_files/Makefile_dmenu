@@ -1,10 +1,18 @@
 OUT := $(PWD)/dmenu_out
-DMENU_VERSION := dmenu-4.6
-DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
-DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
-CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_clipboard.diff
 
-# Generate CLIPBOARD_PATCH:
+# Use git repository:
+DMENU_VERSION := dmenu
+DMENU_COMMIT := a9a5c6cc2d7d55ed7e556a4fe9d75307c6df2e84
+DMENU_URL := http://git.suckless.org/dmenu
+
+# Use suckless tools website:
+# DMENU_VERSION := dmenu-4.6
+# DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
+# DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
+
+CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_clipboard.patch
+
+# Generate CLIPBOARD_PATCH (old method, no git):
 # diff -urn dmenu_orig_folder dmenu_modified_folder > dmenu.diff
 # Fix in vim (compare with old version).
 
@@ -19,13 +27,18 @@ install_dependencies:
 
 PHONY += apply_patch
 apply_patch: $(OUT)/$(DMENU_VERSION) $(CLIPBOARD_PATCH)
-	patch -N -d $< -p 1 < $(CLIPBOARD_PATCH)
+	cd $(OUT)/$(DMENU_VERSION) && git apply $(CLIPBOARD_PATCH)
+	# patch -N -d $< -p 1 < $(CLIPBOARD_PATCH)
 
-$(OUT)/$(DMENU_VERSION): $(OUT)/$(DMENU_ARCHIVE_NAME)
-	tar xf $< -C $(OUT)
+$(OUT)/$(DMENU_VERSION): | $(OUT)
+	cd $(OUT) && git clone $(DMENU_URL)
+	cd $@ && git checkout $(DMENU_COMMIT)
 
-$(OUT)/$(DMENU_ARCHIVE_NAME): | $(OUT)
-	wget -P $| $(DMENU_URL)
+# $(OUT)/$(DMENU_VERSION): $(OUT)/$(DMENU_ARCHIVE_NAME)
+# 	tar xf $< -C $(OUT)
+
+# $(OUT)/$(DMENU_ARCHIVE_NAME): | $(OUT)
+# 	wget -P $| $(DMENU_URL)
 
 PHONY += clean
 clean:

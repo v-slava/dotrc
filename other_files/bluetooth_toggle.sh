@@ -65,13 +65,7 @@ EOF
 		echo -e "\n"
 		if [ $bluetoothctl_RET -eq 3 ]; then
 			echo "Need to replug device"
-# /devices/pci0000:00/0000:00:1d.0/usb2/2-1/2-1.1/2-1.1:1.0/bluetooth/hci0
-
-# udevadm trigger -v --action=change -p RFKILL_TYPE=bluetooth
-# udevadm trigger -v --action=change -s rfkill
-# udevadm trigger -v --action=change -s bluetooth
-# udevadm trigger -v --action=change -p 'ID_MODEL_FROM_DATABASE=Bluetooth Dongle (HCI mode)'
-
+			exit
 		fi
 		if [ $bluetoothctl_RET -ne 1 ]; then
 			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2

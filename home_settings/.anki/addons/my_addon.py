@@ -116,6 +116,10 @@ def fill_button_pressed(self):
 	self.note.fields[1] = ""
 	data.append(("usage_example", ""))
 	self.note.fields[2] = ""
+	# No audio for german:
+	data.append(("audio", ""))
+	self.note.fields[3] = ""
+	'''
 	# Add audio if available:
 	audio_file = MEDIA + "/" + english_word + ".mp3"
 	if os.path.isfile(audio_file):
@@ -130,6 +134,7 @@ def fill_button_pressed(self):
 		showInfo("No audio found")
 	data.append(("audio", audio_field_content))
 	self.note.fields[3] = audio_field_content
+	'''
 	# Add empty image:
 	data.append(("image", self.note.fields[4]))
 	refresh_all_fields(self, data, 4) # 4 = field to place cursor to (image)
