@@ -129,7 +129,7 @@ hi StatusLine ctermfg=232 ctermbg=46
 hi StatusLineNC ctermfg=232 ctermbg=252
 
 " Highlight spaces and tabs in the end of the line as errors:
-autocmd BufRead * match Error /\s\+$/
+match Error /\s\+$/
 
 set listchars=tab:»\ 
 set list
