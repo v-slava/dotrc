@@ -1,3 +1,8 @@
+# Print file capabilities:
+getcap FILE
+# Add capabilities to a file:
+setcap 'cap_sys_rawio+ep' FILE
+
 # Print properties of window (find PID by clicking):
 xprop
 
@@ -1316,7 +1321,7 @@ frame
 # gdb: disable overloading of c++ function names:
 set overload-resolution off
 
-# Debug program with core dump:
+# gdb: debug program with core dump:
 gdb -e PROGRAM -c core.dump
 gdb PROGRAM core.dump
 info proc mappings
@@ -1324,38 +1329,46 @@ backtrace full
 # in gdb:
 (gdb) core-file /home/user/my_core_file
 
-# Stop on writing to stderr (x86_64 only):
+# gdb: stop on writing to stderr (x86_64 only):
 b write if 2==$rdi
 
-# Do not stop on signal SIGUSR1:
-handle SIGUSR1 noprint nostop
+# gdb: stop on errno modification:
+watch *&errno
 
-# Answer "yes" on "No source file named FILE.c. Make breakpoint pending on future shared library load? (y or [n])":
+# gdb: stop on file open (x86_64 only):
+b open if strcmp(\$rdi, "/tmp/some/file") == 0
+
+# gdb: do not stop on signal SIGUSR1 (ignore signal):
+handle SIGUSR1 noprint nostop
+handle SIGTRAP nostop
+handle all nostop noprint
+
+# gdb: answer "yes" on "No source file named FILE.c. Make breakpoint pending on future shared library load? (y or [n])":
 set breakpoint pending on
 
-# GDB save value in gdb variable:
+# gdb: save value in gdb variable:
 set $var_name = expression
-# GDB overwrite variable in program:
+# gdb: overwrite variable in program:
 set var_name = expression
 
-# GDB step out of a function:
+# gdb: step out of a function:
 finish
 
-# gdb (tui) refresh screen:
+# gdb: (tui) refresh screen:
 refresh
 
-# GDB debug threads.
+# gdb: debug threads.
 # Make CTRL-C / breakpoints affect only currently selected thread:
 set non-stop on
-# Allow GDB to control inferior in asynchronous mode:
+# gdb: allow to control inferior in asynchronous mode:
 set target-async on
-# List threads:
+# gdb: list threads:
 info thread
-# Switch to thread specified by a given number (ID, see "info thread"):
+# gdb: switch to thread specified by a given number (ID, see "info thread"):
 thread ID
-# Interrupt current thread (doesn't work if target-async is off):
+# gdb: interrupt current thread (doesn't work if target-async is off):
 interrupt
-# Interrupt all threads (doesn't work if target-async is off):
+# gdb: interrupt all threads (doesn't work if target-async is off):
 interrupt -a
 
 # gdb: write to process memory from file (read from file):
@@ -1364,58 +1377,54 @@ restore FILE binary START_ADDRESS_IN_MEMORY
 # gdb: write to file from process memory [START .. STOP):
 dump binary memory FILE START STOP
 
-# GDB catch syscall:
+# gdb: catch syscall:
 catch syscall chroot
 
-# GDB disable/enable breakpoints:
+# gdb: disable/enable breakpoints:
 disable num
 enable num
 
-# GDB conditional breakpoints:
+# gdb: conditional breakpoints:
 cond <bnum> <expression> # stop if <expression> == true
 b LOCATION if CONDITION
 ignore <bnum> <count>
 
-# GDB set a breakpoint for all functions matching REGEXP:
+# gdb: set a breakpoint for all functions matching REGEXP:
 rbreak func_prefix_*
 
-# GDB breakpoints on read/write:
+# gdb: breakpoints on read/write:
 # watch *0xaab12450 [mask 0xfffffff0]
 watch -  only breaks on write
 rwatch - only breaks on read
 awatch - breaks on read/write.
 
-# GDB delete breakpoint
+# gdb: delete breakpoint
 del <breakpoint number>
 
-# GDB list breakpoints
+# gdb: list breakpoints
 info break
 
-# GDB: display an array of values:
+# gdb: display an array of values:
 disp {$r0, $r1}
 
-# Write into memory using GDB:
+# gdb: write into memory
 set *0xAb000000 = 0xcd
 set {int}0xAb000000 = 0xcd
 
-# GDB signals handling:
-handle SIGTRAP nostop
-handle all nostop noprint
-
-# gdb load symbols from file:
+# gdb: load symbols from file
 sym FILE
 
 # gdb view source files:
 info sources
 
-# gdb sysroot (to debug shared libraries with gdb-server):
+# gdb: sysroot (to debug shared libraries with gdb-server):
 set sysroot HOST_COPY_OF_DEBUGGIE_ROOT_WITH_LIBS_AND_LD
 set solib-search-path DIR # not recommended, single step doesn't work without ld
 
-# gdb change sources path:
+# gdb: change sources path:
 set substitute-path FROM TO
 
-# gdb view loaded shared libraries:
+# gdb: view loaded shared libraries:
 info sharedlibrary
 
 # Generate core dump on runtime error:
