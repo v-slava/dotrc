@@ -1,3 +1,6 @@
+# View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
+netstat -apn
+
 # Print file capabilities:
 getcap FILE
 # Add capabilities to a file:
@@ -1314,6 +1317,12 @@ gcc -O0 -g3 backtrace_example.c -o backtrace_exe
 
 # Jtag (J-Link) do not cache flash memory (gdb command):
 monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
+
+# gdb: define command (next and refresh tui screen):
+define next_refresh
+next
+refresh
+end
 
 # gdb: view next source line to to be executed:
 frame
