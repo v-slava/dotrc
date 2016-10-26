@@ -309,6 +309,12 @@ find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
 
+# xargs specify parameters order (you can use anything as replace_str):
+echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
+
+# xargs spaces (files with spaces, print size in bytes):
+find -type f -print0 | xargs -0 du -b
+
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
 
@@ -602,9 +608,6 @@ fsck.reiserfs -n FILE
 # Do not reserve 5% of space on file system:
 mkfs -t ext4 -m 0 -L files_partition /dev/sdX1
 tune2fs -m 0 FILE
-
-# xargs specify parameters order (you can use anything as replace_str):
-echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
 
 # To apply patches manually:
 1. Copy debian folder to original sources
