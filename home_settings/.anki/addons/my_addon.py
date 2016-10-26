@@ -157,8 +157,15 @@ def clear_button_pressed(self):
 	self.note.fields[4] = ""
 	refresh_all_fields(self, data, 0)
 
-def add_prefix(self, prefix):
-	field_0 = prefix + self.note.fields[0]
+class add_prefix_mode():
+	default = 0
+	uppercase = 1
+
+def add_prefix(self, prefix, mode = add_prefix_mode.default):
+	field_0 = self.note.fields[0]
+	if mode == add_prefix_mode.uppercase:
+		field_0 = field_0[0].upper() + field_0[1:]
+	field_0 = prefix + field_0
 	data = []
 	data.append(("english", field_0))
 	self.note.fields[0] = field_0
@@ -168,14 +175,17 @@ def add_prefix(self, prefix):
 	data.append(("image", self.note.fields[4]))
 	refresh_all_fields(self, data, 0)
 
+def sich_button_pressed(self):
+	add_prefix(self, "sich ")
+
 def der_button_pressed(self):
-	add_prefix(self, "der ")
+	add_prefix(self, "der ", add_prefix_mode.uppercase)
 
 def die_button_pressed(self):
-	add_prefix(self, "die ")
+	add_prefix(self, "die ", add_prefix_mode.uppercase)
 
 def das_button_pressed(self):
-	add_prefix(self, "das ")
+	add_prefix(self, "das ", add_prefix_mode.uppercase)
 
 def to_button_pressed(self):
 	add_prefix(self, "to ")
@@ -195,6 +205,7 @@ def setup_my_button(self, text, tooltip, shortcut, handler):
 def setup_all_my_buttons(self):
 	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+f', fill_button_pressed)
 	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+Alt+c', clear_button_pressed)
+	setup_my_button(self, 'sich', 'Add prefix "sich " (reflexiv)', 'Ctrl+s', sich_button_pressed)
 	setup_my_button(self, 'der', 'Add prefix "der " (Maskulinum)', 'Ctrl+Alt+m', der_button_pressed)
 	setup_my_button(self, 'die', 'Add prefix "die " (Femininum)', 'Ctrl+Alt+f', die_button_pressed)
 	setup_my_button(self, 'das', 'Add prefix "das " (Neutrum)', 'Ctrl+Alt+n', das_button_pressed)
