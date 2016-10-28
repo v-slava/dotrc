@@ -1,3 +1,12 @@
+# Uboot commands (press any key at early boot stage to enter uboot console):
+help
+help CMD
+printenv
+printenv -a
+setenv ARG "VALUE"
+saveenv
+reset
+
 # View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
 netstat -apn
 

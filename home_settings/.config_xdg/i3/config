@@ -78,10 +78,10 @@ bindsym $Alt_L+$Shift_L+space floating toggle
 bindsym $Alt_L+space focus mode_toggle
 
 # focus the parent container
-bindsym $Alt_L+a focus parent
+bindsym $Alt_L+Shift_L+p focus parent
 
 # focus the child container
-bindsym $Alt_L+c focus child
+bindsym $Alt_L+Shift_L+c focus child
 
 # switch to workspace
 bindsym $Alt_L+1 workspace 1
@@ -192,7 +192,7 @@ for_window [class="URxvt" title="suspend script"] floating enable
 bindsym $WIN+k exec --no-startup-id exec keynav
 
 # Define Alt+Tab in order not to remove file contents in vim by this key combination:
-bindsym $Alt_L+Tab focus left
+# bindsym $Alt_L+Tab focus left
 
 # terminal
 # bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm

@@ -61,7 +61,7 @@ index 9eab758..cd61b64 100644
 -.TP
 -C\-Y
 -Paste from X clipboard
-+A\-i
++A\-v
 +Paste from clipboard
  .TP
  M\-g
@@ -108,7 +108,7 @@ index 9278e91..43c67d8 100644
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
-+		case XK_i: // paste (insert) from clipboard
++		case XK_v: // paste (insert) from clipboard
 +		{
 +			Atom sel;
 +			switch (clipboard)
