@@ -40,4 +40,5 @@ for FILE in $FILES_LIST ; do
 done
 
 ~/os_settings/other_files/generate_configs.sh
+i3-msg reload
 
