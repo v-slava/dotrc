@@ -23,7 +23,7 @@ all: apply_patch install_dependencies
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c "apt-get install libx11-dev libxft-dev libfreetype6-dev libxmu-dev"
+	su -c "apt-get install libxinerama-dev libx11-dev libxft-dev libfreetype6-dev libxmu-dev"
 
 PHONY += apply_patch
 apply_patch: $(OUT)/$(DMENU_VERSION) $(CLIPBOARD_PATCH)
