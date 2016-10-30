@@ -24,6 +24,8 @@ import os.path
 # from subprocess import *
 from subprocess import call,check_call
 
+KEYBOARD_LAYOUT = "/media/files/other/programs/keyboard_layout"
+
 def add_image(self, english_word):
 	TMP_DIR = "/tmp/anki"
 	TMP_DIR_IMAGE_FILE = TMP_DIR + "/image.jpg"
@@ -102,6 +104,8 @@ def fill_button_pressed(self):
 	HOME = "/home/volkov"
 	SOUNDS = HOME + "/other/GoldenDict/sound_en/sound_en.dsl.files.zip"
 	MEDIA = HOME + "/.anki/slava/collection.media"
+	# Switch i3-wm workspace to goldendict, browser:
+	check_call(["i3-msg", "workspace 2"])
 	# Read english word:
 	self.web.eval("focusField(%d);" % 1)
 	self.web.eval("focusField(%d);" % 0)
@@ -140,8 +144,12 @@ def fill_button_pressed(self):
 	refresh_all_fields(self, data, 4) # 4 = field to place cursor to (image)
 	# Add image (if any):
 	add_image(self, english_word)
+	# Switch i3-wm workspace to anki:
+	check_call(["i3-msg", "workspace 1"])
 	# Set focus on translation:
 	self.web.eval("focusField(%d);" % 1)
+	# Switch keyboard layout to russian:
+	check_call([KEYBOARD_LAYOUT, "--set_layout", "1"])
 
 def clear_button_pressed(self):
 	data = []
@@ -156,6 +164,8 @@ def clear_button_pressed(self):
 	data.append(("image", ""))
 	self.note.fields[4] = ""
 	refresh_all_fields(self, data, 0)
+	# Switch keyboard layout to english:
+	check_call([KEYBOARD_LAYOUT, "--set_layout", "0"])
 
 class add_prefix_mode():
 	default = 0
@@ -173,7 +183,7 @@ def add_prefix(self, prefix, mode = add_prefix_mode.default):
 	data.append(("usage_example", self.note.fields[2]))
 	data.append(("audio", self.note.fields[3]))
 	data.append(("image", self.note.fields[4]))
-	refresh_all_fields(self, data, 0)
+	refresh_all_fields(self, data, 1)
 
 def sich_button_pressed(self):
 	add_prefix(self, "sich ")
