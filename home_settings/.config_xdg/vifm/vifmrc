@@ -453,16 +453,16 @@ nmap E :!e<space>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 
-nnoremap ocd :! ${CROSS_COMPILE}objdump -D ./%c | less -i<CR>
-nnoremap od :! ${CROSS_COMPILE}objdump -D ./%c | c++filt | less -i<CR>
-nnoremap opd :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D ./%c | c++filt | less -i<CR>
-nnoremap oz :! ${CROSS_COMPILE}objdump -D -z ./%c | c++filt | less -i<CR>
-nnoremap opz :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -z ./%c | c++filt | less -i<CR>
-nnoremap os :! ${CROSS_COMPILE}objdump -S ./%c | less -i<CR>
-nnoremap ops :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -S ./%c | less -i<CR>
+nnoremap ot :! $HOME/os_settings/other_files/objdump.sh -t ./%c | c++filt | less -i<CR>
+nnoremap ocd :! $HOME/os_settings/other_files/objdump.sh -D ./%c | less -i<CR>
+nnoremap od :! $HOME/os_settings/other_files/objdump.sh -D ./%c | c++filt | less -i<CR>
+nnoremap opd :! $HOME/os_settings/other_files/objdump.sh --prefix-address --show-raw-insn -D ./%c | c++filt | less -i<CR>
+nnoremap oz :! $HOME/os_settings/other_files/objdump.sh -D -z ./%c | c++filt | less -i<CR>
+nnoremap opz :! $HOME/os_settings/other_files/objdump.sh --prefix-address --show-raw-insn -D -z ./%c | c++filt | less -i<CR>
+nnoremap os :! $HOME/os_settings/other_files/objdump.sh -S ./%c | less -i<CR>
+nnoremap ops :! $HOME/os_settings/other_files/objdump.sh --prefix-address --show-raw-insn -S ./%c | less -i<CR>
 nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
 nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
-nnoremap ot :! ${CROSS_COMPILE}objdump -t ./%c | c++filt | less -i<CR>
 
 nnoremap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
 vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
