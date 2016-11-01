@@ -357,6 +357,11 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
+" Rename file: replace spaces with underscores:
+nnoremap cs :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <CR>
+" Rename file: replace big letters with little ones:
+nnoremap cl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <CR>
+nnoremap ,d :! $HOME/os_settings/other_files/vifm_create_duplicate_file.sh %c<CR>
 " nnoremap A cw<c-w>
 
 " Toggle wrap setting on ,w key
@@ -476,11 +481,6 @@ nnoremap yf :!echo -n "%c:p" | clipboard.sh<CR>
 nnoremap yn :!echo -n "%c" | clipboard.sh<CR>
 " Yank current file's size (in bytes) into the clipboard
 nnoremap yb :!du -b "%c" | cut -f1 | clipboard.sh -n<CR>
-" Rename file: replace spaces with underscores:
-nnoremap ns :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <CR>
-" Rename file: replace big letters with little ones:
-nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <CR>
-" nnoremap nl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' && echo<CR>
 
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<CR>

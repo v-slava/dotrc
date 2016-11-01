@@ -180,6 +180,7 @@ for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 for_window [class="Icedove"] focus
+for_window [class="Icedove"] mark --replace mail
 
 bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
