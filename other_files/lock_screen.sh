@@ -15,5 +15,5 @@ set -e
 i3lock -c 101010 --nofork
 setxkbmap us,ru
 
-~/other_files/init_keyboard_layout.sh
+~/os_settings/other_files/init_keyboard_layout.sh
 
