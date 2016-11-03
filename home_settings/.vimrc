@@ -734,6 +734,9 @@ function! GetFileName(line)
 	let l:last_file_char = stridx(a:line, " ", 1)
 	if l:last_file_char == -1
 		let l:last_file_char = stridx(a:line, "\t", 1)
+		if l:last_file_char == -1
+			let l:last_file_char = stridx(a:line, ",", 1)
+		endif
 	endif
 	if l:last_file_char != -1
 		return strpart(a:line, 0, l:last_file_char)
