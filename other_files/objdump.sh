@@ -6,7 +6,7 @@
 # last command line argument:
 FILE="${@: -1}"
 
-if file "$FILE" | grep -q 'relocatable, ARM' ; then
+if file "$FILE" | grep -q "ARM" ; then
 	OBJDUMP=${CROSS_COMPILE}objdump
 else
 	OBJDUMP=objdump
