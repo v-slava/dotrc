@@ -64,8 +64,8 @@ EOF
 		bluetoothctl_RET=$?
 		echo -e "\n"
 		if [ $bluetoothctl_RET -eq 3 ]; then
-			echo "Need to replug device"
-			exit
+			echo "Toggling bluetooth USB port..."
+			sudo /media/files/workspace/dotrc/other_files/toggle_bluetooth_usb_port.sh
 		fi
 		if [ $bluetoothctl_RET -ne 1 ]; then
 			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2
