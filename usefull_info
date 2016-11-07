@@ -264,6 +264,9 @@ ninja -v
 ninja -t commands
 make VERBOSE=1
 
+# Start rtags daemon (custom toolchain):
+rdm -R
+
 # enable failures in libc via LD_PRELOAD (fiu):
 fiu-run -x -c 'enable name=posix/io/*' ls
 

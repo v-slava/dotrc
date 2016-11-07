@@ -1,14 +1,14 @@
 PHONY := all
 all: download_git install_dependencies
 	mkdir rtags_out
-	cd rtags_out && cmake ../rtags
+	cd rtags_out && cmake -DCMAKE_BUILD_TYPE=Release ../rtags
 	make -C rtags_out -j 9
 	su -c "make -C rtags_out install"
 
 PHONY += download_git
 download_git:
 	git clone --recursive https://github.com/Andersbakken/rtags.git
-	cd rtags && git tag # && git checkout 'v2.1'
+	cd rtags && git tag # && git checkout 'v2.5'
 
 PHONY += install_dependencies
 install_dependencies:
