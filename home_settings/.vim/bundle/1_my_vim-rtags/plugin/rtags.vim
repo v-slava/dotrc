@@ -110,7 +110,7 @@ function! rtags#ExecuteRC(args)
     if v:shell_error && len(output) > 0
         let output = substitute(output, '\n', '', '')
         echohl ErrorMsg | echomsg "[vim-rtags] Error: " . output | echohl None
-        return []
+        " return []
     endif
     if output =~ '^Not indexed'
         echohl ErrorMsg | echomsg "[vim-rtags] Current file is not indexed!" | echohl None
