@@ -18,3 +18,6 @@ autocmd BufEnter common.h setlocal textwidth=0
 
 " let g:filter = g:prj_src_dir . '/../.issues_filter.sh'
 
+" let g:src_loc_relative_prefix = build_dir . '/'
+" let g:run_cmd = './unit_test --gtest_filter=PREFIX_1*:PREFIX_2*:PREFIX_3*'
+

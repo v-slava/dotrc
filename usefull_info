@@ -7,6 +7,9 @@ setenv ARG "VALUE"
 saveenv
 reset
 
+# Google test (gtest) test filter:
+./test_executable --gtest_filter='PREFIX_1*:PREFIX_2*:PREFIX_3*'
+
 # View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
 netstat -apn
 
