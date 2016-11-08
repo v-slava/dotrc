@@ -10,7 +10,7 @@ fi
 source ~/os_settings/other_files/vim_ide_common.sh
 
 IN="$1"
-OUT="${OUT_DIR}/${IN}.out"
+OUT="${VIM_IDE_DIR}/${IN}.out"
 # FLAGS=" -Wall -Wextra -Werror "
 FLAGS=" -Wall -Wextra "
 
@@ -35,7 +35,7 @@ case "$IN" in
 		# echo -n "cargo build"
 	;;
 	*.nim)
-		echo -n "/usr/local/bin/nim/bin/nim -d:release --opt:size c -o:\"$OUT\" --nimcache:\"${OUT_DIR}/nimcache\" \"$IN\""
+		echo -n "/usr/local/bin/nim/bin/nim -d:release --opt:size c -o:\"$OUT\" --nimcache:\"${VIM_IDE_DIR}/nimcache\" \"$IN\""
 		# --debuginfo --opt:speed
 	;;
 	*.S)

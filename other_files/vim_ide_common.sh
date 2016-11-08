@@ -1,3 +1,3 @@
-OUT_DIR=/tmp/vim_ide_dir
-FULL_FILE=$OUT_DIR/full_file
+VIM_IDE_DIR=/tmp/vim_ide_dir
+BUILD_LOG=$VIM_IDE_DIR/build_log
 

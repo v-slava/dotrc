@@ -13,16 +13,17 @@ FILTER_EXECUTABLE : filter executable to be used"
 set -e
 source ~/os_settings/other_files/vim_ide_common.sh
 # Files:
-# $OUT_DIR/source_locations - source locations of error (each in separate line)
-# $OUT_DIR/message_error_0 - error message for first error (and further errors)
-# $OUT_DIR/message_error_1 - error message for second error (and further errors)
+# $VIM_IDE_DIR/source_locations - source locations of error (each in separate line)
+# $VIM_IDE_DIR/message_error_0 - error message for first error (and further errors)
+# $VIM_IDE_DIR/message_error_1 - error message for second error (and further errors)
 # ...
-rm -rf $OUT_DIR
-mkdir $OUT_DIR
+mkdir -p $VIM_IDE_DIR
+rm -f $VIM_IDE_DIR/run_*
+rm -f $VIM_IDE_DIR/build_*
 
 write_error()
 {
-	echo -e "$1" | tee -a "$FULL_FILE" 1>&2
+	echo -e "$1" | tee -a "$BUILD_LOG" 1>&2
 }
 usage()
 {
@@ -49,21 +50,21 @@ else
 	fi
 fi
 
-# Write all output in $FULL_FILE and get space-separated line numbers of errors
+# Write all output in $BUILD_LOG and get space-separated line numbers of errors
 # in $ERROR_LINES:
 if [ "$FILTER" = "nf" ]; then
-	ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | cut -d':' -f1)
+	ERROR_LINES=$(tee "$BUILD_LOG" | grep -n "$REGEX" | cut -d':' -f1)
 else
 	if [ ! -x "$FILTER" ]; then
 		write_error "Filter argument \"$FILTER\" != 'nf' and is not executable file"
 		usage
 	fi
-	ERROR_LINES=$(tee "$FULL_FILE" | grep -n "$REGEX" | "$FILTER" | cut -d':' -f1)
+	ERROR_LINES=$(tee "$BUILD_LOG" | grep -n "$REGEX" | "$FILTER" | cut -d':' -f1)
 fi
 error_index=0
 for error_line in $ERROR_LINES ; do
-	sed "${error_line}q;d" "$FULL_FILE" | grep -o "$REGEX_SRC_LOC" >> "$OUT_DIR/source_locations"
-	tail -n +$error_line "$FULL_FILE" > "$OUT_DIR/message_error_${error_index}"
+	sed "${error_line}q;d" "$BUILD_LOG" | grep -o "$REGEX_SRC_LOC" >> "$VIM_IDE_DIR/source_locations"
+	tail -n +$error_line "$BUILD_LOG" > "$VIM_IDE_DIR/message_error_${error_index}"
 	error_index=$((error_index + 1))
 done
 
