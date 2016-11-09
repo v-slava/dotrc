@@ -428,7 +428,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	let l:build_exit_code = system(l:full_build_cmd)
 	call writefile([a:build_cmd], g:ide_dir . '/build_cmd')
 	call writefile([l:build_exit_code], g:ide_dir . '/build_exit_code')
-	let l:src_loc_file = g:ide_dir . '/source_locations'
+	let l:src_loc_file = g:ide_dir . '/build_message_source_locations'
 	let l:issues_found = filereadable(l:src_loc_file)
 	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
 		if a:run_interactive == 'false'
@@ -549,7 +549,7 @@ function! Show_error( error_index )
 		let l:current_source_location = g:src_loc_relative_prefix . l:current_source_location
 	endif
 	execute ':edit ' . l:current_source_location
-	execute 'botright pedit ' . g:ide_dir . '/message_error_' . a:error_index
+	execute 'botright pedit ' . g:ide_dir . '/build_message_' . a:error_index
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
 
