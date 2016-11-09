@@ -11,15 +11,15 @@ w                 : warnings
 nf                : no filter required
 FILTER_EXECUTABLE : filter executable to be used"
 set -e
-source ~/os_settings/other_files/vim_ide_common.sh
+source ~/os_settings/other_files/ide_common.sh
 # Files:
-# $VIM_IDE_DIR/source_locations - source locations of error (each in separate line)
-# $VIM_IDE_DIR/message_error_0 - error message for first error (and further errors)
-# $VIM_IDE_DIR/message_error_1 - error message for second error (and further errors)
+# $IDE_DIR/build_message_source_locations - source locations of warning/error (each in separate line)
+# $IDE_DIR/build_message_0 - first  warning/error message (and further messages)
+# $IDE_DIR/build_message_1 - second warning/error message (and further messages)
 # ...
-mkdir -p $VIM_IDE_DIR
-rm -f $VIM_IDE_DIR/run_*
-rm -f $VIM_IDE_DIR/build_*
+mkdir -p $IDE_DIR
+rm -f $IDE_DIR/run_*
+rm -f $IDE_DIR/build_*
 
 write_error()
 {
@@ -63,8 +63,8 @@ else
 fi
 error_index=0
 for error_line in $ERROR_LINES ; do
-	sed "${error_line}q;d" "$BUILD_LOG" | grep -o "$REGEX_SRC_LOC" >> "$VIM_IDE_DIR/source_locations"
-	tail -n +$error_line "$BUILD_LOG" > "$VIM_IDE_DIR/message_error_${error_index}"
+	sed "${error_line}q;d" "$BUILD_LOG" | grep -o "$REGEX_SRC_LOC" >> "$IDE_DIR/build_message_source_locations"
+	tail -n +$error_line "$BUILD_LOG" > "$IDE_DIR/build_message_${error_index}"
 	error_index=$((error_index + 1))
 done
 

@@ -410,7 +410,7 @@ nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR>:cs add ~/.vim/tags/std.cscope<CR>
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
 
-let g:vim_ide_dir = '/tmp/vim_ide_dir'
+let g:ide_dir = '/tmp/ide_dir'
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')
 let g:build_cmd_all = g:build_cmd
 let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . expand('%:t') . '"')
@@ -426,18 +426,18 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	call Update_status_line('Build started...', 'normal')
 	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
 	let l:build_exit_code = system(l:full_build_cmd)
-	call writefile([a:build_cmd], g:vim_ide_dir . '/build_cmd')
-	call writefile([l:build_exit_code], g:vim_ide_dir . '/build_exit_code')
-	let l:src_loc_file = g:vim_ide_dir . '/source_locations'
+	call writefile([a:build_cmd], g:ide_dir . '/build_cmd')
+	call writefile([l:build_exit_code], g:ide_dir . '/build_exit_code')
+	let l:src_loc_file = g:ide_dir . '/source_locations'
 	let l:issues_found = filereadable(l:src_loc_file)
 	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
 		if a:run_interactive == 'false'
-			let l:run_log_file = g:vim_ide_dir . '/run_log'
+			let l:run_log_file = g:ide_dir . '/run_log'
 			call Update_status_line('Running...', 'normal')
-			call writefile([a:run_cmd], g:vim_ide_dir . '/run_cmd')
+			call writefile([a:run_cmd], g:ide_dir . '/run_cmd')
 			call system("echo '" . a:run_cmd . "' | bash 1>" . l:run_log_file . ' 2>&1')
 			let l:run_exit_code = v:shell_error
-			call writefile([l:run_exit_code], g:vim_ide_dir . '/run_exit_code')
+			call writefile([l:run_exit_code], g:ide_dir . '/run_exit_code')
 			execute 'botright pedit ' . l:run_log_file
 			call Update_status_line('Running completed. Exit code: ' . l:run_exit_code, 'normal')
 		else " a:run_interactive == 'true'
@@ -460,7 +460,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 			let g:error_index = 0
 			call Show_error(g:error_index)
 		else
-			execute 'botright pedit ' . g:vim_ide_dir . '/build_log'
+			execute 'botright pedit ' . g:ide_dir . '/build_log'
 			call Update_status_line('Build failed. Exit code: ' . l:build_exit_code, 'normal')
 		endif
 	endif
@@ -473,7 +473,7 @@ nmap <silent> <Leader>or :wa<CR>:call Build_and_run(g:rebuild_cmd, g:run_cmd, g:
 function Close_window_if_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == g:vim_ide_dir || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == g:ide_dir || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
 		execute ':q'
 	endif
 	let l:last_part_expected = '.fugitiveblame'
@@ -528,13 +528,13 @@ command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
 
 function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
-	let l:config_log_file = g:vim_ide_dir . '/config_log'
-	call system('rm -rf ' . g:vim_ide_dir . ' && mkdir -p ' . g:vim_ide_dir)
-	call writefile([a:config_cmd], g:vim_ide_dir . '/config_cmd')
+	let l:config_log_file = g:ide_dir . '/config_log'
+	call system('rm -rf ' . g:ide_dir . ' && mkdir -p ' . g:ide_dir)
+	call writefile([a:config_cmd], g:ide_dir . '/config_cmd')
 	let l:full_config_cmd = "echo '" . a:config_cmd . "' | bash 1>" . l:config_log_file . ' 2>&1'
 	call system(l:full_config_cmd)
 	let l:exit_code = v:shell_error
-	call writefile([l:exit_code], g:vim_ide_dir . '/config_exit_code')
+	call writefile([l:exit_code], g:ide_dir . '/config_exit_code')
 	execute 'botright pedit ' . l:config_log_file
 	call Update_status_line('Configure is done. Exit code: ' . l:exit_code, 'normal')
 endfunction
@@ -549,7 +549,7 @@ function! Show_error( error_index )
 		let l:current_source_location = g:src_loc_relative_prefix . l:current_source_location
 	endif
 	execute ':edit ' . l:current_source_location
-	execute 'botright pedit ' . g:vim_ide_dir . '/message_error_' . a:error_index
+	execute 'botright pedit ' . g:ide_dir . '/message_error_' . a:error_index
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
 
