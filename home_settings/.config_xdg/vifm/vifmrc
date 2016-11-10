@@ -390,7 +390,7 @@ mark w /media/files/workspace
 mark o /media/files/workspace/dotrc
 mark u /media/usb
 mark f /media/files
-mark r /media/files/radio
+mark r /media/files/music/radio
 mark n /media/files/music/new
 
 nmap b :bmarks<CR>/
