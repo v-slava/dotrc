@@ -7,7 +7,7 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-source ~/os_settings/other_files/vim_ide_common.sh
+source ~/os_settings/other_files/ide_common.sh
 
 IN="$1"
 OUT="${IDE_DIR}/${IN}.out"
