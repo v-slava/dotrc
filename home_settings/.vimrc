@@ -485,6 +485,9 @@ function Close_window_if_temporary()
 			execute ':q'
 		endif
 	endif
+	if &pvw == 1 " If it is a preview window
+		execute ':q'
+	endif
 endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
 nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
@@ -789,11 +792,14 @@ nmap <Leader>gb :Gblame<CR>
 nmap <Leader>gdi :Gdiff<CR>
 " Diff against HEAD:
 nmap <Leader>gdh :Gdiff HEAD<CR>
+" Diff against previous commit:
+nmap <Leader>gdp :Gdiff ~1<CR>
 nmap <Leader>gw :Gwrite<CR>
 nmap <Leader>gr :Gread<CR>
 nmap <Leader>gco :Gcommit<CR>
 nmap <Leader>gca :Gcommit --amend<CR>
 nmap <Leader>ga <C-w>k-
+nmap <Leader>ge :!git show --name-only --pretty="" HEAD<CR>
 " Need for "fugitive-:Gdiff":
 set diffopt+=vertical
 " Search for next unstaged file (TODO):

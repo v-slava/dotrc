@@ -14,6 +14,7 @@ alias glog='git log --all --graph --decorate | cless -i'
 alias ga='git add'
 alias gs='git status'
 alias gsh='~/os_settings/other_files/git_show_HEAD.sh'
+alias ge='~/os_settings/other_files/git_edit_HEAD.sh'
 alias gd='git diff'
 __git_complete gd _git_diff
 alias gco='git commit'
