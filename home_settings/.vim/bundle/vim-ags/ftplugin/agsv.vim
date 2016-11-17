@@ -54,3 +54,7 @@ nnoremap <buffer> OL   : AgsViewFileLeft<CR>
 nnoremap <buffer> OR   : AgsViewFileRight<CR>
 nnoremap <buffer> OS   : AgsOpenFileSame<CR>
 nnoremap <buffer> OU   : AgsViewFileReuse<CR>
+
+" My hotkeys:
+nnoremap <silent><buffer> <c-n> :AgsNextResult<CR>: AgsOpenFileReuse<CR>zz<c-w><c-p>
+nnoremap <silent><buffer> <c-p> :AgsPrevResult<CR>: AgsOpenFileReuse<CR>zz<c-w><c-p>
