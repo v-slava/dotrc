@@ -7,14 +7,16 @@
 
 # Note: i3-wm version 4.10+ required for wmctrl to work here.
 
+goldendict &
+
 set -e
+
+REQUEST=$(dmenu -fn 'Inconsolata LGC-16:monospace' -p 'word to translate:' < /dev/null)
 
 WIN_IDs=$(wmctrl -l | grep GoldenDict | cut -d' ' -f1)
 for win_id in $WIN_IDs ; do
 	wmctrl -ic $win_id
 done
-
-REQUEST=$(dmenu -fn 'Inconsolata LGC-16:monospace' -p 'word to translate:' < /dev/null)
 
 LANG_PAIR=$(echo $REQUEST | cut -c -2)
 WORD="$(echo $REQUEST | cut -c 4-)"
