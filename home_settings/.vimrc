@@ -102,6 +102,9 @@ hi StatusLineNC ctermfg=232 ctermbg=252
 " Highlight spaces and tabs in the end of the line as errors:
 match Error /\s\+$/
 
+" Set maximum number of tab pages to be opened by the "-p" command line argument:
+set tabpagemax=100
+
 " Display symbol '»' as a first symbol for tab:
 set listchars=tab:»\ 
 set list
