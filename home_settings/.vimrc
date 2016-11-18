@@ -27,6 +27,12 @@
 " " View man page in vim:
 " :Man 2 read
 "
+" Resize vim window:
+" :[vertical] resize {+|-}<NUMBER><CR>
+"
+" List all sourced script names:
+" :scriptnames
+"
 " Generate helptags:
 " cd ~/.vim/bundle/SOME_PLUGIN
 " vim -c "helptags doc | q"
@@ -69,46 +75,11 @@
 " L - move cursor to the last line on a screen (low).
 " M - move cursor to the middle line on a screen (middle).
 "
-" <F12> - copy full source location into clipboard
-" <F11> - copy stripped source location into clipboard
-" <F9>  - index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
-" <F7> - set spell checking (expects {en|de|ru|en,ru|...}
-" <F6> - disable spell checking.
-"
 " in visual mode '=' - fix identation
-" Tcomment block comment:
-" gb in visual mode (my)
-" gcb<motion> in normal mode
 "
 " <Leader>mt : Toggles ShowMarks on and off.
 "
-" ctags:
-" :help tag
-" :[count]ta[g][!] {ident}  == <C-]> jump to the definition of {ident}
-" :[count]ta[g][!]         Jump to [count] newer entry in tag stack (default 1).
-" :[count]po[p][!]          == <C-T> Jump to [count] older entry in tag stack (default 1).
-" :ts[elect][!] [ident]     == g]    list the tags that match [indent]
-" :sts[elect][!] [ident]    == <C-W>g] Like :ts, but splits the window for the selected tag.
-" :tags  Show the contents of the tag stack.  The active entry is marked with a '>'.
-"
-" cscope:
-" Query types:
-"   's'   symbol: find all references to the token under cursor
-"   'g'   global: find global definition(s) of the token under cursor
-"   'c'   calls:  find all calls to the function name under cursor
-"   't'   text:   find all instances of the text under cursor
-"   'e'   egrep:  egrep search for the word under cursor
-"   'f'   file:   open the filename under cursor
-"   'i'   includes: find files that include the filename under cursor
-"   'd'   called: find functions that function under cursor calls
-" :cs  find {querytype} {name}  ==  <C-\>{querytype}
-" :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
-" :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
-"
 " reload file: :edit
-"
-" Add (framework/standard C/C++ library) tags: <F8> (see ~/.vim/tags)
-" Index source files and update cscope connection: <F9>. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 "
 " view vim filetypes:
 " ls /usr/share/vim/vim74/ftplugin/
@@ -131,12 +102,10 @@ hi StatusLineNC ctermfg=232 ctermbg=252
 " Highlight spaces and tabs in the end of the line as errors:
 match Error /\s\+$/
 
+" Display symbol '»' as a first symbol for tab:
 set listchars=tab:»\ 
 set list
 
-" View list all sourced script names:
-" :scriptnames
-"
 " Disable some unused standard plugins:
 let g:loaded_getscriptPlugin = 1
 let g:loaded_gzip = 1
@@ -204,6 +173,8 @@ map q: <nop>
 " View invisible characters for makefiles:
 " autocmd FileType make set list
 nmap <F2> :set list!<CR>
+" Clear last used search pattern:
+nmap <Leader>hdk :let @/ = ""<CR>
 
 " Set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
@@ -407,8 +378,34 @@ set tags=./tags;,tags;
 " Add (framework/standard C/C++ library) tags:
 nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR>:cs add ~/.vim/tags/std.cscope<CR>
 
+" Update cscope connection while opening new file:
+autocmd FileType c,cpp,asm call Cscope_connect()
+
 " Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
 nmap <F9> :SrcIndexOn 
+
+" ctags:
+" :help tag
+" :[count]ta[g][!] {ident}  == <C-]> jump to the definition of {ident}
+" :[count]ta[g][!]         Jump to [count] newer entry in tag stack (default 1).
+" :[count]po[p][!]          == <C-T> Jump to [count] older entry in tag stack (default 1).
+" :ts[elect][!] [ident]     == g]    list the tags that match [indent]
+" :sts[elect][!] [ident]    == <C-W>g] Like :ts, but splits the window for the selected tag.
+" :tags  Show the contents of the tag stack.  The active entry is marked with a '>'.
+
+" cscope:
+" Query types:
+"   's'   symbol: find all references to the token under cursor
+"   'g'   global: find global definition(s) of the token under cursor
+"   'c'   calls:  find all calls to the function name under cursor
+"   't'   text:   find all instances of the text under cursor
+"   'e'   egrep:  egrep search for the word under cursor
+"   'f'   file:   open the filename under cursor
+"   'i'   includes: find files that include the filename under cursor
+"   'd'   called: find functions that function under cursor calls
+" :cs  find {querytype} {name}  ==  <C-\>{querytype}
+" :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
+" :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
 
 let g:ide_dir = '/tmp/ide_dir'
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')
@@ -593,12 +590,9 @@ function! Copy_location(in_file, strip_part)
 		let @+ = l:full_location
 	endif
 endfunction
+" Copy full source location into clipboard:
 nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
-nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
-
-
-" Update cscope connection while opening new file:
-autocmd FileType c,cpp,asm call Cscope_connect()
+" nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
 
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
@@ -631,7 +625,6 @@ hi ShowMarksHLu   cterm=bold ctermfg=black ctermbg=white
 hi ShowMarksHLm   cterm=bold ctermfg=black ctermbg=white
 
 " Tcomment:
-vmap gb :TCommentBlock<CR>
 call tcomment#DefineType('unknown', '# %s')
 call tcomment#DefineType('make', '# %s')
 call tcomment#DefineType('gdb', '# %s')
@@ -650,6 +643,12 @@ call tcomment#DefineType('texinfo', '@c %s')
 call tcomment#DefineType('xdefaults', '! %s')
 call tcomment#DefineType('xmodmap', '! %s')
 call tcomment#DefineType('vifm', '" %s')
+let g:tcommentMapLeader1 = ''
+let g:tcommentMapLeader2 = ''
+" Block comment (use gcb<motion> in normal mode):
+vmap gb :TCommentBlock<CR>
+call tcomment#DefineType('c_block', g:tcommentBlockC2)
+call tcomment#DefineType('cpp_block', g:tcommentBlockC2)
 
 " localvimrc:
 let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced
@@ -671,6 +670,7 @@ function! Split_lines() range
 	let l:words_array = split(l:orig_text)
 	let l:failed = append(l:first_line - 1, l:words_array)
 endfunction
+" Split lines:
 command! -range Slines <line1>,<line2> call Split_lines()
 function! Merge_lines() range
 	let l:first_line = a:firstline
@@ -681,6 +681,7 @@ function! Merge_lines() range
 	execute l:first_line ',' l:last_line 'delete z'
 	let l:failed = append(l:first_line - 1, l:orig_text)
 endfunction
+" Merge lines:
 command! -range Mlines <line1>,<line2> call Merge_lines()
 
 " doxygen: function begin:
