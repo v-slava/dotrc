@@ -77,11 +77,11 @@ bindsym $Alt_L+$Shift_L+space floating toggle
 # change focus between tiling / floating windows
 bindsym $Alt_L+space focus mode_toggle
 
-# focus the parent container
-bindsym $Alt_L+Shift_L+p focus parent
+# focus the parent container (father)
+bindsym $Alt_R+f focus parent
 
 # focus the child container
-bindsym $Alt_L+Shift_L+c focus child
+bindsym $Alt_R+C focus child
 
 # switch to workspace
 bindsym $Alt_L+1 workspace 1

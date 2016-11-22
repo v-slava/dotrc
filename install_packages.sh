@@ -32,7 +32,7 @@ apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:
-apt-get install -t jessie-backports i3-wm i3status i3lock fbxkb
+apt-get install -t jessie-backports i3-wm libanyevent-i3-perl i3status i3lock fbxkb
 
 # Install network manager:
 apt-get install network-manager-gnome gnome-keyring notification-daemon
