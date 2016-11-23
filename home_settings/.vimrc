@@ -796,6 +796,8 @@ nmap <Leader>gb :Gblame<CR>
 nmap <Leader>gdi :Gdiff<CR>
 " Diff against HEAD:
 nmap <Leader>gdh :Gdiff HEAD<CR>
+" Diff against HEAD~1:
+nmap <Leader>gd1 :Gdiff ~1<CR>
 " Diff next file:
 nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR>
 " Diff against previous commit:
