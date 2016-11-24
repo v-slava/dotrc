@@ -12,5 +12,16 @@ List of available interfaces:\n" 1>&2
 if [ $# -ne 1 ]; then
 	usage
 fi
-tcpdump -i "$1" -w - -U | wireshark -k -i -
+
+set -e
+
+FIFO=/tmp/wireshark_tcpdump_fifo
+
+rm -f $FIFO
+mkfifo $FIFO
+
+tcpdump -i "$1" -w - -U > $FIFO &
+cat $FIFO | wireshark -k -i -
+killall tcpdump
+rm -f $FIFO
 
