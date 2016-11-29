@@ -834,8 +834,8 @@ nmap <Leader>gd1 :Gdiff ~1<CR>
 nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR>
 " Diff against previous commit:
 nmap <Leader>gdp :Gdiff ~1<CR>
-nmap <Leader>gw :Gwrite<CR><C-w>k<C-n>
-nmap <Leader>gr :Gread<CR><C-w>k<C-n>
+nmap <Leader>gw :Gwrite<CR><C-w>k
+nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
 nmap <Leader>gco :Gcommit<CR>
 nmap <Leader>gca :Gcommit --amend<CR>
 nmap <Leader>ga <C-w>k-
