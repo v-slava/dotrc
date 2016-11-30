@@ -101,6 +101,7 @@ hi StatusLineNC ctermfg=232 ctermbg=252
 
 " Highlight spaces and tabs in the end of the line as errors:
 match Error /\s\+$/
+autocmd WinEnter * match Error /\s\+$/
 
 " Set maximum number of tab pages to be opened by the "-p" command line argument:
 set tabpagemax=100
@@ -173,8 +174,8 @@ map q: <nop>
 " nnoremap , <
 " nnoremap < ,
 
-" Clear last used search pattern (highlighting):
-nmap <Leader>hdk :let @/ = ""<CR>
+" Clear last used search pattern (highlighting, search clear, no highlight search):
+nmap <Leader>sc :let @/ = ""<CR>
 
 " Set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>

@@ -26,6 +26,7 @@ alias gpl='git pull'
 alias gpush_test_commit='~/temporary/exchange_push_test_commit.sh'
 alias gfetch_test_commit='~/temporary/exchange_fetch_test_commit.sh'
 alias beautify='~/temporary/beautify.sh'
+alias noice='export PATH=$(echo $PATH | tr : "\n" | grep -v icecc | xargs echo -n | tr " " :)'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
