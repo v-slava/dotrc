@@ -1,6 +1,6 @@
 # fill              = Ctrl+f
 # clear             = Ctrl+Alt+c
-# submit card       = Ctrl+enter
+# submit card       = Ctrl+j
 
 # # Prefixes german (maskulinum, femininum, neutrum):
 # add "der " prefix = Ctrl+Alt+m
@@ -24,6 +24,10 @@ import os.path
 # from subprocess import *
 from subprocess import call,check_call
 
+from aqt import addcards
+from aqt.utils import tooltip
+from anki.sound import clearAudioQueue
+
 KEYBOARD_LAYOUT = "/media/files/other/programs/keyboard_layout"
 
 def add_image(self, english_word):
@@ -40,6 +44,8 @@ def add_image(self, english_word):
 	os.makedirs(TMP_DIR)
 	# Start from first google search result:
 	num = 0
+	# Switch keyboard layout to english:
+	check_call([KEYBOARD_LAYOUT, "--set_layout", "0"])
 	while (True):
 		# Download images web-page:
 		check_call(["wget", "--user-agent=Mozilla/5.0", "-O", IMAGE_WEB_PAGE,
@@ -212,7 +218,31 @@ def setup_my_button(self, text, tooltip, shortcut, handler):
 	button.setShortcut(QKeySequence(shortcut))
 	button.setToolTip(tooltip + ': ' + shortcut)
 
+# This is modified version of function AddCards::addCards from addcards.py:
+def my_addCards(self):
+	self.saveNow()
+	self.saveAddModeVars()
+	note = self.note
+	note = self.parentWindow.addNote(note)
+	if not note:
+		return False
+	tooltip(_("Added"), period=500)
+	# stop anything playing
+	clearAudioQueue()
+	self.parentWindow.onReset(keep=True)
+	self.parentWindow.mw.col.autosave()
+	return True
+
+def submit_button_pressed(self):
+	# self.parentWindow.addCards()
+	# succeeded = True
+	succeeded = my_addCards(self)
+	# Switch keyboard layout to english if submit succeeded:
+	if succeeded:
+		check_call([KEYBOARD_LAYOUT, "--set_layout", "0"])
+
 def setup_all_my_buttons(self):
+	setup_my_button(self, 'Submit', 'Submit card', 'Ctrl+j', submit_button_pressed)
 	setup_my_button(self, 'Fill', 'Fill all fields', 'Ctrl+f', fill_button_pressed)
 	setup_my_button(self, 'Clear', 'Clear all fields', 'Ctrl+Alt+c', clear_button_pressed)
 	setup_my_button(self, 'sich', 'Add prefix "sich " (reflexiv)', 'Ctrl+s', sich_button_pressed)

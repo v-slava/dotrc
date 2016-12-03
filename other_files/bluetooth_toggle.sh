@@ -66,6 +66,7 @@ EOF
 		if [ $bluetoothctl_RET -eq 3 ]; then
 			echo "Toggling bluetooth USB port..."
 			sudo /media/files/workspace/dotrc/other_files/toggle_bluetooth_usb_port.sh
+			sleep 1
 		fi
 		if [ $bluetoothctl_RET -ne 1 ]; then
 			echo -e "Failed to connect to bluetooth headset $BT_MAC.\n" 1>&2
