@@ -177,6 +177,9 @@ map q: <nop>
 " Clear last used search pattern (highlighting, search clear, no highlight search):
 nmap <Leader>sc :let @/ = ""<CR>
 
+" Search for text in clipboard:
+nmap <Leader>/ :let @/ = @+<CR>
+
 " Set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
 
@@ -418,7 +421,7 @@ function! ViewInNewBuffer(cmd)
 	put z
 endfunction
 command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
-" Usage example: :ViewInNewBuffer :map<CR>
+" Usage example: :ViewInNewBuffer :map<CR> (show mappings in buffer).
 
 let g:ide_dir = '/tmp/ide_dir'
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')

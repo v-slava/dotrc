@@ -74,9 +74,12 @@ export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
 # Toolchains:
 # Icecream (distributed compiler):
 export PATH=/usr/lib/icecc/bin:$PATH
-export ICECC_CC=/usr/bin/clang
-export ICECC_CXX=/usr/bin/clang++
-export ICECC_VERSION=$HOME/other/toolchains/icecc/clang-3.5-slava_f07eb13ba0ccf7554cb64725c5c308a0.tar.gz
+# export ICECC_CC=/usr/bin/clang
+# export ICECC_CXX=/usr/bin/clang++
+# export ICECC_VERSION=$HOME/other/toolchains/icecc/clang-3.5-slava_f07eb13ba0ccf7554cb64725c5c308a0.tar.gz
+export ICECC_CC=/usr/bin/gcc
+export ICECC_CXX=/usr/bin/g++
+export ICECC_VERSION=$HOME/other/toolchains/icecc/gcc-4.9.2-slava_a908cb794bef5674145090371ab9281b.tar.gz
 
 # Atmel:
 export CROSS_COMPILE=arm-none-eabi-

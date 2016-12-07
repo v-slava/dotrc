@@ -35,6 +35,13 @@ case "$1" in
 	;;
 esac
 
+# Filter out binary files:
+for file in $($CMD) ; do
+	if file -ib "$file" | grep -q "^text/" ; then
+		FILES_LIST="$FILES_LIST $file"
+	fi
+done
+
 case "$2" in
 	"h")
 		GDIFF_ARG="HEAD"
@@ -47,5 +54,4 @@ case "$2" in
 	;;
 esac
 
-vim -p $($CMD) -c "let g:Gdiff_arg='$GDIFF_ARG'|exec ':Gdiff ' . g:Gdiff_arg"
-
+vim -p $FILES_LIST -c "let g:Gdiff_arg='$GDIFF_ARG'|exec ':Gdiff ' . g:Gdiff_arg"
