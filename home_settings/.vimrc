@@ -178,7 +178,7 @@ map q: <nop>
 nmap <Leader>sc :let @/ = ""<CR>
 
 " Search for text in clipboard:
-nmap <Leader>/ :let @/ = @+<CR>
+nmap <Leader>s/ :let @/ = @+<CR>
 
 " Set/unset search highlighting:
 nmap <F3> :set hlsearch!<CR>
@@ -617,30 +617,61 @@ let g:localvimrc_blacklist='^/media/*'
 let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)
 let g:localvimrc_sandbox = 0 " don't use sandbox (1 = use)
 
-" Code to convert spaces to \n and backwards:
-function! Split_lines() range
-	let l:first_line = a:firstline
-	let l:last_line = a:lastline
-	let l:lines_array = getline(l:first_line, l:last_line)
-	let l:orig_text = join(l:lines_array, '\n')
+" Code to convert spaces to \n and backwards (mlines, merge lines, slines, split lines):
+function! SplitLines()
+	let l:current_line_number = line('.')
+	let l:text_below = getline(l:current_line_number + 1)
+	let l:orig_text = getline('.')
 	" Delete original text into register z:
-	execute l:first_line ',' last_line 'delete z'
+	execute 'normal 0"zD'
+	" Get list of words:
 	let l:words_array = split(l:orig_text)
-	let l:failed = append(l:first_line - 1, l:words_array)
+	if l:text_below != ''
+		call add(l:words_array, '')
+	endif
+	" Append list of words to current buffer:
+	let l:failed = append(l:current_line_number, l:words_array)
+	let l:text_above = getline(line('.') - 1)
+	echom l:text_above
+	if l:text_above == '' " We've inserted unnecessary empty line. Need to delete it.
+		execute 'normal "zdd'
+	else " Need to move cursor to first word.
+		execute 'normal j'
+	endif
 endfunction
-" Split lines:
-command! -range Slines <line1>,<line2> call Split_lines()
-function! Merge_lines() range
-	let l:first_line = a:firstline
-	let l:last_line = a:lastline
-	let l:lines_array = getline(l:first_line, l:last_line)
-	let l:orig_text = join(l:lines_array, ' ')
+command! SplitLines call SplitLines()
+nmap <Leader>s0 :SplitLines<CR>
+
+function! MergeLines(...) range
+	execute a:firstline
+	let l:last_line_in_buffer = line('$')
+	let l:separator = (a:0 >= 1) ? a:1 : ' '
+	let l:lines_array = getline(a:firstline, a:lastline)
+	let l:orig_text = join(l:lines_array, l:separator)
 	" Delete original text into register z:
-	execute l:first_line ',' l:last_line 'delete z'
-	let l:failed = append(l:first_line - 1, l:orig_text)
+	execute a:firstline ',' a:lastline 'delete z'
+	let l:failed = append(a:firstline - 1, l:orig_text)
+	if a:lastline == l:last_line_in_buffer
+		execute 'normal j'
+	else
+		execute 'normal k'
+	endif
 endfunction
-" Merge lines:
-command! -range Mlines <line1>,<line2> call Merge_lines()
+command! -nargs=? -range MergeLines <line1>,<line2> call MergeLines(<f-args>)
+function! MergeBlock()
+	execute 'normal {'
+	if getline('.') == ''
+		execute 'normal j'
+	endif
+	let l:first_line = line('.')
+	execute 'normal }'
+	if getline('.') == ''
+		execute 'normal k'
+	endif
+	let l:last_line = line('.')
+	execute l:first_line . ',' . l:last_line . 'call MergeLines()'
+endfunction
+nmap <Leader>m1 :call MergeBlock()<CR>
 
 " function! Backspace_handler()
 " 	let l:cursor = getpos('.')
