@@ -13,6 +13,15 @@ reset
 # View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
 netstat -apn
 
+# Audio CD is can't be mounted.
+# Listen track #1 from audio CD:
+mplayer -cdrom-device /dev/cdrom -cache 5000 cdda://1
+# Determine number of audio tracks:
+udevadm info /dev/cdrom | grep ID_CDROM_MEDIA_TRACK_COUNT
+# Extract all audio tracks in mp3 format from audio cd:
+apt-get install abcde eyed3
+abcde -o mp3
+
 # Print file capabilities:
 getcap FILE
 # Add capabilities to a file:
