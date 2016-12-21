@@ -372,7 +372,7 @@ nnoremap ,d :! $HOME/os_settings/other_files/vifm_create_duplicate_file.sh %c<CR
 " nnoremap <f4> :edit<CR>
 " nnoremap <f5> :copy<CR>
 " nnoremap <f6> :move<CR>
-" nnoremap <f7> :mkdir<space>
+" nnoremap <f7> :mkdir<SPACE>
 " nnoremap <f8> :delete<CR>
 
 " ------------------------------------------------------------------------------
@@ -393,7 +393,8 @@ mark f /media/files
 mark r /media/files/music/radio
 mark n /media/files/music/new
 
-nmap b :bmarks<CR>/
+nmap b :bmarks<SPACE>
+nmap B :bmarks<CR>/
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/.. trash_vifm
@@ -453,8 +454,8 @@ nnoremap rs :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "./%c"<
 nnoremap rm :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make"<CR>
 nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make clean"<CR>
 
-nmap V :!vim<space>
-nmap E :!e<space>
+nmap V :!vim<SPACE>
+nmap E :!e<SPACE>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 

@@ -318,8 +318,18 @@ uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 # Use valgrind for dynamic memory analysis:
 valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
 
-# Use clang's static analysis:
+# Use clang static analysis:
 scan-build BUILD_COMMAND
+# List some clang command line options:
+clang++ -cc1 --help
+# List scan-build default checkers:
+scan-build --help-checkers
+# List all available analyzers:
+clang++ -cc1 -analyzer-checker-help
+# Use one specific analyzer:
+clang++ -cc1 -analyze -analyzer-checker=core.DivideZero FILE.cpp
+# Verbose scan-build execution:
+scan-build -v -v -v BUILD_COMMAND
 
 # Find *.c files only in specified path:
 find -path './some/path*' -name '*.c
