@@ -14,6 +14,9 @@
 " set vicmd="vim --servername VIM"
 set vixcmd='e'
 
+" set cpoptions='fst' " Default value
+set cpoptions='fs'
+
 " Trash Directory
 " The default is to move files that are deleted with dd or :d to
 " the trash directory.  If you change this you will not be able to move
