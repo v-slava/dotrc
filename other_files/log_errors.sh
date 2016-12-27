@@ -13,11 +13,9 @@ FILTER_EXECUTABLE : filter executable to be used"
 set -e
 source ~/os_settings/other_files/ide_common.sh
 # Files:
-# $IDE_DIR/build_message_source_locations - source locations of warning/error (each in separate line)
-# $IDE_DIR/build_message_0 - first  warning/error message (and further messages)
-# $IDE_DIR/build_message_1 - second warning/error message (and further messages)
-# ...
+# $IDE_DIR/build_log_line_numbers - line numbers (in build log) of warning/error
 mkdir -p $IDE_DIR
+LINE_NUMBERS_FILE="$IDE_DIR/build_log_line_numbers"
 rm -f $IDE_DIR/run_*
 rm -f $IDE_DIR/build_*
 
@@ -53,18 +51,11 @@ fi
 # Write all output in $BUILD_LOG and get space-separated line numbers of errors
 # in $ERROR_LINES:
 if [ "$FILTER" = "nf" ]; then
-	ERROR_LINES=$(tee "$BUILD_LOG" | grep -n "$REGEX" | cut -d':' -f1)
+	tee "$BUILD_LOG" | grep -n "$REGEX" | cut -d':' -f1 > "$LINE_NUMBERS_FILE"
 else
 	if [ ! -x "$FILTER" ]; then
 		write_error "Filter argument \"$FILTER\" != 'nf' and is not executable file"
 		usage
 	fi
-	ERROR_LINES=$(tee "$BUILD_LOG" | grep -n "$REGEX" | "$FILTER" | cut -d':' -f1)
+	tee "$BUILD_LOG" | grep -n "$REGEX" | "$FILTER" | cut -d':' -f1 > "$LINE_NUMBERS_FILE"
 fi
-error_index=0
-for error_line in $ERROR_LINES ; do
-	sed "${error_line}q;d" "$BUILD_LOG" | grep -o "$REGEX_SRC_LOC" >> "$IDE_DIR/build_message_source_locations"
-	tail -n +$error_line "$BUILD_LOG" > "$IDE_DIR/build_message_${error_index}"
-	error_index=$((error_index + 1))
-done
-

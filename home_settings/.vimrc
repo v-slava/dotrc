@@ -435,14 +435,15 @@ let g:error_index = -1
 let g:warnings = 'w' " change to 'nw' if you want to suppress warnings
 let g:filter = 'nf' " change to shell script name if you want to filter issues
 let g:run_interactive = 'false' " change to 'true' to spawn terminal
+let g:build_log_file = g:ide_dir . '/build_log'
 function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	call Update_status_line('Build started...', 'normal')
 	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
 	let l:build_exit_code = system(l:full_build_cmd)
 	call writefile([a:build_cmd], g:ide_dir . '/build_cmd')
 	call writefile([l:build_exit_code], g:ide_dir . '/build_exit_code')
-	let l:src_loc_file = g:ide_dir . '/build_message_source_locations'
-	let l:issues_found = filereadable(l:src_loc_file)
+	let l:log_line_numbers_file = g:ide_dir . '/build_log_line_numbers'
+	let l:issues_found = getfsize(l:log_line_numbers_file) != 0
 	if l:build_exit_code == 0 && !l:issues_found " if build succeeded
 		if a:run_interactive == 'false'
 			let l:run_log_file = g:ide_dir . '/run_log'
@@ -469,7 +470,8 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 		endif
 	else " build failed => open error log for first error and goto source location
 		if l:issues_found
-			let g:source_locations = readfile(l:src_loc_file)
+			let g:build_log = readfile(g:build_log_file)
+			let g:build_log_line_numbers = readfile(l:log_line_numbers_file)
 			let g:error_index = 0
 			call Show_error(g:error_index)
 		else
@@ -497,16 +499,19 @@ function! Configure(config_cmd)
 endfunction
 nmap <silent> <Leader>oc :wa<CR>:call Configure(g:config_cmd)<CR>
 
-function! Show_error( error_index )
-	let l:current_source_location = get(g:source_locations, a:error_index)
-	let l:slash_index = match(l:current_source_location, "/")
+function! Show_error(error_index)
+	let l:log_line_number = g:build_log_line_numbers[a:error_index]
+	let l:build_log_line = g:build_log[l:log_line_number - 1]
+	let l:line = l:build_log_line
+	let l:slash_index = match(l:line, "/")
 	if l:slash_index == 0 " absolute path
-		let l:current_source_location = g:src_loc_absolute_prefix . l:current_source_location
+		let l:line = g:src_loc_absolute_prefix . l:line
 	else
-		let l:current_source_location = g:src_loc_relative_prefix . l:current_source_location
+		let l:line = g:src_loc_relative_prefix . l:line
 	endif
+	let l:current_source_location = GetFileNameUnderCursor(l:line)
 	execute ':edit ' . l:current_source_location
-	execute 'botright pedit ' . g:ide_dir . '/build_message_' . a:error_index
+	execute 'botright pedit ' . g:build_log_file . ':' . l:log_line_number
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
 
@@ -517,23 +522,35 @@ function! Show_next_error()
 	if g:error_index == -1 " if there was no build
 		call Update_status_line('Error: unable to show next build error', 'error')
 	else
-		let l:last_error_index = len(g:source_locations) - 1
+		let l:last_error_index = len(g:build_log_line_numbers) - 1
 		if g:error_index == l:last_error_index
-			call Update_status_line('Error: unable to show next build error', 'error')
+			let l:was_last_error = 1
 		else
+			let l:was_last_error = 0
 			let g:error_index = g:error_index + 1
-			call Show_error(g:error_index)
+		endif
+		call Show_error(g:error_index)
+		if l:was_last_error == 1
+			call Update_status_line('Error: unable to show next build error', 'error')
 		endif
 	endif
 endfunction
 nmap <Leader>en :wa<CR>:call Show_next_error()<CR>
 
 function! Show_prev_error()
-	if g:error_index <= 0 " if there is no previous error
+	if g:error_index == -1 " if there was no build
 		call Update_status_line('Error: unable to show previous build error', 'error')
 	else
-		let g:error_index = g:error_index - 1
+		if g:error_index == 0 " if there is no previous error
+			let l:was_first_error = 1
+		else
+			let l:was_first_error = 0
+			let g:error_index = g:error_index - 1
+		endif
 		call Show_error(g:error_index)
+		if l:was_first_error == 1
+			call Update_status_line('Error: unable to show previous build error', 'error')
+		endif
 	endif
 endfunction
 nmap <Leader>ep :wa<CR>:call Show_prev_error()<CR>
