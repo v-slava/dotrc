@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
 
-USAGE="Usage: $(basename $0) FILE_TO_GET_BUILD_CMD_FOR"
+USAGE="Usage: $(basename $0) IDE_DIR FILE_TO_GET_BUILD_CMD_FOR"
+source ~/os_settings/other_files/get_default_cmd_common.sh
 
-if [ $# -ne 1 ]; then
-	echo $USAGE 1>&2
-	exit 1
-fi
-
-source ~/os_settings/other_files/ide_common.sh
-
-IN="$1"
-OUT="${IDE_DIR}/${IN}.out"
 # FLAGS=" -Wall -Wextra -Werror "
 FLAGS=" -Wall -Wextra "
 
@@ -35,7 +27,7 @@ case "$IN" in
 		# echo -n "cargo build"
 	;;
 	*.nim)
-		echo -n "/usr/local/bin/nim/bin/nim -d:release --opt:size c -o:\"$OUT\" --nimcache:\"${VIM_IDE_DIR}/nimcache\" \"$IN\""
+		echo -n "/usr/local/bin/nim/bin/nim -d:release --opt:size c -o:\"$OUT\" --nimcache:\"${IDE_DIR}/nimcache\" \"$IN\""
 		# --debuginfo --opt:speed
 	;;
 	*.S)
@@ -43,6 +35,6 @@ case "$IN" in
 	;;
 	*)
 		echo -n 'echo "Default build command for this file type is not defined" && false'
-		exit 1
+		exit 2
 esac
 

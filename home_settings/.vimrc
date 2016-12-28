@@ -423,10 +423,10 @@ endfunction
 command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
 " Usage example: :ViewInNewBuffer :map<CR> (show mappings in buffer).
 
-let g:ide_dir = '/tmp/ide_dir'
-let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . expand('%:t') . '"')
+let g:ide_dir = '/tmp/ide_dir' . expand('%:p')
+let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . g:ide_dir . '" "' . expand('%:t') . '"')
 let g:build_cmd_all = g:build_cmd
-let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . expand('%:t') . '"')
+let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . g:ide_dir . '" "' . expand('%:t') . '"')
 let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'
 let g:src_loc_relative_prefix = ''
@@ -436,11 +436,16 @@ let g:warnings = 'w' " change to 'nw' if you want to suppress warnings
 let g:filter = 'nf' " change to shell script name if you want to filter issues
 let g:run_interactive = 'false' " change to 'true' to spawn terminal
 let g:build_log_file = g:ide_dir . '/build_log'
+function Log_cmd(cmd, logFile)
+	let l:file = a:logFile . '.sh'
+	call writefile(['#!/bin/bash', '', 'set -e', 'cd "' . expand('%:p:h') . '"', '', a:cmd], l:file)
+	call system("chmod +x '" . l:file . "'")
+endfunction
 function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 	call Update_status_line('Build started...', 'normal')
-	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
+	let l:full_build_cmd = "echo '" . a:build_cmd . "' | bash 2>&1 | ~/os_settings/other_files/log_errors.sh " . g:ide_dir . ' ' . a:warnings . ' ' . a:filter . ' ; echo -n ${PIPESTATUS[1]}'
 	let l:build_exit_code = system(l:full_build_cmd)
-	call writefile([a:build_cmd], g:ide_dir . '/build_cmd')
+	call Log_cmd(a:build_cmd, g:ide_dir . '/build_cmd')
 	call writefile([l:build_exit_code], g:ide_dir . '/build_exit_code')
 	let l:log_line_numbers_file = g:ide_dir . '/build_log_line_numbers'
 	let l:issues_found = getfsize(l:log_line_numbers_file) != 0
@@ -448,7 +453,7 @@ function! Build_and_run(build_cmd, run_cmd, warnings, filter, run_interactive)
 		if a:run_interactive == 'false'
 			let l:run_log_file = g:ide_dir . '/run_log'
 			call Update_status_line('Running...', 'normal')
-			call writefile([a:run_cmd], g:ide_dir . '/run_cmd')
+			call Log_cmd(a:run_cmd, g:ide_dir . '/run_cmd')
 			call system("echo '" . a:run_cmd . "' | bash 1>" . l:run_log_file . ' 2>&1')
 			let l:run_exit_code = v:shell_error
 			call writefile([l:run_exit_code], g:ide_dir . '/run_exit_code')
@@ -489,7 +494,7 @@ function! Configure(config_cmd)
 	call Update_status_line('Config started...', 'normal')
 	let l:config_log_file = g:ide_dir . '/config_log'
 	call system('rm -rf ' . g:ide_dir . ' && mkdir -p ' . g:ide_dir)
-	call writefile([a:config_cmd], g:ide_dir . '/config_cmd')
+	call Log_cmd(a:config_cmd, g:ide_dir . '/config_cmd')
 	let l:full_config_cmd = "echo '" . a:config_cmd . "' | bash 1>" . l:config_log_file . ' 2>&1'
 	call system(l:full_config_cmd)
 	let l:exit_code = v:shell_error

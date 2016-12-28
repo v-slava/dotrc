@@ -5,19 +5,18 @@ Create files with information about compilation / linking errors (for vim IDE).
 	Sample usage:
 echo 'cd some_dir && make -j9' | bash 2>&1 | $(basename $0) nw nf ; echo -n \"Build result: \${PIPESTATUS[1]}\"
 	Detailed usage:
-$(basename $0) {nw|w} {nf|FILTER_EXECUTABLE}
+$(basename $0) IDE_DIR {nw|w} {nf|FILTER_EXECUTABLE}
 nw                : no warnings (suppress warnings)
 w                 : warnings
 nf                : no filter required
 FILTER_EXECUTABLE : filter executable to be used"
-set -e
 source ~/os_settings/other_files/ide_common.sh
 # Files:
 # $IDE_DIR/build_log_line_numbers - line numbers (in build log) of warning/error
-mkdir -p $IDE_DIR
+mkdir -p "$IDE_DIR"
 LINE_NUMBERS_FILE="$IDE_DIR/build_log_line_numbers"
-rm -f $IDE_DIR/run_*
-rm -f $IDE_DIR/build_*
+rm -f "$IDE_DIR"/run_*
+rm -f "$IDE_DIR"/build_*
 
 write_error()
 {
@@ -29,7 +28,7 @@ usage()
 	exit 1
 }
 if [ $# -ne 2 ]; then
-	write_error "Exactly 2 arguments expected. Actually got $# arguments."
+	write_error "Wrong number of arguments"
 	usage
 fi
 WARNINGS="$1"
