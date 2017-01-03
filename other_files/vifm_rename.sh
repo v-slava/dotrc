@@ -39,4 +39,7 @@ if [ "$IN" = "$OUT" ]; then
 	exit 0
 fi
 
-mv "$IN" "$OUT"
+# mv "$IN" "$OUT"
+
+# vifm rename is better than mv because vifm undo works.
+vifm --server-name "$VIFM_SERVER_NAME" --remote -c "rename '$OUT'"

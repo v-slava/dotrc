@@ -4,10 +4,13 @@ all: download_git
 	make -C vifm -j 9
 	su -c "make -C vifm install"
 
+# If your autotools version is too old downgrade it in vifm sources
+# (for example recursively replace "1.15" to "1.14").
+
 PHONY += download_git
 download_git:
 	git clone https://github.com/vifm/vifm
-	cd vifm && git tag && git checkout v0.8.1
+	cd vifm && git tag && git checkout v0.8.1 # need master (> v0.8.2)
 
 PHONY += clean
 clean:

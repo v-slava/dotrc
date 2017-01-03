@@ -61,6 +61,9 @@ set norunexec
 
 set noiec
 
+" set confirm=delete,permdelete
+set confirm=permdelete
+
 " Selected color scheme
 
 colorscheme Default
@@ -363,7 +366,7 @@ vmap cv :rename<CR>
 nnoremap cfs :!$HOME/os_settings/other_files/vifm_rename.sh %c spaces_to_underscores<CR>
 nnoremap cfl :!$HOME/os_settings/other_files/vifm_rename.sh %c to_lowercase<CR>
 nnoremap cfm :!$HOME/os_settings/other_files/vifm_rename.sh %c music<CR>
-nnoremap ,d :!$HOME/os_settings/other_files/vifm_create_duplicate_file.sh %c<CR>
+nnoremap ,d :clone?<CR>
 " nnoremap A cw<c-w>
 
 " Toggle wrap setting on ,w key
@@ -507,4 +510,6 @@ command minicom nohup $HOME/os_settings/other_files/minicom.sh 1>/dev/null
 command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
 command hexedit hed %c
+
+let $VIFM_SERVER_NAME = v:servername
 
