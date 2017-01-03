@@ -363,11 +363,11 @@ nmap <F9> :SrcIndexOn
 " :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
 " :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
 
-function Close_window_if_temporary()
+function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
 	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == g:ide_dir || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
-		execute ':q'
+		return 1
 	endif
 	let l:last_part_expected = '.fugitiveblame'
 	let l:len_expected = strlen(l:last_part_expected)
@@ -375,10 +375,16 @@ function Close_window_if_temporary()
 	if l:len_actual > l:len_expected
 		let l:last_part_actual = strpart(l:file_name, l:len_actual - l:len_expected)
 		if l:last_part_actual == l:last_part_expected
-			execute ':q'
+			return 1
 		endif
 	endif
 	if &pvw == 1 " If it is a preview window
+		return 1
+	endif
+	return 0
+endfunction
+function Close_window_if_temporary()
+	if Window_is_temporary() != 0
 		execute ':q'
 	endif
 endfunction
@@ -515,8 +521,17 @@ function! Show_error(error_index)
 		let l:line = g:src_loc_relative_prefix . l:line
 	endif
 	let l:current_source_location = GetFileNameUnderCursor(l:line)
+	let l:in_errors_window = Window_is_temporary()
+	if l:in_errors_window != 0
+		" switch to source code window
+		execute ':wincmd k'
+	endif
 	execute ':edit ' . l:current_source_location
 	execute 'botright pedit ' . g:build_log_file . ':' . l:log_line_number
+	if l:in_errors_window != 0
+		" switch back to errors window
+		execute ':wincmd j'
+	endif
 	call Update_status_line('error_index = ' . a:error_index, 'normal')
 endfunction
 
