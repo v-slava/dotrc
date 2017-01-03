@@ -360,11 +360,10 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
-" Rename file: replace spaces with underscores:
-nnoremap cs :!echo -n "%c" | sed -e 's/ /_/g' | xargs mv %c <CR>
-" Rename file: replace big letters with little ones:
-nnoremap cl :!echo -n "%c" | tr '[:upper:]' '[:lower:]' | xargs mv %c <CR>
-nnoremap ,d :! $HOME/os_settings/other_files/vifm_create_duplicate_file.sh %c<CR>
+nnoremap cfs :!$HOME/os_settings/other_files/vifm_rename.sh %c spaces_to_underscores<CR>
+nnoremap cfl :!$HOME/os_settings/other_files/vifm_rename.sh %c to_lowercase<CR>
+nnoremap cfm :!$HOME/os_settings/other_files/vifm_rename.sh %c music<CR>
+nnoremap ,d :!$HOME/os_settings/other_files/vifm_create_duplicate_file.sh %c<CR>
 " nnoremap A cw<c-w>
 
 " Toggle wrap setting on ,w key
@@ -478,13 +477,13 @@ vmap xx :! $HOME/os_settings/other_files/extract_progress.sh %f<CR>
 nmap xc :! $HOME/os_settings/other_files/compress.sh %f<CR>
 
 " Yank current directory path into the clipboard
-nnoremap yd :!echo -n "%d" | clipboard.sh<CR>
+nnoremap yd :!echo -n %d | clipboard.sh<CR>
 " Yank current file (full path) into the clipboard
-nnoremap yf :!echo -n "%c:p" | clipboard.sh<CR>
+nnoremap yf :!echo -n %c:p | clipboard.sh<CR>
 " Yank current file (name only) into the clipboard
-nnoremap yn :!echo -n "%c" | clipboard.sh<CR>
+nnoremap yn :!echo -n %c | clipboard.sh<CR>
 " Yank current file's size (in bytes) into the clipboard
-nnoremap yb :!du -b "%c" | cut -f1 | clipboard.sh -n<CR>
+nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<CR>
