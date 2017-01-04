@@ -1380,13 +1380,17 @@ backtrace full
 (gdb) core-file /home/user/my_core_file
 
 # gdb: stop on writing to stderr (x86_64 only):
-b write if 2==$rdi
+b write if 2 == $rdi
+# lldb: stop on writing to stderr (x86_64 only):
+br s -n write -c '2 == $rdi' # TODO this is wrong
+# gdb: stop on writing to stdout of some text (x86_64 only):
+b write if (1 == $rdi) && (0 != strstr($rsi, "some text"))
 
 # gdb: stop on errno modification:
 watch *&errno
 
 # gdb: stop on file open (x86_64 only):
-b open if strcmp(\$rdi, "/tmp/some/file") == 0
+b open if strcmp($rdi, "/tmp/some/file") == 0
 
 # gdb: do not stop on signal SIGUSR1 (ignore signal):
 handle SIGUSR1 noprint nostop
@@ -1414,8 +1418,14 @@ set non-stop on
 set target-async on
 # gdb: list threads:
 info thread
+# lldb: list threads:
+thread list
+# lldb: get thread name:
+thread info
 # gdb: switch to thread specified by a given number (ID, see "info thread"):
 thread ID
+# gdb: switch to thread specified by a given number (ID)
+thread select ID
 # gdb: interrupt current thread (doesn't work if target-async is off):
 interrupt
 # gdb: interrupt all threads (doesn't work if target-async is off):
@@ -1434,10 +1444,12 @@ catch syscall chroot
 disable num
 enable num
 
-# gdb: conditional breakpoints:
+# gdb: conditional breakpoints (b if):
 cond <bnum> <expression> # stop if <expression> == true
 b LOCATION if CONDITION
 ignore <bnum> <count>
+# lldb: conditional breakpoints:
+br s -n FUNCTION_NAME -c 'CONDITION'
 
 # gdb: set a breakpoint for all functions matching REGEXP:
 rbreak func_prefix_*
@@ -1450,9 +1462,21 @@ awatch - breaks on read/write.
 
 # gdb: delete breakpoint
 del <breakpoint number>
+# lldb: delete breakpoint
+br de <breakpoint number>
+
+# gdb: list registers
+info registers
+# lldb: list registers (general-purpose)
+re r
+# lldb: list registers (all)
+re r -a
+re r rax
 
 # gdb: list breakpoints
 info break
+# lldb: list breakpoints
+br l
 
 # gdb: display an array of values:
 disp {$r0, $r1}
