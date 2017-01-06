@@ -363,9 +363,9 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
-nnoremap cfs :!$HOME/os_settings/other_files/vifm_rename.sh %c spaces_to_underscores<CR>
-nnoremap cfl :!$HOME/os_settings/other_files/vifm_rename.sh %c to_lowercase<CR>
-nnoremap cfm :!$HOME/os_settings/other_files/vifm_rename.sh %c music<CR>
+nnoremap cfs :!$HOME/os_settings/other_files/vifm_rename.py %c spaces_to_underscores<CR>
+nnoremap cfl :!$HOME/os_settings/other_files/vifm_rename.py %c to_lowercase<CR>
+nnoremap cfm :!$HOME/os_settings/other_files/vifm_rename.py %c music<CR>
 nnoremap ,d :clone?<CR>
 " nnoremap A cw<c-w>
 
