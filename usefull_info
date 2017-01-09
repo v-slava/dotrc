@@ -1359,6 +1359,20 @@ monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
 # gdb: set breakpoint on all functions:
 rbreak .
 
+# Connect to running gdbserver (gdb client):
+target remote REMOTE:PORT
+# Connect to running gdbserver (lldb client):
+gdb-remote REMOTE:PORT
+
+# Add symbols (gdb):
+symbol-file FILE
+# Add symbols (lldb):
+target symbols add # TODO
+
+# Execute debugging commands from file:
+gdb -x FILE
+lldb -s FILE
+
 # gdb: define command (next and refresh tui screen):
 define next_refresh
 next

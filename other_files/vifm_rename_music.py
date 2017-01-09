@@ -6,14 +6,13 @@ def get_output_string(arg):
 		return arg
 	arg = delete_before_dot_mp3(arg, " (mp3cut.net)")
 	arg = delete_before_dot_mp3(arg, "-spaces.ru")
-	arg = arg.lower().replace(' ', '_')
-	arg = add_underscores_around_dash(arg)
-	arg = replace_braces_with_underscores(arg)
+	arg = arg.lower().replace(' ', '_').replace('(', '_').replace(')', '_').replace('-', "_-_").replace('&', '_')
+	arg = arg.replace("acoustic_version", "acoustic").replace("i'm", "i_am").replace("you're", "you_are")
+	arg = arg.replace("'ll", "_will").replace("n't", "_not")
 	arg = replace_multiple_underscores_with_single(arg)
 	arg = delete_single_underscore_at_begin(arg)
 	arg = delete_single_underscore_at_end(arg)
 	arg = delete_dots(arg)
-	arg = process_acoustic_version(arg)
 	arg = delete_excessive_artist_name(arg)
 	return arg
 
@@ -37,12 +36,6 @@ def delete_before_dot_mp3(arg, suffix):
 		return arg
 	return arg[:pos_suffix_begin] + ".mp3"
 
-def add_underscores_around_dash(arg):
-	return re.sub("-", "_-_", arg)
-
-def replace_braces_with_underscores(arg):
-	return re.sub("[\(\)]", "_", arg)
-
 def replace_multiple_underscores_with_single(arg):
 	return re.sub("_+", "_", arg)
 
@@ -59,9 +52,6 @@ def delete_single_underscore_at_end(arg):
 
 def delete_dots(arg):
 	return re.sub("\.", "", arg[:-4]) + ".mp3"
-
-def process_acoustic_version(arg):
-	return re.sub("acoustic_version", "acoustic", arg)
 
 def delete_excessive_artist_name(arg):
 	pos_dash = arg.find('-')
@@ -99,6 +89,10 @@ class MyUnitTests(unittest.TestCase):
 		self.convert("artist1-artist2-track.mp3",
 		             "artist1_-_artist2_-_track.mp3")
 
+	def test_replace_and_with_underscore(self):
+		self.convert("artist1_&_artist2_-_track.mp3",
+		             "artist1_artist2_-_track.mp3")
+
 	def test_replace_braces_with_underscores(self):
 		self.convert("artist_-_track(acoustic)name.mp3",
 		             "artist_-_track_acoustic_name.mp3")
@@ -130,6 +124,18 @@ class MyUnitTests(unittest.TestCase):
 	def test_do_nothing(self):
 		self.convert("word1_word22_-_word1_word22.mp3",
 		             "word1_word22_-_word1_word22.mp3")
+
+	def test_rename_i_am(self):
+		self.convert("artist_-_i'm_alive.mp3",
+		             "artist_-_i_am_alive.mp3")
+
+	def test_rename_will(self):
+		self.convert("artist_-_it'll_be_fine.mp3",
+		             "artist_-_it_will_be_fine.mp3")
+
+	def test_rename_not(self):
+		self.convert("artist_-_doesn't_know.mp3",
+		             "artist_-_does_not_know.mp3")
 
 if __name__ == '__main__':
     unittest.main()

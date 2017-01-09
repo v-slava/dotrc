@@ -3,6 +3,7 @@
 /bin/teamviewer
 /bin/tup
 /bin/idea.sh
+*.pyc
 
 # second:
 /bin/xterm
