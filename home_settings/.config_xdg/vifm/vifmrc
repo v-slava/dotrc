@@ -349,8 +349,8 @@ nnoremap s :shell<CR>
 nnoremap S :sort<CR>
 
 " Toggle visibility of preview window
-nnoremap w :view<CR>
-vnoremap w :view<CR>gv
+" nnoremap w :view<CR>
+" vnoremap w :view<CR>gv
 
 " Open file in the background using its default program
 " nnoremap gb :file &<CR>l
@@ -399,8 +399,13 @@ mark f /media/files
 mark r /media/files/music/radio
 mark n /media/files/music/new
 
-nmap b :bmarks<SPACE>
-nmap B :bmarks<CR>/
+nmap B :bmarks<SPACE>
+nmap b :bmarks<CR>/
+
+" Switch to a one window view (single panel):
+nmap dt :only<CR>
+" Switch back to normal two window vertical view:
+nmap w= :vsplit<CR>
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/.. trash_vifm

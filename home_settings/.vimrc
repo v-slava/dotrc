@@ -208,6 +208,16 @@ nmap <Leader>wp <C-w><C-p>
 " Clear current line:
 nmap <Leader>oe $d0x
 
+" Use Y to copy until end of line:
+nmap Y y$
+
+" Diff this (view only this diff panel, hide another one):
+nmap <Leader>dt :resize +1000<CR>:vertical resize +1000<CR>
+" To restore diff use "<Leader>w="
+
+" Refresh diff screen (recalculate diff):
+nmap <Leader>du :diffupdate<CR>
+
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to character within current line:
 " nmap <Leader>l <Plug>(easymotion-sl)

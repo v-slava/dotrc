@@ -40,7 +40,7 @@ values."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
+     git
      ;; markdown
      ;; org
      ;; (shell :variables
@@ -49,12 +49,14 @@ values."
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     evil-commentary
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
+   ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -132,8 +134,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+   dotspacemacs-default-font '("Inconsolata LGC"
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -161,7 +163,7 @@ values."
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab nil
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
@@ -249,7 +251,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers 'relative ;; still have absolut numbers
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -299,6 +301,149 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  (defun lisp-state-eval-sexp-end-of-line ()
+    "My implementation for \'evil-leader \"mel\"\':
+evaluate the last sexp at the end of the current line.
+TODO: respect comments."
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (eval-last-sexp nil)))
+
+  (defun my-text-scale-increase ()
+    (interactive)
+    (text-scale-increase 1)
+    )
+
+  (defun my-text-scale-decrease ()
+    (interactive)
+    (text-scale-decrease 1)
+    )
+
+  (defun my-set-tab-width (tab_width)
+    "My set tab width."
+    (interactive)
+    (when (< tab_width 2) (error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
+    (setq-default tab-width tab_width) ;; view tab as this number of spaces
+    (setq tab-width tab_width)
+    (setq c-basic-offset tab_width) ;; use this number of spaces as indent
+    ;; show each <tab> as a string:
+    ;; (standard-display-ascii ?\t "\xBB   ")
+    ;; (standard-display-ascii ?\t "--->")
+    (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? ))))
+
+  (defun my-close-window-or-frame ()
+    "Close current window or frame."
+	(interactive)
+	(if (buffer-file-name)
+		;; a buffer has associated file name
+		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
+			(error "No write since last change (buffer is modified)")
+		  ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
+          (condition-case nil (delete-window) (error (my-delete-frame)))
+		  )
+	  ;; a buffer hasn't associated file name
+	  (condition-case nil (delete-window) (error (my-delete-frame)))
+      ))
+
+  (defun my-execute-macro (reg)
+	"Execute vim macro from a given register on visualy selected region."
+	(interactive "s:'<,'>normal @")
+	(evil-execute-macro 1 (concat ":normal @" reg)))
+
+  (defun my-indent-buffer ()
+	(interactive)
+	(save-excursion
+	  (indent-region (point-min) (point-max) nil)))
+
+  (defun my-close-temporary-windows ()
+	"Close temporary windows (compile results, help, etc)."
+	(interactive)
+	(dolist (cur_window (window-list))
+	  (when (not (buffer-file-name (window-buffer cur_window)))
+		;; a buffer hasn't associated file name
+		(delete-window cur_window))))
+
+  (defun my-copy-to-clipboard (data)
+	"Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
+	(let* ((process-connection-type nil) (proc (cond ((getenv "DISPLAY")
+                                                      (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
+	  (when proc
+		(process-send-string proc data)
+		(process-send-eof proc))
+	  data))
+
+  (defun my-delete-frame ()
+	"Preserve clipboard contents (using clipboard.sh) and delete frame."
+	(when (x-get-clipboard)
+	  (when (not (get-text-property 0 'foreign-selection (x-get-clipboard)))
+		(my-copy-to-clipboard (x-get-clipboard))))
+	(delete-frame)
+	)
+
+  (kill-buffer "*spacemacs*") ;; less blinking on screen
+  (setq-default evil-symbol-word-search t)
+
+  ;; Highlight eLisp expression (inside braces)
+  (setq show-paren-style 'expression)
+  (show-paren-mode)
+
+  ;; tab settings:
+  ;; permanently, force TAB to insert just one TAB:
+  (global-set-key (kbd "TAB") 'self-insert-command);
+  ;; (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
+  (setq c-default-style "linux") ;; see also variable c-style-alist
+  (my-set-tab-width 4)
+  ;; use tabs instead of spaces:
+  ;; (setq-default indent-tabs-mode t)
+  ;; (setq indent-tabs-mode t)
+  ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
+  ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
+
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
+  (define-key evil-visual-state-map "2" 'my-execute-macro)
+
+  (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (spacemacs/set-leader-keys "qm" 'my-close-window-or-frame)
+  (spacemacs/set-leader-keys "dbs" 'bookmark-set)
+  (spacemacs/set-leader-keys "dbd" 'bookmark-delete)
+  (evil-leader/set-key "SPC" 'avy-goto-char)
+  (evil-leader/set-key "dq" 'my-close-temporary-windows)
+  (evil-leader/set-key "di" 'my-indent-buffer)
+
+  (global-set-key (kbd "C-=") 'my-text-scale-increase)
+  (global-set-key (kbd "C--") 'my-text-scale-decrease)
+  (global-set-key (kbd "<C-mouse-4>") 'my-text-scale-increase)
+  (global-set-key (kbd "<C-mouse-5>") 'my-text-scale-decrease)
+  (global-set-key (kbd "M-=") '(lambda () (interactive) (text-scale-adjust 0))) ;; go back to default scaling
+
+  ;; Leader hotkeys:
+  ;; ? search for a hotkey
+  ;; zx - change font
+  ;; en - next error
+  ;; ep - previous error
+  ;; ec - current error (my hotkey) TODO
+  ;; mel - evaluate lisp expression at the end of the current line
+  ;; mee - evaluate lisp expression at cursor
+  ;; sc - do not highlight search results
+  ;; qq - kill emacs
+  ;; qz - kill frame
+  ;; fb - jump to bookmark
+  ;; ff - open file
+  ;; fed = edit .spacemacs file
+  ;; fs - save current file
+  ;; hdk - help key binding
+  ;; hdf - help function
+  ;; hdv - help variable
+  ;; hdm - describe minor mode
+  ;; tn - toggle line numbers
+  ;; bR - revert buffer (like :q!, but without exit)
+  ;; bd - kill this buffer
+
+  ;; Other hotkeys:
+  ;; ivy cancel search: <c-g> (keyboard-escape-quit)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
