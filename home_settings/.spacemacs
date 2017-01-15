@@ -38,6 +38,8 @@ values."
      ;; ----------------------------------------------------------------
      ivy
      ;; auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-help-tooltip t)
      ;; better-defaults
      emacs-lisp
      git
@@ -47,9 +49,10 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
+     syntax-checking
      ;; version-control
      evil-commentary
+     semantic
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -292,6 +295,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (setq dotspacemacs-major-mode-leader-key nil) ;; allows to use ',' in normal mode when editin elisp.
   )
 
 (defun dotspacemacs/user-config ()
@@ -382,6 +386,11 @@ TODO: respect comments."
 	(delete-frame)
 	)
 
+  (defun my-clear-current-line ()
+    "Clear current line."
+    (interactive)
+    (evil-execute-macro 1 "0\"zD"))
+
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t)
 
@@ -403,15 +412,15 @@ TODO: respect comments."
 
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "2" 'my-execute-macro)
-
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-leader/set-key "SPC" 'avy-goto-char)
   (spacemacs/set-leader-keys "qm" 'my-close-window-or-frame)
   (spacemacs/set-leader-keys "dbs" 'bookmark-set)
   (spacemacs/set-leader-keys "dbd" 'bookmark-delete)
-  (evil-leader/set-key "SPC" 'avy-goto-char)
-  (evil-leader/set-key "dq" 'my-close-temporary-windows)
-  (evil-leader/set-key "di" 'my-indent-buffer)
+  (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
+  (spacemacs/set-leader-keys "di" 'my-indent-buffer)
+  (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
 
   (global-set-key (kbd "C-=") 'my-text-scale-increase)
   (global-set-key (kbd "C--") 'my-text-scale-decrease)
@@ -420,30 +429,41 @@ TODO: respect comments."
   (global-set-key (kbd "M-=") '(lambda () (interactive) (text-scale-adjust 0))) ;; go back to default scaling
 
   ;; Leader hotkeys:
-  ;; ? search for a hotkey
-  ;; zx - change font
-  ;; en - next error
-  ;; ep - previous error
+  ;; ? search for a hotkey (counsel-descbinds)
+  ;; rl - resume the last completion session (ivy-resume)
+  ;; zx - change font (spacemacs/scale-font-transient-state/body)
+  ;; en - next error (spacemacs/next-error)
+  ;; ep - previous error (spacemacs/previous-error)
   ;; ec - current error (my hotkey) TODO
-  ;; mel - evaluate lisp expression at the end of the current line
-  ;; mee - evaluate lisp expression at cursor
-  ;; sc - do not highlight search results
-  ;; qq - kill emacs
-  ;; qz - kill frame
-  ;; fb - jump to bookmark
-  ;; ff - open file
-  ;; fed = edit .spacemacs file
-  ;; fs - save current file
-  ;; hdk - help key binding
-  ;; hdf - help function
-  ;; hdv - help variable
-  ;; hdm - describe minor mode
-  ;; tn - toggle line numbers
-  ;; bR - revert buffer (like :q!, but without exit)
-  ;; bd - kill this buffer
+  ;; mel - evaluate lisp expression at the end of the current line (lisp-state-eval-sexp-end-of-line)
+  ;; mef - evaluate lisp function (the function our cursor is in).
+  ;; mee - evaluate lisp expression at cursor (eval-last-sexp)
+  ;; nf - narrow the buffer to the current function (narrow-to-defun)
+  ;; np	- narrow the buffer to the visible page (narrow-to-page)
+  ;; nr	- narrow the buffer to the selected text (narrow-to-region)
+  ;; nw	- widen, i.e show the whole buffer again (widen)
+  ;; qq - kill emacs (spacemacs/prompt-kill-emacs)
+  ;; qz - kill frame (spacemacs/frame-killer)
+  ;; fb - jump to bookmark (command bookmark-jump)
+  ;; ff - open file (counsel-find-file)
+  ;; fed = edit .spacemacs file (spacemacs/find-dotfile)
+  ;; fs - save current file (save-buffer)
+  ;; hdk - help key binding (describe-key)
+  ;; hdf - help function (counsel-describe-function)
+  ;; hdv - help variable (counsel-describe-variable)
+  ;; hdm - describe mode (spacemacs/describe-mode)
+  ;; tn - toggle line numbers (spacemacs/toggle-line-numbers)
+  ;; bR - revert buffer (like :q!, but without exit) (spacemacs/safe-revert-buffer)
+  ;; bd - kill this buffer (spacemacs/kill-this-buffer)
 
   ;; Other hotkeys:
   ;; ivy cancel search: <c-g> (keyboard-escape-quit)
+  ;; ivy jump to one of the current ivy candidates <c-'> (ivy-avy)
+  ;; ivy freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
+
+  ;; TODO research iedit mode
+  ;; TODO add evil-exchange
+  ;; TODO spacemacs documentation 10.
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
