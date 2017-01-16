@@ -63,6 +63,10 @@
 "
 " <C-E> - line up
 " <C-Y> - line down
+" <C-B> - page up
+" <C-F> - page down
+" <C-U> - half-page up
+" <C-D> - half-page down
 "
 " <C-L> - scroll right (my binding)
 " <C-H> - scroll left (my binding)
@@ -235,7 +239,7 @@ set shellredir=>%s
 
 " Reformat C/C++ source code:
 " nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
-nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
+" nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
 
 " Use vifm in vim as file selector:
 nmap <C-s> :VsplitVifm<CR>
