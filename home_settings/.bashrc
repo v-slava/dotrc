@@ -12,6 +12,7 @@ source /usr/share/bash-completion/completions/git
 # alias glog='git log --all --graph --decorate'
 alias glog='git log --all --graph --decorate | cless -i'
 alias ga='git add'
+__git_complete ga _git_add
 alias gs='git status'
 alias gsh='~/os_settings/other_files/git_show_HEAD.sh'
 alias ge='~/os_settings/other_files/git_edit.sh'
