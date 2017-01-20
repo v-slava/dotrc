@@ -443,6 +443,10 @@ endfunction
 command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
 " Usage example: :ViewInNewBuffer :map<CR> (show mappings in buffer).
 
+let g:lvimrc_loaded = 0
+" Put this to your .lvimrc file to prevent further .lvimrc reload:
+" let g:lvimrc_loaded = 1
+
 let g:ide_dir = '/tmp/ide_dir' . expand('%:p')
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . g:ide_dir . '" "' . expand('%:t') . '"')
 let g:build_cmd_all = g:build_cmd

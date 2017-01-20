@@ -160,6 +160,10 @@ endif
 " source them in reverse order.
 "
 function! s:LocalVimRC()
+  if g:lvimrc_loaded == 1
+    return
+  endif
+
   " begin marker
   call s:LocalVimRCDebug(1, "==================================================")
 
