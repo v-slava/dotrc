@@ -53,6 +53,9 @@ values."
      ;; version-control
      evil-commentary
      semantic
+     (c-c++ :variables
+            c-c++-default-mode-for-headers 'c++-mode
+            c-c++-enable-clang-support t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -391,8 +394,14 @@ TODO: respect comments."
     (interactive)
     (evil-execute-macro 1 "0\"zD"))
 
+  (defun my-disable-semantic-stickyfunc-mode ()
+    "Disable semantic-stickyfunc-mode."
+    (if (boundp 'global-semantic-stickyfunc-mode)
+        (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
+
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t)
+  (add-hook 'buffer-list-update-hook 'my-disable-semantic-stickyfunc-mode)
 
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
@@ -460,11 +469,15 @@ TODO: respect comments."
   ;; ivy cancel search: <c-g> (keyboard-escape-quit)
   ;; ivy jump to one of the current ivy candidates <c-'> (ivy-avy)
   ;; ivy freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
+  ;; ivy next candidate <c-n>
+  ;; ivy previous candidate <c-p>
+  ;; ivy resume last completion session SPC r l
 
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

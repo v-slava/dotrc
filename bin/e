@@ -22,7 +22,7 @@ CMD="emacsclient -c"
 # "--wait" is my own argument to edit.sh.
 # "--nofork" is actually an argument, accepted by vim
 # (it is called with it from vifm when renaming a file/folder)
-if [ "$1" = "--wait" ] || [ "$1" = "--nofork" ]; then
+if [ "$1" = "--wait" ] || [ "$1" = "--nofork" ] || [ "$1" = "-f" ]; then
 	shift
 else
 	CMD="$CMD -n"
