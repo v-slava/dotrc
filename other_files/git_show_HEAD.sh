@@ -47,6 +47,10 @@ while getopts "hnrpP:" arg ; do
 done
 shift $(($OPTIND - 1))
 
+if [ -z "$CMD" ]; then
+	CMD="git show HEAD"
+fi
+
 if [ $SINGLE_ARG -eq 1 ]; then
 	if [ $# -gt 1 ]; then
 		usage 2
