@@ -2,10 +2,14 @@
 
 # Edit file
 
-if [ "$1" = "--wait" ]; then
-	shift
+# USE_VIM=true
+
+if [ -n "$USE_VIM" ]; then
+    if [ "$1" = "--wait" ]; then
+        shift
+    fi
+    exec vim "$@"
 fi
-exec vim "$@"
 
 if ! pgrep emacs 1>/dev/null ; then
 	emacs --daemon
@@ -19,7 +23,7 @@ is_a_number()
 }
 
 CMD="emacsclient -c"
-# "--wait" is my own argument to edit.sh.
+# "--wait" is my own argument.
 # "--nofork" is actually an argument, accepted by vim
 # (it is called with it from vifm when renaming a file/folder)
 if [ "$1" = "--wait" ] || [ "$1" = "--nofork" ] || [ "$1" = "-f" ]; then

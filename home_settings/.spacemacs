@@ -407,6 +407,9 @@ TODO: respect comments."
   (setq show-paren-style 'expression)
   (show-paren-mode)
 
+  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  (setq ivy-initial-inputs-alist nil)
+
   ;; tab settings:
   ;; permanently, force TAB to insert just one TAB:
   (global-set-key (kbd "TAB") 'self-insert-command);
@@ -465,17 +468,21 @@ TODO: respect comments."
   ;; bR - revert buffer (like :q!, but without exit) (spacemacs/safe-revert-buffer)
   ;; bd - kill this buffer (spacemacs/kill-this-buffer)
 
-  ;; Other hotkeys:
-  ;; ivy cancel search: <c-g> (keyboard-escape-quit)
-  ;; ivy jump to one of the current ivy candidates <c-'> (ivy-avy)
-  ;; ivy freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
-  ;; ivy next candidate <c-n>
-  ;; ivy previous candidate <c-p>
-  ;; ivy resume last completion session SPC r l
+  ;; ivy hotkeys:
+  (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
+  ;; insert from clipboard: "C-y"
+  ;; delete all input: "C-k" (ivy-kill-line)
+  ;; cancel search: "C-g" (keyboard-escape-quit)
+  ;; jump to one of the current ivy candidates <c-'> (ivy-avy)
+  ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
+  ;; next candidate "C-n" (ivy-next-line)
+  ;; previous candidate: "C-p" (ivy-previous-line)
+  ;; resume last completion session: "SPC r l" (ivy-resume)
 
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
+  ;; TODO kill (try to kill) buffers before closing frame.
   )
 
 
