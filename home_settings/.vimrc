@@ -639,6 +639,7 @@ hi ShowMarksHLm   cterm=bold ctermfg=black ctermbg=white
 
 " Tcomment:
 call tcomment#DefineType('unknown', '# %s')
+call tcomment#DefineType('lisp', ';; %s')
 call tcomment#DefineType('make', '# %s')
 call tcomment#DefineType('gdb', '# %s')
 call tcomment#DefineType('kconfig', '# %s')

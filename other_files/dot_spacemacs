@@ -53,6 +53,7 @@ values."
      ;; version-control
      evil-commentary
      semantic
+     nlinum
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
@@ -257,7 +258,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative ;; still have absolut numbers
+   dotspacemacs-line-numbers 'relative
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -400,15 +401,36 @@ TODO: respect comments."
         (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
 
   (kill-buffer "*spacemacs*") ;; less blinking on screen
-  (setq-default evil-symbol-word-search t)
+  (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my-disable-semantic-stickyfunc-mode)
+
+  (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
+  ;; nlinum has bug (at least for emacs 24) - it doesn't work with emacs daemon (can't open frame). Workaround:
+  (defvar frame-ready nil)
+  (add-hook 'after-make-frame-functions (lambda (frame) (set-frame-parameter frame 'frame-ready t)))
+  (add-hook 'after-init-hook (lambda () (set-frame-parameter nil 'frame-ready t)))
+  (eval-after-load "nlinum"
+    '(defun nlinum--setup-window ()
+       (let ((width (if (and frame-ready (display-graphic-p)) ;; <-- Here
+                        (ceiling
+                         (let ((width (nlinum--face-width 'linum)))
+                           (if width
+                               (/ (* nlinum--width 1.0 width)
+                                  (frame-char-width))
+                             (/ (* nlinum--width 1.0
+                                   (nlinum--face-height 'linum))
+                                (frame-char-height)))))
+                      nlinum--width)))
+         (set-window-margins nil (if nlinum-mode width)
+                             (cdr (window-margins)))))
+    )
 
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
 
-  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ;; search results for "word1 word2" are equal to "word2 word1"
+  (setq ivy-initial-inputs-alist nil) ;; do not automatically prepend "^" in ivy input
 
   ;; tab settings:
   ;; permanently, force TAB to insert just one TAB:
