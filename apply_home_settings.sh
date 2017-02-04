@@ -18,6 +18,9 @@ fi
 if [ ! -L ~/os_settings ]; then
 	ln -s $PWD ~/os_settings
 fi
+if [ ! -L ~/.spacemacs ]; then
+	ln -s $PWD/other_files/dot_spacemacs ~/.spacemacs
+fi
 # if [ ! -d ~/terminal ]; then
 # 	mkdir ~/terminal
 # fi
