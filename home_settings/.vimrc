@@ -338,6 +338,13 @@ endfunction
 nmap <C-k> :call Swap_keyboard_layout()<CR>
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 
+function! Add_include_guards(file_name)
+	let l:guard_name = tr(toupper(a:file_name), '.', '_')
+	call append(line('0'), ['#ifndef ' . l:guard_name, '#define ' . l:guard_name])
+	call append(line('$'), ['', '#endif // #ifndef ' . l:guard_name])
+endfunction
+nmap <Leader>di :call Add_include_guards(expand('%:t'))<CR>
+
 " Move current tab left and right (move tab):
 nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
