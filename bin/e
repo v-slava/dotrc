@@ -2,7 +2,7 @@
 
 # Edit file
 
-# USE_VIM=true
+USE_VIM=true
 
 if [ -n "$USE_VIM" ]; then
     if [ "$1" = "--wait" ]; then
