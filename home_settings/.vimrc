@@ -268,7 +268,7 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl setlocal tabstop=4 | setlocal noexpandtab | setlocal shiftwidth=0
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua setlocal tabstop=4 | setlocal expandtab | setlocal shiftwidth=0
 autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal noexpandtab
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
@@ -457,6 +457,7 @@ let g:lvimrc_loaded = 0
 let g:ide_dir = '/tmp/ide_dir' . expand('%:p')
 let g:build_cmd = system('~/os_settings/other_files/get_default_build_cmd.sh "' . g:ide_dir . '" "' . expand('%:t') . '"')
 let g:build_cmd_all = g:build_cmd
+let g:build_cmd_fast = g:build_cmd
 let g:run_cmd =   system('~/os_settings/other_files/get_default_run_cmd.sh "' . g:ide_dir . '" "' . expand('%:t') . '"')
 let g:config_cmd =  'echo "no config_cmd defined" && false'
 let g:rebuild_cmd = 'echo "no rebuild_cmd defined" && false'

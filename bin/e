@@ -8,7 +8,7 @@ if [ -n "$USE_VIM" ]; then
     if [ "$1" = "--wait" ]; then
         shift
     fi
-    exec vim "$@"
+    exec vim -p "$@"
 fi
 
 if ! pgrep emacs 1>/dev/null ; then
