@@ -15,7 +15,8 @@ LEFT="$(realpath "$1")"
 RIGHT="$(realpath "$2")"
 cd
 
-EDIFF_COMMAND='e -d'
+# EDIFF_COMMAND='e -d'
+EDIFF_COMMAND='vimdiff'
 
 # echo "LEFT = |$LEFT|"
 # echo "RIGTH = |$RIGHT|"
