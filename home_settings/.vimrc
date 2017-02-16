@@ -268,8 +268,9 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua setlocal tabstop=4 | setlocal expandtab | setlocal shiftwidth=0
-autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal noexpandtab
+setlocal tabstop=4 | setlocal expandtab | setlocal shiftwidth=0
+" autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua setlocal tabstop=4 | setlocal expandtab | setlocal shiftwidth=0
+" autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal expandtab
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
