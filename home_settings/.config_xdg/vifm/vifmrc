@@ -394,6 +394,7 @@ mark T /tmp
 mark w /media/files/workspace
 " mark o ~/os_settings
 mark o /media/files/workspace/dotrc
+mark O /media/files/workspace/dotrc_s
 mark u /media/usb
 mark f /media/files
 mark r /media/files/music/radio
