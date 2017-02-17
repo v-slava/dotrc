@@ -47,7 +47,7 @@ if echo $TERM | grep -q '256color\|screen' ; then
 	else
 		USER_COLOR=99
 	fi
-	PS1='\[\e[38;5;${USER_COLOR}m\]\u\[\e[38;5;178m\]@\[\e[38;5;80m\]\h \[\e[38;5;46m\]\w \[\e[38;5;27m\]\$ \[\e[0;38m\]'
+	PS1='\e[0m\[\e[38;5;${USER_COLOR}m\]\u\[\e[38;5;178m\]@\[\e[38;5;80m\]\h \[\e[38;5;46m\]\w \[\e[38;5;27m\]\$ \[\e[0;38m\]'
 else
 	if [ `id -un` == root ]; then
 		USER_COLOR='0;31'

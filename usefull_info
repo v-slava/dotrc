@@ -1097,7 +1097,7 @@ grep -R --include=*.cpp --include=*.h --exclude=*.inl.h <pattern> .
 # Show only file names with matched content:
 grep -rl -m 1 'REGEX' .
 
-# Check debug info in elf:
+# Check debug info (debug symbols, debug sections) in elf:
 readelf --sections FILE | grep debug
 # Without debug info output is empty. With debug info output looks like:
 # [27] .debug_aranges    PROGBITS        00000000 001071 000020 00      0   0  1
