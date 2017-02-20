@@ -9,6 +9,21 @@ set -ex
 
 cp -rfv --preserve=mode $PWD/root_settings/* /
 
+ROOT_SETTINGS_S='/media/files/workspace/dotrc_s/root_settings'
+if [ -d "$ROOT_SETTINGS_S" ]; then
+    set +x
+    cd "$ROOT_SETTINGS_S"
+    find -type f | while read file ; do
+        orig_file="$(echo $file | cut -c 2-)"
+        repo_file="$ROOT_SETTINGS_S$orig_file"
+        cmd="cat $repo_file >> $orig_file"
+        echo $cmd
+        eval $cmd
+    done
+    cd - 1>/dev/null
+    set -x
+fi
+
 update-grub
 locale-gen
 if systemctl is-enabled systemd-networkd.service ; then
