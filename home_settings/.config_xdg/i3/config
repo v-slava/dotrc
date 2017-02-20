@@ -21,6 +21,8 @@ set $Shift_R Shift
 # Print: 107 - PrintScreen
 # Menu: 135
 
+bindsym $Alt_R+e exec --no-startup-id exec ~/workspace/dotrc_s/i3_hotkey_handler.sh
+
 # font for window title
 font pango:Inconsolata LGC 8
 

@@ -27,7 +27,7 @@ if [ $EXIT_CODE -eq 0 ]; then
 else
 	echo -e "${VIFM_EXIT_CODE_FAIL}Command failed (exit code = $EXIT_CODE)"
 fi
-echo -en "${VIFM_END}"
+echo -en "${VIFM_END}${VIFM_RESET_COLORS}"
 
 if [ ! -z "$PAUSE" ]; then
 	vifm-pause

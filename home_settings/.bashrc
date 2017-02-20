@@ -29,8 +29,8 @@ __git_complete gch _git_checkout
 alias gb='git branch'
 __git_complete gb _git_branch
 alias gpl='git pull'
-alias gpush_test_commit='~/temporary/exchange_push_test_commit.sh'
-alias gfetch_test_commit='~/temporary/exchange_fetch_test_commit.sh'
+# alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
+# alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
 alias beautify='~/temporary/beautify.sh'
 alias noice='export PATH=$(echo $PATH | tr : "\n" | grep -v icecc | xargs echo -n | tr " " :)'
 
