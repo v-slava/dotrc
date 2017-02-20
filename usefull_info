@@ -285,6 +285,10 @@ fiu-run -x -c 'enable name=posix/io/*' ls
 # C++ hex output format example:
 std::cout << std::hex << std::setfill('0') << std::nouppercase << std::setw(8);
 
+# print sizeof(SomeType) at compile time:
+template<int s> struct UnusedStruct;
+UnusedStruct<sizeof(SomeType)> UnusedStructInstance;
+
 # list available fonts:
 fc-list
 

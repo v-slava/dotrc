@@ -31,7 +31,7 @@ __git_complete gb _git_branch
 alias gpl='git pull'
 # alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
 # alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
-alias beautify='~/temporary/beautify.sh'
+alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
 alias noice='export PATH=$(echo $PATH | tr : "\n" | grep -v icecc | xargs echo -n | tr " " :)'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):

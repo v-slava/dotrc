@@ -302,6 +302,8 @@ function! OpenLocation()
 endfunction
 " Open location in QuickFix window:
 autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
+nmap <Leader>ln :lne<CR>
+nmap <Leader>lp :lp<CR>
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
