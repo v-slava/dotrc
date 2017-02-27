@@ -183,9 +183,12 @@ for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 for_window [class="Icedove"] focus
 for_window [class="Icedove"] mark --replace mail
+for_window [class="ViberPC"] mark --replace viber
 for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
 bindsym $Alt_R+i exec --no-startup-id sleep 1 && exec xdotool type 237872289
+
+bindsym $WIN+v exec exec viber
 
 bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
