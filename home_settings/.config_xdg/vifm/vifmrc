@@ -432,6 +432,8 @@ nnoremap ,u :!e ~/os_settings/usefull_info<CR>
 nnoremap ,r :!e ~/other/remarks<CR>
 
 set syscalls
+set number
+set relativenumber
 set trashdir=/media/files/trash_vifm
 
 " :com[mand][!] command_name action
