@@ -18,8 +18,8 @@ set $Ctrl_L Control
 set $Ctrl_R Control
 set $Shift_L Shift
 set $Shift_R Shift
-# Print: 107 - PrintScreen
-# Menu: 135
+set $PrintScreen 107
+# set $Menu 135
 
 bindsym $Alt_R+e exec --no-startup-id exec ~/workspace/dotrc_s/i3_hotkey_handler.sh
 
@@ -302,8 +302,7 @@ bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:mon
 
 # exec --no-startup-id i3-msg 'workspace 2; exec uzbl -u URL'
 
-# PrintScreen
-bindcode 107 exec --no-startup-id exec scrot
-# Alt + PrintScreen
-bindcode $Alt_L+107 exec --no-startup-id exec scrot --focused --border
-
+bindcode $PrintScreen exec --no-startup-id exec scrot
+bindcode $Alt_L+$PrintScreen exec --no-startup-id exec scrot --focused --border
+# CapsLock (caps lock):
+bindsym $WIN+j exec --no-startup-id exec xdotool key Caps_Lock
