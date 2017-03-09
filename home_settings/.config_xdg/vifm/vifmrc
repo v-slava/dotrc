@@ -520,5 +520,7 @@ command rminicom $HOME/os_settings/other_files/remote_minicom.sh 1>/dev/null
 command hexview xxd %c | less
 command hexedit hed %c
 
+" noremap j j:echo system('readlink -f ' . expand('%c:p'))<CR>
+" noremap k k:echo system('readlink -f ' . expand('%c:p'))<CR>
 let $VIFM_SERVER_NAME = v:servername
 

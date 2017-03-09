@@ -188,8 +188,6 @@ for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
 bindsym $Alt_R+i exec --no-startup-id sleep 1 && exec xdotool type 237872289
 
-bindsym $WIN+v exec exec viber
-
 bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
 bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/suspend_hotkey.sh
@@ -223,6 +221,7 @@ bindsym $WIN+a exec --no-startup-id exec ~/os_settings/other_files/start_anki.sh
 # browser
 bindsym XF86HomePage exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
 bindsym $Alt_L+b exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
+bindsym $WIN+v exec --no-startup-id exec /opt/viber/Viber
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
