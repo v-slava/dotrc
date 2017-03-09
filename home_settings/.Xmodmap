@@ -23,7 +23,7 @@ remove Lock = Caps_Lock
 remove Control = Control_L
 keysym Control_L = Multi_key
 keysym Caps_Lock = Control_L
-add Lock = Caps_Lock
+! add Lock = Caps_Lock
 add Control = Control_L
 ! Now we can use Control_L (Multi_Key) for key combination like <Multi_Key> -> a => ä
 
