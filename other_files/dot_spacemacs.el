@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     vimscript
      lua
      python
      ;; ----------------------------------------------------------------
@@ -408,30 +409,121 @@ TODO: respect comments."
     (if (boundp 'global-semantic-stickyfunc-mode)
         (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
 
+  ;; TODO delete?
+  ;; (defun my-shell-command (cmd)
+  ;;   "Run shell command. Display output and exit code."
+  ;;   ;; TODO
+  ;;   ;; (interactive)
+  ;;   (compile "make -C /home/volkov/prj/ -j1 clean")
+  ;;   (compile "make -C /home/volkov/prj/ -j1 main")
+  ;;   ;; (message "me")
+  ;;   ;; (shell-command cmd t)
+  ;;   )
+  ;; (my-shell-command "ls -l && pwd")
+  ;;
+  ;; (defun my-buffer-to-string (buffer)
+  ;;   "Return buffer contents as a string."
+  ;;   (with-current-buffer buffer
+  ;;     (save-restriction
+  ;;   	(widen)
+  ;;   	(buffer-substring-no-properties (point-min) (point-max)))))
+  ;;
+  ;; (defun my-create-shell-frame-if-required ()
+  ;;   "Create a shell frame if it is not already created."
+  ;;   (shell))
+  ;;   ;; (require 'frame-fns)
+  ;;   ;; (when (not (get-a-frame "*shell*"))
+  ;;   ;;   (shell)
+  ;;   ;;   (sleep-for 0 100) ;; wait for shell greeting (TODO fix)
+  ;;   ;;   ))
+  ;;
+  ;; (defun my-execute-command-in-shell-frame (cmd)
+  ;;   "Execute given command in a shell frame."
+  ;;   (my-create-shell-frame-if-required)
+  ;;   (comint-send-string "*shell*" (concat cmd "\n")))
+
+
+  ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
+  ;; Get current line (into myLine variable):
+  ;; (setq myLine
+  ;;       (buffer-substring-no-properties
+  ;;        (line-beginning-position)
+  ;;        (line-end-position)
+  ;;        ))
+
+  (defun my-next-error ()
+	"Visit next error in source code."
+	(interactive)
+	(spacemacs/next-error))
+
+    ;; (with-current-buffer buffer (write-file file_name)))
+    ;; (save-excursion
+    ;;   (end-of-line)
+    ;;   (eval-last-sexp nil)))
+
+  ;; TODO To run two compilations at once, start the first one, then rename the *compilation* buffer
+  ;; (perhaps using rename-uniquely; see Misc Buffer), then switch buffers and start the other compilation.
+  ;; This will create a new *compilation* buffer. See also (rename-buffer)
+
+
+  (setq my-compilation-buffer "orig")
+  ;; (make-variable-frame-local 'my-compilation-buffer)
+  ;; (setq my-compilation-buffer "modified")
+  ;; (modify-frame-parameters (selected-frame) '((name . "my frame name!")))
+  ;; (set-frame-parameter (selected-frame) 'name "my frame name 2!")
+  ;; (frame-parameter (selected-frame) 'name)
+  ;; (frame-parameters (selected-frame))
+  ;; (set-frame-parameter (selected-frame) 'my_param "my param value can be veeeeeeeeeeeeeeeeery long !!!!!!!!!!")
+  ;; (frame-parameter (selected-frame) 'my_param)
+
+  (defun my-previous-error ()
+	"Visit previous error in source code."
+	(interactive)
+	(spacemacs/previous-error))
+
+  (defun my-this-error()
+	"Visit this (current) error in source code."
+	(interactive)
+	(evil-goto-error nil))
+
+  (defun my-first-error()
+	"Visit this (current) error in source code."
+	(interactive)
+	(first-error nil))
+
+  (setq compilation-error-regexp-alist '(bash gcc-include gnu))
+  ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
+  (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
+  (setq compilation-auto-jump-to-first-error t)
+  ;; Treat column numbers as character positions instead of screen columns in compilation errors.
+  ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.
+  ;; (setq compilation-error-screen-columns nil)
+  ;; TODO auto scroll: see variable: compilation-scroll-output
+
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my-disable-semantic-stickyfunc-mode)
 
   (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
   ;; nlinum has bug (at least for emacs 24) - it doesn't work with emacs daemon (can't open frame). Workaround:
-  (defvar frame-ready nil)
-  (add-hook 'after-make-frame-functions (lambda (frame) (set-frame-parameter frame 'frame-ready t)))
-  (add-hook 'after-init-hook (lambda () (set-frame-parameter nil 'frame-ready t)))
-  (eval-after-load "nlinum"
-    '(defun nlinum--setup-window ()
-       (let ((width (if (and frame-ready (display-graphic-p)) ;; <-- Here
-                        (ceiling
-                         (let ((width (nlinum--face-width 'linum)))
-                           (if width
-                               (/ (* nlinum--width 1.0 width)
-                                  (frame-char-width))
-                             (/ (* nlinum--width 1.0
-                                   (nlinum--face-height 'linum))
-                                (frame-char-height)))))
-                      nlinum--width)))
-         (set-window-margins nil (if nlinum-mode width)
-                             (cdr (window-margins)))))
-    )
+  ;; (defvar frame-ready nil)
+  ;; (add-hook 'after-make-frame-functions (lambda (frame) (set-frame-parameter frame 'frame-ready t)))
+  ;; (add-hook 'after-init-hook (lambda () (set-frame-parameter nil 'frame-ready t)))
+  ;; (eval-after-load "nlinum"
+  ;;   '(defun nlinum--setup-window ()
+  ;;      (let ((width (if (and frame-ready (display-graphic-p)) ;; <-- Here
+  ;;                       (ceiling
+  ;;                        (let ((width (nlinum--face-width 'linum)))
+  ;;                          (if width
+  ;;                              (/ (* nlinum--width 1.0 width)
+  ;;                                 (frame-char-width))
+  ;;                            (/ (* nlinum--width 1.0
+  ;;                                  (nlinum--face-height 'linum))
+  ;;                               (frame-char-height)))))
+  ;;                     nlinum--width)))
+  ;;        (set-window-margins nil (if nlinum-mode width)
+  ;;                            (cdr (window-margins)))))
+  ;;   )
 
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
@@ -439,10 +531,15 @@ TODO: respect comments."
 
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ;; search results for "word1 word2" are equal to "word2 word1"
   (setq ivy-initial-inputs-alist nil) ;; do not automatically prepend "^" in ivy input
+  ;; Disable all automatically loading variables:
+  (setq enable-dir-local-variables nil)
+  (setq enable-local-variables nil)
+  (setq local-enable-local-variables nil)
+  (setq enable-local-eval nil)
 
   ;; tab settings:
   ;; permanently, force TAB to insert just one TAB:
-  (global-set-key (kbd "TAB") 'self-insert-command);
+  ;; (global-set-key (kbd "TAB") 'self-insert-command);
   ;; (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
   (setq c-default-style "linux") ;; see also variable c-style-alist
   (my-set-tab-width 4)
@@ -456,6 +553,7 @@ TODO: respect comments."
   (define-key evil-visual-state-map "2" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
   (evil-leader/set-key "SPC" 'avy-goto-char)
   (spacemacs/set-leader-keys "qm" 'my-close-window-or-frame)
   (spacemacs/set-leader-keys "dbs" 'bookmark-set)
@@ -469,6 +567,12 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
+  (evil-leader/set-key "en" 'my-next-error)
+  (evil-leader/set-key "ep" 'my-previous-error)
+  (evil-leader/set-key "eN" 'spacemacs/next-error)
+  (evil-leader/set-key "eP" 'spacemacs/previous-error)
+  (evil-leader/set-key "et" 'my-this-error)
+  (evil-leader/set-key "ef" 'my-first-error)
 
   (global-set-key (kbd "C-=") 'my-text-scale-increase)
   (global-set-key (kbd "C--") 'my-text-scale-decrease)
@@ -480,8 +584,7 @@ TODO: respect comments."
   ;; ? search for a hotkey (counsel-descbinds)
   ;; rl - resume the last completion session (ivy-resume)
   ;; zx - change font (spacemacs/scale-font-transient-state/body)
-  ;; en - next error (spacemacs/next-error)
-  ;; ep - previous error (spacemacs/previous-error)
+  ;; u SPC en - go to first error (next-error 1 t)
   ;; ec - current error (my hotkey) TODO
   ;; nf - narrow the buffer to the current function (narrow-to-defun)
   ;; np	- narrow the buffer to the visible page (narrow-to-page)
@@ -510,22 +613,22 @@ TODO: respect comments."
   ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
   ;; next candidate "C-n" (ivy-next-line)
   ;; previous candidate: "C-p" (ivy-previous-line)
-  ;; resume last completion session: "SPC r l" (ivy-resume)
+  ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
   ;; TODO kill (try to kill) buffers before closing frame.
+  ;; (kill-compilation) ;; SPC ck
 
-  ;; TODO read projectile documentation (test command, run command, compile command...)
-  ;; configure/build/run settings: use "SPC c c" and set
-  ;; (setq-default helm-make-build-dir "/some/directory/which/contains/main/Makefile")
-  ;; You will select make target (from your Makefile) from using ivy.
-  ;; To run some predefined target (do not select in ivy), use:
+  ;; I won't use projectile too much. I will have my targets in elisp .dir-locals.el.
+  ;; Need a function to select current (default) target from list by name (using ivy). Use hotkey: SPC o c
+  ;; Need a function to display default target. Use hotkey: SPC o d
+  ;; Need a function to run current (default) target (see above, but now without ivy). Use hotkey: SPC o f
+  ;; To run some predefined target use something like:
   ;; (compile "make -C /some/directory/which/contains/main/Makefile your_target")
-  ;; use "SPC o f": (projectile-save-project-buffers) + (helm-make-projectile) with default (last one) target. TODO how?
-  ;; use "SPC o c": the same as above, but allows user to select a target.
-  ;; TODO: .dir-locals.el, (for helm-make-build-dir)
+  ;; TODO: .dir-locals.el, (projectile-save-project-buffers). See how (helm-make-projectile) has been implemented.
+  ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
 
   ;; TODO projectile:
   ;; projectile-switch-project
@@ -535,8 +638,17 @@ TODO: respect comments."
   ;; projectile-project-test-cmd
   ;; projectile-project-run-cmd
 
-  )
 
+  ;; (message "hello")
+  ;; (setq-default helm-make-build-dir "/home/volkov/out")
+
+  ;; (compile "make -C /home/volkov/prj/ -j1 main")
+  ;; make -j2 SOME_TARGET:
+  ;; (helm-make 2)
+  ;; (helm-make-projectile 2)
+  ;; make "main" target:
+  ;; (helm--make-action "main")
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
