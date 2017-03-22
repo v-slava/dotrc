@@ -404,10 +404,42 @@ TODO: respect comments."
     (save-some-buffers 't)
     )
 
-  (defun my-disable-semantic-stickyfunc-mode ()
+  (defun my--disable-semantic-stickyfunc-mode ()
     "Disable semantic-stickyfunc-mode."
     (if (boundp 'global-semantic-stickyfunc-mode)
         (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
+
+  (defun my--load-emacs-process-files-list (directory files-list)
+    "Recursively process files-list. See (my-load-emacs-projects) for details."
+    (if files-list
+        (progn
+          (let ((file (concat directory "/" (car files-list))))
+            (if (file-regular-p file)
+                (progn
+                  (message "evaluating elisp code from file: %s" file)
+                  (load-file file))))
+          (my--load-emacs-process-files-list directory (cdr files-list)))))
+
+  (defun my-load-emacs-projects (directory)
+	"Read and evaluate as elisp all files from a given directory."
+    (my--load-emacs-process-files-list directory (directory-files directory))
+    )
+
+  (defun my--test-elisp-hotkey ()
+    "Evaluate current elisp function and call (my-test-elisp-function)"
+    (interactive)
+    (save-excursion
+      (re-search-backward "(defun ")
+      (evil-jump-item)
+      (lisp-state-eval-sexp-end-of-line)
+      (my-test-elisp-function)
+      )
+    )
+
+  (defun my-test-elisp-function ()
+    "Call function to be tested (execute a testcase)"
+    ;; (my-load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+    )
 
   ;; TODO delete?
   ;; (defun my-shell-command (cmd)
@@ -465,8 +497,7 @@ TODO: respect comments."
   ;; (perhaps using rename-uniquely; see Misc Buffer), then switch buffers and start the other compilation.
   ;; This will create a new *compilation* buffer. See also (rename-buffer)
 
-
-  (setq my-compilation-buffer "orig")
+  ;; (setq my-compilation-buffer "orig")
   ;; (make-variable-frame-local 'my-compilation-buffer)
   ;; (setq my-compilation-buffer "modified")
   ;; (modify-frame-parameters (selected-frame) '((name . "my frame name!")))
@@ -502,7 +533,7 @@ TODO: respect comments."
 
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
-  (add-hook 'buffer-list-update-hook 'my-disable-semantic-stickyfunc-mode)
+  (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
 
   (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
   ;; nlinum has bug (at least for emacs 24) - it doesn't work with emacs daemon (can't open frame). Workaround:
@@ -550,7 +581,7 @@ TODO: respect comments."
   ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
-  (define-key evil-visual-state-map "2" 'my-execute-macro)
+  (define-key evil-visual-state-map "9" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
@@ -562,6 +593,7 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
+  (spacemacs/set-leader-keys "of" 'my--test-elisp-hotkey)
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
@@ -592,7 +624,7 @@ TODO: respect comments."
   ;; nw	- widen, i.e show the whole buffer again (widen)
   ;; qq - kill emacs (spacemacs/prompt-kill-emacs)
   ;; qz - kill frame (spacemacs/frame-killer)
-  ;; fb - jump to bookmark (command bookmark-jump)
+  ;; fb - jump to bookmark (bookmark-jump)
   ;; ff - open file (counsel-find-file)
   ;; fed = edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
@@ -648,6 +680,8 @@ TODO: respect comments."
   ;; (helm-make-projectile 2)
   ;; make "main" target:
   ;; (helm--make-action "main")
+
+  ;; (my-load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
