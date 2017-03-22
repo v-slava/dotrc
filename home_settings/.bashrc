@@ -32,7 +32,6 @@ alias gpl='git pull'
 # alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
 # alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
 alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
-alias noice='export PATH=$(echo $PATH | tr : "\n" | grep -v icecc | xargs echo -n | tr " " :)'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
@@ -78,17 +77,8 @@ fi
 export PATH=$ORIG_PATH
 export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
 # Toolchains:
-# Icecream (distributed compiler):
-export PATH=/usr/lib/icecc/bin:$PATH
-# export ICECC_CC=/usr/bin/clang
-# export ICECC_CXX=/usr/bin/clang++
-# export ICECC_VERSION=$HOME/other/toolchains/icecc/clang-3.5-slava_f07eb13ba0ccf7554cb64725c5c308a0.tar.gz
-export ICECC_CC=/usr/bin/gcc
-export ICECC_CXX=/usr/bin/g++
-export ICECC_VERSION=$HOME/other/toolchains/icecc/gcc-4.9.2-slava_a908cb794bef5674145090371ab9281b.tar.gz
-
 # Atmel:
-export CROSS_COMPILE=arm-none-eabi-
+# export CROSS_COMPILE=arm-none-eabi-
 export PATH=$PATH:$HOME/other/toolchains/atmel_gnu_arm-none-eabi/bin
 # export PATH=$PATH:$HOME/other/toolchains/gcc-linaro-4.9-2014.11-x86_64_arm-eabi/bin
 
@@ -118,13 +108,9 @@ export QUILT_PATCHES=debian/patches
 # export T32TMP=/tmp
 # export T32ID=T32
 
-# IP:
-export IP_PC=106.125.38.23
-export IP_BUILD_SERVER=106.125.52.218
-
 # Perforce:
-export P4PORT=106.125.19.19:1666
-export P4USER=USER_NAME
+# export P4PORT=106.125.19.19:1666
+# export P4USER=USER_NAME
 # export P4PASSWD=
 
 BASHRC_S=$HOME/workspace/dotrc_s/home_settings/.bashrc
