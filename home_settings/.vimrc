@@ -231,7 +231,7 @@ nmap <Leader><Leader> <Plug>(easymotion-s)
 vmap <Leader><Leader> <Plug>(easymotion-s)
 
 " Apply macro to selected lines:
-vmap 2 :normal @
+vmap 9 :normal @
 
 " Do not capture stderr while using :read
 " set shellredir=>%s 2>&1 " - default value

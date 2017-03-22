@@ -7,6 +7,11 @@ setenv ARG "VALUE"
 saveenv
 reset
 
+# If libreoffice draw is slow (with grid enabled), turn on the following settings:
+Tools -> Options -> View -> Use OpenGL for all rendering (on restart)
+Tools -> Options -> View -> Force OpenGL even if blacklisted (on restart)
+# Save document often, beware of OpenGL driver crashes!
+
 # Google test (gtest) test filter:
 ./test_executable --gtest_filter='PREFIX_1*:PREFIX_2*:PREFIX_3*'
 
