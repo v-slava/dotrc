@@ -324,13 +324,11 @@ TODO: respect comments."
 
   (defun my-text-scale-increase ()
     (interactive)
-    (text-scale-increase 1)
-    )
+    (text-scale-increase 1))
 
   (defun my-text-scale-decrease ()
     (interactive)
-    (text-scale-decrease 1)
-    )
+    (text-scale-decrease 1))
 
   (defun my-set-tab-width (tab_width)
     "My set tab width."
@@ -352,11 +350,10 @@ TODO: respect comments."
 		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
 			(error "No write since last change (buffer is modified)")
 		  ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
-          (condition-case nil (delete-window) (error (my-delete-frame)))
+          (condition-case nil (delete-window) (error (my--delete-frame)))
 		  )
 	  ;; a buffer hasn't associated file name
-	  (condition-case nil (delete-window) (error (my-delete-frame)))
-      ))
+	  (condition-case nil (delete-window) (error (my--delete-frame)))))
 
   (defun my-execute-macro (reg)
 	"Execute vim macro from a given register on visualy selected region."
@@ -364,7 +361,7 @@ TODO: respect comments."
 	(evil-execute-macro 1 (concat ":normal @" reg)))
 
   (defun my-indent-buffer ()
-	(interactive)
+    (interactive)
 	(save-excursion
 	  (indent-region (point-min) (point-max) nil)))
 
@@ -376,7 +373,7 @@ TODO: respect comments."
 		;; a buffer hasn't associated file name
 		(delete-window cur_window))))
 
-  (defun my-copy-to-clipboard (data)
+  (defun my--copy-to-clipboard (data)
 	"Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
 	(let* ((process-connection-type nil) (proc (cond ((getenv "DISPLAY")
                                                       (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
@@ -385,13 +382,12 @@ TODO: respect comments."
 		(process-send-eof proc))
 	  data))
 
-  (defun my-delete-frame ()
+  (defun my--delete-frame ()
 	"Preserve clipboard contents (using clipboard.sh) and delete frame."
 	(when (x-get-clipboard)
 	  (when (not (get-text-property 0 'foreign-selection (x-get-clipboard)))
-		(my-copy-to-clipboard (x-get-clipboard))))
-	(delete-frame)
-	)
+		(my--copy-to-clipboard (x-get-clipboard))))
+	(delete-frame))
 
   (defun my-clear-current-line ()
     "Clear current line."
@@ -401,16 +397,22 @@ TODO: respect comments."
   (defun my-save-all-buffers ()
     "Silently save all buffers."
     (interactive)
-    (save-some-buffers 't)
-    )
+    (save-some-buffers 't))
 
   (defun my--disable-semantic-stickyfunc-mode ()
     "Disable semantic-stickyfunc-mode."
     (if (boundp 'global-semantic-stickyfunc-mode)
         (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
 
+  (defun my--buffer-to-string (buffer)
+    "Return buffer contents as a string."
+    (with-current-buffer buffer
+      (save-restriction
+        (widen)
+        (buffer-substring-no-properties (point-min) (point-max)))))
+
   (defun my--load-emacs-process-files-list (directory files-list)
-    "Recursively process files-list. See (my-load-emacs-projects) for details."
+    "Recursively process files-list. See (my--load-emacs-projects) for details."
     (if files-list
         (progn
           (let ((file (concat directory "/" (car files-list))))
@@ -420,25 +422,69 @@ TODO: respect comments."
                   (load-file file))))
           (my--load-emacs-process-files-list directory (cdr files-list)))))
 
-  (defun my-load-emacs-projects (directory)
+  (defun my--load-emacs-projects (directory)
 	"Read and evaluate as elisp all files from a given directory."
-    (my--load-emacs-process-files-list directory (directory-files directory))
-    )
+    (my--load-emacs-process-files-list directory (directory-files directory)))
 
-  (defun my--test-elisp-hotkey ()
-    "Evaluate current elisp function and call (my-test-elisp-function)"
+  (defun my-configure-build-run ()
+    "Configure and/or build and/or run function/file/project."
     (interactive)
+    (if (derived-mode-p 'emacs-lisp-mode)
+        (my--test-elisp)
+      (my--select-and-execute-shell-command)))
+
+  (defun my--select-and-execute-shell-command ()
+    "Select and execute shell command."
+    (let ((saved-shell-command (frame-parameter (selected-frame) 'my-shell-command)))
+      (my--execute-shell-command
+       (if saved-shell-command
+           saved-shell-command
+         (my--get-shell-command-by-file-type)))))
+
+  (defun my--get-shell-command-by-file-type ()
+    "Return a shell command to be executed for a given file type."
+    (let* ((file-path (buffer-file-name (current-buffer)))
+           (file-name (file-name-nondirectory file-path))
+           (file-extension (file-name-extension file-name))
+           (compiled-file (concat "/tmp/" file-name ".out"))
+           (compile-ending (concat file-path " -o " compiled-file " && " compiled-file))
+           (script (concat "chmod +x " file-path " && " file-path)))
+      (cond
+       ((equal file-extension "c") (concat "gcc -Wall -Wextra " compile-ending))
+       ((member file-extension '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C")) (concat "g++ -Wall -Wextra -std=c++11 " compile-ending))
+       ((equal file-extension "rs") (concat "rustc " compile-ending))
+       ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
+       ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
+       (t "echo \"shell command for this file type is not defined\" && false"))))
+
+  (defun my--test-elisp ()
+    "Evaluate current elisp function and call (my-test-elisp-function)."
     (save-excursion
       (re-search-backward "(defun ")
       (evil-jump-item)
       (lisp-state-eval-sexp-end-of-line)
-      (my-test-elisp-function)
-      )
+      (my-elisp-testcase)))
+
+  (defun my-elisp-testcase ()
+    "Call function to be tested (execute a testcase)."
+    ;; (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+    ;; (my--get-shell-command-by-file-type)
+    (my--select-and-execute-shell-command)
     )
 
-  (defun my-test-elisp-function ()
-    "Call function to be tested (execute a testcase)"
-    ;; (my-load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+  (defun my--execute-shell-command (cmd)
+    "Execute given shell command."
+
+    ;; TODO
+    (message "cmd = |%s|" cmd)
+
+    ;; (set-frame-parameter (selected-frame) 'my-shell-command "asd")
+
+    ;; (message "|%s|" (current-buffer))
+    ;; (let ((case-fold-search nil)) ;; case-sensitive
+    ;;   (string-match "regex" "haystack qwasdqw"))
+
+    ;; (string-match "as" "qwAsdqw")
     )
 
   ;; TODO delete?
@@ -452,28 +498,6 @@ TODO: respect comments."
   ;;   ;; (shell-command cmd t)
   ;;   )
   ;; (my-shell-command "ls -l && pwd")
-  ;;
-  ;; (defun my-buffer-to-string (buffer)
-  ;;   "Return buffer contents as a string."
-  ;;   (with-current-buffer buffer
-  ;;     (save-restriction
-  ;;   	(widen)
-  ;;   	(buffer-substring-no-properties (point-min) (point-max)))))
-  ;;
-  ;; (defun my-create-shell-frame-if-required ()
-  ;;   "Create a shell frame if it is not already created."
-  ;;   (shell))
-  ;;   ;; (require 'frame-fns)
-  ;;   ;; (when (not (get-a-frame "*shell*"))
-  ;;   ;;   (shell)
-  ;;   ;;   (sleep-for 0 100) ;; wait for shell greeting (TODO fix)
-  ;;   ;;   ))
-  ;;
-  ;; (defun my-execute-command-in-shell-frame (cmd)
-  ;;   "Execute given command in a shell frame."
-  ;;   (my-create-shell-frame-if-required)
-  ;;   (comint-send-string "*shell*" (concat cmd "\n")))
-
 
   ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
   ;; Get current line (into myLine variable):
@@ -488,10 +512,10 @@ TODO: respect comments."
 	(interactive)
 	(spacemacs/next-error))
 
-    ;; (with-current-buffer buffer (write-file file_name)))
-    ;; (save-excursion
-    ;;   (end-of-line)
-    ;;   (eval-last-sexp nil)))
+  ;; (with-current-buffer buffer (write-file file_name)))
+  ;; (save-excursion
+  ;;   (end-of-line)
+  ;;   (eval-last-sexp nil)))
 
   ;; TODO To run two compilations at once, start the first one, then rename the *compilation* buffer
   ;; (perhaps using rename-uniquely; see Misc Buffer), then switch buffers and start the other compilation.
@@ -593,7 +617,8 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
-  (spacemacs/set-leader-keys "of" 'my--test-elisp-hotkey)
+  (spacemacs/set-leader-keys "of" 'my-configure-build-run)
+
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
@@ -681,7 +706,7 @@ TODO: respect comments."
   ;; make "main" target:
   ;; (helm--make-action "main")
 
-  ;; (my-load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+  ;; (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
