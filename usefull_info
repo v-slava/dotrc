@@ -1067,19 +1067,6 @@ bind -P
 readlink -f PATH
 realpath PATH
 
-# Create uImage from raw binary:
-mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
-
-# Create hard drive image in regular file:
-fdisk FILE
-kpartx -a FILE # add partition mappings
-losetup -l # print info about loop devices
-mount /dev/mapper/loop0p1 /mnt # mount first partition from FILE to /mnt
-kpartx -d FILE # delete partition mappings
-# losetup -f # print name of first unused loop device (for example /dev/loop0)
-# losetup -o OFFSET /dev/loop0 FILE # attach loop device with regular file
-# losetup -d /dev/loop0 # detach loop device from file
-
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
@@ -1298,7 +1285,49 @@ cp memtest86-iso /mnt/boot/memtest.iso
 # Create bootable iso image (for cdrom):
 mkdir -p image_root/boot/grub
 vim image_root/boot/grub/grub.cfg
+apt-get install xorriso
 grub-mkrescue -o grub.iso image_root
+
+# Create hard drive image in regular file (possibly with grub):
+fdisk FILE
+kpartx -a FILE # add partition mappings
+losetup -l # print info about loop devices
+mount /dev/mapper/loop0p1 /mnt # mount first partition from FILE to /mnt
+kpartx -d FILE # delete partition mappings
+# losetup -f # print name of first unused loop device (for example /dev/loop0)
+# losetup -o OFFSET /dev/loop0 FILE # attach loop device with regular file
+# losetup -d /dev/loop0 # detach loop device from file
+
+# Create HDD image with grub:
+apt-get install kpartx grub-pc util-linux dosfstools
+GRUB_CFG=grub.cfg
+OUT=grub_hdd.img
+MNT=/tmp/mnt
+rm -f $OUT
+rm -rf $MNT
+mkdir $MNT
+dd if=/dev/zero of=$OUT bs=1M count=10
+# create a new empty DOS partition table
+# add a new partition: primary, partition number = 1, default first and last sectors
+# toggle bootable flag
+# change partition type to "W95 FAT16 (LBA)"
+# write table to disk and exit
+# echo -e "o\nn\np\n1\n\n\na\nt\nc\nw\n" | fdisk $OUT
+echo -e "o\nn\np\n1\n\n\na\nt\ne\nw\n" | fdisk $OUT
+kpartx -a $OUT # add partition mappings:
+sleep 1
+PARTITION=/dev/mapper/loop0p1
+mkfs -t vfat -F 16 -n GRUB_HDD $PARTITION
+echo mounting...
+mount $PARTITION $MNT
+mkdir -p $MNT/boot
+grub-install --boot-directory=$MNT/boot $OUT
+cp $GRUB_CFG $MNT/boot/grub/grub.cfg
+umount $MNT
+kpartx -d $OUT # delete partition mappings:
+
+# Create uImage from raw binary:
+mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
 
 # Add bridge:
 brctl addbr br0
