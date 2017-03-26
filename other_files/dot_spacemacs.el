@@ -418,13 +418,31 @@ TODO: respect comments."
           (let ((file (concat directory "/" (car files-list))))
             (if (file-regular-p file)
                 (progn
-                  (message "evaluating elisp code from file: %s" file)
+                  ;; (message "evaluating elisp code from file: %s" file)
                   (load-file file))))
           (my--load-emacs-process-files-list directory (cdr files-list)))))
 
   (defun my--load-emacs-projects (directory)
 	"Read and evaluate as elisp all files from a given directory."
-    (my--load-emacs-process-files-list directory (directory-files directory)))
+    (if (file-directory-p directory)
+        (my--load-emacs-process-files-list directory (directory-files directory))
+      (message "Can't load emacs projects: \"%s\" - no such directory" directory)))
+
+  (defun my--get-project ()
+    "Return currently selected project or nil."
+    (frame-parameter (selected-frame) 'my-project))
+
+  (defun my--set-project (prj)
+    "Set currently selected project to PRJ."
+    (set-frame-parameter (selected-frame) 'my-project prj))
+
+  (defun my--get-shell-command-for-project ()
+    "Return currently selected shell command (for current project) or nil."
+    (frame-parameter (selected-frame) 'my-shell-command))
+
+  (defun my--set-shell-command-for-project (cmd)
+    "Set currently selected shell command (for current project) to CMD."
+    (set-frame-parameter (selected-frame) 'my-shell-command cmd))
 
   (defun my-configure-build-run ()
     "Configure and/or build and/or run function/file/project."
@@ -435,11 +453,10 @@ TODO: respect comments."
 
   (defun my--select-and-execute-shell-command ()
     "Select and execute shell command."
-    (let ((saved-shell-command (frame-parameter (selected-frame) 'my-shell-command)))
-      (my--execute-shell-command
-       (if saved-shell-command
-           saved-shell-command
-         (my--get-shell-command-by-file-type)))))
+    (my-save-all-buffers)
+    (compile (if (my--get-shell-command-for-project)
+                 (my--get-shell-command-for-project)
+               (my--get-shell-command-by-file-type))))
 
   (defun my--get-shell-command-by-file-type ()
     "Return a shell command to be executed for a given file type."
@@ -457,8 +474,16 @@ TODO: respect comments."
        ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
        (t "echo \"shell command for this file type is not defined\" && false"))))
 
+  (defun my-configure-editor ()
+    "Configure shell-command to be executed by (my-configure-build-run) in editor."
+    (interactive)
+    (switch-to-buffer "*scratch*")
+    (erase-buffer)
+    ;; TODO continue
+    )
+
   (defun my--test-elisp ()
-    "Evaluate current elisp function and call (my-test-elisp-function)."
+    "Evaluate current elisp function and call (my-elisp-testcase)."
     (save-excursion
       (re-search-backward "(defun ")
       (evil-jump-item)
@@ -467,24 +492,7 @@ TODO: respect comments."
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
-    ;; (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
-    ;; (my--get-shell-command-by-file-type)
-    (my--select-and-execute-shell-command)
-    )
-
-  (defun my--execute-shell-command (cmd)
-    "Execute given shell command."
-
-    ;; TODO
-    (message "cmd = |%s|" cmd)
-
-    ;; (set-frame-parameter (selected-frame) 'my-shell-command "asd")
-
-    ;; (message "|%s|" (current-buffer))
-    ;; (let ((case-fold-search nil)) ;; case-sensitive
-    ;;   (string-match "regex" "haystack qwasdqw"))
-
-    ;; (string-match "as" "qwAsdqw")
+    (my-configure-editor)
     )
 
   ;; TODO delete?
@@ -521,16 +529,6 @@ TODO: respect comments."
   ;; (perhaps using rename-uniquely; see Misc Buffer), then switch buffers and start the other compilation.
   ;; This will create a new *compilation* buffer. See also (rename-buffer)
 
-  ;; (setq my-compilation-buffer "orig")
-  ;; (make-variable-frame-local 'my-compilation-buffer)
-  ;; (setq my-compilation-buffer "modified")
-  ;; (modify-frame-parameters (selected-frame) '((name . "my frame name!")))
-  ;; (set-frame-parameter (selected-frame) 'name "my frame name 2!")
-  ;; (frame-parameter (selected-frame) 'name)
-  ;; (frame-parameters (selected-frame))
-  ;; (set-frame-parameter (selected-frame) 'my_param "my param value can be veeeeeeeeeeeeeeeeery long !!!!!!!!!!")
-  ;; (frame-parameter (selected-frame) 'my_param)
-
   (defun my-previous-error ()
 	"Visit previous error in source code."
 	(interactive)
@@ -553,7 +551,7 @@ TODO: respect comments."
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
   ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.
   ;; (setq compilation-error-screen-columns nil)
-  ;; TODO auto scroll: see variable: compilation-scroll-output
+  (setq compilation-scroll-output 'first-error)
 
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
@@ -618,6 +616,13 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
+  ;; TODO implement
+  ;; (spacemacs/set-leader-keys "os" 'my-select-shell-command)
+  ;; (spacemacs/set-leader-keys "cc" 'my-select-project)
+  ;; TODO open scratch buffer with elisp expressions to set shell command for (my-configure-build-run).
+  ;; Preinitialize the scratch buffer with all possible shell commands for current project (if any).
+  ;; Otherwise use output of (my--get-shell-command-by-file-type).
+  (spacemacs/set-leader-keys "oc" 'my-configure-editor)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
@@ -695,18 +700,17 @@ TODO: respect comments."
   ;; projectile-project-test-cmd
   ;; projectile-project-run-cmd
 
-
   ;; (message "hello")
   ;; (setq-default helm-make-build-dir "/home/volkov/out")
-
-  ;; (compile "make -C /home/volkov/prj/ -j1 main")
   ;; make -j2 SOME_TARGET:
   ;; (helm-make 2)
   ;; (helm-make-projectile 2)
   ;; make "main" target:
   ;; (helm--make-action "main")
+  ;; (let ((case-fold-search nil)) ;; case-sensitive
+  ;;   (string-match "regex" "haystack qwasdqw"))
 
-  ;; (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+  (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
