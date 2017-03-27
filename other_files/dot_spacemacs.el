@@ -444,6 +444,12 @@ TODO: respect comments."
     "Set currently selected shell command (for current project) to CMD."
     (set-frame-parameter (selected-frame) 'my-shell-command cmd))
 
+  (defun my--get-elisp-for-shell-command (cmd)
+    "Returns elisp expression for setting current shell command to CMD."
+    (concat "(my--set-shell-command-for-project "
+            (let ((print-escape-newlines t)) (prin1-to-string cmd))
+            ")\n"))
+
   (defun my-configure-build-run ()
     "Configure and/or build and/or run function/file/project."
     (interactive)
@@ -477,10 +483,19 @@ TODO: respect comments."
   (defun my-configure-editor ()
     "Configure shell-command to be executed by (my-configure-build-run) in editor."
     (interactive)
-    (switch-to-buffer "*scratch*")
-    (erase-buffer)
-    ;; TODO continue
-    )
+    (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type)))
+      (switch-to-buffer "*scratch*")
+      (erase-buffer)
+      (if (my--get-shell-command-for-project)
+          (progn
+            (insert (my--get-elisp-for-shell-command (my--get-shell-command-for-project)))
+            (insert "\n")
+            ;; TODO insert other shell commands for (my--get-project)
+            )
+        (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type))))
+    (evil-goto-first-line)
+    (evil-find-char 1 ?\")
+    (evil-forward-char))
 
   (defun my--test-elisp ()
     "Evaluate current elisp function and call (my-elisp-testcase)."
