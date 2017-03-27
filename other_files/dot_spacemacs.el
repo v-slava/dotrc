@@ -497,6 +497,20 @@ TODO: respect comments."
     (evil-find-char 1 ?\")
     (evil-forward-char))
 
+  (defvar my--projects-alist nil "My alist of emacs projects.")
+
+  (defun my-register-project (name cmds)
+    "Register new emacs project."
+    (if (assoc name my--projects-alist)
+        (message "Can't register new emacs project: a project with this name already exists.")
+      (add-to-list 'my--projects-alist `(,name . ,cmds) t)))
+
+  ;; Usage example:
+  ;; (my-register-project "some-prj-name"
+  ;;                     '(("run-pc" . "make -j12 ARCH=x86 && ./unit_tests")
+  ;;                     ("build-ninja-arm" . "ninja -j12 ARCH=arm")
+  ;;                     ("configure" . "cd .. && cmake /home/user/prj-dir")))
+
   (defun my--test-elisp ()
     "Evaluate current elisp function and call (my-elisp-testcase)."
     (save-excursion
@@ -507,8 +521,13 @@ TODO: respect comments."
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
-    (my-configure-editor)
+    ;; (my-configure-editor)
     )
+
+  ;; (car (assoc "some-prj-name" my--projects-alist))
+  ;; (cdr (assoc "some-prj-name" my--projects-alist))
+  ;; (completing-read "hello> " `("value1" "asdf" "some_dval_2"))
+  ;; (setq trees '(("my_pine" . cones) (oak . "some cmd") (maple . seeds)))
 
   ;; TODO delete?
   ;; (defun my-shell-command (cmd)
