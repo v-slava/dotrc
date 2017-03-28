@@ -4,6 +4,8 @@
 /bin/teamviewer
 /bin/tup
 /bin/idea.sh
+/bin/clang
+/bin/clang++
 *.pyc
 
 # second:

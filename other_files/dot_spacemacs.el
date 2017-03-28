@@ -455,10 +455,16 @@ TODO: respect comments."
     (interactive)
     (if (derived-mode-p 'emacs-lisp-mode)
         (my--test-elisp)
-      (my--select-and-execute-shell-command)))
+      (my--execute-shell-command)))
 
-  (defun my--select-and-execute-shell-command ()
-    "Select and execute shell command."
+  (defun my-print-shell-command ()
+    "Print shell command to be executed."
+    (message "Command: %s" (if (my--get-shell-command-for-project)
+                               (my--get-shell-command-for-project)
+                             (my--get-shell-command-by-file-type))))
+
+  (defun my--execute-shell-command ()
+    "Execute shell command."
     (my-save-all-buffers)
     (compile (if (my--get-shell-command-for-project)
                  (my--get-shell-command-for-project)
@@ -480,7 +486,7 @@ TODO: respect comments."
        ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
        (t "echo \"shell command for this file type is not defined\" && false"))))
 
-  (defun my-configure-editor ()
+  (defun my-configure-shell-command-editor ()
     "Configure shell-command to be executed by (my-configure-build-run) in editor."
     (interactive)
     (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type)))
@@ -506,10 +512,24 @@ TODO: respect comments."
       (add-to-list 'my--projects-alist `(,name . ,cmds) t)))
 
   ;; Usage example:
-  ;; (my-register-project "some-prj-name"
-  ;;                     '(("run-pc" . "make -j12 ARCH=x86 && ./unit_tests")
-  ;;                     ("build-ninja-arm" . "ninja -j12 ARCH=arm")
-  ;;                     ("configure" . "cd .. && cmake /home/user/prj-dir")))
+  ;; (my-register-project "prj2"
+  ;;                      '(("cmd1: pc unit tests" . "make -j12 ARCH=x86 && ./unit_tests")
+  ;;                        ("cmd2: build for arm (ninja)" . "ninja -j12 ARCH=arm")
+  ;;                        ("cmd3: cmake" . "cd .. && cmake /home/user/prj-dir")))
+
+  (defun my-select-project ()
+    "Select project using ivy."
+    (interactive)
+    (my--set-project (completing-read "Select project: " my--projects-alist)))
+
+  (defun my-select-shell-command ()
+    "Select shell command within current project."
+    (interactive)
+    (let* ((prj-def (assoc (my--get-project) my--projects-alist))
+           (prj-shell-commands (cdr prj-def))
+           (shell-command-name (completing-read "Select shell command: " prj-shell-commands))
+           (shell-command-def (cdr (assoc shell-command-name prj-shell-commands))))
+      (my--set-shell-command-for-project shell-command-def)))
 
   (defun my--test-elisp ()
     "Evaluate current elisp function and call (my-elisp-testcase)."
@@ -521,13 +541,8 @@ TODO: respect comments."
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
-    ;; (my-configure-editor)
+    (my-select-shell-command)
     )
-
-  ;; (car (assoc "some-prj-name" my--projects-alist))
-  ;; (cdr (assoc "some-prj-name" my--projects-alist))
-  ;; (completing-read "hello> " `("value1" "asdf" "some_dval_2"))
-  ;; (setq trees '(("my_pine" . cones) (oak . "some cmd") (maple . seeds)))
 
   ;; TODO delete?
   ;; (defun my-shell-command (cmd)
@@ -650,13 +665,10 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
-  ;; TODO implement
-  ;; (spacemacs/set-leader-keys "os" 'my-select-shell-command)
-  ;; (spacemacs/set-leader-keys "cc" 'my-select-project)
-  ;; TODO open scratch buffer with elisp expressions to set shell command for (my-configure-build-run).
-  ;; Preinitialize the scratch buffer with all possible shell commands for current project (if any).
-  ;; Otherwise use output of (my--get-shell-command-by-file-type).
-  (spacemacs/set-leader-keys "oc" 'my-configure-editor)
+  (spacemacs/set-leader-keys "or" 'my-print-shell-command)
+  (spacemacs/set-leader-keys "os" 'my-select-shell-command)
+  (spacemacs/set-leader-keys "oc" 'my-configure-shell-command-editor)
+  (spacemacs/set-leader-keys "cc" 'my-select-project)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
