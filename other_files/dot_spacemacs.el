@@ -350,8 +350,7 @@ TODO: respect comments."
 		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
 			(error "No write since last change (buffer is modified)")
 		  ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
-          (condition-case nil (delete-window) (error (my--delete-frame)))
-		  )
+          (condition-case nil (delete-window) (error (my--delete-frame))))
 	  ;; a buffer hasn't associated file name
 	  (condition-case nil (delete-window) (error (my--delete-frame)))))
 
@@ -361,9 +360,9 @@ TODO: respect comments."
 	(evil-execute-macro 1 (concat ":normal @" reg)))
 
   (defun my-indent-buffer ()
+    "Indent current buffer."
     (interactive)
-	(save-excursion
-	  (indent-region (point-min) (point-max) nil)))
+	(save-excursion (indent-region (point-min) (point-max) nil)))
 
   (defun my-close-temporary-windows ()
 	"Close temporary windows (compile results, help, etc)."
@@ -375,8 +374,9 @@ TODO: respect comments."
 
   (defun my--copy-to-clipboard (data)
 	"Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
-	(let* ((process-connection-type nil) (proc (cond ((getenv "DISPLAY")
-                                                      (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
+	(let* ((process-connection-type nil)
+           (proc (cond ((getenv "DISPLAY")
+                        (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
 	  (when proc
 		(process-send-string proc data)
 		(process-send-eof proc))
@@ -401,8 +401,8 @@ TODO: respect comments."
 
   (defun my--disable-semantic-stickyfunc-mode ()
     "Disable semantic-stickyfunc-mode."
-    (if (boundp 'global-semantic-stickyfunc-mode)
-        (if global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
+    (when (boundp 'global-semantic-stickyfunc-mode)
+      (when global-semantic-stickyfunc-mode (global-semantic-stickyfunc-mode -1))))
 
   (defun my--buffer-to-string (buffer)
     "Return buffer contents as a string."
@@ -413,20 +413,18 @@ TODO: respect comments."
 
   (defun my--load-emacs-process-files-list (directory files-list)
     "Recursively process files-list. See (my--load-emacs-projects) for details."
-    (if files-list
-        (progn
-          (let ((file (concat directory "/" (car files-list))))
-            (if (file-regular-p file)
-                (progn
-                  ;; (message "evaluating elisp code from file: %s" file)
-                  (load-file file))))
-          (my--load-emacs-process-files-list directory (cdr files-list)))))
+    (when files-list
+      (let ((file (concat directory "/" (car files-list))))
+        (when (file-regular-p file)
+          ;; (message "evaluating elisp code from file: %s" file)
+          (load-file file)))
+      (my--load-emacs-process-files-list directory (cdr files-list))))
 
   (defun my--load-emacs-projects (directory)
 	"Read and evaluate as elisp all files from a given directory."
-    (if (file-directory-p directory)
-        (my--load-emacs-process-files-list directory (directory-files directory))
-      (message "Can't load emacs projects: \"%s\" - no such directory" directory)))
+    (unless (file-directory-p directory)
+      (error "Can't load emacs projects: \"%s\" - no such directory" directory))
+    (my--load-emacs-process-files-list directory (directory-files directory)))
 
   (defun my--get-project ()
     "Return currently selected project or nil."
@@ -457,18 +455,21 @@ TODO: respect comments."
         (my--test-elisp)
       (my--execute-shell-command)))
 
+  (defun my--get-shell-command ()
+    "Return shell command (either selected for current project or by file type)."
+    (if (my--get-shell-command-for-project)
+        (my--get-shell-command-for-project)
+      (my--get-shell-command-by-file-type)))
+
   (defun my-print-shell-command ()
     "Print shell command to be executed."
-    (message "Command: %s" (if (my--get-shell-command-for-project)
-                               (my--get-shell-command-for-project)
-                             (my--get-shell-command-by-file-type))))
+    (interactive)
+    (message "Shell command: %s" (my--get-shell-command)))
 
   (defun my--execute-shell-command ()
     "Execute shell command."
     (my-save-all-buffers)
-    (compile (if (my--get-shell-command-for-project)
-                 (my--get-shell-command-for-project)
-               (my--get-shell-command-by-file-type))))
+    (compile (my--get-shell-command)))
 
   (defun my--get-shell-command-by-file-type ()
     "Return a shell command to be executed for a given file type."
@@ -486,6 +487,17 @@ TODO: respect comments."
        ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
        (t "echo \"shell command for this file type is not defined\" && false"))))
 
+  (defun my--insert-prj-shell-commands (shell-commands)
+    "Insert project shell commands in buffer."
+    (when shell-commands
+      (let* ((first-cmd (car shell-commands))
+             (cmd-name (car first-cmd))
+             (cmd-def (cdr first-cmd)))
+        (insert (concat "# " cmd-name ":\n"))
+        (insert (my--get-elisp-for-shell-command cmd-def))
+        ;; (insert "\n")
+        (my--insert-prj-shell-commands (cdr shell-commands)))))
+
   (defun my-configure-shell-command-editor ()
     "Configure shell-command to be executed by (my-configure-build-run) in editor."
     (interactive)
@@ -496,8 +508,9 @@ TODO: respect comments."
           (progn
             (insert (my--get-elisp-for-shell-command (my--get-shell-command-for-project)))
             (insert "\n")
-            ;; TODO insert other shell commands for (my--get-project)
-            )
+            (let* ((prj-def (assoc (my--get-project) my--projects-alist))
+                   (prj-shell-commands (cdr prj-def)))
+              (my--insert-prj-shell-commands prj-shell-commands)))
         (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type))))
     (evil-goto-first-line)
     (evil-find-char 1 ?\")
@@ -507,9 +520,10 @@ TODO: respect comments."
 
   (defun my-register-project (name cmds)
     "Register new emacs project."
-    (if (assoc name my--projects-alist)
-        (message "Can't register new emacs project: a project with this name already exists.")
-      (add-to-list 'my--projects-alist `(,name . ,cmds) t)))
+    (when (assoc name my--projects-alist)
+      (error "Can't register new emacs project: a project with this name already exists."))
+    ;; TODO check more.
+    (add-to-list 'my--projects-alist `(,name . ,cmds) t))
 
   ;; Usage example:
   ;; (my-register-project "prj2"
@@ -536,25 +550,13 @@ TODO: respect comments."
     (save-excursion
       (re-search-backward "(defun ")
       (evil-jump-item)
-      (lisp-state-eval-sexp-end-of-line)
-      (my-elisp-testcase)))
+      (lisp-state-eval-sexp-end-of-line))
+    (save-excursion (my-elisp-testcase)))
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
-    (my-select-shell-command)
+    (my-configure-shell-command-editor)
     )
-
-  ;; TODO delete?
-  ;; (defun my-shell-command (cmd)
-  ;;   "Run shell command. Display output and exit code."
-  ;;   ;; TODO
-  ;;   ;; (interactive)
-  ;;   (compile "make -C /home/volkov/prj/ -j1 clean")
-  ;;   (compile "make -C /home/volkov/prj/ -j1 main")
-  ;;   ;; (message "me")
-  ;;   ;; (shell-command cmd t)
-  ;;   )
-  ;; (my-shell-command "ls -l && pwd")
 
   ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
   ;; Get current line (into myLine variable):
@@ -565,9 +567,9 @@ TODO: respect comments."
   ;;        ))
 
   (defun my-next-error ()
-	"Visit next error in source code."
-	(interactive)
-	(spacemacs/next-error))
+    "Visit next error in source code."
+    (interactive)
+    (spacemacs/next-error))
 
   ;; (with-current-buffer buffer (write-file file_name)))
   ;; (save-excursion
@@ -579,19 +581,19 @@ TODO: respect comments."
   ;; This will create a new *compilation* buffer. See also (rename-buffer)
 
   (defun my-previous-error ()
-	"Visit previous error in source code."
-	(interactive)
-	(spacemacs/previous-error))
+    "Visit previous error in source code."
+    (interactive)
+    (spacemacs/previous-error))
 
   (defun my-this-error()
-	"Visit this (current) error in source code."
-	(interactive)
-	(evil-goto-error nil))
+    "Visit this (current) error in source code."
+    (interactive)
+    (evil-goto-error nil))
 
   (defun my-first-error()
-	"Visit this (current) error in source code."
-	(interactive)
-	(first-error nil))
+    "Visit this (current) error in source code."
+    (interactive)
+    (first-error nil))
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
@@ -667,8 +669,8 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
   (spacemacs/set-leader-keys "or" 'my-print-shell-command)
   (spacemacs/set-leader-keys "os" 'my-select-shell-command)
-  (spacemacs/set-leader-keys "oc" 'my-configure-shell-command-editor)
-  (spacemacs/set-leader-keys "cc" 'my-select-project)
+  (spacemacs/set-leader-keys "oc" 'my-select-project)
+  (spacemacs/set-leader-keys "cc" 'my-configure-shell-command-editor)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
