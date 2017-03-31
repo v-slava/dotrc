@@ -333,61 +333,60 @@ TODO: respect comments."
   (defun my-set-tab-width (tab_width)
     "My set tab width."
     (interactive)
-    (when (< tab_width 2) (error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
-    (setq-default tab-width tab_width) ;; view tab as this number of spaces
-    (setq tab-width tab_width)
-    (setq c-basic-offset tab_width) ;; use this number of spaces as indent
-    ;; show each <tab> as a string:
-    ;; (standard-display-ascii ?\t "\xBB   ")
-    ;; (standard-display-ascii ?\t "--->")
-    (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? ))))
+    (with-demoted-errors "%s"
+      (when (< tab_width 2) (error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
+      (setq-default tab-width tab_width) ;; view tab as this number of spaces
+      (setq tab-width tab_width)
+      (setq c-basic-offset tab_width) ;; use this number of spaces as indent
+      ;; show each <tab> as a string:
+      ;; (standard-display-ascii ?\t "\xBB   ")
+      ;; (standard-display-ascii ?\t "--->")
+      (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))))
 
   (defun my-close-window-or-frame ()
     "Close current window or frame."
-	(interactive)
-	(if (buffer-file-name)
-		;; a buffer has associated file name
-		(if (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
-			(error "No write since last change (buffer is modified)")
-		  ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
-          (condition-case nil (delete-window) (error (my--delete-frame))))
-	  ;; a buffer hasn't associated file name
-	  (condition-case nil (delete-window) (error (my--delete-frame)))))
+    (interactive)
+    (when (buffer-file-name)
+      ;; a buffer has associated file name
+      (when (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
+        (error "No write since last change (buffer is modified)")))
+    ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
+    (condition-case nil (delete-window) (error (my--delete-frame))))
 
   (defun my-execute-macro (reg)
-	"Execute vim macro from a given register on visualy selected region."
-	(interactive "s:'<,'>normal @")
-	(evil-execute-macro 1 (concat ":normal @" reg)))
+    "Execute vim macro from a given register on visualy selected region."
+    (interactive "s:'<,'>normal @")
+    (evil-execute-macro 1 (concat ":normal @" reg)))
 
   (defun my-indent-buffer ()
     "Indent current buffer."
     (interactive)
-	(save-excursion (indent-region (point-min) (point-max) nil)))
+    (save-excursion (indent-region (point-min) (point-max) nil)))
 
   (defun my-close-temporary-windows ()
-	"Close temporary windows (compile results, help, etc)."
-	(interactive)
-	(dolist (cur_window (window-list))
-	  (when (not (buffer-file-name (window-buffer cur_window)))
-		;; a buffer hasn't associated file name
-		(delete-window cur_window))))
+    "Close temporary windows (compile results, help, etc)."
+    (interactive)
+    (dolist (cur_window (window-list))
+      (when (not (buffer-file-name (window-buffer cur_window)))
+        ;; a buffer hasn't associated file name
+        (delete-window cur_window))))
 
   (defun my--copy-to-clipboard (data)
-	"Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
-	(let* ((process-connection-type nil)
+    "Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
+    (let* ((process-connection-type nil)
            (proc (cond ((getenv "DISPLAY")
                         (start-file-process-shell-command "my_clipboard" nil "clipboard.sh")))))
-	  (when proc
-		(process-send-string proc data)
-		(process-send-eof proc))
-	  data))
+      (when proc
+        (process-send-string proc data)
+        (process-send-eof proc))
+      data))
 
   (defun my--delete-frame ()
-	"Preserve clipboard contents (using clipboard.sh) and delete frame."
-	(when (x-get-clipboard)
-	  (when (not (get-text-property 0 'foreign-selection (x-get-clipboard)))
-		(my--copy-to-clipboard (x-get-clipboard))))
-	(delete-frame))
+    "Preserve clipboard contents (using clipboard.sh) and delete frame."
+    (when (x-get-clipboard)
+      (when (not (get-text-property 0 'foreign-selection (x-get-clipboard)))
+        (my--copy-to-clipboard (x-get-clipboard))))
+    (delete-frame))
 
   (defun my-clear-current-line ()
     "Clear current line."
@@ -417,14 +416,15 @@ TODO: respect comments."
       (let ((file (concat directory "/" (car files-list))))
         (when (file-regular-p file)
           ;; (message "evaluating elisp code from file: %s" file)
-          (load-file file)))
+          (with-demoted-errors "%s" (load-file file))))
       (my--load-emacs-process-files-list directory (cdr files-list))))
 
   (defun my--load-emacs-projects (directory)
-	"Read and evaluate as elisp all files from a given directory."
-    (unless (file-directory-p directory)
-      (error "Can't load emacs projects: \"%s\" - no such directory" directory))
-    (my--load-emacs-process-files-list directory (directory-files directory)))
+    "Read and evaluate as elisp all files from a given directory."
+    (with-demoted-errors "%s"
+      (unless (file-directory-p directory)
+        (error "Can't load emacs projects: \"%s\" - no such directory" directory))
+      (my--load-emacs-process-files-list directory (directory-files directory))))
 
   (defun my--get-project ()
     "Return currently selected project or nil."
@@ -520,8 +520,8 @@ TODO: respect comments."
 
   (defun my-register-project (name cmds)
     "Register new emacs project."
-    (when (assoc name my--projects-alist)
-      (error "Can't register new emacs project: a project with this name already exists."))
+    (let* ((prj (assoc name my--projects-alist)))
+      (when prj (setq my--projects-alist (remove prj my--projects-alist))))
     ;; TODO check more.
     (add-to-list 'my--projects-alist `(,name . ,cmds) t))
 
@@ -697,9 +697,9 @@ TODO: respect comments."
   ;; u SPC en - go to first error (next-error 1 t)
   ;; ec - current error (my hotkey) TODO
   ;; nf - narrow the buffer to the current function (narrow-to-defun)
-  ;; np	- narrow the buffer to the visible page (narrow-to-page)
-  ;; nr	- narrow the buffer to the selected text (narrow-to-region)
-  ;; nw	- widen, i.e show the whole buffer again (widen)
+  ;; np - narrow the buffer to the visible page (narrow-to-page)
+  ;; nr - narrow the buffer to the selected text (narrow-to-region)
+  ;; nw - widen, i.e show the whole buffer again (widen)
   ;; qq - kill emacs (spacemacs/prompt-kill-emacs)
   ;; qz - kill frame (spacemacs/frame-killer)
   ;; fb - jump to bookmark (bookmark-jump)
