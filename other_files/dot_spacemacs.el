@@ -313,6 +313,10 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  (defun my--error (&rest args)
+    "Print error message using (user-error)."
+    (user-error "[Error] %s: %s" this-command (apply #'format-message args)))
+
   (defun lisp-state-eval-sexp-end-of-line ()
     "My implementation for \'evil-leader \"mel\"\':
 evaluate the last sexp at the end of the current line.
@@ -334,7 +338,7 @@ TODO: respect comments."
     "My set tab width."
     (interactive)
     (with-demoted-errors "%s"
-      (when (< tab_width 2) (error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
+      (when (< tab_width 2) (my--error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
       (setq-default tab-width tab_width) ;; view tab as this number of spaces
       (setq tab-width tab_width)
       (setq c-basic-offset tab_width) ;; use this number of spaces as indent
@@ -349,7 +353,7 @@ TODO: respect comments."
     (when (buffer-file-name)
       ;; a buffer has associated file name
       (when (and (buffer-modified-p) (= 1 (safe-length (get-buffer-window-list nil t t))))
-        (error "No write since last change (buffer is modified)")))
+        (my--error "No write since last change (buffer is modified)")))
     ;; (evil-execute-macro 1 ":q") ;; may cause accidental hangs (especially if shell is opened)
     (condition-case nil (delete-window) (error (my--delete-frame))))
 
@@ -413,29 +417,41 @@ TODO: respect comments."
   (defun my--load-emacs-process-files-list (directory files-list)
     "Recursively process files-list. See (my--load-emacs-projects) for details."
     (when files-list
-      (let ((file (concat directory "/" (car files-list))))
-        (when (file-regular-p file)
-          ;; (message "evaluating elisp code from file: %s" file)
-          (with-demoted-errors "%s" (load-file file))))
+      (let ((my--loading-file (concat directory "/" (car files-list))))
+        (when (file-regular-p my--loading-file)
+          ;; (message "evaluating elisp code from file: %s" my--loading-file)
+          (with-demoted-errors "%s" (load-file my--loading-file))))
       (my--load-emacs-process-files-list directory (cdr files-list))))
 
   (defun my--load-emacs-projects (directory)
     "Read and evaluate as elisp all files from a given directory."
     (with-demoted-errors "%s"
       (unless (file-directory-p directory)
-        (error "Can't load emacs projects: \"%s\" - no such directory" directory))
+        (my--error "Can't load emacs projects: \"%s\" - no such directory" directory))
       (my--load-emacs-process-files-list directory (directory-files directory))))
 
-  (defun my--get-project ()
-    "Return currently selected project or nil."
+  (defun my--get-project-name ()
+    "Return currently selected project name."
     (frame-parameter (selected-frame) 'my-project))
 
-  (defun my--set-project (prj)
-    "Set currently selected project to PRJ."
-    (set-frame-parameter (selected-frame) 'my-project prj))
+  (defun my--set-project-name (name)
+    "Set currently selected project name to NAME."
+    (set-frame-parameter (selected-frame) 'my-project name))
+
+  (defun my--get-project-definition ()
+    "Return currently selected project definition."
+    (assoc (my--get-project-name) my--projects-alist))
+
+  (defun my--get-project-file ()
+    "Return a file where currently selected project is defined."
+    (car (cdr (my--get-project-definition))))
+
+  (defun my--get-project-shell-commands-alist ()
+    "Return shell commands alist for currently selected project."
+    (car (cdr (cdr (my--get-project-definition)))))
 
   (defun my--get-shell-command-for-project ()
-    "Return currently selected shell command (for current project) or nil."
+    "Return currently selected shell command (for current project)."
     (frame-parameter (selected-frame) 'my-shell-command))
 
   (defun my--set-shell-command-for-project (cmd)
@@ -498,8 +514,8 @@ TODO: respect comments."
         ;; (insert "\n")
         (my--insert-prj-shell-commands (cdr shell-commands)))))
 
-  (defun my-configure-shell-command-editor ()
-    "Configure shell-command to be executed by (my-configure-build-run) in editor."
+  (defun my-edit-shell-command ()
+    "Edit shell-command to be executed by (my-configure-build-run)."
     (interactive)
     (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type)))
       (switch-to-buffer "*scratch*")
@@ -508,9 +524,7 @@ TODO: respect comments."
           (progn
             (insert (my--get-elisp-for-shell-command (my--get-shell-command-for-project)))
             (insert "\n")
-            (let* ((prj-def (assoc (my--get-project) my--projects-alist))
-                   (prj-shell-commands (cdr prj-def)))
-              (my--insert-prj-shell-commands prj-shell-commands)))
+            (my--insert-prj-shell-commands (my--get-project-shell-commands-alist)))
         (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type))))
     (evil-goto-first-line)
     (evil-find-char 1 ?\")
@@ -520,30 +534,50 @@ TODO: respect comments."
 
   (defun my-register-project (name cmds)
     "Register new emacs project."
-    (let* ((prj (assoc name my--projects-alist)))
-      (when prj (setq my--projects-alist (remove prj my--projects-alist))))
-    ;; TODO check more.
-    (add-to-list 'my--projects-alist `(,name . ,cmds) t))
+    (let* ((prj-def (assoc name my--projects-alist))
+           (file (if (buffer-file-name) (buffer-file-name) my--loading-file)))
+      (when prj-def (setq my--projects-alist (remove prj-def my--projects-alist)))
+      ;; TODO check project definition.
+      (add-to-list 'my--projects-alist `(,name . (,file ,cmds)) t)))
 
-  ;; Usage example:
-  ;; (my-register-project "prj2"
-  ;;                      '(("cmd1: pc unit tests" . "make -j12 ARCH=x86 && ./unit_tests")
-  ;;                        ("cmd2: build for arm (ninja)" . "ninja -j12 ARCH=arm")
-  ;;                        ("cmd3: cmake" . "cd .. && cmake /home/user/prj-dir")))
+  ;; Project file example:
+  ;; To evaluate whole buffer use "SPC m e b". See also variable:
+  ;; my--projects-alist
+  ;; (let* ((prj-dir "/media/files/workspace/prj_dir")
+  ;;        (out "/tmp/prj_build_dir")
+  ;;        (pc-out (concat out "/pc"))
+  ;;        (arm-out (concat out "/arm"))
+  ;;        (build "ninja -j1 -C ")
+  ;;        )
+  ;;   (my-register-project "prj_name"
+  ;;                        `(("pc build target1" . ,(concat build pc-out " target1"))
+  ;;                          ("pc build target2" . ,(concat build pc-out " target2"))
+  ;;                          ("arm build" . "echo TODO && false")
+  ;;                          ("pc clean" . ,(concat "rm -rf " pc-out))
+  ;;                          ("arm clean" . ,(concat "rm -rf " arm-out))
+  ;;                          ("pc cmake" . ,(concat "mkdir -p " pc-out " && cd " pc-out " && cmake -G Ninja " prj-dir)))))
 
   (defun my-select-project ()
     "Select project using ivy."
     (interactive)
-    (my--set-project (completing-read "Select project: " my--projects-alist)))
+    (my--set-project-name (completing-read "Select project: " my--projects-alist)))
 
   (defun my-select-shell-command ()
     "Select shell command within current project."
     (interactive)
-    (let* ((prj-def (assoc (my--get-project) my--projects-alist))
-           (prj-shell-commands (cdr prj-def))
+    (unless (my--get-project-name) (my--error "you should select project first"))
+    (let* ((prj-shell-commands (my--get-project-shell-commands-alist))
            (shell-command-name (completing-read "Select shell command: " prj-shell-commands))
            (shell-command-def (cdr (assoc shell-command-name prj-shell-commands))))
       (my--set-shell-command-for-project shell-command-def)))
+
+  (defun my-edit-project-definition ()
+    "Edit currently selected project definition."
+    (interactive)
+    (let* ((file (my--get-project-file)))
+      (if file
+          (find-file file)
+        (my--error "you should select project first"))))
 
   (defun my--test-elisp ()
     "Evaluate current elisp function and call (my-elisp-testcase)."
@@ -555,7 +589,7 @@ TODO: respect comments."
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
-    (my-configure-shell-command-editor)
+    ;; (my-configure-shell-command-editor)
     )
 
   ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
@@ -670,7 +704,8 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "or" 'my-print-shell-command)
   (spacemacs/set-leader-keys "os" 'my-select-shell-command)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
-  (spacemacs/set-leader-keys "cc" 'my-configure-shell-command-editor)
+  (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
+  (spacemacs/set-leader-keys "cc" 'my-edit-shell-command)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
