@@ -8,7 +8,7 @@ all: download_git install_dependencies
 PHONY += download_git
 download_git:
 	git clone --recursive https://github.com/Andersbakken/rtags.git
-	cd rtags && git tag # && git checkout 'v2.5'
+	cd rtags && git tag # && git checkout 'v2.9'
 
 PHONY += install_dependencies
 install_dependencies:
