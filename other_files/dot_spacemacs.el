@@ -634,11 +634,6 @@ TODO: respect comments."
     (interactive)
     (spacemacs/next-error))
 
-  ;; (with-current-buffer buffer (write-file file_name)))
-  ;; (save-excursion
-  ;;   (end-of-line)
-  ;;   (eval-last-sexp nil)))
-
   (defun my-previous-error ()
     "Visit previous error in source code."
     (interactive)
