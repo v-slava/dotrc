@@ -302,7 +302,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setq dotspacemacs-major-mode-leader-key nil) ;; allows to use ',' in normal mode when editin elisp.
+  (setq dotspacemacs-major-mode-leader-key nil) ;; allows to use ',' in normal mode when editing elisp.
   )
 
 (defun dotspacemacs/user-config ()
@@ -430,13 +430,21 @@ TODO: respect comments."
         (my--error "Can't load emacs projects: \"%s\" - no such directory" directory))
       (my--load-emacs-process-files-list directory (directory-files directory))))
 
+  (defun my--get-compilation-buffer ()
+    "Return compilation buffer."
+    (frame-parameter (selected-frame) 'my--compilation-buffer))
+
+  (defun my--set-compilation-buffer (buffer)
+    "Set compilation buffer to BUFFER."
+    (set-frame-parameter (selected-frame) 'my--compilation-buffer buffer))
+
   (defun my--get-project-name ()
     "Return currently selected project name."
-    (frame-parameter (selected-frame) 'my-project))
+    (frame-parameter (selected-frame) 'my--project-name))
 
   (defun my--set-project-name (name)
     "Set currently selected project name to NAME."
-    (set-frame-parameter (selected-frame) 'my-project name))
+    (set-frame-parameter (selected-frame) 'my--project-name name))
 
   (defun my--get-project-definition ()
     "Return currently selected project definition."
@@ -452,11 +460,11 @@ TODO: respect comments."
 
   (defun my--get-shell-command-for-project ()
     "Return currently selected shell command (for current project)."
-    (frame-parameter (selected-frame) 'my-shell-command))
+    (frame-parameter (selected-frame) 'my--shell-command))
 
   (defun my--set-shell-command-for-project (cmd)
     "Set currently selected shell command (for current project) to CMD."
-    (set-frame-parameter (selected-frame) 'my-shell-command cmd))
+    (set-frame-parameter (selected-frame) 'my--shell-command cmd))
 
   (defun my--get-elisp-for-shell-command (cmd)
     "Returns elisp expression for setting current shell command to CMD."
@@ -482,10 +490,31 @@ TODO: respect comments."
     (interactive)
     (message "Shell command: %s" (my--get-shell-command)))
 
+  (defun my--open-compilation-window ()
+    "Open compilation window."
+    (split-window-below-and-focus)
+    (switch-to-buffer (my--get-compilation-buffer)))
+
   (defun my--execute-shell-command ()
     "Execute shell command."
     (my-save-all-buffers)
-    (compile (my--get-shell-command)))
+    ;; (spacemacs/close-compilation-window) ;; this closes compilation windows in all frames.
+    (my-close-temporary-windows)
+    (if (my--get-compilation-buffer)
+        (let* ((shell-command (my--get-shell-command)))
+          (save-selected-window
+            (my--open-compilation-window)
+            (compile shell-command)))
+      (compile (my--get-shell-command))
+      (with-current-buffer "*compilation*" (rename-uniquely))
+      (my--set-compilation-buffer compilation-last-buffer)))
+
+  (defun my-open-compilation-window ()
+    "Open compilation window."
+    (interactive)
+    (unless (my--get-compilation-buffer) (my--error "there is no compilation window associated by now."))
+    (my-close-temporary-windows)
+    (save-selected-window (my--open-compilation-window)))
 
   (defun my--get-shell-command-by-file-type ()
     "Return a shell command to be executed for a given file type."
@@ -610,10 +639,6 @@ TODO: respect comments."
   ;;   (end-of-line)
   ;;   (eval-last-sexp nil)))
 
-  ;; TODO To run two compilations at once, start the first one, then rename the *compilation* buffer
-  ;; (perhaps using rename-uniquely; see Misc Buffer), then switch buffers and start the other compilation.
-  ;; This will create a new *compilation* buffer. See also (rename-buffer)
-
   (defun my-previous-error ()
     "Visit previous error in source code."
     (interactive)
@@ -694,9 +719,10 @@ TODO: respect comments."
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
   (evil-leader/set-key "SPC" 'avy-goto-char)
   (spacemacs/set-leader-keys "qm" 'my-close-window-or-frame)
-  (spacemacs/set-leader-keys "dbs" 'bookmark-set)
-  (spacemacs/set-leader-keys "dbd" 'bookmark-delete)
+  (spacemacs/set-leader-keys "ds" 'bookmark-set)
+  (spacemacs/set-leader-keys "dd" 'bookmark-delete)
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
+  (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
