@@ -1397,6 +1397,10 @@ monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
 # gdb: print the full value of a C-string:
 set print element 0
 
+# gdb print (echo) string:
+echo "some text\n"
+printf "my int value = %d\n", my_value
+
 # gdb: automatically execute some commands when breakpoint is hit:
 b some_location.cpp:23
 commands
