@@ -577,6 +577,7 @@ TODO: respect comments."
   ;;        (pc-out (concat out "/pc"))
   ;;        (arm-out (concat out "/arm"))
   ;;        (build "ninja -j1 -C ")
+  ;;        (my--cmake (lambda (dir) (concat "mkdir -p " dir " && cd " dir " && cmake -G Ninja ")))
   ;;        )
   ;;   (my-register-project "prj_name"
   ;;                        `(("pc build target1" . ,(concat build pc-out " target1"))
@@ -584,7 +585,7 @@ TODO: respect comments."
   ;;                          ("arm build" . "echo TODO && false")
   ;;                          ("pc clean" . ,(concat "rm -rf " pc-out))
   ;;                          ("arm clean" . ,(concat "rm -rf " arm-out))
-  ;;                          ("pc cmake" . ,(concat "mkdir -p " pc-out " && cd " pc-out " && cmake -G Ninja " prj-dir)))))
+  ;;                          ("pc cmake" . ,(concat (funcall my--cmake pc-out) prj-dir)))))
 
   (defun my-select-project ()
     "Select project using ivy."
