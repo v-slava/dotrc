@@ -78,6 +78,9 @@ apt-get install libreoffice
 # Install pdf viewer:
 apt-get install zathura
 
+# Install whatever is necessary for spacemacs:
+apt-get install emacs python-jedi
+
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
 apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl

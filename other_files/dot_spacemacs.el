@@ -65,7 +65,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(ninja-mode)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -751,6 +751,8 @@ TODO: respect comments."
   ;; ? search for a hotkey (counsel-descbinds)
   ;; rl - resume the last completion session (ivy-resume)
   ;; zx - change font (spacemacs/scale-font-transient-state/body)
+  ;; xu - convert selected region to lower case
+  ;; xU - convert selected region to upper case
   ;; u SPC en - go to first error (next-error 1 t)
   ;; ec - current error (my hotkey) TODO
   ;; nf - narrow the buffer to the current function (narrow-to-defun)
