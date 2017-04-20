@@ -340,6 +340,12 @@ clang++ -cc1 -analyze -analyzer-checker=core.DivideZero FILE.cpp
 # Verbose scan-build execution:
 scan-build -v -v -v BUILD_COMMAND
 
+# Find everything. Exclude directory '.git':
+find -path ./.git -prune -o -print
+
+# Find files only. Exclude directory '.git':
+find -path ./.git -prune -o -type f -print
+
 # Find *.c files only in specified path:
 find -path './some/path*' -name '*.c
 

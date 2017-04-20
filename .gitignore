@@ -7,7 +7,9 @@
 /bin/clang
 /bin/clang++
 /bin/gcc
+/bin/cc
 /bin/g++
+/bin/ctags
 *.pyc
 
 # second:
