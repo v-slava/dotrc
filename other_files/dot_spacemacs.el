@@ -651,6 +651,10 @@ TODO: respect comments."
     (interactive)
     (first-error nil))
 
+  (defun my-describe-hotkeys ()
+    (interactive)
+    (describe-variable 'spacemacs-default-map))
+
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
   (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
@@ -688,6 +692,9 @@ TODO: respect comments."
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
+
+  ;; Do not ask for confirmation when visiting symbolic links, which point ot git-controlled files
+  (setq vc-follow-symlinks nil)
 
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ;; search results for "word1 word2" are equal to "word2 word1"
   (setq ivy-initial-inputs-alist nil) ;; do not automatically prepend "^" in ivy input
@@ -743,6 +750,7 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-shell-command)
+  (spacemacs/set-leader-keys "hdh" 'my-describe-hotkeys)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
