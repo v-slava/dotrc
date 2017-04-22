@@ -553,8 +553,9 @@ TODO: respect comments."
           (progn
             (insert (my--get-elisp-for-shell-command (my--get-shell-command-for-project)))
             (insert "\n")
-            (my--insert-prj-shell-commands (my--get-project-shell-commands-alist)))
-        (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type))))
+            (my--insert-prj-shell-commands (my--get-project-shell-commands-alist))
+            (insert "\n")))
+      (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type)))
     (evil-goto-first-line)
     (evil-find-char 1 ?\")
     (evil-forward-char))

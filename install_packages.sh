@@ -79,7 +79,7 @@ apt-get install libreoffice
 apt-get install zathura
 
 # Install whatever is necessary for spacemacs:
-apt-get install emacs python-jedi
+apt-get install emacs python-jedi clang-format-3.8
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru

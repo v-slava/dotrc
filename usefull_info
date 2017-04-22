@@ -346,6 +346,9 @@ find -path ./.git -prune -o -print
 # Find files only. Exclude directory '.git':
 find -path ./.git -prune -o -type f -print
 
+# Find file '*ctags*' in system folders:
+find / -path /dev -prune -o -path /home -prune -o -path /lost+found -prune -o -path /media -prune -o -path /mnt -prune -o -path /proc -prune -o -path /root -prune -o -path /run -prune -o -path /sys -prune -o -path /tmp -prune -o -path /var -prune -o -type f -name '*ctags*' -print
+
 # Find *.c files only in specified path:
 find -path './some/path*' -name '*.c
 

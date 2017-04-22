@@ -5,6 +5,7 @@
 /bin/tup
 /bin/idea.sh
 /bin/clang
+/bin/clang-format
 /bin/clang++
 /bin/gcc
 /bin/cc
