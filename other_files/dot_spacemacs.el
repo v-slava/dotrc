@@ -709,13 +709,27 @@ TODO: respect comments."
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
   ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
+  ;; C/C++ autocompletion hotkeys:
+  ;; C-n - next
+  ;; C-p - previous
+  ;; C-f - select candidate
+  ;; C-g - cancel completion
+  ;; C-j - trigger completion manually
+  (with-eval-after-load 'company (spacemacs//company-active-navigation nil))
+  (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
+  ;; See also: (company-filter-candidates) (company-search-candidates)
+  ;; (company-complete-selection) (company-complete-number)
+
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "9" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (setq Man-notify-method 'newframe)
+
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
   (evil-leader/set-key "SPC" 'avy-goto-char)
-  (spacemacs/set-leader-keys "qm" 'my-close-window-or-frame)
+  (spacemacs/set-leader-keys "qm" 'man)
   (spacemacs/set-leader-keys "ds" 'bookmark-set)
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
@@ -764,7 +778,7 @@ TODO: respect comments."
   ;; qz - kill frame (spacemacs/frame-killer)
   ;; fb - jump to bookmark (bookmark-jump)
   ;; ff - open file (counsel-find-file)
-  ;; fed = edit .spacemacs file (spacemacs/find-dotfile)
+  ;; fed - edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
   ;; hdk - help key binding (describe-key)
   ;; hdf - help function (counsel-describe-function)
@@ -773,6 +787,13 @@ TODO: respect comments."
   ;; tn - toggle line numbers (spacemacs/toggle-line-numbers)
   ;; bR - revert buffer (like :q!, but without exit) (spacemacs/safe-revert-buffer)
   ;; bd - kill this buffer (spacemacs/kill-this-buffer)
+  ;; C/C++ hotkeys:
+  ;; mr - refactor at point (semantic)
+  ;; mga - switch source <--> header (cpp <--> hpp), (c <--> h) (projectile-find-other-file)
+  ;; mgA - switch source <--> header (open in other window)
+  ;; mgg - jump to definition
+  ;; mgG - jump to definition (open in other window)
+
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
