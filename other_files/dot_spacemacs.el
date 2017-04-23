@@ -830,10 +830,11 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
-  ;; projectile-switch-project
-  ;; projectile-tags-command
-  ;; visit-tags-table find-tag
-  ;; universal ctags
+
+  ;; ctags interface (see also universal ctags): visit-tags-table [<C-u>] find-tag find-tag-regexp
+  ;; find-tag-other-window find-tag-other-frame tags-search list-tags tags-apropos tag-query-replace
+  ;; semantic-ia-fast-jump semantic-complete-jump (works only in current file?)
+  ;; semantic-symref
   ;; ebrowse - class hierarchy
 
   ;; Search in string:
