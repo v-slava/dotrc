@@ -334,8 +334,11 @@ TODO: respect comments."
     (interactive)
     (text-scale-decrease 1))
 
+  (defun my-text-scale-default ()
+    (interactive)
+    (text-scale-adjust 0))
+
   (defun my-set-tab-width (tab_width)
-    "My set tab width."
     (interactive)
     (with-demoted-errors "%s"
       (when (< tab_width 2) (my--error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
@@ -400,7 +403,8 @@ TODO: respect comments."
   (defun my-save-all-buffers ()
     "Silently save all buffers."
     (interactive)
-    (save-some-buffers 't))
+    (save-some-buffers 't)
+    (message "all buffers are saved"))
 
   (defun my--disable-semantic-stickyfunc-mode ()
     "Disable semantic-stickyfunc-mode."
@@ -652,8 +656,20 @@ TODO: respect comments."
     (first-error nil))
 
   (defun my-describe-hotkeys ()
+    "Opens a new window with a buffer, in which you can search for a \"spacemacs leader\" hotkey you forgot.
+For example if you defined a hotkey like:
+(spacemacs/set-leader-keys \"ef\" 'my-first-error)
+then you can find \"my-first-error\" in the buffer.
+When you've found a function you are interested in, use \"SPC h d f\" to find out actual hotkey."
     (interactive)
     (describe-variable 'spacemacs-default-map))
+
+  (defun my-copy-location-to-clipboard ()
+    "Copy \"/path/to/file:line\" to clipboard"
+    (interactive)
+    (let ((location (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)))))
+      (my--copy-to-clipboard location)
+      (message (concat "copied: " location))))
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
@@ -667,27 +683,7 @@ TODO: respect comments."
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
-
   (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
-  ;; nlinum has bug (at least for emacs 24) - it doesn't work with emacs daemon (can't open frame). Workaround:
-  ;; (defvar frame-ready nil)
-  ;; (add-hook 'after-make-frame-functions (lambda (frame) (set-frame-parameter frame 'frame-ready t)))
-  ;; (add-hook 'after-init-hook (lambda () (set-frame-parameter nil 'frame-ready t)))
-  ;; (eval-after-load "nlinum"
-  ;;   '(defun nlinum--setup-window ()
-  ;;      (let ((width (if (and frame-ready (display-graphic-p)) ;; <-- Here
-  ;;                       (ceiling
-  ;;                        (let ((width (nlinum--face-width 'linum)))
-  ;;                          (if width
-  ;;                              (/ (* nlinum--width 1.0 width)
-  ;;                                 (frame-char-width))
-  ;;                            (/ (* nlinum--width 1.0
-  ;;                                  (nlinum--face-height 'linum))
-  ;;                               (frame-char-height)))))
-  ;;                     nlinum--width)))
-  ;;        (set-window-margins nil (if nlinum-mode width)
-  ;;                            (cdr (window-margins)))))
-  ;;   )
 
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
@@ -716,7 +712,7 @@ TODO: respect comments."
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
   ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
-  ;; C/C++ autocompletion hotkeys:
+  ;; C/C++ autocompletion (cpp_hotkeys):
   ;; C-n - next
   ;; C-p - previous
   ;; C-f - select candidate
@@ -742,7 +738,7 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
-  (spacemacs/set-leader-keys "ds" 'my-save-all-buffers)
+  (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
   (spacemacs/set-leader-keys "or" 'my-print-shell-command)
@@ -750,6 +746,7 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-shell-command)
+  (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
   (spacemacs/set-leader-keys "hdh" 'my-describe-hotkeys)
 
   ;; The following is standard spacemacs hotkeys (for elisp mode).
@@ -757,18 +754,18 @@ TODO: respect comments."
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
-  (evil-leader/set-key "en" 'my-next-error)
-  (evil-leader/set-key "ep" 'my-previous-error)
-  (evil-leader/set-key "eN" 'spacemacs/next-error)
-  (evil-leader/set-key "eP" 'spacemacs/previous-error)
-  (evil-leader/set-key "et" 'my-this-error)
-  (evil-leader/set-key "ef" 'my-first-error)
+  (spacemacs/set-leader-keys "en" 'my-next-error)
+  (spacemacs/set-leader-keys "ep" 'my-previous-error)
+  (spacemacs/set-leader-keys "eN" 'spacemacs/next-error)
+  (spacemacs/set-leader-keys "eP" 'spacemacs/previous-error)
+  (spacemacs/set-leader-keys "et" 'my-this-error)
+  (spacemacs/set-leader-keys "ef" 'my-first-error)
 
   (global-set-key (kbd "C-=") 'my-text-scale-increase)
   (global-set-key (kbd "C--") 'my-text-scale-decrease)
   (global-set-key (kbd "<C-mouse-4>") 'my-text-scale-increase)
   (global-set-key (kbd "<C-mouse-5>") 'my-text-scale-decrease)
-  (global-set-key (kbd "M-=") '(lambda () (interactive) (text-scale-adjust 0))) ;; go back to default scaling
+  (global-set-key (kbd "M-=") 'my-text-scale-default)
 
   ;; Leader hotkeys:
   ;; ? search for a hotkey (counsel-descbinds)
@@ -795,13 +792,12 @@ TODO: respect comments."
   ;; tn - toggle line numbers (spacemacs/toggle-line-numbers)
   ;; bR - revert buffer (like :q!, but without exit) (spacemacs/safe-revert-buffer)
   ;; bd - kill this buffer (spacemacs/kill-this-buffer)
-  ;; C/C++ hotkeys:
+  ;; C/C++ (cpp_hotkeys):
   ;; mr - refactor at point (semantic)
   ;; mga - switch source <--> header (cpp <--> hpp), (c <--> h) (projectile-find-other-file)
   ;; mgA - switch source <--> header (open in other window)
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
-
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
@@ -817,33 +813,11 @@ TODO: respect comments."
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
-  ;; TODO kill (try to kill) buffers before closing frame.
-  ;; (kill-compilation) ;; SPC ck
-
-  ;; I won't use projectile too much. I will have my targets in elisp .dir-locals.el.
-  ;; Need a function to select current (default) target from list by name (using ivy). Use hotkey: SPC o c
-  ;; Need a function to display default target. Use hotkey: SPC o d
-  ;; Need a function to run current (default) target (see above, but now without ivy). Use hotkey: SPC o f
-  ;; To run some predefined target use something like:
-  ;; (compile "make -C /some/directory/which/contains/main/Makefile your_target")
-  ;; TODO: .dir-locals.el, (projectile-save-project-buffers). See how (helm-make-projectile) has been implemented.
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
-
-  ;; TODO projectile:
   ;; projectile-switch-project
   ;; projectile-tags-command
-  ;; projectile-edit-dir-locals
-  ;; projectile-project-compilation-cmd
-  ;; projectile-project-test-cmd
-  ;; projectile-project-run-cmd
 
-  ;; (message "hello")
-  ;; (setq-default helm-make-build-dir "/home/volkov/out")
-  ;; make -j2 SOME_TARGET:
-  ;; (helm-make 2)
-  ;; (helm-make-projectile 2)
-  ;; make "main" target:
-  ;; (helm--make-action "main")
+  ;; Search in string:
   ;; (let ((case-fold-search nil)) ;; case-sensitive
   ;;   (string-match "regex" "haystack qwasdqw"))
 

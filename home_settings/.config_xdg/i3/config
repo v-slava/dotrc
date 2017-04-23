@@ -227,7 +227,7 @@ bindsym $WIN+v exec --no-startup-id exec /opt/viber/Viber
 # bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
 
 # start downloading .torrent file from ~/downloads:
-bindsym $WIN+t exec exec ~/os_settings/other_files/torrent_download.sh
+bindsym $WIN+t exec --no-startup-id exec ~/os_settings/other_files/torrent_download.sh
 
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'

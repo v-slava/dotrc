@@ -8,7 +8,7 @@ usage()
 	exit 1
 }
 
-CTAGS="ctags --c++-kinds=+p --fields=+iaS --extra=+q"
+CTAGS="ctags-exuberant --c++-kinds=+p --fields=+iaS --extra=+q"
 CSCOPE="cscope -b -k"
 
 if [ $# -eq 2 ]; then
