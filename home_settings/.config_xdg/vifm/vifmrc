@@ -470,6 +470,7 @@ nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make c
 
 nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
+nmap T :!touch<SPACE>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 

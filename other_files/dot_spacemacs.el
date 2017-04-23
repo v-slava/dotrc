@@ -684,6 +684,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
   (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
+  (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
 
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
@@ -769,7 +770,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
 
   ;; Leader hotkeys:
   ;; ? search for a hotkey (counsel-descbinds)
-  ;; rl - resume the last completion session (ivy-resume)
+  ;; sF - search symbol under cursor (ag)
   ;; zx - change font (spacemacs/scale-font-transient-state/body)
   ;; xu - convert selected region to lower case
   ;; xU - convert selected region to upper case
@@ -798,9 +799,12 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; mgA - switch source <--> header (open in other window)
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
+  ;; M-? - find references to symbol under cursor (xref-find-references) (like full text search implemented in elisp)
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
+  ;; stop completion and put the current matches into a new buffer: "C-c C-e". Note: in this case
+  ;; we can edit this buffer and apply all changes to corresponding files. See also ("C-c C-o" (ivy-occur)).
   ;; insert from clipboard: "C-y"
   ;; delete all input: "C-k" (ivy-kill-line)
   ;; cancel search: "C-g" (keyboard-escape-quit)
@@ -810,12 +814,18 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; previous candidate: "C-p" (ivy-previous-line)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
+  ;; vim navigation: f<symbol> - jump to symbol. t<symbol> - jump before symbol.
+  ;; [dc]io - delete/change inner object (symbol). [dc]ao - outer object (including space).
+
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
   ;; projectile-switch-project
   ;; projectile-tags-command
+  ;; find-tag
+  ;; ebrowse - class hierarchy
+  ;; universal ctags
 
   ;; Search in string:
   ;; (let ((case-fold-search nil)) ;; case-sensitive
