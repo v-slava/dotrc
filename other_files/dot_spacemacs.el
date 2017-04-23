@@ -665,11 +665,19 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
     (describe-variable 'spacemacs-default-map))
 
   (defun my-copy-location-to-clipboard ()
-    "Copy \"/path/to/file:line\" to clipboard"
+    "Copy \"/path/to/file:line\" to clipboard."
     (interactive)
     (let ((location (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)))))
       (my--copy-to-clipboard location)
       (message (concat "copied: " location))))
+
+  (defun my-goto-last-line ()
+    "Goto last line."
+    (interactive)
+    (goto-char (point-max))
+    (when (looking-at-p "^$")
+      (previous-line))
+      (beginning-of-line))
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
@@ -718,9 +726,9 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; C-p - previous
   ;; C-f - select candidate
   ;; C-g - cancel completion
-  ;; C-j - trigger completion manually
+  ;; Alt+tab - trigger autocompletion manually
   (with-eval-after-load 'company (spacemacs//company-active-navigation nil))
-  (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
+  ;; (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
   ;; See also: (company-filter-candidates) (company-search-candidates)
   ;; (company-complete-selection) (company-complete-number)
 
@@ -729,6 +737,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (define-key evil-normal-state-map "G" 'my-goto-last-line)
   (setq Man-notify-method 'newframe)
 
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
@@ -803,7 +812,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
-  ;; stop completion and put the current matches into a new buffer: "C-c C-e". Note: in this case
+  ;; stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs/counsel-edit). Note: in this case
   ;; we can edit this buffer and apply all changes to corresponding files. See also ("C-c C-o" (ivy-occur)).
   ;; insert from clipboard: "C-y"
   ;; delete all input: "C-k" (ivy-kill-line)
@@ -823,9 +832,9 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
   ;; projectile-switch-project
   ;; projectile-tags-command
-  ;; find-tag
-  ;; ebrowse - class hierarchy
+  ;; visit-tags-table find-tag
   ;; universal ctags
+  ;; ebrowse - class hierarchy
 
   ;; Search in string:
   ;; (let ((case-fold-search nil)) ;; case-sensitive
