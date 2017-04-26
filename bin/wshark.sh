@@ -13,7 +13,16 @@ if [ $# -ne 1 ]; then
 	usage
 fi
 
-set -e
+set -ex
+
+TCPDUMP=$(which tcpdump)
+TCPDUMP_PERMISSIONS=$(ls -l $TCPDUMP | cut -d' ' -f1)
+if ! echo $TCPDUMP_PERMISSIONS | grep -q s ; then
+    echo "$TCPDUMP doesn't have SUID permission bit set.\n\
+To fix, please execute the following command:\n\
+su -c \"chmod u+s $TCPDUMP\"" 1>&2
+    exit 1
+fi
 
 FIFO=/tmp/wireshark_tcpdump_fifo
 
