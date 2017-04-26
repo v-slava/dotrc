@@ -13,7 +13,7 @@ if [ $# -ne 1 ]; then
 	usage
 fi
 
-set -ex
+set -e
 
 TCPDUMP=$(which tcpdump)
 TCPDUMP_PERMISSIONS=$(ls -l $TCPDUMP | cut -d' ' -f1)
