@@ -834,7 +834,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; ctags interface (see also universal ctags): visit-tags-table [<C-u>] find-tag find-tag-regexp
   ;; find-tag-other-window find-tag-other-frame tags-search list-tags tags-apropos tag-query-replace
   ;; semantic-ia-fast-jump semantic-complete-jump (works only in current file?)
-  ;; semantic-symref
+  ;; semantic-symref semantic-symref-symbol semantic-symref-tool
   ;; ebrowse - class hierarchy
 
   ;; Search in string:
