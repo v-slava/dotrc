@@ -324,6 +324,10 @@ gcov UNIT_TESTS.out
 # Reformat source file with uncrustify:
 uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 
+# Format source file with astyle:
+astyle --style=ansi FILE1 [FILE2] [...]
+# Documentation: /usr/share/doc/astyle/html/astyle.html
+
 # Use valgrind for dynamic memory analysis:
 valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
 
@@ -455,6 +459,7 @@ wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 
 # Download video from youtube:
 cclive -f best URL
+youtube-dl --write-sub URL
 
 # Bluetooth headset alsa:
 # /etc/bluetooth/audio.conf:
@@ -502,6 +507,15 @@ mplayer -ao alsa:device=btheadset file.mp3
 hdparm -R0 /dev/sdX
 hdparm -r0 /dev/sdX
 
+# Vim delete empty lines:
+:%g/^\s*$/d
+
+# Vim delete lines by regex:
+:%g/<regex>/d
+
+# some vim execution example:
+vim -p $FILES_LIST -c "let g:Gdiff_arg='$GDIFF_ARG'|exec ':Gdiff ' . g:Gdiff_arg"
+
 # neovim (nvim) for pair programming:
 # #1:
 NVIM_LISTEN_ADDRESS=127.0.0.1:6666 nvim --headless
@@ -541,7 +555,7 @@ doxygen -g
 # STRIP_CODE_COMMENTS GENERATE_LATEX GENERATE_DOCBOOK HAVE_DOT CALL_GRAPH
 # CALLER_GRAPH CLASS_GRAPH EXTRACT_ALL EXTRACT_STATIC REFERENCED_BY_RELATION
 # REFERENCED_RELATION MACRO_EXPANSION SKIP_FUNCTION_MACROS
-vim Doxyfile
+edit Doxyfile
 # generate documentation:
 doxygen
 # view generated documentation:
@@ -585,7 +599,7 @@ mount -t cifs -o username=SomeUserName,password=SomePassword,domain=SomeDomain /
 
 # Restart nfs server (ubuntu):
 sudo service nfs-kernel-server restart
-# sudo vim /etc/exports:
+# edit /etc/exports:
 # /mnt_folder 192.168.1.1(rw,sync,no_root_squash,no_subtree_check)
 # /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
 
@@ -623,6 +637,7 @@ fakeroot debootstrap --arch=armhf --foreign --variant=scratchbox wheezy DIR
 cp /usr/bin/qemu-arm-static root_dir/usr/bin
 sudo chroot root_dir
 # Note: there might be issues with fakechroot-ing to foreign architecture.
+# See also other_files/bootstrap.sh
 
 # Generate password for /etc/passwd:
 openssl passwd -1 -salt my_salt my_password
@@ -774,7 +789,7 @@ git diff --name-only --cached
 # Git amend not last commit:
 git rebase --interactive bbc643cd^
 # In the default editor, modify 'pick' to 'edit' in the line whose commit you want to modify
-vim FILES_TO_MODIFY
+edit FILES_TO_MODIFY
 git add FILES_TO_MODIFY
 git commit --amend --no-edit
 git rebase --continue
@@ -1066,12 +1081,6 @@ xev
 # To inspect bash keyboard mapping:
 bind -P
 
-# Vim delete empty lines:
-:%g/^\s*$/d
-
-# Vim delete lines by regex:
-:%g/<regex>/d
-
 # Canonicalize PATH:
 readlink -f PATH
 realpath PATH
@@ -1251,10 +1260,6 @@ avprobe file.avi
 # maximum brightness:
 /sys/class/backlight/intel_backlight/max_brightness
 
-# Flash player with webkit-based browsers:
-http://sourceforge.net/p/vimprobable/wiki/Plugins/
-strings /usr/lib/x86_64-linux-gnu/libwebkitgtk-3.0.so.0 | grep plugin
-
 # Add ppa to /etc/apt/sources.list (debian):
 deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main
 
@@ -1279,7 +1284,7 @@ fdisk /dev/sdX
 mkfs -t vfat -F 32 -n usb_boot /dev/sdX1
 mount /dev/sdX1 /mnt
 grub-install --boot-directory=/mnt/boot /dev/sdX
-vim /mnt/boot/grub/grub.cfg
+edit /mnt/boot/grub/grub.cfg
 # Add memdisk (to boot iso/floppy/hard disk images):
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
 cp syslinux-6.01/bios/memdisk/memdisk /mnt/boot/memdisk
@@ -1293,7 +1298,7 @@ cp memtest86-iso /mnt/boot/memtest.iso
 
 # Create bootable iso image (for cdrom):
 mkdir -p image_root/boot/grub
-vim image_root/boot/grub/grub.cfg
+edit image_root/boot/grub/grub.cfg
 apt-get install xorriso
 grub-mkrescue -o grub.iso image_root
 
@@ -1402,6 +1407,26 @@ gcc -O0 -g3 backtrace_example.c -o backtrace_exe
 
 # Jtag (J-Link) do not cache flash memory (gdb command):
 monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
+
+# Jtag (J-Link): run gdb server:
+DEVICE=ATSAM4E16E
+INTERFACE=JTAG
+# DEVICE=ATSAMV71Q21
+# INTERFACE=SWD
+/path/to/JLink_Linux_V512a_x86_64/JLinkGDBServer -device "$DEVICE" -if "$INTERFACE" -speed auto -endian little
+
+# Jtag (J-Link): flash board:
+JLINK=/path/to/JLink_Linux_V610a_x86_64/JLinkExe
+JLINK_SCRIPT=/tmp/flash_board_sh.jlink
+cat << EOF > $JLINK_SCRIPT
+r
+loadbin $FILE_TO_FLASH 0x$FLASH_START_ADDRESS
+r
+exit
+EOF
+# SetPC 0x$PC
+# h = halt, g = go, r = Reset target (RESET), ? = help
+$JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $JLINK_SCRIPT
 
 # gdb: print the full value of a C-string:
 set print element 0
