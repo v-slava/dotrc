@@ -42,11 +42,14 @@ if [ "$STATE" != "CSCOPE_OPTIONS" ]; then
     usage
 fi
 
+rm -f "$CTAGS_FILE" "$CSCOPE_FILE"
+
 CTAGS_CMD="ctags-exuberant --c++-kinds=+p --fields=+iaS --extra=+q --tag-relative=no -L - -e $CTAGS_OPTIONS -f $CTAGS_FILE"
 # -k     "Kernel  Mode", turns off the use of the default include dir
 CSCOPE_CMD="cscope -b -i- $CSCOPE_OPTIONS -f $CSCOPE_FILE"
 
-tee >($CTAGS_CMD) | $CSCOPE_CMD
+# Here sed is used to add quotes around each file name:
+tee >($CTAGS_CMD) | sed 's/\(.*\)/"\1"/g' | $CSCOPE_CMD
 
 # Run cscope in navigation mode (do not index anything):
 # cscope -d -f $CSCOPE_FILE

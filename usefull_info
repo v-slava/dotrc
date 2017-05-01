@@ -1,3 +1,21 @@
+# Find everything. Exclude directory '.git':
+find -path ./.git -prune -o -print
+
+# Find files only. Exclude directory '.git':
+find -path ./.git -prune -o -type f -print
+
+# Find file '*ctags*' in system folders:
+find / -path /dev -prune -o -path /home -prune -o -path /lost+found -prune -o -path /media -prune -o -path /mnt -prune -o -path /proc -prune -o -path /root -prune -o -path /run -prune -o -path /sys -prune -o -path /tmp -prune -o -path /var -prune -o -type f -name '*ctags*' -print
+
+# Find *.c files only in specified path:
+find -path './some/path*' -name '*.c
+
+# Execute command for each element found:
+find -exec CMD args_before {} args_after \;
+
+# Find symbol in directory with libraries / object files:
+find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
+
 # Uboot commands (press any key at early boot stage to enter uboot console):
 help
 help CMD
@@ -343,24 +361,6 @@ clang++ -cc1 -analyzer-checker-help
 clang++ -cc1 -analyze -analyzer-checker=core.DivideZero FILE.cpp
 # Verbose scan-build execution:
 scan-build -v -v -v BUILD_COMMAND
-
-# Find everything. Exclude directory '.git':
-find -path ./.git -prune -o -print
-
-# Find files only. Exclude directory '.git':
-find -path ./.git -prune -o -type f -print
-
-# Find file '*ctags*' in system folders:
-find / -path /dev -prune -o -path /home -prune -o -path /lost+found -prune -o -path /media -prune -o -path /mnt -prune -o -path /proc -prune -o -path /root -prune -o -path /run -prune -o -path /sys -prune -o -path /tmp -prune -o -path /var -prune -o -type f -name '*ctags*' -print
-
-# Find *.c files only in specified path:
-find -path './some/path*' -name '*.c
-
-# Execute command for each element found:
-find -exec CMD args_before {} args_after \;
-
-# Find symbol in directory with libraries / object files:
-find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
