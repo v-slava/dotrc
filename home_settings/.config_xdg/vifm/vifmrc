@@ -399,6 +399,7 @@ mark u /media/usb
 mark f /media/files
 mark r /media/files/music/radio
 mark n /media/files/music/new
+mark s /media/sf_virtualbox_shared ..
 
 nmap B :bmarks<SPACE>
 nmap b :bmarks<CR>/
