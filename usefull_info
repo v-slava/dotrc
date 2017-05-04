@@ -1018,9 +1018,6 @@ service nfs-kernel-server restart
 # nfs server config (/etc/exports):
 /path/to/rootfs_mnt *(rw,sync,no_root_squash,no_subtree_check)
 
-# All info elf:
-readelf -a FILE
-
 # Show video mode resolution ModeLine:
 xvidtune -show
 
@@ -1110,6 +1107,12 @@ grep -R --include=*.cpp --include=*.h --exclude=*.inl.h <pattern> .
 
 # Show only file names with matched content:
 grep -rl -m 1 'REGEX' .
+
+# C++ ABI version:
+readelf -V file.elf | grep CXXABI_
+
+# All info elf:
+readelf -a FILE
 
 # Check debug info (debug symbols, debug sections) in elf:
 readelf --sections FILE | grep debug
