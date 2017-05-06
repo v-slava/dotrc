@@ -698,6 +698,10 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (setq show-paren-style 'expression)
   (show-paren-mode)
 
+  (setq use-file-dialog nil) ;; disable gtk fle diailog
+  ;; (debug-on-entry 'read-file-name)
+  ;; (cancel-debug-on-entry 'read-file-name)
+
   ;; Do not ask for confirmation when visiting symbolic links, which point ot git-controlled files
   (setq vc-follow-symlinks nil)
 
