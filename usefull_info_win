@@ -1,0 +1,36 @@
+# Some commands:
+cmd /K "cd C:\files\black_sheep && git status"
+cmd /C "cd C:\files\black_sheep && git status"
+
+# Print exit code:
+echo %errorlevel%
+
+# Wait for keypress:
+pause
+set /p DUMMY=Hit ENTER to exit...
+
+# Exit on first error (cmd.exe):
+some_cmd_1 || goto error
+some_cmd_2 || goto error
+exit
+:error
+set /p DUMMY=Hit ENTER to exit...
+
+# Preprocess (msvc):
+1) Create new win32 console msvc project. Add single source file with the following contents:
+     #include "preprocessed.i"
+     int main(void) { return 0; }
+2) Copy to clipboard YOUR_COMPILATION_OPTIONS:
+   in Visual Studio: right click on your project -> Properties -> Configuration Properties -> C/C++ -> Command Line.
+3) Create file "preprocess.bat" with the following contents:
+     call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64 || goto error
+     cd C:\your\path\to\project || goto error
+     cl.exe YOUR_COMPILATION_OPTIONS ^
+     some_file.cpp /C /EP > C:\your\path\to\preprocessed\preprocessed\preprocessed.i || goto error
+     exit
+     :error
+     set /p DUMMY=Hit ENTER to exit...
+4) Run "preprocess.bat"
+5) Compile your preprocessing project.
+
+

@@ -700,6 +700,12 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git change email:
+git config user.email 'your_email@gmail.com'
+# git change email: add in .git/config:
+[user]
+        email = your_email@gmail.com
+
 # git delete remote branch (from remote repository):
 git push REMOTE --delete BRANCH
 git push REMOTE :BRANCH
