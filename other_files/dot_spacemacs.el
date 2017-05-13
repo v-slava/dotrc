@@ -56,7 +56,6 @@ values."
      ;; version-control
      evil-commentary
      semantic
-     nlinum
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
@@ -65,7 +64,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode) ;; smooth-scroll
+   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -261,7 +260,8 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative
+   ;; dotspacemacs-line-numbers 'relative
+   dotspacemacs-line-numbers 'nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -677,13 +677,16 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
     (goto-char (point-max))
     (when (looking-at-p "^$")
       (previous-line))
-      (beginning-of-line))
+    (beginning-of-line))
 
-  ;; scrolling:
-  ;; (require 'smooth-scroll)
-  ;; (smooth-scroll-mode 1)
-  ;; (setq smooth-scroll/vscroll-step-size 3)
-  ;; (setq smooth-scroll/redisplay-interval 0.005)
+  (defun my-relative-line-numbers-format (offset)
+    "Return the absolute value of OFFSET, converted to string."
+    (let* ((current-line-number (line-number-at-pos))
+          (current-line-number-length (length (format "%d" current-line-number)))
+          (max-number-length (max 3 current-line-number-length))
+          (number-format (concat "%" (number-to-string max-number-length) "d"))
+          (value-to-print (if (= 0 offset) current-line-number (abs offset))))
+      (format number-format value-to-print)))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -698,12 +701,13 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; (setq compilation-error-screen-columns nil)
   (setq compilation-scroll-output 'first-error)
 
-  (kill-buffer "*spacemacs*") ;; less blinking on screen
+  (kill-buffer "*spacemacs*")              ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
-  (setq nlinum-format "%d") ;; setup relative line numbers. Another format example: "%4d "
   (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
-
+  ;; Setup relative line numbers:
+  (global-relative-line-numbers-mode 1)
+  (setq relative-line-numbers-format 'my-relative-line-numbers-format)
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
