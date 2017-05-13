@@ -25,3 +25,6 @@ mus: http://spaces.ru/files/?r=main/search&Gs=1&Slist=61&link_id=80753&word=%s M
 # Music recognition service:
 # http://audiotag.info/index.php
 
+# Search for films:
+film: https://gomovies.to/movie/search/%s Films
+movie: https://gomovies.to/movie/search/%s Movie
