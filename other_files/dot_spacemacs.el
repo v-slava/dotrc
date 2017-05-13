@@ -261,7 +261,6 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   ;; dotspacemacs-line-numbers 'relative
    dotspacemacs-line-numbers 'nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -712,6 +711,12 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
+
+  ;; Fix "describe function" and "describe variable" highlighting:
+  (custom-set-faces
+   ;; '(ivy-current-match ((t :background "#ff0000" :foreground "white" :weight bold)))
+   '(ivy-highlight-face ((t :weight bold)))
+   )
 
   (setq use-file-dialog nil) ;; disable gtk file diailog
   ;; (debug-on-entry 'read-file-name)
