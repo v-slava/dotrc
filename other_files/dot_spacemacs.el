@@ -65,7 +65,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode)
+   dotspacemacs-additional-packages '(ninja-mode) ;; smooth-scroll
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -679,6 +679,16 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
       (previous-line))
       (beginning-of-line))
 
+  ;; scrolling:
+  ;; (require 'smooth-scroll)
+  ;; (smooth-scroll-mode 1)
+  ;; (setq smooth-scroll/vscroll-step-size 3)
+  ;; (setq smooth-scroll/redisplay-interval 0.005)
+
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
   (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
@@ -698,7 +708,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (setq show-paren-style 'expression)
   (show-paren-mode)
 
-  (setq use-file-dialog nil) ;; disable gtk fle diailog
+  (setq use-file-dialog nil) ;; disable gtk file diailog
   ;; (debug-on-entry 'read-file-name)
   ;; (cancel-debug-on-entry 'read-file-name)
 
