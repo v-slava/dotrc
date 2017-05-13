@@ -45,6 +45,7 @@ values."
                       auto-completion-enable-help-tooltip t)
      ;; better-defaults
      emacs-lisp
+     spacemacs-org ;; need for git layer below
      git
      markdown
      ;; org
