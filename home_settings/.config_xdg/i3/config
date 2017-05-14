@@ -279,10 +279,10 @@ bindsym $WIN+0        exec --no-startup-id exec alsaplayer --seek 0
 
 # volume hotkeys:
 bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh 0%
-bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +3%
-bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +3%
-bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -3%
-bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -3%
+bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +5%
+bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -5%
+bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -5%
 
 # toggle sound output (bluetooth headset / built-in audio):
 bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
