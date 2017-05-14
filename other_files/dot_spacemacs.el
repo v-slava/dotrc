@@ -627,6 +627,26 @@ TODO: respect comments."
     ;; (my-configure-shell-command-editor)
     )
 
+  (defun my-visit-tags-table ()
+    "Add tags table. This function calls (visit-tags-table).
+Variable tags-table-list contains list of currently active tag tables.
+See also variable tags-file-name."
+    (interactive)
+    (let* ((saved-large-file-warning-threshold large-file-warning-threshold)
+           (saved-dotspacemacs-large-file-size dotspacemacs-large-file-size)
+           (files (directory-files "/media/files/workspace/dotrc_s/emacs_projects/tags" nil "^[^.]+\.TAGS$"))
+           (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files))
+           (selected-tag (completing-read "Select tags: " tags))
+           (selected-tags-file (concat my--tags-dir "/" selected-tag ".TAGS")))
+      (setq large-file-warning-threshold nil)
+      (setq dotspacemacs-large-file-size 1024) ;; in megabytes
+      (visit-tags-table selected-tags-file)
+      (tags-completion-table)
+      (setq dotspacemacs-large-file-size saved-dotspacemacs-large-file-size)
+      ;; (add-to-list 'spacemacs-large-file-modes-list 'fundamental-mode) ;; tags-table-mode
+      (setq large-file-warning-threshold saved-large-file-warning-threshold)
+      ))
+
   ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
   ;; Get current line (into myLine variable):
   ;; (setq myLine
@@ -719,8 +739,12 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
    )
 
   (setq use-file-dialog nil) ;; disable gtk file diailog
+
+  ;; elisp debugging:
   ;; (debug-on-entry 'read-file-name)
   ;; (cancel-debug-on-entry 'read-file-name)
+  ;; Get backtrace when I press C-g: M-x (toggle-debug-on-quit). Now do whatever and press C-g.
+  ;; See debugger hotkeys: SPC dm. d - step into. c - step out.
 
   ;; Do not ask for confirmation when visiting symbolic links, which point ot git-controlled files
   (setq vc-follow-symlinks nil)
@@ -773,6 +797,8 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
+  (spacemacs/set-leader-keys "ot" 'my-visit-tags-table)
+  (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
   (spacemacs/set-leader-keys "or" 'my-print-shell-command)
@@ -855,8 +881,15 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; TODO spacemacs documentation 10.
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
 
-  ;; ctags interface (see also universal ctags): visit-tags-table [<C-u>] find-tag find-tag-regexp
-  ;; find-tag-other-window find-tag-other-frame tags-search list-tags tags-apropos tag-query-replace
+  ;; ctags:
+  ;; SPC ot - (my-visit-tags-table)
+  ;; SPC qr - (tags-reset-tags-tables)
+  ;; g C-]  - (find-tag)
+  ;; See also:
+  ;; universal ctags, cxxtags, ebrowse
+  ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
+  ;; tags-search list-tags tags-apropos tag-query-replace
+
   ;; semantic-ia-fast-jump semantic-complete-jump (works only in current file?)
   ;; semantic-symref semantic-symref-symbol semantic-symref-tool
   ;; ebrowse - class hierarchy
@@ -865,7 +898,9 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; (let ((case-fold-search nil)) ;; case-sensitive
   ;;   (string-match "regex" "haystack qwasdqw"))
 
-  (my--load-emacs-projects "~/workspace/dotrc_s/emacs_projects")
+  (setq my--emacs-projects-dir "~/workspace/dotrc_s/emacs_projects")
+  (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
+  (my--load-emacs-projects my--emacs-projects-dir)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
