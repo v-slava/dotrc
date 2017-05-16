@@ -16,6 +16,9 @@ exit
 :error
 set /p DUMMY=Hit ENTER to exit...
 
+# To run bat file from shortcut's folder (not actual bat file folder):
+# right click on shortcut -> properties -> Shortcut (tab) -> clear "Start in:"
+
 # Preprocess (msvc):
 1) Create new win32 console msvc project. Add single source file with the following contents:
      #include "preprocessed.i"
