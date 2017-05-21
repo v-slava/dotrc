@@ -65,7 +65,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers)
+   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers) ;; key-chord)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -369,6 +369,17 @@ TODO: respect comments."
     "Indent current buffer."
     (interactive)
     (save-excursion (indent-region (point-min) (point-max) nil)))
+
+  (defun my-switch-keyboard-layout ()
+    (interactive)
+    (let* ((in-insert-state (string= evil-state "insert")))
+      (if in-insert-state (evil-escape))
+      (if evil-input-method
+          (progn (setq evil-input-method nil)
+                 (message "Switched to english keyboard layout"))
+        (setq evil-input-method "russian-computer") ;; See M-x (set-input-method)
+        (message "Switched to russian keyboard layout"))
+      (if in-insert-state (evil-append 1))))
 
   (defun my-close-temporary-windows ()
     "Close temporary windows (compile results, help, etc)."
@@ -780,6 +791,11 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; See also: (company-filter-candidates) (company-search-candidates)
   ;; (company-complete-selection) (company-complete-number)
 
+  ;; (key-chord-mode 1)
+  ;; (key-chord-define evil-insert-state-map "ав" 'evil-escape)
+  ;; (setq-default evil-escape-key-sequence "ав")
+  (define-key evil-insert-state-map (kbd "C-k") 'my-switch-keyboard-layout)
+
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "9" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
@@ -862,6 +878,8 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
+  (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
+  (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
   ;; stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs/counsel-edit). Note: in this case
   ;; we can edit this buffer and apply all changes to corresponding files. See also ("C-c C-o" (ivy-occur)).
   ;; insert from clipboard: "C-y"
