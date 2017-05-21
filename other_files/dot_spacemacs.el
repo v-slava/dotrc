@@ -713,11 +713,27 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   (defun my-relative-line-numbers-format (offset)
     "Return the absolute value of OFFSET, converted to string."
     (let* ((current-line-number (line-number-at-pos))
-          (current-line-number-length (length (format "%d" current-line-number)))
-          (max-number-length (max 3 current-line-number-length))
-          (number-format (concat "%" (number-to-string max-number-length) "d"))
-          (value-to-print (if (= 0 offset) current-line-number (abs offset))))
+           (current-line-number-length (length (format "%d" current-line-number)))
+           (max-number-length (max 3 current-line-number-length))
+           (number-format (concat "%" (number-to-string max-number-length) "d"))
+           (value-to-print (if (= 0 offset) current-line-number (abs offset))))
       (format number-format value-to-print)))
+
+  (defun my--find-exclude-dirs (dirs-list)
+    "Return command line options for \"find\" command to exclude
+specified in dirs-list directories from search."
+    (let (options)
+      (dolist (dir dirs-list options)
+        (setq options (concat options " -type d -path $(realpath " dir ") -prune -o ")))
+      options))
+
+  (defun my--find-add-prefix (prefix list)
+    "Adds prefix to each list element. Returns a string which contains
+concatenated (modified) elements separated by ' '."
+    (let (ret)
+      (dolist (element list ret)
+        (setq ret (concat ret " $(realpath " prefix element ") ")))
+      ret))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -732,7 +748,7 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
   ;; (setq compilation-error-screen-columns nil)
   (setq compilation-scroll-output 'first-error)
 
-  (kill-buffer "*spacemacs*")              ;; less blinking on screen
+  (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
   (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
