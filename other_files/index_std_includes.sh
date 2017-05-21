@@ -8,4 +8,4 @@ CSCOPE_FILE=$TAGS_DIR/std.cscope.out
 set -e
 rm -f $CTAGS_FILE $CSCOPE_FILE
 mkdir -p $TAGS_DIR
-find $INCLUDE_PATH -type f | /media/files/workspace/dotrc/other_files/index_src.sh $CTAGS_FILE -- $CSCOPE_FILE
+find $INCLUDE_PATH -type f | ~/os_settings/other_files/index_files_list.sh $CTAGS_FILE -- $CSCOPE_FILE
