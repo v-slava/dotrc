@@ -140,6 +140,28 @@ export LANG=ru_RU.UTF-8
 export LANGUAGE=ru
 # See also /etc/default/locale
 
+# show window properties:
+xprop
+xwininfo
+
+# show all windows, PIDs and process names:
+wmctrl -p -G -l
+
+# show all windows:
+xlsclients -a -l
+
+# hide window:
+xdotool windowunmap $WIN
+
+# show window:
+xdotool windowmap $WIN
+
+# move specified window:
+xdotool windowmove $WIN $X $Y
+
+# move and resize specified window:
+wmctrl -i -r $WIN -e 1,$X,$Y,$WIDTH,$HEIGHT
+
 # Setup desktop wallpaper (i3wm):
 feh --bg-center ~/os_settings/other_files/desktop_wallpaper.png
 
