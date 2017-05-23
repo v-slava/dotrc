@@ -53,6 +53,51 @@ setcap 'cap_sys_rawio+ep' FILE
 # Print properties of window (find PID by clicking):
 xprop
 
+# Preprocess source file for further compilation:
+gcc FILE.c -o FILE.i -E -P -dN
+# (see -dCHARS in "man gcc")
+
+# gcc save preprocessed and assembler files:
+gcc -save-temps=obj
+
+# Standard compiler include search paths:
+touch foo.h && gcc -c -v foo.h
+
+# Standard compiler macros (preprocessor):
+gcc -dM -E - < /dev/null
+
+# preprocess bash script:
+#!/bin/bash -x
+# in "help set":
+# -x  Print commands and their arguments as they are executed.
+bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
+
+# To inspect bash keyboard mapping:
+bind -P
+
+# Start logging bash session:
+script IN_OUT_LOG_FILE -t 2>TIMING_LOG_FILE
+
+# Read logging bash session:
+scriptreplay -t TIMINT_LOG_FILE IN_OUT_LOG_FILE
+cat <file_name>
+less -r|-R IN_OUT_LOG_FILE
+
+# bash assume that $SOME_VAR contains hex value (without 0x), convert it to decimal:
+echo $((16#$SOME_VAR))
+
+# Unset environment variable (bash):
+unset ENV_VAR_NAME
+
+# Switch to russian language (add to ~/.bashrc):
+export LANG=ru_RU.UTF-8
+export LANGUAGE=ru
+# See also /etc/default/locale
+
+# Signal bash to include filenames beginning with a `.'
+# in the results of pathname expansion:
+shopt -s dotglob
+
 # Icecream:
 sudo apt-get install icecc icecc-monitor
 # kill icecc-scheduler, if present
@@ -134,11 +179,6 @@ dpkg -S FILE
 
 # Find all packages that provide www-browser:
 aptitude search '~Pwww-browser'
-
-# Switch to russian language (add to ~/.bashrc):
-export LANG=ru_RU.UTF-8
-export LANGUAGE=ru
-# See also /etc/default/locale
 
 # show window properties:
 xprop
@@ -415,10 +455,6 @@ tar czf archive.tar.gz /path/to/directory
 
 # assert.h : assert() -DNDEBUG to turn off
 
-# Signal bash to include filenames beginning with a `.'
-# in the results of pathname expansion:
-shopt -s dotglob
-
 # View bluetoothctl commands:
 echo help | bluetoothctl
 
@@ -677,9 +713,6 @@ pr_devel() should produce zero code unless DEBUG is defined
 pr_debug(char *format, ...);
 # If you are writing a driver, please use dev_dbg instead
 dev_dbg(struct device *dev, char *format, ...);
-
-# Unset environment variable (bash):
-unset ENV_VAR_NAME
 
 # Truncate file:
 truncate -s SIZE FILE
@@ -1060,25 +1093,6 @@ su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
 # Show dmesg log:
 tail -F /var/log/messages
 
-# preprocess bash script:
-#!/bin/bash -x
-# in "help set":
-# -x  Print commands and their arguments as they are executed.
-bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
-
-# Preprocess source file for further compilation:
-gcc FILE.c -o FILE.i -E -P -dN
-# (see -dCHARS in "man gcc")
-
-# gcc save preprocessed and assembler files:
-gcc -save-temps=obj
-
-# Standard compiler include search paths:
-touch foo.h && gcc -c -v foo.h
-
-# Standard compiler macros (preprocessor):
-gcc -dM -E - < /dev/null
-
 # Replace symbol (space in this case) witn \n:
 cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER
 
@@ -1103,23 +1117,12 @@ caps:swapescape    # Caps Lock becomes Escape, and Escape becomes Caps Lock
 # Print contents of X events (and keyboard codes):
 xev
 
-# To inspect bash keyboard mapping:
-bind -P
-
 # Canonicalize PATH:
 readlink -f PATH
 realpath PATH
 
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
-
-# Start logging bash session:
-script IN_OUT_LOG_FILE -t 2>TIMING_LOG_FILE
-
-# Read logging bash session:
-scriptreplay -t TIMINT_LOG_FILE IN_OUT_LOG_FILE
-cat <file_name>
-less -r|-R IN_OUT_LOG_FILE
 
 # less search command line:
 less -p pattern FILE

@@ -817,6 +817,7 @@ concatenated (modified) elements separated by ' '."
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-define-key 'motion compilation-mode-map "h" 'evil-backward-char)
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
   (setq Man-notify-method 'newframe)
 
