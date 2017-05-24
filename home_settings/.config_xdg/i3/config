@@ -181,8 +181,9 @@ for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
-for_window [class="Icedove"] focus
-for_window [class="Icedove"] mark --replace mail
+for_window [class="Icedove"] focus, mark --replace mail
+for_window [class="Thunderbird" title="Search Messages"] floating enable
+for_window [class="Thunderbird"] focus, mark --replace mail
 for_window [class="ViberPC"] mark --replace viber
 for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
@@ -240,9 +241,9 @@ bindsym $WIN+t exec --no-startup-id exec ~/os_settings/other_files/torrent_downl
 # Start emacs daemon:
 # exec --no-startup-id exec emacs --daemon
 
-# Start mail client (icedove):
-exec --no-startup-id ~/os_settings/other_files/virtual_box.sh || icedove
-bindsym $WIN+m exec --no-startup-id exec icedove
+# Start mail client (icedove/thunderbird):
+exec --no-startup-id ~/os_settings/other_files/virtual_box.sh || thunderbird
+bindsym $WIN+m exec --no-startup-id exec thunderbird
 
 # Start goldendict:
 # exec --no-startup-id exec goldendict
