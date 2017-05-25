@@ -459,6 +459,7 @@ TODO: respect comments."
 
   (defun my--set-project-name (name)
     "Set currently selected project name to NAME."
+    (message "Set my project to: \"%s\"" name)
     (set-frame-parameter (selected-frame) 'my--project-name name))
 
   (defun my--get-project-definition ()
@@ -479,6 +480,7 @@ TODO: respect comments."
 
   (defun my--set-shell-command-for-project (cmd)
     "Set currently selected shell command (for current project) to CMD."
+    (message "Set my shell command to: \"%s\"" cmd)
     (set-frame-parameter (selected-frame) 'my--shell-command cmd))
 
   (defun my--get-elisp-for-shell-command (cmd)
@@ -606,16 +608,14 @@ TODO: respect comments."
   (defun my-select-project ()
     "Select project using ivy."
     (interactive)
-    (my--set-project-name (completing-read "Select project: " my--projects-alist)))
+    (ivy-read "Select project: " my--projects-alist :action (lambda (x) (my--set-project-name (car x)))))
 
   (defun my-select-shell-command ()
     "Select shell command within current project."
     (interactive)
     (unless (my--get-project-name) (my--error "you should select project first"))
-    (let* ((prj-shell-commands (my--get-project-shell-commands-alist))
-           (shell-command-name (completing-read "Select shell command: " prj-shell-commands))
-           (shell-command-def (cdr (assoc shell-command-name prj-shell-commands))))
-      (my--set-shell-command-for-project shell-command-def)))
+    (ivy-read "Select shell command: " (my--get-project-shell-commands-alist)
+              :action (lambda (x) (my--set-shell-command-for-project (cdr x)))))
 
   (defun my-edit-project-definition ()
     "Edit currently selected project definition."
@@ -638,17 +638,14 @@ TODO: respect comments."
     ;; (my-configure-shell-command-editor)
     )
 
-  (defun my-visit-tags-table ()
+
+  (defun my--set-tags (name)
     "Add tags table. This function calls (visit-tags-table).
 Variable tags-table-list contains list of currently active tag tables.
 See also variable tags-file-name."
-    (interactive)
     (let* ((saved-large-file-warning-threshold large-file-warning-threshold)
            (saved-dotspacemacs-large-file-size dotspacemacs-large-file-size)
-           (files (directory-files "/media/files/workspace/dotrc_s/emacs_projects/tags" nil "^[^.]+\.TAGS$"))
-           (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files))
-           (selected-tag (completing-read "Select tags: " tags))
-           (selected-tags-file (concat my--tags-dir "/" selected-tag ".TAGS")))
+           (selected-tags-file (concat my--tags-dir "/" name ".TAGS")))
       (setq large-file-warning-threshold nil)
       (setq dotspacemacs-large-file-size 1024) ;; in megabytes
       (visit-tags-table selected-tags-file)
@@ -656,7 +653,14 @@ See also variable tags-file-name."
       (setq dotspacemacs-large-file-size saved-dotspacemacs-large-file-size)
       ;; (add-to-list 'spacemacs-large-file-modes-list 'fundamental-mode) ;; tags-table-mode
       (setq large-file-warning-threshold saved-large-file-warning-threshold)
-      ))
+      (message "Set tags: \"%s\"" name)))
+
+  (defun my-select-tags ()
+    "Select tags to be used."
+    (interactive)
+    (let* ((files (directory-files "/media/files/workspace/dotrc_s/emacs_projects/tags" nil "^[^.]+\.TAGS$"))
+           (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files)))
+      (ivy-read "Select tags: " tags :action 'my--set-tags)))
 
   ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
   ;; Get current line (into myLine variable):
@@ -734,6 +738,12 @@ concatenated (modified) elements separated by ' '."
       (dolist (element list ret)
         (setq ret (concat ret " $(realpath " prefix element ") ")))
       ret))
+
+  (defun my-find-tag ()
+    "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
+    (interactive)
+    (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search)))
+      (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect (find-tag--default) :action 'find-tag)))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -815,6 +825,7 @@ concatenated (modified) elements separated by ' '."
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "9" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
+  (define-key evil-normal-state-map (kbd "g C-]") 'my-find-tag)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion compilation-mode-map "h" 'evil-backward-char)
@@ -830,7 +841,7 @@ concatenated (modified) elements separated by ' '."
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
-  (spacemacs/set-leader-keys "ot" 'my-visit-tags-table)
+  (spacemacs/set-leader-keys "ot" 'my-select-tags)
   (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
@@ -917,9 +928,9 @@ concatenated (modified) elements separated by ' '."
   ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
 
   ;; ctags:
-  ;; SPC ot - (my-visit-tags-table)
+  ;; SPC ot - (my-select-tags)
   ;; SPC qr - (tags-reset-tags-tables)
-  ;; g C-]  - (find-tag)
+  ;; g C-]  - (my-find-tag)
   ;; See also:
   ;; universal ctags, cxxtags, ebrowse
   ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
