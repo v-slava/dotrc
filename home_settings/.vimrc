@@ -96,6 +96,10 @@
 syntax on
 colorscheme molokai
 
+set nocompatible
+set path+=**
+set wildmenu
+
 " Fix colorscheme:
 hi Search ctermfg=0 ctermbg=12
 hi DiffAdd ctermbg=234
