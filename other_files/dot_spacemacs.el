@@ -65,7 +65,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers) ;; key-chord)
+   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers xcscope) ;; key-chord)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -645,7 +645,10 @@ Variable tags-table-list contains list of currently active tag tables.
 See also variable tags-file-name."
     (let* ((saved-large-file-warning-threshold large-file-warning-threshold)
            (saved-dotspacemacs-large-file-size dotspacemacs-large-file-size)
+           (selected-cscope-file (concat my--tags-dir "/" name ".cscope.out"))
            (selected-tags-file (concat my--tags-dir "/" name ".TAGS")))
+      (setq cscope-database-file selected-cscope-file)
+      (tags-reset-tags-tables)
       (setq large-file-warning-threshold nil)
       (setq dotspacemacs-large-file-size 1024) ;; in megabytes
       (visit-tags-table selected-tags-file)
@@ -658,7 +661,7 @@ See also variable tags-file-name."
   (defun my-select-tags ()
     "Select tags to be used."
     (interactive)
-    (let* ((files (directory-files "/media/files/workspace/dotrc_s/emacs_projects/tags" nil "^[^.]+\.TAGS$"))
+    (let* ((files (directory-files (concat my--emacs-projects-dir "/tags") nil "^[^.]+\.TAGS$"))
            (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files)))
       (ivy-read "Select tags: " tags :action 'my--set-tags)))
 
@@ -745,6 +748,10 @@ concatenated (modified) elements separated by ' '."
     (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search)))
       (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect (find-tag--default) :action 'find-tag)))
 
+  (defun my--choose-directory ()
+    "Choose directory interactively (use vifm). Returns choosed directory."
+    (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh")))
+
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -806,6 +813,11 @@ concatenated (modified) elements separated by ' '."
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
   ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
+  ;; Setup cscope:
+  (require 'xcscope)
+  (cscope-setup)
+  (setq cscope-option-do-not-update-database t)
+
   ;; C/C++ autocompletion (cpp_hotkeys):
   ;; C-n - next
   ;; C-p - previous
@@ -829,6 +841,10 @@ concatenated (modified) elements separated by ' '."
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion compilation-mode-map "h" 'evil-backward-char)
+  (evil-define-key 'visual compilation-mode-map "h" 'evil-backward-char)
+  (evil-define-key 'motion compilation-mode-map "0" 'evil-digit-argument-or-evil-beginning-of-line)
+  (evil-define-key 'visual compilation-mode-map "0" 'evil-digit-argument-or-evil-beginning-of-line)
+
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
   (setq Man-notify-method 'newframe)
 
@@ -842,7 +858,7 @@ concatenated (modified) elements separated by ' '."
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "ot" 'my-select-tags)
-  (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
+  ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
   (spacemacs/set-leader-keys "or" 'my-print-shell-command)
@@ -925,16 +941,15 @@ concatenated (modified) elements separated by ' '."
   ;; TODO research iedit mode
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
-  ;; TODO ctags / TAGS / cscope.out integration (google for "mural").
 
   ;; ctags:
   ;; SPC ot - (my-select-tags)
-  ;; SPC qr - (tags-reset-tags-tables)
   ;; g C-]  - (my-find-tag)
-  ;; See also:
-  ;; universal ctags, cxxtags, ebrowse
+  ;; See also: universal ctags, cxxtags, ebrowse, mural
   ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
   ;; tags-search list-tags tags-apropos tag-query-replace
+
+  ;; cscope-output-buffer-name cscope-command-map cscope-keymap-prefix
 
   ;; semantic-ia-fast-jump semantic-complete-jump (works only in current file?)
   ;; semantic-symref semantic-symref-symbol semantic-symref-tool
@@ -944,7 +959,8 @@ concatenated (modified) elements separated by ' '."
   ;; (let ((case-fold-search nil)) ;; case-sensitive
   ;;   (string-match "regex" "haystack qwasdqw"))
 
-  (setq my--emacs-projects-dir "~/workspace/dotrc_s/emacs_projects")
+  (setq my--os-settings "~/os_settings")
+  (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)
   )

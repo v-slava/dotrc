@@ -35,8 +35,8 @@ floating_modifier $Alt_L
 bindsym $Alt_R+$Shift_R+Q kill
 bindsym $WIN+Escape kill
 
-# "minimize" window (move to workspace 10):
-bindsym $WIN+Tab move container to workspace 10
+# "minimize" window (move to workspace 0):
+bindsym $WIN+Tab move container to workspace 0
 
 # mark window with label for further fast access:
 bindsym $Alt_L+m exec --no-startup-id exec ~/os_settings/other_files/i3_mark_window.sh
@@ -86,6 +86,7 @@ bindsym $Alt_R+f focus parent
 bindsym $Alt_R+C focus child
 
 # switch to workspace
+bindsym $Alt_L+0 workspace 0
 bindsym $Alt_L+1 workspace 1
 # bindsym $Alt_L+1 workspace 1: main
 bindsym $Alt_L+2 workspace 2
@@ -96,7 +97,6 @@ bindsym $Alt_L+6 workspace 6
 bindsym $Alt_L+7 workspace 7
 bindsym $Alt_L+8 workspace 8
 bindsym $Alt_L+9 workspace 9
-bindsym $Alt_L+0 workspace 10
 
 # Workspace-output assignments:
 # SED native begin
@@ -115,6 +115,7 @@ set $OUTPUT_LEFT VGA-0
 exec --no-startup-id sleep 4 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 # SED virtual end
 
+workspace 0 output $OUTPUT_CENTRAL # temporary workspace
 workspace 1 output $OUTPUT_CENTRAL
 workspace 2 output $OUTPUT_RIGHT
 workspace 3 output $OUTPUT_CENTRAL
@@ -124,7 +125,6 @@ workspace 6 output $OUTPUT_RIGHT
 workspace 7 output $OUTPUT_CENTRAL
 workspace 8 output $OUTPUT_RIGHT
 workspace 9 output $OUTPUT_CENTRAL
-workspace 10 output $OUTPUT_RIGHT
 
 # Start i3bar:
 bar {
@@ -137,6 +137,7 @@ bar {
 exec --no-startup-id exec i3-msg "workspace 1"
 
 # move focused container to workspace
+bindsym $Alt_L+$Shift_L+parenright move container to workspace 0
 bindsym $Alt_R+$Shift_R+exclam move container to workspace 1
 bindsym $Alt_R+$Shift_R+at move container to workspace 2
 bindsym $Alt_R+$Shift_R+numbersign move container to workspace 3
@@ -147,7 +148,6 @@ bindsym $Alt_L+$Shift_L+asciicircum move container to workspace 6
 bindsym $Alt_L+$Shift_L+ampersand move container to workspace 7
 bindsym $Alt_L+$Shift_L+asterisk move container to workspace 8
 bindsym $Alt_L+$Shift_L+parenleft move container to workspace 9
-bindsym $Alt_L+$Shift_L+parenright move container to workspace 10
 
 # reload the configuration file
 bindsym $Alt_R+$Shift_R+C reload
@@ -171,6 +171,7 @@ mode "resize" {
 
 bindsym $Alt_L+r mode "resize"
 
+for_window [workspace="0"] layout tabbed
 for_window [window_role="browser"] mark --replace browser
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen
