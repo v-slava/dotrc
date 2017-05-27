@@ -6,6 +6,7 @@
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
 values."
+  ;; (setq debug-on-error t)
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -65,7 +66,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers xcscope) ;; key-chord)
+   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers xcscope ag) ;; key-chord)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -389,6 +390,13 @@ TODO: respect comments."
         ;; a buffer hasn't associated file name
         (delete-window cur_window))))
 
+  (defun my-split-and-open-buffer-below ()
+    "Split current window and switch to buffer below."
+    (interactive)
+    (split-window-below-and-focus)
+    (switch-to-buffer "*scratch*")
+    (ivy-switch-buffer))
+
   (defun my--copy-to-clipboard (data)
     "Copy data to clipboard. Based on function xclip-set-selection from xclip-1.3.el."
     (let* ((process-connection-type nil)
@@ -638,7 +646,6 @@ TODO: respect comments."
     ;; (my-configure-shell-command-editor)
     )
 
-
   (defun my--set-tags (name)
     "Add tags table. This function calls (visit-tags-table).
 Variable tags-table-list contains list of currently active tag tables.
@@ -673,20 +680,13 @@ See also variable tags-file-name."
   ;;        (line-end-position)
   ;;        ))
 
-  (defun my-next-error ()
-    "Visit next error in source code."
-    (interactive)
-    (spacemacs/next-error))
-
-  (defun my-previous-error ()
-    "Visit previous error in source code."
-    (interactive)
-    (spacemacs/previous-error))
-
   (defun my-this-error()
     "Visit this (current) error in source code."
     (interactive)
-    (evil-goto-error nil))
+    (unless (my--get-compilation-buffer) (my--error "Can't get compilation buffer"))
+    (if (with-current-buffer (my--get-compilation-buffer) compilation-current-error)
+        (evil-goto-error nil)
+      (my-first-error)))
 
   (defun my-first-error()
     "Visit this (current) error in source code."
@@ -752,6 +752,29 @@ concatenated (modified) elements separated by ' '."
     "Choose directory interactively (use vifm). Returns choosed directory."
     (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh")))
 
+  (defun my-search-in-directory-recursive ()
+    "Use ag to search in interactively choosen directory (ivy interface)."
+    (interactive)
+    ;; (spacemacs/counsel-search '("ag") t (my--choose-directory)) ;; this fails if we can't find a symbol under cursor
+    (spacemacs/counsel-search '("ag") (not (not (find-tag--default))) (my--choose-directory))
+    )
+
+  (defun my-search-in-directory-ag ()
+    "Use ag to search in interactively choosen directory (ag.el interface)."
+    (interactive)
+    ;; TODO wgrep:
+    ;; use --vimgrep but delete column
+    ;; header format must be like in (spacemacs/counsel-search), number of candidates is obligatory
+    ;; delete ag statistics in the end.
+    ;; put buffer in proper folder (relative file path must be correct)
+    ;; (grep-mode)
+    ;; (ivy-wgrep-change-to-wgrep-mode) ;; (require 'wgrep) (wgrep-change-to-wgrep-mode)
+    ;; edit ...
+    ;; (wgrep-finish-edit)
+    ;; (my-save-all-buffers)
+    (let ((dir (my--choose-directory)))
+      (ag-regexp (read-from-minibuffer "Search string: ") dir)))
+
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -759,7 +782,7 @@ concatenated (modified) elements separated by ' '."
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
   (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
-  (setq compilation-auto-jump-to-first-error t)
+  ;; (setq compilation-auto-jump-to-first-error t)
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
   ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.
   ;; (setq compilation-error-screen-columns nil)
@@ -813,6 +836,7 @@ concatenated (modified) elements separated by ' '."
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
   ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
+  (require 'ag)
   ;; Setup cscope:
   (require 'xcscope)
   (cscope-setup)
@@ -844,6 +868,10 @@ concatenated (modified) elements separated by ' '."
   (evil-define-key 'visual compilation-mode-map "h" 'evil-backward-char)
   (evil-define-key 'motion compilation-mode-map "0" 'evil-digit-argument-or-evil-beginning-of-line)
   (evil-define-key 'visual compilation-mode-map "0" 'evil-digit-argument-or-evil-beginning-of-line)
+  (evil-define-key 'motion ag-mode-map "n" 'evil-search-next)
+  (evil-define-key 'visual ag-mode-map "n" 'evil-search-next)
+  (evil-define-key 'motion ag-mode-map (kbd "C-n") 'compilation-next-error)
+  (evil-define-key 'motion ag-mode-map (kbd "C-p") 'compilation-previous-error)
 
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
   (setq Man-notify-method 'newframe)
@@ -869,17 +897,21 @@ concatenated (modified) elements separated by ' '."
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
   (spacemacs/set-leader-keys "hdh" 'my-describe-hotkeys)
 
+  ;; search hotkeys:
+  (spacemacs/set-leader-keys "sm" 'my-search-in-directory-recursive) ;; use ag, ivy interface
+  (spacemacs/set-leader-keys "sa" 'my-search-in-directory-ag) ;; use ag.el
+  (spacemacs/set-leader-keys "st" 'my-find-tag) ;; g C-] (ctags)
+  (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
+  (spacemacs/set-leader-keys "su" 'cscope-find-this-symbol) ;; C-c s s find all references (+definition) of symbol.
+
   ;; The following is standard spacemacs hotkeys (for elisp mode).
   ;; Need to define them here in order to be able to use them in non-elisp buffers.
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
-  (spacemacs/set-leader-keys "en" 'my-next-error)
-  (spacemacs/set-leader-keys "ep" 'my-previous-error)
-  (spacemacs/set-leader-keys "eN" 'spacemacs/next-error)
-  (spacemacs/set-leader-keys "eP" 'spacemacs/previous-error)
   (spacemacs/set-leader-keys "et" 'my-this-error)
   (spacemacs/set-leader-keys "ef" 'my-first-error)
+  (spacemacs/set-leader-keys "ws" 'my-split-and-open-buffer-below)
 
   (global-set-key (kbd "C-=") 'my-text-scale-increase)
   (global-set-key (kbd "C--") 'my-text-scale-decrease)
@@ -924,8 +956,7 @@ concatenated (modified) elements separated by ' '."
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
   (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
   (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
-  ;; stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs/counsel-edit). Note: in this case
-  ;; we can edit this buffer and apply all changes to corresponding files. See also ("C-c C-o" (ivy-occur)).
+  ;; stop completion and put the current matches into a new buffer: "C-c C-o" (ivy-occur)
   ;; insert from clipboard: "C-y"
   ;; delete all input: "C-k" (ivy-kill-line)
   ;; cancel search: "C-g" (keyboard-escape-quit)
@@ -935,6 +966,19 @@ concatenated (modified) elements separated by ' '."
   ;; previous candidate: "C-p" (ivy-previous-line)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
+  ;; ag (spacemacs/counsel-search) "SPC s m":
+  ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
+  ;; Now we can edit this buffer:
+  ;; - apply all changes to corresponding files: ", c" (wgrep-finish-edit)
+  ;; - abort (kill, cancel) all changes: ", k" (wgrep-abort-changes)
+
+  ;; ag (ag.el) "SPC s a":
+  ;; custom command line: SPC u SPC s a
+  ;; next search result: SPC e n, C-n (compilation-next-error)
+  ;; previous search result: SPC e p, C-p (compilation-previous-error)
+  ;; visit current search result: RET (compile-goto-error)
+  ;; automatically visit error under cursor: C-c C-f (next-error-follow-minor-mode)
+
   ;; vim navigation: f<symbol> - jump to symbol. t<symbol> - jump before symbol.
   ;; [dc]io - delete/change inner object (symbol). [dc]ao - outer object (including space).
 
@@ -942,9 +986,6 @@ concatenated (modified) elements separated by ' '."
   ;; TODO add evil-exchange
   ;; TODO spacemacs documentation 10.
 
-  ;; ctags:
-  ;; SPC ot - (my-select-tags)
-  ;; g C-]  - (my-find-tag)
   ;; See also: universal ctags, cxxtags, ebrowse, mural
   ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
   ;; tags-search list-tags tags-apropos tag-query-replace

@@ -471,7 +471,7 @@ function! Copy_location(in_file, strip_part)
 	endif
 endfunction
 " Copy full source location into clipboard:
-nmap <F12> :call Copy_location( expand('%:p'), '' )<CR>
+nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
 " nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
 
 " Initialize pathogen plugin (update runtimepath variable):
