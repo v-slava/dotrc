@@ -240,6 +240,9 @@ su -c 'modprobe usbmon'
 # Dump packets and feed them to wireshark through unnamed pipe:
 tcpdump -i usbmon1 -w - -U | wireshark -k -i -
 
+# Use wireshark plugin (dissector):
+wireshark -X lua_script:/path/to/plugin/file.lua
+
 # List interfaces available:
 dumpcap -D
 # Dump packets to file:
@@ -1439,6 +1442,10 @@ wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
 gcc -O0 -g3 backtrace_example.c -o backtrace_exe
 ./backtrace_exe 4 | grep -o '\[0x.\+\]' | cut -d'[' -f2 | cut -d']' -f1 | addr2line -p -f -e ./backtrace_exe
 
+# run gdbserver:
+gdbserver :PORT cmd args
+gdb -> target remote :PORT
+
 # Jtag (J-Link) do not cache flash memory (gdb command):
 monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
 
@@ -1507,10 +1514,18 @@ target symbols add # TODO
 gdb -x FILE
 lldb -s FILE
 
-# gdb: define command (next and refresh tui screen):
-define next_refresh
-next
+# gdb: (tui) refresh screen:
 refresh
+CTRL-L
+
+# gdb (tui): change window height:
+winheight src 10
+winheight src +1
+
+# gdb: define command:
+define cmd_name
+cmd1
+cmd2
 end
 
 # gdb: view next source line to to be executed:
@@ -1555,9 +1570,6 @@ set var_name = expression
 
 # gdb: step out of a function:
 finish
-
-# gdb: (tui) refresh screen:
-refresh
 
 # gdb: debug threads.
 # Make CTRL-C / breakpoints affect only currently selected thread:
