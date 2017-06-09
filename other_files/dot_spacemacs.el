@@ -745,8 +745,10 @@ concatenated (modified) elements separated by ' '."
   (defun my-find-tag ()
     "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
     (interactive)
-    (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search)))
-      (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect (find-tag--default) :action 'find-tag)))
+    (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search))
+           (default-value (find-tag--default)))
+           ;; :initial-input default-value
+      (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect default-value :action 'find-tag)))
 
   (defun my--choose-directory ()
     "Choose directory interactively (use vifm). Returns choosed directory."
@@ -756,8 +758,7 @@ concatenated (modified) elements separated by ' '."
     "Use ag to search in interactively choosen directory (ivy interface)."
     (interactive)
     ;; (spacemacs/counsel-search '("ag") t (my--choose-directory)) ;; this fails if we can't find a symbol under cursor
-    (spacemacs/counsel-search '("ag") (not (not (find-tag--default))) (my--choose-directory))
-    )
+    (spacemacs/counsel-search '("ag") (not (not (find-tag--default))) (my--choose-directory)))
 
   (defun my-search-in-directory-ag ()
     "Use ag to search in interactively choosen directory (ag.el interface)."
@@ -773,7 +774,7 @@ concatenated (modified) elements separated by ' '."
     ;; (wgrep-finish-edit)
     ;; (my-save-all-buffers)
     (let ((dir (my--choose-directory)))
-      (ag-regexp (read-from-minibuffer "Search string: ") dir)))
+      (ag-regexp (read-from-minibuffer "Search string: " (find-tag--default)) dir)))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -872,6 +873,8 @@ concatenated (modified) elements separated by ' '."
   (evil-define-key 'visual ag-mode-map "n" 'evil-search-next)
   (evil-define-key 'motion ag-mode-map (kbd "C-n") 'compilation-next-error)
   (evil-define-key 'motion ag-mode-map (kbd "C-p") 'compilation-previous-error)
+  (define-key compilation-mode-map (kbd "C-n") 'compilation-next-error)
+  (define-key compilation-mode-map (kbd "C-p") 'compilation-previous-error)
 
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
   (setq Man-notify-method 'newframe)
@@ -952,6 +955,11 @@ concatenated (modified) elements separated by ' '."
   ;; mgG - jump to definition (open in other window)
   ;; M-? - find references to symbol under cursor (xref-find-references) (like full text search implemented in elisp)
 
+  ;; minibuffer hotkeys. Functions: (my-search-in-directory-ag).
+  (define-key minibuffer-local-map (kbd "C-k") 'evil-delete-whole-line)
+  (define-key minibuffer-local-map (kbd "M-i") 'move-beginning-of-line)
+  (define-key minibuffer-local-map (kbd "M-a") 'move-end-of-line)
+
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
   (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
@@ -965,6 +973,8 @@ concatenated (modified) elements separated by ' '."
   ;; next candidate "C-n" (ivy-next-line)
   ;; previous candidate: "C-p" (ivy-previous-line)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
+
+  ;; cscope: go to insert mode, use "n" (next), "p" (previous).
 
   ;; ag (spacemacs/counsel-search) "SPC s m":
   ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
