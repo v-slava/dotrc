@@ -1,8 +1,8 @@
-# Find everything. Exclude directory '.git':
-find -path ./.git -prune -o -print
+# Find everything. Exclude directory 'dir1':
+find -path ./dir1 -prune -o -print
 
-# Find files only. Exclude directory '.git':
-find -path ./.git -prune -o -type f -print
+# Find files only. Exclude directory 'dir1':
+find -path ./dir1 -prune -o -type f -print
 
 # Find file '*ctags*' in system folders:
 find / -path /dev -prune -o -path /home -prune -o -path /lost+found -prune -o -path /media -prune -o -path /mnt -prune -o -path /proc -prune -o -path /root -prune -o -path /run -prune -o -path /sys -prune -o -path /tmp -prune -o -path /var -prune -o -type f -name '*ctags*' -print
@@ -757,6 +757,9 @@ patch old_file patch_file
 cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
+
+# git get list of commits in BRANCH since COMMIT_1:
+git rev-list ^COMMIT_1 BRANCH
 
 # git change email:
 git config user.email 'your_email@gmail.com'

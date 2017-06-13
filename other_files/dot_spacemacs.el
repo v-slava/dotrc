@@ -371,6 +371,25 @@ TODO: respect comments."
     (interactive)
     (save-excursion (indent-region (point-min) (point-max) nil)))
 
+  (defun my--modify-line-internal (line prepend append fill last-column)
+    "Modify current line (prepend and append given text)."
+    (let* ((result (concat prepend (replace-regexp-in-string "^[ \t]*" "" (replace-regexp-in-string "[ \t]*\n$" "" line))))
+           (current-length (length result))
+           (need-to-add-length (if (>= current-length last-column) 0 (- last-column current-length (length append))))
+           (to-add (make-string need-to-add-length fill))
+           (ret (concat result to-add append)))
+      ret))
+
+  (defun my-modify-lines ()
+    "Modify current line."
+    (interactive)
+    ;; TODO operate on visual selection, vim movement block ...
+    (let* ((current-line (thing-at-point 'line t))
+           (updated-line (my--modify-line-internal current-line "        " " \\" ?  80)))
+      (my-clear-current-line)
+      (insert updated-line)
+      (evil-beginning-of-line)))
+
   (defun my-switch-keyboard-layout ()
     (interactive)
     (let* ((in-insert-state (string= evil-state "insert")))
@@ -783,7 +802,7 @@ concatenated (modified) elements separated by ' '."
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
   ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
   (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
-  ;; (setq compilation-auto-jump-to-first-error t)
+  ;; (setq compilation-auto-jump-to-first-error t) ;; automatically jump to first compilation error
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
   ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.
   ;; (setq compilation-error-screen-columns nil)
@@ -887,6 +906,7 @@ concatenated (modified) elements separated by ' '."
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "di" 'my-indent-buffer)
+  (spacemacs/set-leader-keys "dm" 'my-modify-lines)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "ot" 'my-select-tags)
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
