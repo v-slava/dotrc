@@ -378,7 +378,7 @@ TODO: respect comments."
            (line-no-newline-length (length line-no-newline))
            (line-ending (if (> line-no-newline-length append-length) (substring line-no-newline (- append-length) nil) nil))
            (line-no-append (if (string= line-ending append) (substring line-no-newline 0 (- line-no-newline-length append-length)) line-no-newline))
-           (result (concat prepend (replace-regexp-in-string "^[ \t]*" "" (replace-regexp-in-string "[ \t]*\n$" "" line-no-append))))
+           (result (concat prepend (replace-regexp-in-string "^[ \t]*" "" (replace-regexp-in-string "[ \t]*$" "" line-no-append))))
            (current-length (length result))
            (need-to-add-length (if (>= current-length last-column) 0 (- last-column current-length append-length)))
            (to-add (make-string need-to-add-length fill))
