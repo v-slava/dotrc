@@ -800,6 +800,46 @@ concatenated (modified) elements separated by ' '."
     (let ((dir (my--choose-directory)))
       (ag-regexp (read-from-minibuffer "Search string: " (find-tag--default)) dir)))
 
+  (defun my-open-new-man-page ()
+    "Open man page in new frame."
+    (interactive)
+    (if (string= major-mode "Man-mode")
+        (call-interactively 'man)
+      (let* ((saved-notify-method Man-notify-method))
+        (setq Man-notify-method 'newframe)
+        (call-interactively 'man)
+        (setq Man-notify-method saved-notify-method))))
+
+  (defun my-next-buffer ()
+    "In selected window switch to next buffer.
+Add Man mode support to (next-buffer)."
+    (interactive)
+    (if (string= major-mode "Man-mode")
+        (let* ((next-buffers-before (window-next-buffers))
+               (next-buffers-after (cdr next-buffers-before))
+               (cur-window (get-buffer-window)))
+          (if next-buffers-before
+              (progn
+                (switch-to-buffer (car (car next-buffers-before)))
+                (set-window-next-buffers cur-window next-buffers-after))
+            (my--error "there were no next buffers found.")))
+      (next-buffer)))
+
+  (defun my-previous-buffer ()
+    "In selected window switch to previous buffer.
+Add Man mode support to (previous-buffer)."
+    (interactive)
+    (if (string= major-mode "Man-mode")
+        (let* ((prev-buffers-before (window-prev-buffers))
+               (next-buffers-before (window-next-buffers))
+               (unused (switch-to-buffer (car (car prev-buffers-before))))
+               (next-buffers-after (cons (car (window-prev-buffers)) next-buffers-before))
+               (prev-buffers-after (cdr prev-buffers-before))
+               (cur-window (get-buffer-window)))
+          (set-window-next-buffers cur-window next-buffers-after)
+          (set-window-prev-buffers cur-window prev-buffers-after))
+      (previous-buffer)))
+
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -889,6 +929,54 @@ concatenated (modified) elements separated by ' '."
   (define-key evil-normal-state-map (kbd "g C-]") 'my-find-tag)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-define-key 'motion Man-mode-map (kbd "C-o") 'my-previous-buffer)
+  (evil-define-key 'motion Man-mode-map (kbd "RET") 'man-follow)
+  (evil-define-key 'motion Man-mode-map (kbd "M-g") 'Man-goto-section)
+  ;; u - reformat current manpage (Man-update-manpage).
+  (setq Man-notify-method 'pushy)
+
+  (require 'man)
+  (defun Man-notify-when-ready (man-buffer)
+    "Notify the user when MAN-BUFFER is ready.
+See the variable `Man-notify-method' for the different notification behaviors."
+    (let ((saved-frame (with-current-buffer man-buffer
+                Man-original-frame)))
+      (pcase Man-notify-method
+        (`newframe
+        ;; Since we run asynchronously, perhaps while Emacs is waiting
+        ;; for input, we must not leave a different buffer current.  We
+        ;; can't rely on the editor command loop to reselect the
+        ;; selected window's buffer.
+        (save-excursion
+          (let ((frame (make-frame Man-frame-parameters)))
+            (set-window-buffer (frame-selected-window frame) man-buffer)
+            ;; (set-window-dedicated-p (frame-selected-window frame) t) ;; my change: do not set window dedicated
+            (or (display-multi-frame-p frame)
+                (select-frame frame)))))
+        (`pushy
+        (switch-to-buffer man-buffer))
+        (`bully
+        (and (frame-live-p saved-frame)
+              (select-frame saved-frame))
+        (pop-to-buffer man-buffer)
+        (delete-other-windows))
+        (`aggressive
+        (and (frame-live-p saved-frame)
+              (select-frame saved-frame))
+        (pop-to-buffer man-buffer))
+        (`friendly
+        (and (frame-live-p saved-frame)
+              (select-frame saved-frame))
+        (display-buffer man-buffer 'not-this-window))
+        (`polite
+        (beep)
+        (message "Manual buffer %s is ready" (buffer-name man-buffer)))
+        (`quiet
+        (message "Manual buffer %s is ready" (buffer-name man-buffer)))
+        (_ ;; meek
+        (message ""))
+        )))
+
   (evil-define-key 'motion compilation-mode-map "h" 'evil-backward-char)
   (evil-define-key 'visual compilation-mode-map "h" 'evil-backward-char)
   (evil-define-key 'motion compilation-mode-map "0" 'evil-digit-argument-or-evil-beginning-of-line)
@@ -901,11 +989,10 @@ concatenated (modified) elements separated by ' '."
   (define-key compilation-mode-map (kbd "C-p") 'compilation-previous-error)
 
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
-  (setq Man-notify-method 'newframe)
 
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
   (evil-leader/set-key "SPC" 'avy-goto-char)
-  (spacemacs/set-leader-keys "qm" 'man)
+  (spacemacs/set-leader-keys "qm" 'my-open-new-man-page)
   (spacemacs/set-leader-keys "ds" 'bookmark-set)
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
@@ -932,14 +1019,14 @@ concatenated (modified) elements separated by ' '."
   (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
   (spacemacs/set-leader-keys "su" 'cscope-find-this-symbol) ;; C-c s s find all references (+definition) of symbol.
 
-  ;; The following is standard spacemacs hotkeys (for elisp mode).
-  ;; Need to define them here in order to be able to use them in non-elisp buffers.
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
   (spacemacs/set-leader-keys "et" 'my-this-error)
   (spacemacs/set-leader-keys "ef" 'my-first-error)
   (spacemacs/set-leader-keys "ws" 'my-split-and-open-buffer-below)
+  (spacemacs/set-leader-keys "bn" 'my-next-buffer)
+  (spacemacs/set-leader-keys "bp" 'my-previous-buffer)
 
   (global-set-key (kbd "C-=") 'my-text-scale-increase)
   (global-set-key (kbd "C--") 'my-text-scale-decrease)
