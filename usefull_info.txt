@@ -505,12 +505,14 @@ journalctl
 systemd-cgls
 
 # Systemd commands:
+systemctl [--user] list-unit-files
 systemctl is-enabled SERVICE
 systemctl status SERVICE
 systemctl enable SERVICE
 systemctl start SERVICE
 systemctl set-default multi-user.target
-# target example: /usr/lib/systemd/system/graphical.target
+systemctl get-default
+# target example: /lib/systemd/system/graphical.target
 
 # Connect manually to wifi (wpasupplicant):
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
