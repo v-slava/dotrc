@@ -14,6 +14,6 @@ set -e
 FILE=$(mktemp --tmpdir=/tmp scrollback_buffer_XXXXXX)
 
 cat > $FILE
-x-terminal-emulator -e e $FILE
+x-terminal-emulator -e vim $FILE
 rm $FILE
 

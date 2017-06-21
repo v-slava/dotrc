@@ -1597,7 +1597,7 @@ interrupt -a
 # gdb: write to process memory from file (read from file):
 restore FILE binary START_ADDRESS_IN_MEMORY
 
-# gdb: write to file from process memory [START .. STOP) (dump):
+# gdb: write to file from process memory [START .. STOP) (dump memory):
 dump binary memory FILE START STOP
 
 # gdb: catch syscall:
