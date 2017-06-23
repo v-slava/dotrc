@@ -86,6 +86,18 @@ less -r|-R IN_OUT_LOG_FILE
 # bash assume that $SOME_VAR contains hex value (without 0x), convert it to decimal:
 echo $((16#$SOME_VAR))
 
+# Where to define environment variables:
+/etc/environment
+/etc/bash.bashrc
+/etc/profile
+/etc/profile.d/*
+/etc/pam.d/*
+~/.pam_environment
+~/.profile
+~/.bash_profile
+~/.bash_login
+~/.bashrc
+
 # Unset environment variable (bash):
 unset ENV_VAR_NAME
 
@@ -411,8 +423,38 @@ uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 astyle --style=ansi FILE1 [FILE2] [...]
 # Documentation: /usr/share/doc/astyle/html/astyle.html
 
+# AddressSanitizer detects:
+# - stack, global and heap buffer overflow;
+# - use after free();
+# - use after return (stack); # ASAN_OPTIONS=detect_stack_use_after_return=1
+# - use after scope (stack);  # -fsanitize-address-use-after-scope (currently I can't compile this, on clang-3.8, should be enabled by default)
+# - memory leak;
+# - double free;
+# - invalid free;
+gcc FILE.c -fsanitize=address -g -O0 -fno-common -fno-omit-frame-pointer -fno-optimize-sibling-calls -o FILE.out
+PATH=/usr/lib/llvm-3.8/bin:$PATH ASAN_OPTIONS=detect_stack_use_after_return=1 ./FILE.out
+# Note: PATH is required for symbolizer to work. See also ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.8
+# Note: -fsanitize=leak is included in -fsanitize=address
+# View runtime options:
+ASAN_OPTIONS=help=1 ./FILE.out
+# Set some runtime options:
+ASAN_OPTIONS=verbosity=1:malloc_context_size=20 ./a.out
+# For Cmake see also target: make check-asan
+
+# MemorySanitizier detects use of uninitialized variables:
+gcc FILE.c -fsanitize=memory -fsanitize-memory-track-origins -g -O0 -pie -fPIE -fno-omit-frame-pointer -fno-optimize-sibling-calls
+
+# ThreadSanitizer detects data races:
+gcc FILE.c -fsanitize=thread -g -O0 -pie
+# Note: -pie required only at linkage.
+
+# Undefined behaviour sanitizer:
+gcc FILE.c -fsanitize=undefined -fno-omit-frame-pointer 
+PATH=/usr/lib/llvm-3.8/bin:$PATH UBSAN_OPTIONS=print_stacktrace=1 ./FILE.out
+
 # Use valgrind for dynamic memory analysis:
-valgrind --leak-check=full --track-origins=yes EXECUTABLE.out
+valgrind --error-exitcode=1 --leak-check=full --track-origins=yes EXECUTABLE.out
+# --read-var-info=yes
 
 # Use clang static analysis:
 scan-build BUILD_COMMAND
@@ -505,13 +547,16 @@ journalctl
 systemd-cgls
 
 # Systemd commands:
-systemctl [--user] list-unit-files
+systemctl [--user] list-unit-files # always shows up-to-date information
 systemctl is-enabled SERVICE
 systemctl status SERVICE
 systemctl enable SERVICE
 systemctl start SERVICE
 systemctl set-default multi-user.target
 systemctl get-default
+# Kernel command line argument "single" (recovery mode)
+# is equivalent to "systemd.unit=rescue.target".
+# Default target: graphical.target.
 # target example: /lib/systemd/system/graphical.target
 
 # Connect manually to wifi (wpasupplicant):

@@ -931,7 +931,9 @@ Add Man mode support to (previous-buffer)."
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-o") 'my-previous-buffer)
   (evil-define-key 'motion Man-mode-map (kbd "RET") 'man-follow)
-  (evil-define-key 'motion Man-mode-map (kbd "M-g") 'Man-goto-section)
+  (evil-define-key 'motion Man-mode-map (kbd "C-s") 'Man-goto-section)
+  (evil-define-key 'motion Man-mode-map (kbd "C-n") 'Man-next-section)
+  (evil-define-key 'motion Man-mode-map (kbd "C-p") 'Man-previous-section)
   ;; u - reformat current manpage (Man-update-manpage).
   (setq Man-notify-method 'pushy)
 
