@@ -1618,10 +1618,12 @@ br s -n FUNCTION_NAME -c 'CONDITION'
 rbreak func_prefix_*
 
 # gdb: breakpoints on read/write:
-# watch *0xaab12450 [mask 0xfffffff0]
-watch -  only breaks on write
-rwatch - only breaks on read
-awatch - breaks on read/write.
+watch *0xaab12450 [mask 0xfffffff0]
+watch (char[100]) *0xaab12450
+watch -l SomeArray[2]
+# watch -  only breaks on write
+# rwatch - only breaks on read
+# awatch - breaks on read/write.
 
 # gdb: delete breakpoint
 del <breakpoint number>
