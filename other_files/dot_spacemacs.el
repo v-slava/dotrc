@@ -929,6 +929,7 @@ Add Man mode support to (previous-buffer)."
   (define-key evil-normal-state-map (kbd "g C-]") 'my-find-tag)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
+  (evil-define-key 'motion Man-mode-map (kbd "q") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-o") 'my-previous-buffer)
   (evil-define-key 'motion Man-mode-map (kbd "RET") 'man-follow)
   (evil-define-key 'motion Man-mode-map (kbd "C-s") 'Man-goto-section)
