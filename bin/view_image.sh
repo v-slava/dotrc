@@ -15,7 +15,7 @@ fi
 IMAGE_FILE="$1"
 
 if ! pidof gliv ; then
-	gliv "$IMAGE_FILE" &
+	nohup gliv "$IMAGE_FILE" &
 else
 	gliv -c "$IMAGE_FILE"
 fi

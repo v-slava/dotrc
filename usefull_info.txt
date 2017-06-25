@@ -469,6 +469,8 @@ clang++ -cc1 -analyze -analyzer-checker=core.DivideZero FILE.cpp
 # Verbose scan-build execution:
 scan-build -v -v -v BUILD_COMMAND
 
+# See also ~/os_settings/other_files/check_program.sh
+
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
 
