@@ -15,6 +15,10 @@ class SafeBreakpoint(gdb.Command):
         ret = re.search('Function ".*" not defined.', gdb_output)
         if ret == None:
             ret = re.search('No source file named', gdb_output)
+        if ret == None:
+            ret = re.search('No symbol table is loaded.', gdb_output)
+        if ret == None:
+            ret = re.search('Make breakpoint pending on future shared library load?', gdb_output)
         # Optionally GDB also prints:
         # Make breakpoint pending on future shared library load?
         return ret != None
