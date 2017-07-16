@@ -36,6 +36,10 @@ Tools -> Options -> View -> Force OpenGL even if blacklisted (on restart)
 # View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
 netstat -apn
 
+# Install GPG key for third-party apt repository:
+wget http://apt.llvm.org/llvm-snapshot.gpg.key
+apt-key add llvm-snapshot.gpg.key
+
 # Audio CD is can't be mounted.
 # Listen track #1 from audio CD:
 mplayer -cdrom-device /dev/cdrom -cache 5000 cdda://1

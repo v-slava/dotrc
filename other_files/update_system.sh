@@ -7,8 +7,8 @@ if ! mkdir "$LOCK_DIR" ; then
 	exit 1
 fi
 set -x
-sudo update-flashplugin-nonfree --install
-sudo update-pepperflashplugin-nonfree --install
+# sudo update-flashplugin-nonfree --install
+# sudo update-pepperflashplugin-nonfree --install
 sudo apt-get update
 sudo apt-get upgrade --yes
 sync
