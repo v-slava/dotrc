@@ -1,9 +1,0 @@
-[Service]
-ExecStart=/bin/su volkov -l -c "/bin/true"
-
-# This causes "systemd --user" to execute default.target for user "volkov".
-
-# ExecStart=/bin/su volkov -l -c "/home/volkov/os_settings/other_files/generate_configs.sh ; exec /usr/bin/startx -- -configdir %i"
-# %i means input argument (either from native.target or virtual.target)
-# passing vt0X works from second time only (why?) -> do not use.
-# ExecStart=/bin/su USER_NAME -l -c "/usr/bin/startx -- vt06"

@@ -36,7 +36,7 @@ GRUB_CMDLINE_LINUX=""
 #GRUB_INIT_TUNE="480 440 1"
 
 # My code begin:
-export ENABLE_MY_GRUB_MENU_ENTRY=true
+# export ENABLE_MY_GRUB_MENU_ENTRY=true
 # By default runlevel for Debian is 2 (see /etc/inittab).
 # See also output of /sbin/runlevel command.
 # For noob_linux we set it to 3 (trailing kernel options are passed to /sbin/init?):

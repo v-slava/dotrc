@@ -1,0 +1,7 @@
+[Unit]
+Requires=multi-user.target
+Conflicts=rescue.target
+Conflicts=graphical.target
+
+[Service]
+ExecStart=/bin/su volkov -l -c "systemctl --user start default_user_gui.target"

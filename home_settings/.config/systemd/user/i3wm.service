@@ -1,0 +1,7 @@
+[Unit]
+Requires=generate_configs.service
+After=generate_configs.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "source $HOME/.bashrc && exec /usr/bin/startx -- -configdir `if ~/os_settings/other_files/virtual_box.sh ; then echo virtual ; else echo native ; fi`"
