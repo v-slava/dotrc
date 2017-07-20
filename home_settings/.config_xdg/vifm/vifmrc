@@ -421,7 +421,7 @@ bmark! /home/volkov/other/my_samples/vim_prj_settings_example/.. vim_project_set
 bmark! /home/volkov/other/books/ books
 bmark! /home/volkov/other/compiler_overloading/compiler_settings compiler_overloading
 bmark! /home/volkov/other/toolchains/ toolchains
-bmark! /media/files/workspace/dotrc_s/emacs_projects/ tags emacs
+bmark! /media/files/workspace/dotrc_s/emacs_projects/ emacs
 
 nnoremap ,c :write | execute ':!e --wait ~/os_settings/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && if [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] ; then cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC ; fi' | restart<CR>
 nnoremap ,C :write | execute ':!mkdir -p ~/workspace/dotrc_s/home_settings/.config_xdg/vifm && e --wait ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc && cp ~/os_settings/home_settings/.config_xdg/vifm/vifmrc $MYVIFMRC && if [ -f ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc ] ; then cat ~/workspace/dotrc_s/home_settings/.config_xdg/vifm/vifmrc >> $MYVIFMRC ; fi' | restart<CR>

@@ -845,8 +845,8 @@ Add Man mode support to (previous-buffer)."
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
-  (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
-  ;; (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
+  ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
+  (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
   (setq compilation-auto-jump-to-first-error t) ;; automatically jump to first compilation error
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
   ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.

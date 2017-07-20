@@ -811,6 +811,8 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git delete non-existend (obsolete, stale) remote branches:
+git remote purge REMOTE
 # git get list of commits in BRANCH since COMMIT_1:
 git rev-list ^COMMIT_1 BRANCH
 
@@ -1525,6 +1527,10 @@ EOF
 # h = halt, g = go, r = Reset target (RESET), ? = help
 $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $JLINK_SCRIPT
 
+# gdb:
+show max-value-size
+set max-value-size 100000
+
 # gdb: print the full value of a C-string:
 set print element 0
 
@@ -1570,7 +1576,7 @@ target symbols add # TODO
 gdb -x FILE
 lldb -s FILE
 
-# gdb: (tui) refresh screen:
+# gdb: (tui) refresh (redraw) screen:
 refresh
 CTRL-L
 
