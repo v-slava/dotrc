@@ -1,3 +1,6 @@
+# disable address space randomization:
+echo 0 > /proc/sys/kernel/randomize_va_space
+
 # Find everything. Exclude directory 'dir1':
 find -path ./dir1 -prune -o -print
 
@@ -699,16 +702,16 @@ nbtscan 192.168.2.3/16
 sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
 
 # List samba services available on server:
-smbclient -U USER_NAME[%PASSWORD] -W DOMAIN -L SERVER
+smbclient -U USER_NAME[%PASSWORD] -L SERVER [-W DOMAIN] [-m {SMB3|SMB2|NT1}]
 # mount smb share with cifs-utils with separate credentials file:
-mount -t cifs -o credentials=/file/with/smb_credentials //server_name/share_name /mount/point
+mount -t cifs -o [vers={1.0|2.0|2.1|3.0},]credentials=/file/with/smb_credentials //server_name/share_name /mount/point
 # Create file with smb credentials:
 cat << EOF > /file/with/smb_credentials
 username=SomeUserName
 password=SomePassword
 EOF
 # mount smb share with cifs-utils without separate credentials file:
-mount -t cifs -o username=SomeUserName,password=SomePassword,domain=SomeDomain //server_name/share_name /mount/point
+mount -t cifs -o [vers={1.0|2.0|2.1|3.0},]username=SomeUserName,password=SomePassword,domain=SomeDomain //server_name/share_name /mount/point
 # See also mount shared folder via smb (package=smbnetfs|fusesmb, no root required)
 
 # Restart nfs server (ubuntu):
