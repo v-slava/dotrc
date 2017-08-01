@@ -493,10 +493,6 @@ cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
 # Extract initramfs:
 cd FOLDER_TO_EXTRACT_INTO && gunzip -c -9 /boot/initrd.img-3.11.0-12-generic | cpio -i -d -H newc --no-absolute-filenames
 
-# Copy files over ssh:
-ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
-ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
-
 # View progress using coreutils viewer (cv, progress viewer):
 progress -wm
 
@@ -655,6 +651,22 @@ nvim-qt --server /tmp/nvimsocket
 apt-get install fonts-baekmuk
 LANG=ko_KR.EUC-KR gvim file.cpp
 
+# View machines, connected via ssh:
+who -a
+
+# Mount folder over SSH:
+sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
+
+# Copy files over ssh:
+ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
+ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# ~/.ssh/config example:
+Host github-custom
+  HostName github.com
+  User v-slava
+  IdentityFile ~/.ssh/id_rsa_something
+
 # Generate SSH keys:
 ssh-keygen -t rsa -C "user@email.com"
 # Add authorization without password:
@@ -708,9 +720,6 @@ sudo dpkg-reconfigure ca-certificates
 # Scan network for NetBIOS name information (with IP):
 nbtscan 192.168.2.3/16
 
-# Mount folder over SSH:
-sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
-
 # List samba services available on server:
 smbclient -U USER_NAME[%PASSWORD] -L SERVER [-W DOMAIN] [-m {SMB3|SMB2|NT1}]
 # mount smb share with cifs-utils with separate credentials file:
@@ -729,9 +738,6 @@ sudo service nfs-kernel-server restart
 # edit /etc/exports:
 # /mnt_folder 192.168.1.1(rw,sync,no_root_squash,no_subtree_check)
 # /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
-
-# View machines, connected via ssh:
-who -a
 
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register

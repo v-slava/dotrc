@@ -1,6 +1,7 @@
 [Unit]
 After=systemd-user-sessions.service
 Requires=multi-user.target
+After=multi-user.target
 Conflicts=rescue.target
 Conflicts=graphical.target
 
