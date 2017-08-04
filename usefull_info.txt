@@ -555,6 +555,16 @@ journalctl
 # Recursively show control group contents:
 systemd-cgls
 
+# Some man pages:
+man systemd.target
+man systemd.service
+
+# Check whether there is a valid local session within X:
+loginctl show-session $XDG_SESSION_ID | grep '\(Remote=\|Active=\)'
+# This should show:
+Remote=no
+Active=yes
+
 # Systemd commands:
 systemctl [--user] list-unit-files # always shows up-to-date information
 systemctl is-enabled SERVICE

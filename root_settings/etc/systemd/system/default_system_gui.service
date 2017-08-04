@@ -1,7 +1,15 @@
 [Unit]
+After=systemd-user-sessions.service
 Requires=multi-user.target
 Conflicts=rescue.target
 Conflicts=graphical.target
 
 [Service]
-ExecStart=/bin/su volkov -l -c "systemctl --user start default_user_gui.target"
+ExecStart=/bin/su volkov -l -c "/home/volkov/os_settings/other_files/apply_i3_config.sh ; exec /usr/bin/startx -- -configdir `if /home/volkov/os_settings/other_files/virtual_box.sh ; then echo virtual ; else echo native ; fi`"
+
+# Note: currently we ignore files ~/.config/systemd/user/*
+# Reason: in this case we run outside of a session. Some system settings are not applied
+# (e.g. /etc/security/limits.conf). See example (outside session) below:
+# ExecStart=/bin/su volkov -l -c "systemctl --user start default_user_gui.target"
+
+# %i means input argument (either from native.target or virtual.target)
