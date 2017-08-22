@@ -33,15 +33,19 @@ for dir in $DIRS ; do
 	fi
 done
 
-if [ ! -d /media/files/workspace/dotrc_s/home_settings ]; then
-	exit
+set +e
+if [ -d /media/files/workspace/dotrc_s/home_settings ]; then
+    set -e
+    cd /media/files/workspace/dotrc_s/home_settings
+    FILES_LIST=$(find -type f)
+    for FILE in $FILES_LIST ; do
+        cat "$FILE" >> ~/$FILE
+    done
 fi
-cd /media/files/workspace/dotrc_s/home_settings
-FILES_LIST=$(find -type f)
-for FILE in $FILES_LIST ; do
-	cat "$FILE" >> ~/$FILE
-done
+set -e
 
 ~/os_settings/other_files/generate_configs.sh
 i3-msg reload
+
+echo -e "\nDone!"
 

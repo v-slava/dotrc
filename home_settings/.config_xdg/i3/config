@@ -24,7 +24,7 @@ set $PrintScreen 107
 bindsym $Alt_R+e exec --no-startup-id exec ~/workspace/dotrc_s/i3_hotkey_handler.sh
 
 # font for window title
-font pango:Inconsolata LGC 8
+font pango:Inconsolata LGC 12
 
 # focus_on_window_activation focus
 
@@ -101,7 +101,7 @@ bindsym $Alt_L+9 workspace 9
 # Workspace-output assignments:
 # SED native begin
 
-set $OUTPUT_CENTRAL LVDS1
+set $OUTPUT_CENTRAL eDP1
 set $OUTPUT_RIGHT HDMI1
 # set $OUTPUT_LEFT
 
@@ -191,7 +191,7 @@ for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
 bindsym $Alt_R+i exec --no-startup-id sleep 1 && exec xdotool type 237872289
 
-bindsym       $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh
+bindsym $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh i3_hotkey
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
 bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/suspend_hotkey.sh
 # bindsym $Ctrl_L+$Alt_L+h exec sudo poweroff
@@ -291,13 +291,19 @@ bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh
 bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
 
+# brightness hotkeys:
+bindsym XF86MonBrightnessUp exec --no-startup-id exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec --no-startup-id exec xbacklight -dec 10
+
 # toggle touchpad:
 bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
+bindsym XF86TouchpadToggle exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
+
 # turn off touchpad by default:
 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
-bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
+bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-20:monospace'
 # bindsym $Alt_L+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
 
 # noob settings begin

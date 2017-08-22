@@ -525,5 +525,6 @@ command hexedit hed %c
 
 " noremap j j:echo system('readlink -f ' . expand('%c:p'))<CR>
 " noremap k k:echo system('readlink -f ' . expand('%c:p'))<CR>
+" let $MY_ENV_VAR = 'some_value'
 let $VIFM_SERVER_NAME = v:servername
 

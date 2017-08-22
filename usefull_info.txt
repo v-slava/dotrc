@@ -1,3 +1,6 @@
+# start teamviewer service:
+systemctl start teamviewerd.service
+
 # disable address space randomization:
 echo 0 > /proc/sys/kernel/randomize_va_space
 
@@ -1351,8 +1354,17 @@ lsblk
 # Folder write access:   can create new files,
 #                        can delete existed ones if execute folder access available.
 
+# Check whether swap is enabled (empty output means "no swap"):
+swapon --show
+
 # Format partition as a swap:
 mkswap -L linux_swap /dev/sdaX
+
+# Create swap file and use it (execute as root):
+fallocate -l 8G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
 
 # update-alternatives:
 ls -l /etc/alternatives

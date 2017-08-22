@@ -1,5 +1,21 @@
 #!/bin/bash
 
+DIR=/media/files/temporary/do_not_lock_screen
+
+if [ "$1" = "i3_hotkey" ]; then
+    rm -rf $DIR
+fi
+
+if ls $DIR 1>/dev/null 2>&1 ; then
+    DO_LOCK=false
+else
+    DO_LOCK=true
+fi
+
+if [ "$DO_LOCK" = "false" ]; then
+    exit
+fi
+
 set -e
 
 setxkbmap us

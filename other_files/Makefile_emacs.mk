@@ -1,12 +1,16 @@
-VERSION := 24.5
+VERSION := 25.2
 FOLDER := emacs-$(VERSION)
 ARCHIVE := $(FOLDER).tar.xz
 
 PHONY := all
-all: $(FOLDER)
+all: $(FOLDER) install_dependencies
 	cd $< && ./configure --with-xpm=no --with-jpeg=no --with-gif=no --with-tiff=no
 	make -C $< -j 9
 	su -c "make -C $< install"
+
+PHONY += install_dependencies
+install_dependencies:
+	su -c 'apt-get install libgtk-3-dev'
 
 $(FOLDER): $(ARCHIVE)
 	tar xf $<

@@ -1,7 +1,7 @@
 # <file system>        <dir>         <type>    <options>           <dump> <pass>
-/dev/sda3              /             ext4      defaults,noatime      0      1
-/dev/sda5              none          swap      defaults              0      0
-/dev/sda6              /media/files  ext4      defaults,noatime      0      2
+/dev/sda1              /             ext4      defaults,noatime      0      1
+/dev/sda2              /media/files  ext4      defaults,noatime      0      2
+# /dev/sda5              none          swap      defaults              0      0
 
 # Mount /media/usb:
 /dev/sdb1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0

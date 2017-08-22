@@ -15,7 +15,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	openssh-client sshfs fuse silversearcher-ag kbd \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
 	g++ gdb gdb-doc gdbserver gdb-multiarch \
-	zip unzip gzip bzip2 p7zip-full cpio unrar \
+	zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
@@ -23,8 +23,9 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 
 apt-file update
 
-# For HP630:
-apt-get install firmware-realtek
+# For Asus F541U:
+apt-get install -t jessie-backports firmware-atheros
+apt-get install firmware-realtek firmware-misc-nonfree
 
 # Install xorg:
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
@@ -48,7 +49,7 @@ apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xdotool xclip xinput scrot zenity xcape xprintidle uim-gtk2.0
+apt-get install wmctrl xdotool xclip xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
 # keynav
 
 # Install vim instance, which is able to access X clipboard:
@@ -87,18 +88,17 @@ apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl
 # On wheezy: chromium-browser-l10n
 
 # dmenu:
-make -f ~/os_settings/other_files/Makefile_dmenu
+make -f ~/os_settings/other_files/Makefile_dmenu.mk
 
 # Coreutils viewer:
 apt-get install libncurses5-dev pkg-config
-make -f ~/os_settings/other_files/Makefile_coreutils_viewer
+make -f ~/os_settings/other_files/Makefile_coreutils_viewer.mk
 
 # vifm:
-apt-get install libncursesw5-dev
-make -f ~/os_settings/other_files/Makefile_vifm
+# make -f ~/os_settings/other_files/Makefile_vifm.mk
 
-dpkg --add-architecture i386
-apt-get update
+# dpkg --add-architecture i386
+# apt-get update
 
 # Download skype.deb via browser
 # dpkg -i skype.deb # install skype

@@ -38,7 +38,7 @@ EOF
 		exit 1
 	fi
 	set -e
-	~/os_settings/other_files/set_volume.sh 30%
+	~/os_settings/other_files/set_volume.sh 20%
 	pactl -- set-sink-mute "$SPEAKERS_SINK" 0
 	echo "Disconnected from bluetooth headset $BT_MAC."
 

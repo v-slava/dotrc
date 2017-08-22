@@ -1,22 +1,31 @@
 #!/bin/bash
 
+MAIN_OUTPUT=eDP1
+MAIN_MODE=1920x1080
+
+set -e
+
 if [ "$1" = "xinitrc" ]; then
-	xrandr --output LVDS1 --mode 1366x768
+    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE
 fi
 
-if xrandr | grep -q 'HDMI1 connected' ; then
-	xrandr --output HDMI1 --mode 1680x1050 --right-of LVDS1
+MIRROR_MAIN=true
+EXTERNAL_MODE=1920x1080
+
+if [ "$MIRROR_MAIN" = "true" ]; then
+    ARGS="--mode $MAIN_MODE"
 else
-	if [ "$1" = "external_monitor.sh" ]; then
-		xrandr --output HDMI1 --off
-	fi
+    ARGS="--mode $EXTERNAL_MODE --right-of $MAIN_OUTPUT"
 fi
 
-if xrandr | grep -q 'VGA1 connected' ; then
-	xrandr --output VGA1 --mode 1920x1080 --right-of LVDS1
-else
-	if [ "$1" = "external_monitor.sh" ]; then
-		xrandr --output VGA1 --off
-	fi
-fi
+OTHER_OUTPUTS="HDMI1 VGA1"
 
+for OUTPUT in $OTHER_OUTPUTS ; do
+    if xrandr | grep -q "$output connected" ; then
+        xrandr --output $OUTPUT $ARGS
+    else
+        if [ "$1" = "external_monitor.sh" ]; then
+            xrandr --output $OUTPUT --off
+        fi
+    fi
+done

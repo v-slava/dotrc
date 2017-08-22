@@ -66,7 +66,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode relative-line-numbers xcscope ag) ;; key-chord)
+   dotspacemacs-additional-packages '(ninja-mode xcscope ag) ;; key-chord relative-line-numbers)
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -146,7 +146,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Inconsolata LGC"
-                               :size 14
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -262,7 +262,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'nil
+   dotspacemacs-line-numbers 'relative
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -845,8 +845,8 @@ Add Man mode support to (previous-buffer)."
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
-  ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
-  (setq compilation-skip-threshold 1) ;; iterate through errors end warnings.
+  (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
+  ;; (setq compilation-skip-threshold 1) ;; iterate through errors end warnings.
   ;; (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
   (setq compilation-auto-jump-to-first-error t) ;; automatically jump to first compilation error
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
@@ -859,8 +859,8 @@ Add Man mode support to (previous-buffer)."
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
   (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
   ;; Setup relative line numbers:
-  (global-relative-line-numbers-mode 1)
-  (setq relative-line-numbers-format 'my-relative-line-numbers-format)
+  ;; (global-relative-line-numbers-mode 1)
+  ;; (setq relative-line-numbers-format 'my-relative-line-numbers-format)
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
@@ -879,7 +879,7 @@ Add Man mode support to (previous-buffer)."
   ;; Get backtrace when I press C-g: M-x (toggle-debug-on-quit). Now do whatever and press C-g.
   ;; See debugger hotkeys: SPC dm. d - step into. c - step out.
 
-  ;; Do not ask for confirmation when visiting symbolic links, which point ot git-controlled files
+  ;; Do not ask for confirmation when visiting symbolic links, which point to git-controlled files
   (setq vc-follow-symlinks nil)
 
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ;; search results for "word1 word2" are equal to "word2 word1"
