@@ -1,3 +1,0 @@
-[Service]
-Type=oneshot
-ExecStart=/bin/bash -c ~/os_settings/other_files/generate_configs.sh
