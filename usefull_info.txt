@@ -430,6 +430,30 @@ uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 astyle --style=ansi FILE1 [FILE2] [...]
 # Documentation: /usr/share/doc/astyle/html/astyle.html
 
+ARM stack in debug:
+# f[i] = frame #i.
+# fp[i] = frame pointer #i (R7 for Thumb2, R11 for ARM 32 bit, see gcc flag -fno-omit-frame-pointer).
+# sp[0] = $sp; f[0] = *$fp; pc[0] = $pc; pc[1] = $lr; pc[i] = lr[i - 1] - 1.
+                     |-----------|
+                     |           | addr
+                     |-----------|
+f[i] = sp[i + 1] --> |           | addr - 4
+                     |-----------|
+                     |   lr[i]   | return address (not present for leaf function)
+                     |-----------|
+                     |   fp[i]   | = f[i]
+                     |-----------|
+                     |           |
+                     | locals[i] | optional
+f[i - 1] = sp[i] --> |           |
+                     |-----------|
+                     | lr[i - 1] | return address (not present for leaf function)
+                     |-----------|
+                     | fp[i - 1] | = f[i - 1]
+                     |-----------|
+                     |    ...    |
+                     |-----------|
+
 # AddressSanitizer detects:
 # - stack, global and heap buffer overflow;
 # - use after free();
