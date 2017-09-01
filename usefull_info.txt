@@ -39,8 +39,10 @@ Tools -> Options -> View -> Force OpenGL even if blacklisted (on restart)
 # Google test (gtest) test filter:
 ./test_executable --gtest_filter='PREFIX_1*:PREFIX_2*:PREFIX_3*'
 
-# View open ports (a), PIDs (p), do not resolve hosts (n). Try also as root:
-netstat -apn
+# View open ports on local host (a), PIDs (p), do not resolve hosts (n).
+netstat -apn # Try also as root.
+# View open ports on remote server (1-100 = port range):
+nc -z -v 192.168.0.1 1-100
 
 # Install GPG key for third-party apt repository:
 wget http://apt.llvm.org/llvm-snapshot.gpg.key
