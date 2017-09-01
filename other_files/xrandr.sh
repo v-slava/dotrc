@@ -2,30 +2,41 @@
 
 MAIN_OUTPUT=eDP1
 MAIN_MODE=1920x1080
+MAIN_DPI=144
 
 set -e
 
 if [ "$1" = "xinitrc" ]; then
-    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE
+    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE --dpi $MAIN_DPI
+    exit
 fi
 
-MIRROR_MAIN=true
+POSITION=$1
+case "$POSITION" in
+    "--left-of") ;;
+    "--right-of") ;;
+    "--same-as") ;;
+    *)
+        echo "Unexpected argument: $1" 1>&2
+        exit 1
+esac
+
 EXTERNAL_MODE=1920x1080
+EXTERNAL_DPI=144
 
-if [ "$MIRROR_MAIN" = "true" ]; then
-    ARGS="--mode $MAIN_MODE"
+if [ "$POSITION" = "--same-as" ]; then
+    ARGS="$POSITION $MAIN_OUTPUT --mode $MAIN_MODE --dpi $MAIN_DPI"
 else
-    ARGS="--mode $EXTERNAL_MODE --right-of $MAIN_OUTPUT"
+    ARGS="$POSITION $MAIN_OUTPUT --mode $EXTERNAL_MODE --dpi $EXTERNAL_DPI"
 fi
 
-OTHER_OUTPUTS="HDMI1 VGA1"
+OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1"
 
 for OUTPUT in $OTHER_OUTPUTS ; do
-    if xrandr | grep -q "$output connected" ; then
+    if xrandr | grep -q "^$OUTPUT connected" ; then
         xrandr --output $OUTPUT $ARGS
-    else
-        if [ "$1" = "external_monitor.sh" ]; then
-            xrandr --output $OUTPUT --off
-        fi
+    fi
+    if xrandr | grep -q "^$OUTPUT disconnected" ; then
+        xrandr --output $OUTPUT --off
     fi
 done

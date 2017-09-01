@@ -24,7 +24,7 @@ set $PrintScreen 107
 bindsym $Alt_R+e exec --no-startup-id exec ~/workspace/dotrc_s/i3_hotkey_handler.sh
 
 # font for window title
-font pango:Inconsolata LGC 12
+font pango:Inconsolata LGC 8
 
 # focus_on_window_activation focus
 
@@ -303,13 +303,17 @@ bindsym XF86TouchpadToggle exec --no-startup-id exec ~/os_settings/other_files/t
 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
-bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-20:monospace'
+bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
 # bindsym $Alt_L+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
 
 # noob settings begin
 # noob settings end
 
 # exec --no-startup-id i3-msg 'workspace 2; exec uzbl -u URL'
+
+bindsym $WIN+$Shift_R+s exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --same-as
+bindsym $WIN+$Shift_R+h exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --left-of
+bindsym $WIN+$Shift_R+l exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --right-of
 
 bindcode $PrintScreen exec --no-startup-id exec scrot
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec scrot --focused --border

@@ -1,3 +1,6 @@
+# zenity: specify font properties:
+zenity --info --text '<span foreground="blue" font="32">Some\nbig text</span>\n\n<i>(it is also blue)</i>'
+
 # start teamviewer service:
 systemctl start teamviewerd.service
 
@@ -680,6 +683,9 @@ nvim-qt --server /tmp/nvimsocket
 apt-get install fonts-baekmuk
 LANG=ko_KR.EUC-KR gvim file.cpp
 
+# ssh connect to host on specified port (default port = 22):
+ssh -p port user@host
+
 # View machines, connected via ssh:
 who -a
 
@@ -1123,6 +1129,9 @@ openssl passwd -1 -salt xyz yourpass
 
 # man for openssl command (enc, passwd, ...):
 man 1ssl cmd
+
+# Get DPI (dots per inch):
+xdpyinfo | grep resolution
 
 # Qemu monitor:
 qemu-system-arm -monitor pty

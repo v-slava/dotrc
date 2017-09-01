@@ -58,6 +58,7 @@ values."
      ;; version-control
      evil-commentary
      semantic
+     nlinum
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
@@ -66,7 +67,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode xcscope ag) ;; key-chord relative-line-numbers)
+   dotspacemacs-additional-packages '(ninja-mode xcscope ag) ;; key-chord
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -741,15 +742,6 @@ When you've found a function you are interested in, use \"SPC h d f\" to find ou
       (previous-line))
     (beginning-of-line))
 
-  (defun my-relative-line-numbers-format (offset)
-    "Return the absolute value of OFFSET, converted to string."
-    (let* ((current-line-number (line-number-at-pos))
-           (current-line-number-length (length (format "%d" current-line-number)))
-           (max-number-length (max 3 current-line-number-length))
-           (number-format (concat "%" (number-to-string max-number-length) "d"))
-           (value-to-print (if (= 0 offset) current-line-number (abs offset))))
-      (format number-format value-to-print)))
-
   (defun my--find-exclude-dirs (dirs-list)
     "Return command line options for \"find\" command to exclude
 specified in dirs-list directories from search."
@@ -858,9 +850,6 @@ Add Man mode support to (previous-buffer)."
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
   (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
-  ;; Setup relative line numbers:
-  ;; (global-relative-line-numbers-mode 1)
-  ;; (setq relative-line-numbers-format 'my-relative-line-numbers-format)
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
