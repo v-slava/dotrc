@@ -211,7 +211,7 @@
   <mutedDictionaries/>
  </inactiveDictionaries>
  <groups nextId="7">
-  <group id="1" name="En - En">
+  <group shortcut="Ctrl+E, Ctrl+E" id="1" name="En - En">
    <dictionary name="CollinsCobuild (En-En)">dae9bbddeed679d2b1b7066c61d620ff</dictionary>
    <dictionary name="OxfordDictionary (En-En)">52f46b006cbb09a3c8aea81ac7ced561</dictionary>
    <dictionary name="sound_en">1c8c6c8a3a64600e6631a42d4641c7dd</dictionary>
@@ -219,7 +219,7 @@
    <dictionary name="Collins (En-En)">f1af9ec25f9afc165c8fee49a3a4f791</dictionary>
    <mutedDictionaries/>
   </group>
-  <group id="2" name="En - Ru">
+  <group shortcut="Ctrl+E, Ctrl+N" id="2" name="En - Ru">
    <dictionary name="sound_en">1c8c6c8a3a64600e6631a42d4641c7dd</dictionary>
    <dictionary name="LingvoUniversal (En-Ru)">108eeca29a4df5b51f413b53cb217a9a</dictionary>
    <dictionary name="Abbrev_LingvoUniversalEnRu">d6063793c6b0e2342e6db2a657814b93</dictionary>
@@ -332,7 +332,7 @@
    <dictionary name="Abbrev_EconomicusInsuranceEnRu">97c0cadf22c22517d9116ee2425bfad9</dictionary>
    <mutedDictionaries/>
   </group>
-  <group id="3" name="Ru - En">
+  <group shortcut="Ctrl+N, Ctrl+E" id="3" name="Ru - En">
    <dictionary name="LingvoUniversal (Ru-En)">e58afb55c120510480e7474fdf1e78b3</dictionary>
    <dictionary name="PhraseBook (Ru-En)">8ebfe910c6b0ebe4961520702e1b9c40</dictionary>
    <dictionary name="LingvoComputer (Ru-En)">2280b71959daa7880490f2f18f899a68</dictionary>
@@ -397,7 +397,7 @@
    <dictionary name="Universal (Ru-En)">605943eaa266780d7b7a21ba3fffebf4</dictionary>
    <mutedDictionaries/>
   </group>
-  <group id="5" name="De - Ru">
+  <group shortcut="Ctrl+D, Ctrl+N" id="5" name="De - Ru">
    <dictionary name="Universal (De-Ru)">680305fe20914696553e414c1d8803df</dictionary>
    <dictionary name="Active (De-Ru)">7eb90d9af83dfc3d30489bc68849fc0b</dictionary>
    <dictionary name="Idioms (De-Ru)">cffd7ea77020a6825a34a5c936a447a6</dictionary>
@@ -415,7 +415,7 @@
    <dictionary name="Medical (De-Ru)">a5f1953abc69223eef9f9150c675c802</dictionary>
    <mutedDictionaries/>
   </group>
-  <group id="6" name="Ru - De">
+  <group shortcut="Ctrl+N, Ctrl+D" id="6" name="Ru - De">
    <dictionary name="Universal (Ru-De)">51480b65545234672cea3f4e3f9a12cc</dictionary>
    <dictionary name="PhraseBook (Ru-De)">2c007e51a9d95e9b8ea95faf0e6fcd05</dictionary>
    <dictionary name="Polytechnical (Ru-De)">088c8a5ed506ef9d94d6870f2ec0e053</dictionary>
@@ -462,7 +462,7 @@
   <interfaceLanguage></interfaceLanguage>
   <displayStyle></displayStyle>
   <newTabsOpenAfterCurrentOne>0</newTabsOpenAfterCurrentOne>
-  <newTabsOpenInBackground>1</newTabsOpenInBackground>
+  <newTabsOpenInBackground>0</newTabsOpenInBackground>
   <hideSingleTab>0</hideSingleTab>
   <mruTabOrder>0</mruTabOrder>
   <hideMenubar>0</hideMenubar>
@@ -479,7 +479,7 @@
   <mainWindowHotkey>Ctrl+F11, Ctrl+F11</mainWindowHotkey>
   <enableClipboardHotkey>0</enableClipboardHotkey>
   <clipboardHotkey>Ctrl+C, Ctrl+C</clipboardHotkey>
-  <enableScanPopup>1</enableScanPopup>
+  <enableScanPopup>0</enableScanPopup>
   <startWithScanPopupOn>0</startWithScanPopupOn>
   <enableScanPopupModifiers>0</enableScanPopupModifiers>
   <scanPopupModifiers>0</scanPopupModifiers>
@@ -518,8 +518,8 @@
  </preferences>
  <lastMainGroupId>2</lastMainGroupId>
  <lastPopupGroupId>2</lastPopupGroupId>
- <popupWindowState>AAAA/wAAAAH9AAAAAAAAAhQAAAGTAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAQAAAAEAAAAaAGQAaQBjAHQAaQBvAG4AYQByAHkAQgBhAHIDAAAAAP////8AAAAAAAAAAA==</popupWindowState>
- <popupWindowGeometry>AdnQywABAAAAAAHsAAAAlAAABBgAAAImAAAB7AAAAJQAAAQYAAACJgAAAAAAAA==</popupWindowGeometry>
+ <popupWindowState>AAAA/wAAAAH9AAAAAAAAA6EAAAQDAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAQAAAAEAAAAaAGQAaQBjAHQAaQBvAG4AYQByAHkAQgBhAHIDAAAAAP////8AAAAAAAAAAA==</popupWindowState>
+ <popupWindowGeometry>AdnQywABAAAAAAPDAAAAGAAAB3wAAAQaAAADwwAAABgAAAd8AAAEGgAAAAAAAA==</popupWindowGeometry>
  <pinPopupWindow>1</pinPopupWindow>
  <mainWindowState></mainWindowState>
  <mainWindowGeometry></mainWindowGeometry>
