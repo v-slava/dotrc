@@ -1,5 +1,7 @@
 [color]
-	ui = always
+	ui = true
+	diff = true
+	status = true
 [user]
 	email = viacheslav.volkov.1@gmail.com
 	name = Viacheslav Volkov

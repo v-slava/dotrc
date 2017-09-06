@@ -1,63 +1,98 @@
 #!/bin/bash
 
-# Edit file
-
-# USE_VIM=true
-
 ID=$(id -u)
 if [ $ID -eq 0 ]; then
     USE_VIM=true
 fi
-
-if [ -n "$USE_VIM" ]; then
-    if [ "$1" = "--wait" ]; then
-        shift
+if [ -z "$DISPLAY" ]; then
+    USE_VIM=true
+fi
+# USE_VIM=true
+ARGS=()
+for arg in "$@" ; do
+    if [ "$arg" = "--diff" ]; then
+        DIFF=true
+    else
+        ARGS+=("$arg")
     fi
-    exec vim -p "$@"
+done
+
+if [ "$USE_VIM" = "true" ]; then
+    ARGS_TMP=()
+    if [ "$DIFF" = "true" ]; then
+        ARGS_TMP+=("-d")
+    else
+        ARGS_TMP+=("-p")
+    fi
+    for arg in "${ARGS[@]}" ; do
+        if [ "$arg" != "--wait" ] && [ "$arg" != "--diff" ]; then
+            ARGS_TMP+=("$arg")
+        fi
+    done
+    ARGS=("${ARGS_TMP[@]}")
+    exec vim "${ARGS[@]}"
 fi
 
 if ! pgrep emacs 1>/dev/null ; then
-	emacs --daemon
+    emacs --daemon
+fi
+
+CMD="emacsclient -c"
+# "--wait" is my own argument.
+# "--nofork" is an argument, accepted by vim
+# (it is called with it from vifm when renaming a file/folder).
+# "-f" is an argument, accepted by vim ("foreground": do not fork).
+DO_FORK=true
+ARGS_TMP=()
+for arg in "${ARGS[@]}" ; do
+    if [ "$arg" = "--wait" ] || [ "$arg" = "--nofork" ] || [ "$arg" = "-f" ]; then
+        DO_FORK=false
+    else
+        ARGS_TMP+=("$arg")
+    fi
+done
+ARGS=("${ARGS_TMP[@]}")
+if [ "$DO_FORK" = "true" ]; then
+    CMD="$CMD --no-wait"
+fi
+
+if [ "$DIFF" = "true" ]; then
+    # process all command line arguments and as a result fill in $LISP_CMD:
+    LISP_CMD="(ediff-files"
+    for arg in "${ARGS[@]}" ; do
+        LISP_CMD="$LISP_CMD \"$arg\""
+    done
+    LISP_CMD="$LISP_CMD)"
+    exec $CMD --eval "$LISP_CMD"
 fi
 
 is_a_number()
 {
-	local NUMBER_TO_CHECK="$1"
-	echo "$NUMBER_TO_CHECK" | grep -q '^[0-9]\+$'
-	return $?
+    local NUMBER_TO_CHECK="$1"
+    echo "$NUMBER_TO_CHECK" | grep -q '^[0-9]\+$'
+    return $?
 }
 
-CMD="emacsclient -c"
-# "--wait" is my own argument.
-# "--nofork" is actually an argument, accepted by vim
-# (it is called with it from vifm when renaming a file/folder)
-if [ "$1" = "--wait" ] || [ "$1" = "--nofork" ] || [ "$1" = "-f" ]; then
-	shift
-else
-	CMD="$CMD -n"
-fi
-
 # process all command line arguments and as a result fill in $CMD:
-for arg in "$@" ; do
-	line="$(echo "$arg" | cut -d':' -f2)"
-	if [ "$line" = "$arg" ] ; then
-		$CMD $arg
-		continue
-	fi
-	if ! is_a_number "$line" ; then
-		$CMD $arg
-		continue
-	fi
-	column="$(echo "$arg" | cut -d':' -f3)"
-	if [ -z "$column" ]; then # if no column has been specified
-		column=1 # then assume it equals to 1
-	fi
-	if ! is_a_number "$column" ; then
-		$CMD $arg
-		continue
-	fi
-	file="$(echo "$arg" | cut -d':' -f1)"
+for arg in "${ARGS[@]}" ; do
+    line="$(echo "$arg" | cut -d':' -f2)"
+    if [ "$line" = "$arg" ] ; then
+        $CMD "$arg"
+        continue
+    fi
+    if ! is_a_number "$line" ; then
+        $CMD "$arg"
+        continue
+    fi
+    column="$(echo "$arg" | cut -d':' -f3)"
+    if [ -z "$column" ]; then # if no column has been specified
+        column=1 # then assume it equals to 1
+    fi
+    if ! is_a_number "$column" ; then
+        $CMD "$arg"
+        continue
+    fi
+    file="$(echo "$arg" | cut -d':' -f1)"
 
-	$CMD -e "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+    $CMD --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
 done
-

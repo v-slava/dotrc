@@ -1,9 +1,6 @@
 # zenity: specify font properties:
 zenity --info --text '<span foreground="blue" font="32">Some\nbig text</span>\n\n<i>(it is also blue)</i>'
 
-# start teamviewer service:
-systemctl start teamviewerd.service
-
 # disable address space randomization:
 echo 0 > /proc/sys/kernel/randomize_va_space
 
@@ -377,8 +374,11 @@ gcc FILE.c -o FILE.d -MM -MT FILE.o
 OPTS += SomeOption
 OPTS := $(filter-out SomeOption,$(OPTS))
 
-# Cmake: generate project for eclipse:
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../cmake_demo
+# Generate project for eclipse:
+cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../cmake_demo
+
+# Use ninja build system generator:
+cmake -G Ninja
 
 # Specify install directory for cmake:
 cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
@@ -594,6 +594,7 @@ Remote=no
 Active=yes
 
 # Systemd commands:
+systemctl list-unit-files
 systemctl [--user] list-unit-files # always shows up-to-date information
 systemctl is-enabled SERVICE
 systemctl status SERVICE
@@ -605,6 +606,9 @@ systemctl get-default
 # is equivalent to "systemd.unit=rescue.target".
 # Default target: graphical.target.
 # target example: /lib/systemd/system/graphical.target
+
+# start teamviewer service:
+systemctl start teamviewerd.service
 
 # Connect manually to wifi (wpasupplicant):
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
@@ -865,6 +869,9 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git blame further (deeper) in history:
+git blame COMMIT~1 FILE
+
 # git delete non-existend (obsolete, stale) remote branches:
 git remote purge REMOTE
 # git get list of commits in BRANCH since COMMIT_1:
@@ -893,6 +900,10 @@ cat REPO_ROOT/.git/logs/refs/heads/*
 # Create new branch pointing to this commit:
 git checkout -b BRANCH_NAME SHA
 
+# Stash (including untracked files):
+git stash -u
+# Pop stash (do not unstage):
+git stash pop --index
 # Show stash contents:
 git stash show -p [stash@{1}]
 

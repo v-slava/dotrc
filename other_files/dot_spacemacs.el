@@ -41,10 +41,6 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     ;; auto-completion
-     (auto-completion :variables
-                      auto-completion-enable-help-tooltip t)
-     ;; better-defaults
      emacs-lisp
      spacemacs-org ;; need for git layer below
      git
@@ -54,14 +50,19 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     syntax-checking
      ;; version-control
      evil-commentary
-     semantic
      nlinum
+
+     ;; better-defaults
+     ;; cscope
+     (auto-completion :variables
+                      auto-completion-enable-help-tooltip t)
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
+     syntax-checking
+     ;; semantic
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -72,7 +73,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(evil-escape)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -349,7 +350,7 @@ TODO: respect comments."
       (when (< tab_width 2) (my--error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
       (setq-default tab-width tab_width) ;; view tab as this number of spaces
       (setq tab-width tab_width)
-      (setq c-basic-offset tab_width) ;; use this number of spaces as indent
+      ;; (setq c-basic-offset tab_width) ;; use this number of spaces as indent
       ;; show each <tab> as a string:
       ;; (standard-display-ascii ?\t "\xBB   ")
       ;; (standard-display-ascii ?\t "--->")
@@ -369,11 +370,6 @@ TODO: respect comments."
     "Execute vim macro from a given register on visualy selected region."
     (interactive "s:'<,'>normal @")
     (evil-execute-macro 1 (concat ":normal @" reg)))
-
-  (defun my-indent-buffer ()
-    "Indent current buffer."
-    (interactive)
-    (save-excursion (indent-region (point-min) (point-max) nil)))
 
   (defun my--modify-line-internal (line prepend append fill last-column)
     "Modify current line (prepend and append given text)."
@@ -402,7 +398,7 @@ TODO: respect comments."
   (defun my-switch-keyboard-layout ()
     (interactive)
     (let* ((in-insert-state (string= evil-state "insert")))
-      (if in-insert-state (evil-escape))
+      (if in-insert-state (evil-normal-state))
       (if evil-input-method
           (progn (setq evil-input-method nil)
                  (message "Switched to english keyboard layout"))
@@ -623,24 +619,6 @@ TODO: respect comments."
       ;; TODO check project definition.
       (add-to-list 'my--projects-alist `(,name . (,file ,cmds)) t)))
 
-  ;; Project file example:
-  ;; To evaluate whole buffer use "SPC m e b". See also variable:
-  ;; my--projects-alist
-  ;; (let* ((prj-dir "/media/files/workspace/prj_dir")
-  ;;        (out "/tmp/prj_build_dir")
-  ;;        (pc-out (concat out "/pc"))
-  ;;        (arm-out (concat out "/arm"))
-  ;;        (build "ninja -j1 -C ")
-  ;;        (my--cmake (lambda (dir) (concat "mkdir -p " dir " && cd " dir " && cmake -G Ninja ")))
-  ;;        )
-  ;;   (my-register-project "prj_name"
-  ;;                        `(("pc build target1" . ,(concat build pc-out " target1"))
-  ;;                          ("pc build target2" . ,(concat build pc-out " target2"))
-  ;;                          ("arm build" . "echo TODO && false")
-  ;;                          ("pc clean" . ,(concat "rm -rf " pc-out))
-  ;;                          ("arm clean" . ,(concat "rm -rf " arm-out))
-  ;;                          ("pc cmake" . ,(concat (funcall my--cmake pc-out) prj-dir)))))
-
   (defun my-select-project ()
     "Select project using ivy."
     (interactive)
@@ -849,6 +827,7 @@ Add Man mode support to (previous-buffer)."
   ;; (setq compilation-error-screen-columns nil)
   (setq compilation-scroll-output 'first-error)
 
+  (add-to-list 'auto-mode-alist '("\\vifmrc\\'" . vimrc-mode))
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
@@ -856,6 +835,46 @@ Add Man mode support to (previous-buffer)."
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
+
+  ;; magit:
+  ;; SPC g b (spacemacs/git-blame-micro-state).
+  ;; SPC g s (magit-status).
+  ;; In status buffer:
+  ;; "g r" - (magit-refresh).
+  ;; "SPC g m" or "?" or "h" - show help (magit-dispatch-popup).
+  ;; "q" - quit help (magit-mode-bury-buffer).
+  ;; "TAB" - expand / collapse (magit-section-toggle). See also "C-<TAB>", "S-<TAB>", "M-<TAB>".
+  ;; "4" - expand to diff level, "2" - expand to file names level.
+  ;; "C-j" (magit-section-forward).
+  ;; "C-k" (magit-section-backward).
+  ;; "]" or "g j" (magit-section-forward-sibling).
+  ;; "[" or "g k" (magit-section-backward-sibling).
+  ;; "^" (magit-section-up).
+  ;; "s" - stage, "u" - unstage. "S" - stage all. "U" - unstage all.
+  ;; "C-SPC" - mark for staging (set-mark-command).
+  ;; After putting mark move somewhere and press "s" to stage only part of the hunk.
+  ;; "! g", "! k" - run external git gui frontends (git-gui, gitk).
+  ;; Customize settings:
+  ;; 1) Change desired settings (type "-" and then your setting switch).
+  ;; 2) Write changes in .spacemacs: "C-x C-s".
+  ;; Add "--color" to "git log":
+  (custom-set-variables '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
+
+  ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
+  (add-hook 'ediff-keymap-setup-hook (lambda ()
+    (define-key ediff-mode-map "ka" '(lambda () (interactive) (select-window ediff-window-A)))
+    (define-key ediff-mode-map "kb" '(lambda () (interactive) (select-window ediff-window-B)))
+    (define-key ediff-mode-map "kc" '(lambda () (interactive) (select-window ediff-window-C)))
+    (define-key ediff-mode-map " " spacemacs-default-map))) ;; Use SPC as leader key instead of (ediff-next-difference).
+  ;; Refine diff to character-level (default is to word-level):
+  (setq-default ediff-forward-word-function 'forward-char)
+
+  ;; Fix refined ediff highlighting:
+  (custom-set-faces
+    '(ediff-fine-diff-A ((t (:background "black"))))
+    '(ediff-fine-diff-B ((t (:background "black"))))
+    '(ediff-fine-diff-C ((t (:background "black"))))
+   )
 
   ;; Fix "describe function" and "describe variable" highlighting:
   (custom-set-faces
@@ -882,17 +901,27 @@ Add Man mode support to (previous-buffer)."
   (setq local-enable-local-variables nil)
   (setq enable-local-eval nil)
 
-  ;; tab settings:
-  ;; permanently, force TAB to insert just one TAB:
-  ;; (global-set-key (kbd "TAB") 'self-insert-command);
-  ;; (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
-  (setq c-default-style "linux") ;; see also variable c-style-alist
+  (setq sh-here-document-word " EOF") ;; this adds space before EOF in "cat << EOF".
+  ;; To see which rules are applied for indentation: C-c C-o.
+  ;; To switch style: C-c . (c-set-style). Variable: c-style-alist
+  ;; To reindent: SPC j = (spacemacs/indent-region-or-buffer)
+  (c-add-style "my_style" '("stroustrup"
+    (c-basic-offset . 4)
+    (c-offsets-alist
+      (inline-open . 0)
+    )
+  ))
+  (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "my_style")))
   (my-set-tab-width 4)
+  ;; permanently, force TAB to insert just one TAB:
+  (global-set-key (kbd "TAB") 'self-insert-command);
+  (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
+  ;; use backspace to delete tab in c-mode:
+  (setq c-backspace-function 'backward-delete-char)
   ;; use tabs instead of spaces:
   ;; (setq-default indent-tabs-mode t)
   ;; (setq indent-tabs-mode t)
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
-  ;; (setq c-backspace-function 'backward-delete-char) ;; use backspace to delete tab in c-mode
 
   (require 'ag)
   ;; Setup cscope:
@@ -911,10 +940,11 @@ Add Man mode support to (previous-buffer)."
   ;; See also: (company-filter-candidates) (company-search-candidates)
   ;; (company-complete-selection) (company-complete-number)
 
-  ;; (key-chord-mode 1)
-  ;; (key-chord-define evil-insert-state-map "ав" 'evil-escape)
-  ;; (setq-default evil-escape-key-sequence "ав")
   (define-key evil-insert-state-map (kbd "C-k") 'my-switch-keyboard-layout)
+  (define-key evil-visual-state-map (kbd "C-k") 'my-switch-keyboard-layout)
+  (define-key evil-normal-state-map (kbd "C-k") 'my-switch-keyboard-layout)
+  (define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state)
+  (define-key evil-visual-state-map (kbd "C-j") 'evil-normal-state)
 
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "i" 'my-execute-macro)
@@ -993,7 +1023,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
-  (spacemacs/set-leader-keys "di" 'my-indent-buffer)
   (spacemacs/set-leader-keys "dm" 'my-modify-lines)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "ot" 'my-select-tags)
@@ -1048,6 +1077,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; ff - open file (counsel-find-file)
   ;; fed - edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
+  ;; C-h i - emacs help/manuals (info).
   ;; hdk - help key binding (describe-key)
   ;; hdf - help function (counsel-describe-function)
   ;; hdv - help variable (counsel-describe-variable)
@@ -1062,6 +1092,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
   ;; M-? - find references to symbol under cursor (xref-find-references) (like full text search implemented in elisp)
+  ;; (whitespace-mode) display spaces, tabs and newlines.
+  ;; Convert spaces to tabs and backwards: (tabify) (untabify).
+  ;; (toggle-truncate-lines) - set wrap!
+  ;; For available packages see (list-packages) or (package-list-packages).
 
   ;; minibuffer hotkeys. Functions: (my-search-in-directory-ag).
   (define-key minibuffer-local-map (kbd "C-k") 'evil-delete-whole-line)
@@ -1100,9 +1134,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; vim navigation: f<symbol> - jump to symbol. t<symbol> - jump before symbol.
   ;; [dc]io - delete/change inner object (symbol). [dc]ao - outer object (including space).
 
-  ;; TODO research iedit mode
-  ;; TODO add evil-exchange
+  ;; TODO research: iedit mode.
+  ;; TODO add evil-exchange.
   ;; TODO spacemacs documentation 10.
+  ;; TODO do nothing on C-j in tooltip.
 
   ;; See also: universal ctags, cxxtags, ebrowse, mural
   ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
@@ -1120,7 +1155,14 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   ;; To see current encoding: (describe-variable 'buffer-file-coding-system)
 
+  ;; How to create own color theme based on existed one:
+  ;; M-x customize-create-theme
+  ;; do not include basic face customization
+  ;; press "visit theme" (answer "yes" to all questions)
+  ;; change "show paren match face" (use "gray 8")
+
   (setq my--os-settings "~/os_settings")
+  (setq magit-repository-directories `(,my--os-settings))
   (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)

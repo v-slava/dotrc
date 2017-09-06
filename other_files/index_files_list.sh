@@ -65,18 +65,25 @@ fi
 CTAGS_CMD="ctags-exuberant --c++-kinds=+p --fields=+iaS --extra=+q --tag-relative=no -L - -e $CTAGS_OPTIONS -f $CTAGS_FILE"
 # -k     "Kernel  Mode", turns off the use of the default include dir
 CSCOPE_CMD="cscope -b -i- $CSCOPE_OPTIONS -f $CSCOPE_FILE"
+SED_REGEXP='s/\(.*\)/"\1"/g'
+
+# If we stay in correct source directory, cscope finds files in lines like:
+# #include "my_file.hpp"
+# In this case my_file.hpp will be indexed using relative path. To avoid this
+# We shouldn't be in source directory before calling cscope.
+cd /
 
 if [ -n "$CTAGS_FILE" ]; then
     if [ -n "$CSCOPE_FILE" ]; then
         # Here sed is used to add quotes around each file name:
-        tee >($CTAGS_CMD) | sed 's/\(.*\)/"\1"/g' | $CSCOPE_CMD
+        tee >($CTAGS_CMD) | sed "$SED_REGEXP" | $CSCOPE_CMD
     else
         $CTAGS_CMD
     fi
 else
     if [ -n "$CSCOPE_FILE" ]; then
         # Here sed is used to add quotes around each file name:
-        sed 's/\(.*\)/"\1"/g' | $CSCOPE_CMD
+        sed "$SED_REGEXP" | $CSCOPE_CMD
     else
         usage
     fi

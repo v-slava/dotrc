@@ -511,7 +511,8 @@ nmap isy :sync!<CR>
 " swap panels:
 nmap isw <c-w>x
 nmap id :winrun ^ !diff.sh %d/%c %C<CR>
-nmap ied :winrun ^ !ediff %d/%c %C<CR>
+nmap ied :winrun ^ !ediff.sh %d/%c %C<CR>
+nmap ivd :winrun ^ !vimdiff %d/%c %C<CR>
 nmap ig :winrun ^ !diffuse %d/%c %C<CR>
 nmap ix :winrun ^ !dhex %d/%c %C<CR>
 nmap im :winrun ^ !mc %d %D<CR>

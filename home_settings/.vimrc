@@ -159,7 +159,9 @@ nmap <F7> :setlocal spell spelllang=
 nmap <F6> :setlocal nospell<CR>
 
 " Use fd instead of <esc> to exit from insert mode:
-inoremap fd <esc>
+" inoremap fd <esc>
+inoremap <c-j> <esc>
+vnoremap <c-j> <esc>
 " imap <esc> <nop>
 
 " let mapleader = "\\"
@@ -235,7 +237,7 @@ nmap <Leader><Leader> <Plug>(easymotion-s)
 vmap <Leader><Leader> <Plug>(easymotion-s)
 
 " Apply macro to selected lines:
-vmap 9 :normal @
+vmap i :normal @
 
 " Do not capture stderr while using :read
 " set shellredir=>%s 2>&1 " - default value
@@ -342,6 +344,7 @@ function! Swap_keyboard_layout()
 	call Update_status_line('', 'normal')
 endfunction
 nmap <C-k> :call Swap_keyboard_layout()<CR>
+vmap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gv
 imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 function! Add_include_guards(file_name)

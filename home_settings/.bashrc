@@ -10,7 +10,7 @@ alias egrep='egrep --color=auto'
 # Git aliases:
 source /usr/share/bash-completion/completions/git
 # alias glog='git log --all --graph --decorate'
-alias glog='git log --all --graph --decorate | cless -i'
+alias glog='git log --all --graph --decorate --color=always | cless -i'
 alias ga='git add'
 __git_complete ga _git_add
 alias gs='git status'
