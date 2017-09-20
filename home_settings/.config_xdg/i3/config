@@ -207,7 +207,7 @@ bindsym $WIN+k exec --no-startup-id exec keynav
 # terminal
 # bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm
 # bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
-bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm ~ ~'
+bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm ~/my ~/my'
 
 bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec goldendict "$(clipboard.sh -o)"

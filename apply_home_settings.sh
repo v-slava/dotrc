@@ -9,28 +9,41 @@ shopt -s dotglob
 cp -rafv $PWD/home_settings/* $HOME/
 
 if [ -n "$DISPLAY" ]; then
-	xrdb ~/.Xresources
+    xrdb ~/.Xresources
 fi
 
+if [ ! -d ~/my ]; then
+    mkdir ~/my
+fi
 if [ ! -L ~/bin ]; then
-	ln -s $PWD/bin ~/bin
+    ln -s $PWD/bin ~/bin
+fi
+if [ ! -d ~/Downloads ]; then
+    ln -s /media/files/downloads ~/Downloads
 fi
 if [ ! -L ~/os_settings ]; then
-	ln -s $PWD ~/os_settings
+    ln -s $PWD ~/os_settings
 fi
 if [ ! -L ~/.spacemacs ]; then
-	ln -s $PWD/other_files/dot_spacemacs.el ~/.spacemacs
+    ln -s $PWD/other_files/dot_spacemacs.el ~/.spacemacs
 fi
 # if [ ! -d ~/terminal ]; then
-# 	mkdir ~/terminal
+#     mkdir ~/terminal
 # fi
 
 MEDIA_FILES=/media/files
-DIRS="downloads other temporary workspace"
+DIRS="downloads temporary workspace"
 for dir in $DIRS ; do
-	if [ ! -L ~/$dir ]; then
-		ln -s $MEDIA_FILES/$dir ~/$dir
-	fi
+    if [ ! -L ~/$dir ]; then
+        ln -s $MEDIA_FILES/$dir ~/$dir
+    fi
+done
+
+MY_DIRS="other"
+for dir in $MY_DIRS ; do
+    if [ ! -L ~/my/$dir ]; then
+        ln -s $MEDIA_FILES/$dir ~/my/$dir
+    fi
 done
 
 set +e
@@ -48,4 +61,3 @@ set -e
 i3-msg reload
 
 echo -e "\nDone!"
-
