@@ -35,7 +35,7 @@ def get_brightness():
                 cur_brightness = float(fp.readlines()[0].strip())
         with open(intel_backlight + '/max_brightness') as fp:
                 max_brightness = float(fp.readlines()[0].strip())
-        brightness = str(int(brightness * 100 / max_brightness)) + '%'
+        brightness = str(int(cur_brightness * 100 / max_brightness)) + '%'
     else:
         brightness = 'unknown'
     return 'brightness: ' + brightness
