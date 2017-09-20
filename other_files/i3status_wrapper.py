@@ -25,14 +25,20 @@
 # details.
 
 import sys
+import os
 import json
 
 def get_brightness():
-	with open('/sys/class/backlight/intel_backlight/brightness') as fp:
-		brightness = float(fp.readlines()[0].strip())
-	with open('/sys/class/backlight/intel_backlight/max_brightness') as fp:
-		max_brightness = float(fp.readlines()[0].strip())
-	return 'brightness: ' + str(int(brightness * 100 / max_brightness)) + '%'
+    intel_backlight = '/sys/class/backlight/intel_backlight'
+    if os.path.isdir(intel_backlight):
+        with open(intel_backlight + '/brightness') as fp:
+                cur_brightness = float(fp.readlines()[0].strip())
+        with open(intel_backlight + '/max_brightness') as fp:
+                max_brightness = float(fp.readlines()[0].strip())
+        brightness = str(int(brightness * 100 / max_brightness)) + '%'
+    else:
+        brightness = 'unknown'
+    return 'brightness: ' + brightness
 
 def print_line(message):
     """ Non-buffered printing to stdout. """
