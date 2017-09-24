@@ -160,8 +160,8 @@ nmap <F6> :setlocal nospell<CR>
 
 " Use fd instead of <esc> to exit from insert mode:
 " inoremap fd <esc>
-inoremap <c-j> <esc>
-vnoremap <c-j> <esc>
+inoremap <c-l> <esc>
+vnoremap <c-l> <esc>
 " imap <esc> <nop>
 
 " let mapleader = "\\"
@@ -343,9 +343,9 @@ function! Swap_keyboard_layout()
 	endif
 	call Update_status_line('', 'normal')
 endfunction
-nmap <C-k> :call Swap_keyboard_layout()<CR>
-vmap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gv
-imap <C-k> <Esc>:call Swap_keyboard_layout()<CR>gi
+nmap <C-;> :call Swap_keyboard_layout()<CR>
+vmap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gv
+imap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 function! Add_include_guards(file_name)
 	let l:guard_name = tr(toupper(a:file_name), '.', '_')

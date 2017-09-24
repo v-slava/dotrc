@@ -8,8 +8,9 @@ GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 
 # GRUB_CMDLINE_LINUX_DEFAULT=""
-# fix brightness issue on HP 630:
-GRUB_CMDLINE_LINUX_DEFAULT="acpi_backlight=vendor"
+# fix brightness issue, "PCIe Bus Error" in dmesg:
+# pci=noaer pci=nomsi
+GRUB_CMDLINE_LINUX_DEFAULT="acpi_backlight=vendor pci=noaer"
 
 GRUB_CMDLINE_LINUX=""
 

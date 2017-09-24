@@ -61,6 +61,7 @@ values."
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
+     ;; ycmd
      syntax-checking
      ;; semantic
      )
@@ -815,6 +816,19 @@ Add Man mode support to (previous-buffer)."
           (set-window-prev-buffers cur-window prev-buffers-after))
       (previous-buffer)))
 
+  (defun my-goto-elisp-definition ()
+    "In help buffer (function/variable description) go to definition."
+    (interactive)
+    ;; Move cursor to a file where function/variable is defined:
+    (evil-goto-first-line)
+    (evil-beginning-of-line)
+    (search-forward "’.")
+    (evil-backward-char)
+    (evil-backward-char)
+    ;; Simulate <enter> keypress:
+    (setq unread-command-events (listify-key-sequence (kbd "RET")))
+    )
+
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -863,10 +877,19 @@ Add Man mode support to (previous-buffer)."
   (custom-set-variables '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
+  (add-hook 'ediff-display-help-hook '(lambda ()
+    (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "f -first diff  " ediff-help-message))
+    (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
+    (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
+    (setq ediff-help-message (replace-regexp-in-string "ignore case        |" "ignore case        | ox -go to (open) buf X" ediff-help-message))
+    ))
   (add-hook 'ediff-keymap-setup-hook (lambda ()
-    (define-key ediff-mode-map "ka" '(lambda () (interactive) (select-window ediff-window-A)))
-    (define-key ediff-mode-map "kb" '(lambda () (interactive) (select-window ediff-window-B)))
-    (define-key ediff-mode-map "kc" '(lambda () (interactive) (select-window ediff-window-C)))
+    (define-key ediff-mode-map "f" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
+    (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
+    (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
+    (define-key ediff-mode-map "oa" '(lambda () (interactive) (select-window ediff-window-A)))
+    (define-key ediff-mode-map "ob" '(lambda () (interactive) (select-window ediff-window-B)))
+    (define-key ediff-mode-map "oc" '(lambda () (interactive) (select-window ediff-window-C)))
     (define-key ediff-mode-map " " spacemacs-default-map))) ;; Use SPC as leader key instead of (ediff-next-difference).
   ;; Refine diff to character-level (default is to word-level):
   (setq-default ediff-forward-word-function 'forward-char)
@@ -938,20 +961,21 @@ Add Man mode support to (previous-buffer)."
   ;; C-g - cancel completion
   ;; Alt+tab - trigger autocompletion manually
   (with-eval-after-load 'company (spacemacs//company-active-navigation nil))
-  ;; (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
+  (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
   ;; See also: (company-filter-candidates) (company-search-candidates)
   ;; (company-complete-selection) (company-complete-number)
 
-  (define-key evil-insert-state-map (kbd "C-k") 'my-switch-keyboard-layout)
-  (define-key evil-visual-state-map (kbd "C-k") 'my-switch-keyboard-layout)
-  (define-key evil-normal-state-map (kbd "C-k") 'my-switch-keyboard-layout)
-  (define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state)
-  (define-key evil-visual-state-map (kbd "C-j") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-;") 'my-switch-keyboard-layout)
+  (define-key evil-visual-state-map (kbd "C-;") 'my-switch-keyboard-layout)
+  (define-key evil-normal-state-map (kbd "C-;") 'my-switch-keyboard-layout)
+  (define-key evil-insert-state-map (kbd "C-l") 'evil-normal-state)
+  (define-key evil-visual-state-map (kbd "C-l") 'evil-normal-state)
 
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "i" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
   (define-key evil-normal-state-map (kbd "g C-]") 'my-find-tag)
+  (evil-define-key 'motion help-mode-map (kbd "C-<return>") 'my-goto-elisp-definition)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "C-d") 'my-close-window-or-frame)
   (evil-define-key 'motion Man-mode-map (kbd "q") 'my-close-window-or-frame)
@@ -1106,6 +1130,8 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   ;; ivy hotkeys:
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
+  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)     ;; C-n
+  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line) ;; C-p
   (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
   (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
   ;; stop completion and put the current matches into a new buffer: "C-c C-o" (ivy-occur)
@@ -1114,8 +1140,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; cancel search: "C-g" (keyboard-escape-quit)
   ;; jump to one of the current ivy candidates <c-'> (ivy-avy)
   ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
-  ;; next candidate "C-n" (ivy-next-line)
-  ;; previous candidate: "C-p" (ivy-previous-line)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
   ;; cscope: go to insert mode, use "n" (next), "p" (previous).
