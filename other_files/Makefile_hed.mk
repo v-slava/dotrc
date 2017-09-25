@@ -1,5 +1,6 @@
 PHONY := all
 all: download_git
+	su -c "apt-get install libncurses5-dev"
 	make -C hed -j9
 	su -c "make -C hed install"
 

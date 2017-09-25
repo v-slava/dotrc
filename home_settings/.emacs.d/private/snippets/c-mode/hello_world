@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: hello world
+# key: unused
+# --
+#include <stdio.h>
+#include <stdint.h>
+#include <stddef.h>
+
+int main(void)
+{
+    $0
+    return 0;
+}

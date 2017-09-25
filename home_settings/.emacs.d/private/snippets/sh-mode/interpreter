@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: interpreter
+# key: !
+# --
+#!/bin/bash
+
+$0

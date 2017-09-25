@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: include guards
+# key: unused
+
+This is live transformation example:
+#define $1 ${1:$(replace-regexp-in-string "-" "" (capitalize yas-text))} qwe
+# --
+#ifndef ${1:`(upcase (replace-regexp-in-string "\\." "_" (file-name-nondirectory (buffer-file-name))))`}
+#define $1
+
+$0
+
+#endif // #ifndef $1

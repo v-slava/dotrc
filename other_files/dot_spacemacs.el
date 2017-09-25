@@ -57,6 +57,7 @@ values."
      ;; better-defaults
      ;; cscope
      (auto-completion :variables
+                      ;; auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t)
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
@@ -396,7 +397,7 @@ TODO: respect comments."
            (updated-line (my--modify-line-internal current-line "        " " \\" ?  80)))
       (my-clear-current-line)
       (insert updated-line)
-      (evil-beginning-of-line)))
+      (beginning-of-line)))
 
   (defun my-switch-keyboard-layout ()
     (interactive)
@@ -610,7 +611,7 @@ TODO: respect comments."
       (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type)))
     (evil-goto-first-line)
     (evil-find-char 1 ?\")
-    (evil-forward-char))
+    (forward-char))
 
   (defvar my--projects-alist nil "My alist of emacs projects.")
 
@@ -650,11 +651,6 @@ TODO: respect comments."
       (lisp-state-eval-sexp-end-of-line))
     (save-excursion (my-elisp-testcase)))
 
-  (defun my-elisp-testcase ()
-    "Call function to be tested (execute a testcase)."
-    ;; (my-configure-shell-command-editor)
-    )
-
   (defun my--set-tags (name)
     "Add tags table. This function calls (visit-tags-table).
 Variable tags-table-list contains list of currently active tag tables.
@@ -677,7 +673,7 @@ See also variable tags-file-name."
   (defun my-select-tags ()
     "Select tags to be used."
     (interactive)
-    (let* ((files (directory-files (concat my--emacs-projects-dir "/tags") nil "^[^.]+\.TAGS$"))
+    (let* ((files (directory-files (concat my--emacs-projects-dir "/tags") nil "^.+\.TAGS$"))
            (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files)))
       (ivy-read "Select tags: " tags :action 'my--set-tags)))
 
@@ -821,12 +817,105 @@ Add Man mode support to (previous-buffer)."
     (interactive)
     ;; Move cursor to a file where function/variable is defined:
     (evil-goto-first-line)
-    (evil-beginning-of-line)
+    (beginning-of-line)
     (search-forward "’.")
-    (evil-backward-char)
-    (evil-backward-char)
+    (backward-char)
+    (backward-char)
     ;; Simulate <enter> keypress:
     (setq unread-command-events (listify-key-sequence (kbd "RET")))
+    )
+
+  (defun my-insert-snippet ()
+    "Insert snippet."
+    (interactive)
+    (yas-insert-snippet)
+    (evil-insert-state)
+   )
+
+  (defun my-kill-whole-line ()
+    "Like (kill-whole-line), but doesn't fail if there no newline at the end of line."
+    (interactive)
+    (if (= (point) (point-max))
+      (if (not (string= "1" (format-mode-line "%l")))
+        (previous-line)))
+    (if (= (point) (point-max))
+      (if (/= (point) (point-min)) (backward-delete-char 1))
+     (kill-whole-line))
+   )
+
+  (defun my-make-sure-have-newline-at-end-of-file ()
+    "Insert newline at end of file (if absent)."
+    (interactive)
+    (save-excursion
+      (goto-char (point-max))
+      (if (/= 0 (buffer-size))
+        (let* ((orig (thing-at-point 'line t))
+              (new (if (string-match-p "\n" orig) orig (concat orig "\n"))))
+          (my-kill-whole-line)
+          (insert new)
+        )
+      )
+     )
+   )
+
+  (defun my-update-include-guards ()
+    "Add/update include guards."
+    (interactive)
+    (save-excursion
+      (my-make-sure-have-newline-at-end-of-file)
+      ;; Delete old include guards (if present):
+      (if (/= 0 (buffer-size))
+        (let* ((first-line (progn (goto-char (point-min)) (thing-at-point 'line t)))
+              (second-line (progn (goto-char (point-min)) (next-line) (thing-at-point 'line t)))
+              (first-line-matches (string-match-p "^#ifndef[ ]\+[^ ]" first-line))
+              (second-line-matches (string-match-p "^#define[ ]\+[^ ]" second-line))
+              (include-guard-present (and first-line-matches second-line-matches))
+              )
+          (if include-guard-present (progn
+            (goto-char (point-min))
+            (my-kill-whole-line) ;; delete first line ("#ifndef ")
+            (my-kill-whole-line) ;; delete second line ("#define ")
+            (while (string= "\n" (thing-at-point 'line t))
+              (my-kill-whole-line) ;; delete empty lines at the begin of buffer
+            )
+            (goto-char (point-max))
+            (while (string= "\n" (thing-at-point 'line t))
+              (my-kill-whole-line) ;; delete empty lines at the end of buffer
+            )
+            (if (string-match-p "^#endif" (thing-at-point 'line t))
+              (progn (my-kill-whole-line) ;; delete last line ("#endif")
+                (while (string= "\n" (thing-at-point 'line t))
+                  (my-kill-whole-line) ;; delete empty lines at the end of buffer
+                )
+              )
+            )
+          ))
+        )
+       )
+      ;; Insert new include guards:
+      (let* ((define (concat (upcase (replace-regexp-in-string "\\." "_" (file-name-nondirectory (buffer-file-name)))) "")) ;; "_DEFINED"))
+           (ifndef (concat "#ifndef " define)))
+        (goto-char (point-min))
+        (insert (concat ifndef "\n#define " define "\n\n"))
+        (goto-char (point-max))
+        (insert (concat "\n#endif // " ifndef "\n"))
+       )
+     )
+   )
+
+  (defun my-elisp-testcase ()
+    "Call function to be tested (execute a testcase)."
+    ;; (call-interactively 'other-frame)
+    ;; (my-update-include-guards)
+    ;; (call-interactively 'other-frame)
+    )
+
+  (defun my-elisp-testcase-undo ()
+    "Undo effect, caused by prefious execution of (my-elisp-testcase)."
+    (interactive)
+    (call-interactively 'other-frame)
+    (undo-tree-undo)
+    (call-interactively 'other-frame)
     )
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
@@ -875,6 +964,16 @@ Add Man mode support to (previous-buffer)."
   ;; 2) Write changes in .spacemacs: "C-x C-s".
   ;; Add "--color" to "git log":
   (custom-set-variables '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
+
+  (with-eval-after-load 'magit
+    (define-key git-rebase-mode-map (kbd "C-k") 'git-rebase-move-line-up)
+    (define-key git-rebase-mode-map (kbd "C-j") 'git-rebase-move-line-down)
+    (define-key git-rebase-mode-map (kbd "M-k") nil)
+    (define-key git-rebase-mode-map (kbd "M-j") nil)
+    (define-key git-rebase-mode-map (kbd "gg") 'evil-goto-first-line)
+   )
+
+  ;; Snippets: (yas-new-snippet) (yas-reload-all)
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
   (add-hook 'ediff-display-help-hook '(lambda ()
@@ -1050,6 +1149,8 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
   (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
   (spacemacs/set-leader-keys "dm" 'my-modify-lines)
+  (spacemacs/set-leader-keys "di" 'my-update-include-guards)
+  (spacemacs/set-leader-keys "is" 'my-insert-snippet)
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "ot" 'my-select-tags)
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
@@ -1073,6 +1174,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
+  (spacemacs/set-leader-keys "meu" 'my-elisp-testcase-undo)
   (spacemacs/set-leader-keys "et" 'my-this-error)
   (spacemacs/set-leader-keys "ef" 'my-first-error)
   (spacemacs/set-leader-keys "ws" 'my-split-and-open-buffer-below)
@@ -1103,6 +1205,8 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; ff - open file (counsel-find-file)
   ;; fed - edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
+  ;; [ - (help-go-back)
+  ;; ] - (help-go-forward)
   ;; C-h i - emacs help/manuals (info).
   ;; hdk - help key binding (describe-key)
   ;; hdf - help function (counsel-describe-function)
