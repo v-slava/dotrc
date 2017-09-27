@@ -1228,7 +1228,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; For available packages see (list-packages) or (package-list-packages).
 
   ;; minibuffer hotkeys. Functions: (my-search-in-directory-ag).
-  (define-key minibuffer-local-map (kbd "C-k") 'evil-delete-whole-line)
+  (define-key minibuffer-local-map (kbd "C-0") 'evil-delete-whole-line)
   (define-key minibuffer-local-map (kbd "M-i") 'move-beginning-of-line)
   (define-key minibuffer-local-map (kbd "M-a") 'move-end-of-line)
 
@@ -1236,6 +1236,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)     ;; C-n
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line) ;; C-p
+  (define-key ivy-minibuffer-map (kbd "C-0") 'ivy-kill-line)     ;; C-k
   (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
   (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
   ;; stop completion and put the current matches into a new buffer: "C-c C-o" (ivy-occur)
