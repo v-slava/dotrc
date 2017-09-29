@@ -1,6 +1,6 @@
 PHONY := all
 all: download_git install_dependencies
-	cd vim && CFLAGS="-O2 -flto" LDFLAGS="-O2 -flto" ./configure --enable-fail-if-missing --disable-darwin --disable-smack --disable-selinux --disable-xsmp --disable-xsmp-interact --enable-luainterp=no --enable-perlinterp=no --enable-pythoninterp=yes --enable-python3interp=yes --enable-tclinterp=no --enable-rubyinterp=no --enable-cscope --disable-netbeans --enable-multibyte --enable-gui=gtk3 --with-x
+	cd vim && CFLAGS="-O2" LDFLAGS="-O2" ./configure --enable-fail-if-missing --disable-darwin --disable-smack --disable-selinux --disable-xsmp --disable-xsmp-interact --enable-luainterp=no --enable-perlinterp=no --enable-pythoninterp=yes --enable-python3interp=yes --enable-tclinterp=no --enable-rubyinterp=no --enable-cscope --disable-netbeans --enable-multibyte --enable-gui=gtk3 --with-x
 	make -C vim -j 9
 	su -c "make -C vim install"
 

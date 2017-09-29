@@ -11,7 +11,7 @@
   (add-to-list 'magit-repository-directories `(,prj-dir . 0))
   (my-register-project prj-name
                        `(("build" . ,make)
-                         ("run" . ,(concat make " && echo \"Program's output:\" && ./" prj-name))
+                         ("run" . ,(concat make " && echo \"Program's output:\" && ./" prj-name ".exe"))
                          ("clean" . ,(concat cd "rm -f " executable-name))
                          ("index" . ,(concat "cd " prj-dir " && index_src.sh " prj-name))
                          ;; ("arm build" . "echo TODO && false")

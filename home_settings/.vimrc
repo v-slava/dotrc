@@ -160,8 +160,9 @@ nmap <F6> :setlocal nospell<CR>
 
 " Use fd instead of <esc> to exit from insert mode:
 " inoremap fd <esc>
-inoremap <c-l> <esc>
-vnoremap <c-l> <esc>
+" Map <C-Space> to <esc>:
+inoremap <nul> <esc>
+vnoremap <nul> <esc>
 " imap <esc> <nop>
 
 " let mapleader = "\\"
@@ -233,8 +234,8 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " nmap <Leader>l <Plug>(easymotion-sl)
 " vmap <Leader>l <Plug>(easymotion-sl)
 " Jump to character within screen:
-nmap <Leader><Leader> <Plug>(easymotion-s)
-vmap <Leader><Leader> <Plug>(easymotion-s)
+nmap <Leader>jj <Plug>(easymotion-s)
+vmap <Leader>jj <Plug>(easymotion-s)
 
 " Apply macro to selected lines:
 vmap i :normal @

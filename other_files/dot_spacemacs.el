@@ -11,7 +11,9 @@ values."
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
-   dotspacemacs-distribution 'spacemacs-base
+   ;; dotspacemacs-distribution 'spacemacs-bootstrap
+   ;; dotspacemacs-distribution 'spacemacs-base
+   dotspacemacs-distribution 'spacemacs
    ;; Lazy installation of layers (i.e. layers are installed only when a file
    ;; with a supported type is opened). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
@@ -52,7 +54,6 @@ values."
      ;; spell-checking
      ;; version-control
      evil-commentary
-     nlinum
 
      ;; better-defaults
      ;; cscope
@@ -75,7 +76,11 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(evil-escape)
+   dotspacemacs-excluded-packages '(
+                                    evil-escape
+                                    ;; counsel-projectile
+                                    ;; projectile
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -821,6 +826,7 @@ Add Man mode support to (previous-buffer)."
     (search-forward "’.")
     (backward-char)
     (backward-char)
+    (backward-char)
     ;; Simulate <enter> keypress:
     (setq unread-command-events (listify-key-sequence (kbd "RET")))
     )
@@ -977,19 +983,22 @@ Add Man mode support to (previous-buffer)."
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
   (add-hook 'ediff-display-help-hook '(lambda ()
-    (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "f -first diff  " ediff-help-message))
-    (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
-    (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
+    ;; The following required only for spacemacs-base distribution:
+    ;; (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "d -first diff  " ediff-help-message))
+    ;; (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
+    ;; (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
     (setq ediff-help-message (replace-regexp-in-string "ignore case        |" "ignore case        | ox -go to (open) buf X" ediff-help-message))
     ))
   (add-hook 'ediff-keymap-setup-hook (lambda ()
-    (define-key ediff-mode-map "f" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
-    (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
-    (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
+    ;; The following required only for spacemacs-base distribution:
+    ;; (define-key ediff-mode-map "d" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
+    ;; (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
+    ;; (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
+    ;; (define-key ediff-mode-map " " spacemacs-default-map) ;; Use SPC as leader key instead of (ediff-next-difference).
     (define-key ediff-mode-map "oa" '(lambda () (interactive) (select-window ediff-window-A)))
     (define-key ediff-mode-map "ob" '(lambda () (interactive) (select-window ediff-window-B)))
     (define-key ediff-mode-map "oc" '(lambda () (interactive) (select-window ediff-window-C)))
-    (define-key ediff-mode-map " " spacemacs-default-map))) ;; Use SPC as leader key instead of (ediff-next-difference).
+    ))
   ;; Refine diff to character-level (default is to word-level):
   (setq-default ediff-forward-word-function 'forward-char)
 
@@ -1067,8 +1076,9 @@ Add Man mode support to (previous-buffer)."
   (define-key evil-insert-state-map (kbd "C-;") 'my-switch-keyboard-layout)
   (define-key evil-visual-state-map (kbd "C-;") 'my-switch-keyboard-layout)
   (define-key evil-normal-state-map (kbd "C-;") 'my-switch-keyboard-layout)
-  (define-key evil-insert-state-map (kbd "C-l") 'evil-normal-state)
-  (define-key evil-visual-state-map (kbd "C-l") 'evil-normal-state)
+  (global-set-key [?\C-\ ] 'evil-normal-state) ;; Use ctrl-space as ESC
+  ;; (define-key evil-insert-state-map (kbd "C-l") 'evil-normal-state)
+  ;; (define-key evil-visual-state-map (kbd "C-l") 'evil-normal-state)
 
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "i" 'my-execute-macro)
@@ -1142,7 +1152,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
 
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
-  (evil-leader/set-key "SPC" 'avy-goto-char)
   (spacemacs/set-leader-keys "qm" 'my-open-new-man-page)
   (spacemacs/set-leader-keys "ds" 'bookmark-set)
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
@@ -1189,6 +1198,8 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   ;; Leader hotkeys:
   ;; ? search for a hotkey (counsel-descbinds)
+  ;; jj - jump to the currently visible char (evil-avy-goto-char)
+  ;; sc - clear highlight (spacemacs/evil-search-clear-highlight)
   ;; sF - search symbol under cursor (ag)
   ;; zx - change font (spacemacs/scale-font-transient-state/body)
   ;; xu - convert selected region to lower case
@@ -1237,6 +1248,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)     ;; C-n
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line) ;; C-p
   (define-key ivy-minibuffer-map (kbd "C-0") 'ivy-kill-line)     ;; C-k
+  (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-done)          ;; RET
   (define-key ivy-minibuffer-map (kbd "M-i") 'move-beginning-of-line)
   (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
   ;; stop completion and put the current matches into a new buffer: "C-c C-o" (ivy-occur)

@@ -73,6 +73,10 @@ is_a_number()
     return $?
 }
 
+if [ $# -eq 0 ]; then
+    exec $CMD
+fi
+
 # process all command line arguments and as a result fill in $CMD:
 for arg in "${ARGS[@]}" ; do
     line="$(echo "$arg" | cut -d':' -f2)"
