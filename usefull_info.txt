@@ -315,6 +315,9 @@ xmodmap -e 'keycode 108 = Mode_switch'
 # Press Alt_R+s to produce 'ы'
 # See xmodmap -pke for symbols assigned
 
+# Linker: issue linker map (see what consumes memory):
+-Wl,--print-map
+
 # Verbose linking (linker: print linker script, linked objects, libraries, etc.):
 gcc 1.o 2.o -o out.elf -Wl,--verbose
 
