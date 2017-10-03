@@ -268,7 +268,7 @@ filextype *.xcf
 " fileviewer *.7z 7z l %c
 
 " Office files
-filextype *.rtf,*.fodt,*.fods,*.odt,*.odg,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.ppt,*.pptx,*.csv libreoffice %f %i &
+filextype *.rtf,*.fodt,*.fods,*.odt,*.odg,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.xlsm,*.odp,*.ppt,*.pptx,*.csv libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
@@ -473,6 +473,8 @@ nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make c
 
 nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
+nmap cd :mkcd<SPACE>
+nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
 vmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>

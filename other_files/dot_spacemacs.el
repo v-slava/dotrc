@@ -71,7 +71,13 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ninja-mode xcscope ag) ;; key-chord
+   dotspacemacs-additional-packages '(
+                                      ;; key-chord
+                                      ninja-mode
+                                      xcscope
+                                      ag
+                                      ivy-rtags
+                                      )
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -418,6 +424,7 @@ TODO: respect comments."
   (defun my-close-temporary-windows ()
     "Close temporary windows (compile results, help, etc)."
     (interactive)
+    (set-frame-parameter (selected-frame) 'my--window-configuration (current-window-configuration))
     (dolist (cur_window (window-list))
       (when (not (buffer-file-name (window-buffer cur_window)))
         ;; a buffer hasn't associated file name
@@ -567,12 +574,10 @@ TODO: respect comments."
       (with-current-buffer "*compilation*" (rename-uniquely))
       (my--set-compilation-buffer compilation-last-buffer)))
 
-  (defun my-open-compilation-window ()
-    "Open compilation window."
+  (defun my-restore-temp-window ()
+    "Restore previously closed temporary window."
     (interactive)
-    (unless (my--get-compilation-buffer) (my--error "there is no compilation window associated by now."))
-    (my-close-temporary-windows)
-    (save-selected-window (my--open-compilation-window)))
+    (set-window-configuration (frame-parameter (selected-frame) 'my--window-configuration)))
 
   (defun my--get-shell-command-by-file-type ()
     "Return a shell command to be executed for a given file type."
@@ -703,15 +708,6 @@ See also variable tags-file-name."
     (interactive)
     (first-error nil))
 
-  (defun my-describe-hotkeys ()
-    "Opens a new window with a buffer, in which you can search for a \"spacemacs leader\" hotkey you forgot.
-For example if you defined a hotkey like:
-(spacemacs/set-leader-keys \"ef\" 'my-first-error)
-then you can find \"my-first-error\" in the buffer.
-When you've found a function you are interested in, use \"SPC h d f\" to find out actual hotkey."
-    (interactive)
-    (describe-variable 'spacemacs-default-map))
-
   (defun my-copy-location-to-clipboard ()
     "Copy \"/path/to/file:line\" to clipboard."
     (interactive)
@@ -746,6 +742,7 @@ concatenated (modified) elements separated by ' '."
   (defun my-find-tag ()
     "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
     (interactive)
+    (when (not tags-file-name) (my-select-tags))
     (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search))
            (default-value (find-tag--default)))
            ;; :initial-input default-value
@@ -946,6 +943,9 @@ Add Man mode support to (previous-buffer)."
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
+
+  (add-hook 'c-initialization-hook (lambda () (require 'rtags)))
+  (evil-define-key 'motion rtags-mode-map (kbd "RET") 'rtags-select-other-window)
 
   ;; magit:
   ;; SPC g b (spacemacs/git-blame-micro-state).
@@ -1156,7 +1156,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "ds" 'bookmark-set)
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
   (spacemacs/set-leader-keys "dq" 'my-close-temporary-windows)
-  (spacemacs/set-leader-keys "do" 'my-open-compilation-window)
+  (spacemacs/set-leader-keys "do" 'my-restore-temp-window)
   (spacemacs/set-leader-keys "dm" 'my-modify-lines)
   (spacemacs/set-leader-keys "di" 'my-update-include-guards)
   (spacemacs/set-leader-keys "is" 'my-insert-snippet)
@@ -1165,19 +1165,18 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
-  (spacemacs/set-leader-keys "or" 'my-print-shell-command)
+  (spacemacs/set-leader-keys "op" 'my-print-shell-command)
   (spacemacs/set-leader-keys "os" 'my-select-shell-command)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-shell-command)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
-  (spacemacs/set-leader-keys "hdh" 'my-describe-hotkeys)
 
   ;; search hotkeys:
   (spacemacs/set-leader-keys "sm" 'my-search-in-directory-recursive) ;; use ag, ivy interface
   (spacemacs/set-leader-keys "sa" 'my-search-in-directory-ag) ;; use ag.el
   (spacemacs/set-leader-keys "st" 'my-find-tag) ;; g C-] (ctags)
-  (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
+  ;; (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
   (spacemacs/set-leader-keys "su" 'cscope-find-this-symbol) ;; C-c s s find all references (+definition) of symbol.
 
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
@@ -1205,7 +1204,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; xu - convert selected region to lower case
   ;; xU - convert selected region to upper case
   ;; u SPC en - go to first error (next-error 1 t)
-  ;; ec - current error (my hotkey) TODO
   ;; nf - narrow the buffer to the current function (narrow-to-defun)
   ;; np - narrow the buffer to the visible page (narrow-to-page)
   ;; nr - narrow the buffer to the selected text (narrow-to-region)

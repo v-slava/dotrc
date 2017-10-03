@@ -59,5 +59,6 @@ set -e
 
 ~/os_settings/other_files/generate_configs.sh
 i3-msg reload
+systemctl --user enable rdm.socket
 
 echo -e "\nDone!"
