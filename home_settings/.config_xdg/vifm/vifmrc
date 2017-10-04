@@ -391,6 +391,7 @@ mark d ~/downloads
 mark t ~/temporary
 mark T /tmp
 " mark w ~/workspace
+mark m /media
 mark w /media/files/workspace
 " mark o ~/os_settings
 mark o /media/files/workspace/dotrc
