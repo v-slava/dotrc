@@ -304,9 +304,9 @@ bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:mon
 
 # exec --no-startup-id i3-msg 'workspace 2; exec uzbl -u URL'
 
-bindsym $WIN+$Shift_R+s exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --same-as
-bindsym $WIN+$Shift_R+h exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --left-of
-bindsym $WIN+$Shift_R+l exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --right-of
+bindsym $WIN+$Shift_L+s exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --same-as
+bindsym $WIN+$Shift_L+h exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --left-of
+bindsym $WIN+$Shift_L+l exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --right-of
 
 bindcode $PrintScreen exec --no-startup-id exec scrot
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec scrot --focused --border

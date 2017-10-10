@@ -905,6 +905,23 @@ Add Man mode support to (previous-buffer)."
      )
    )
 
+  (defun my--string-to-expression (string)
+    "Convert string to elisp expression that can be evaluated"
+    (car (read-from-string string)))
+
+  (defun my-evaluate-last-expression-from-history ()
+    "Evaluate last expression from history using (eval-expression)."
+    (interactive)
+    ;; alt + shift + ';' (semicolon)
+    ;; (eval-expression (rtags-current-symbol)))
+    (let* ((last-expression (car read-expression-history)))
+      (if last-expression
+          (progn
+            ;; (message (concat "Evaluating: |" last-expression "|"))
+            (eval-expression (my--string-to-expression last-expression))
+            )
+        (my--error "Nothing to evaluate: history is empty."))))
+
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
     ;; (call-interactively 'other-frame)
@@ -945,13 +962,40 @@ Add Man mode support to (previous-buffer)."
 
   (add-hook 'c-initialization-hook (lambda () (require 'rtags)))
   (evil-define-key 'motion rtags-mode-map (kbd "RET") 'rtags-select-other-window)
+  ;; (setq rtags-display-result-backend 'ivy)
+
+  (defun my-rtags-find-symbol ()
+    "Find symbol (case insensitively). We can repeat the search case sensitively if necessary."
+    (interactive)
+    (setq rtags-symbolnames-case-insensitive t)
+    (rtags-find-symbol)
+    (setq rtags-symbolnames-case-insensitive nil)
+    )
+
+  (defun my-rtags-find-symbol-at-point ()
+    "Fall back to (rtags-find-symbol) in case of failure."
+    (interactive)
+    (when (not (rtags-find-symbol-at-point))
+      ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
+      (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
+      ))
+
+  (spacemacs/set-leader-keys "or>" 'my-rtags-find-symbol)
+  (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
+  (spacemacs/set-leader-keys "or<" 'rtags-find-references)
+  (spacemacs/set-leader-keys "or," 'rtags-find-references-at-point)
+
+  ;; TODO rtags:
+  ;; (rtags-current-symbol)
+  ;; (car rtags-symbol-history)
+
 
   ;; magit:
   ;; SPC g b (spacemacs/git-blame-micro-state).
   ;; SPC g s (magit-status).
   ;; In status buffer:
   ;; "g r" - (magit-refresh).
-  ;; "SPC g m" or "?" or "h" - show help (magit-dispatch-popup).
+  ;; "SPC g m" or "?" or "h" - show help, submit changes (magit-dispatch-popup).
   ;; "q" - quit help (magit-mode-bury-buffer).
   ;; "TAB" - expand / collapse (magit-section-toggle). See also "C-<TAB>", "S-<TAB>", "M-<TAB>".
   ;; "4" - expand to diff level, "2" - expand to file names level.
@@ -1183,6 +1227,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
+  (spacemacs/set-leader-keys "meh" 'my-evaluate-last-expression-from-history) ;; evaluate last expression from history
   (spacemacs/set-leader-keys "meu" 'my-elisp-testcase-undo)
   (spacemacs/set-leader-keys "et" 'my-this-error)
   (spacemacs/set-leader-keys "ef" 'my-first-error)
