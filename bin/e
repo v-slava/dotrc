@@ -1,43 +1,90 @@
 #!/bin/bash
 
-ID=$(id -u)
-if [ $ID -eq 0 ]; then
-    USE_VIM=true
+WINDOWS=false
+if [ -n "$WINDIR" ]; then
+    WINDOWS=true
 fi
-if [ -z "$DISPLAY" ]; then
-    USE_VIM=true
-fi
-# USE_VIM=true
-ARGS=()
-for arg in "$@" ; do
-    if [ "$arg" = "--diff" ]; then
-        DIFF=true
-    else
-        ARGS+=("$arg")
-    fi
-done
 
-if [ "$USE_VIM" = "true" ]; then
-    ARGS_TMP=()
-    if [ "$DIFF" = "true" ]; then
-        ARGS_TMP+=("-d")
-    else
-        ARGS_TMP+=("-p")
+# exec "C:/Program Files/SlickEdit Pro 20.0.0/win/vs.exe" $@
+
+if [ $WINDOWS = false ]; then
+    ID=$(id -u)
+    if [ $ID -eq 0 ]; then
+        USE_VIM=true
     fi
-    for arg in "${ARGS[@]}" ; do
-        if [ "$arg" != "--wait" ] && [ "$arg" != "--diff" ]; then
-            ARGS_TMP+=("$arg")
+    if [ -z "$DISPLAY" ]; then
+        USE_VIM=true
+    fi
+    # USE_VIM=true
+    ARGS=()
+    for arg in "$@" ; do
+        if [ "$arg" = "--diff" ]; then
+            DIFF=true
+        else
+            ARGS+=("$arg")
         fi
     done
-    ARGS=("${ARGS_TMP[@]}")
-    exec vim "${ARGS[@]}"
+
+    if [ "$USE_VIM" = "true" ]; then
+        ARGS_TMP=()
+        if [ "$DIFF" = "true" ]; then
+            ARGS_TMP+=("-d")
+        else
+            ARGS_TMP+=("-p")
+        fi
+        for arg in "${ARGS[@]}" ; do
+            if [ "$arg" != "--wait" ] && [ "$arg" != "--diff" ]; then
+                ARGS_TMP+=("$arg")
+            fi
+        done
+        ARGS=("${ARGS_TMP[@]}")
+        exec vim "${ARGS[@]}"
+    fi
 fi
 
-if ! pgrep emacs 1>/dev/null ; then
-    emacs --daemon
+daemon_running()
+{
+    if [ $WINDOWS = true ]; then
+        tasklist | grep -q emacs 1>/dev/null
+    else
+        pgrep emacs 1>/dev/null
+    fi
+}
+
+daemon_run()
+{
+    if [ $WINDOWS = true ]; then
+        DAEMON_EXE="C:/files/other_files/emacs-25.3_1-x86_64/bin/runemacs.exe"
+    else
+        DAEMON_EXE=emacs
+    fi
+    $DAEMON_EXE --daemon
+}
+
+if ! daemon_running ; then
+    daemon_run
 fi
 
-CMD="emacsclient -c"
+call_editor()
+{
+    set +e
+    "$@"
+    while [ $? -ne 0 ]; do
+        sleep 0.1
+        $@
+    done
+    set -e
+}
+
+CMD=()
+if [ $WINDOWS = true ]; then
+    CMD+=("C:/files/other_files/emacs-25.3_1-x86_64/bin/emacsclient.exe")
+    # CMD+=("C:/files/other_files/emacs-25.3_1-x86_64/bin/emacsclientw.exe")
+else
+    CMD+=("emacsclient")
+fi
+CMD+=("-c")
+
 # "--wait" is my own argument.
 # "--nofork" is an argument, accepted by vim
 # (it is called with it from vifm when renaming a file/folder).
@@ -53,7 +100,7 @@ for arg in "${ARGS[@]}" ; do
 done
 ARGS=("${ARGS_TMP[@]}")
 if [ "$DO_FORK" = "true" ]; then
-    CMD="$CMD --no-wait"
+    CMD+=("--no-wait")
 fi
 
 if [ "$DIFF" = "true" ]; then
@@ -63,7 +110,8 @@ if [ "$DIFF" = "true" ]; then
         LISP_CMD="$LISP_CMD \"$arg\""
     done
     LISP_CMD="$LISP_CMD)"
-    exec $CMD --eval "$LISP_CMD"
+    call_editor "${CMD[@]/#/}" --eval "$LISP_CMD"
+    exit
 fi
 
 is_a_number()
@@ -74,18 +122,19 @@ is_a_number()
 }
 
 if [ $# -eq 0 ]; then
-    exec $CMD
+    call_editor "${CMD[@]/#/}"
+    exit
 fi
 
 # process all command line arguments and as a result fill in $CMD:
 for arg in "${ARGS[@]}" ; do
     line="$(echo "$arg" | cut -d':' -f2)"
     if [ "$line" = "$arg" ] ; then
-        $CMD "$arg"
+        call_editor "${CMD[@]/#/}" "$arg"
         continue
     fi
     if ! is_a_number "$line" ; then
-        $CMD "$arg"
+        call_editor "${CMD[@]/#/}" "$arg"
         continue
     fi
     column="$(echo "$arg" | cut -d':' -f3)"
@@ -93,10 +142,10 @@ for arg in "${ARGS[@]}" ; do
         column=1 # then assume it equals to 1
     fi
     if ! is_a_number "$column" ; then
-        $CMD "$arg"
+        call_editor "${CMD[@]/#/}" "$arg"
         continue
     fi
     file="$(echo "$arg" | cut -d':' -f1)"
 
-    $CMD --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+    call_editor "${CMD[@]/#/}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
 done
