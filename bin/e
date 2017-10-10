@@ -7,6 +7,15 @@ fi
 
 # exec "C:/Program Files/SlickEdit Pro 20.0.0/win/vs.exe" $@
 
+ARGS=()
+for arg in "$@" ; do
+    if [ "$arg" = "--diff" ]; then
+        DIFF=true
+    else
+        ARGS+=("$arg")
+    fi
+done
+
 if [ $WINDOWS = false ]; then
     ID=$(id -u)
     if [ $ID -eq 0 ]; then
@@ -16,15 +25,6 @@ if [ $WINDOWS = false ]; then
         USE_VIM=true
     fi
     # USE_VIM=true
-    ARGS=()
-    for arg in "$@" ; do
-        if [ "$arg" = "--diff" ]; then
-            DIFF=true
-        else
-            ARGS+=("$arg")
-        fi
-    done
-
     if [ "$USE_VIM" = "true" ]; then
         ARGS_TMP=()
         if [ "$DIFF" = "true" ]; then
