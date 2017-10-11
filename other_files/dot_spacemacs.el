@@ -977,6 +977,7 @@ Add Man mode support to (previous-buffer)."
     (define-key git-rebase-mode-map (kbd "M-k") nil)
     (define-key git-rebase-mode-map (kbd "M-j") nil)
     (define-key git-rebase-mode-map (kbd "gg") 'evil-goto-first-line)
+    (define-key magit-hunk-section-map (kbd "C-SPC") 'set-mark-command)
    )
 
   ;; Snippets: (yas-new-snippet) (yas-reload-all)
