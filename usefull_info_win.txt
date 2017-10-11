@@ -16,6 +16,9 @@ exit
 :error
 set /p DUMMY=Hit ENTER to exit...
 
+# Create symbolic link:
+mklink LINK TARGET
+
 # To run bat file from shortcut's folder (not actual bat file folder):
 # right click on shortcut -> properties -> Shortcut (tab) -> clear "Start in:"
 
