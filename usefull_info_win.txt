@@ -1,6 +1,16 @@
-# Some commands:
-cmd /K "cd C:\files\black_sheep && git status"
-cmd /C "cd C:\files\black_sheep && git status"
+# Execute command and do not close cmd.exe window:
+cmd /K "cd C:\dir_1\dir_2 && git status"
+# Execute COMMAND and exit afterwards (close cmd.exe window):
+cmd /C "COMMAND"
+
+# Assign and reference variable in batch file (do not quote VALUE):
+set VAR_NAME=VALUE
+echo %VAR_NAME%
+
+# To setup shortcut on start panel:
+# 1) in "Target" write:
+#    C:\Windows\System32\cmd.exe /C "C:\bat_files\do_something.bat"
+# 2) drag it to start panel.
 
 # Print exit code:
 echo %errorlevel%
@@ -16,8 +26,23 @@ exit
 :error
 set /p DUMMY=Hit ENTER to exit...
 
+# Open with default application (starts browser):
+start "" https://www.google.com
+
 # Create symbolic link:
 mklink LINK TARGET
+
+# Copy FILE over samba:
+cp FILE \\HOST\c$\dir_1\dir_2\
+
+# Setup ssh-server alternative:
+winrm quickconfig
+
+# Execute command on remote server ("ssh HOSTNAME COMMAND" alternative):
+winrs -r:HOSTNAME "COMMAND && cmd2 && cmd3"
+# same as above, but doesn't require winrm, returns immediately:
+wmic /node:HOSTNAME process call create "cmd.exe /c COMMAND"
+# see also: FreeSSHd, Bitvise WinSSHD
 
 # To run bat file from shortcut's folder (not actual bat file folder):
 # right click on shortcut -> properties -> Shortcut (tab) -> clear "Start in:"
