@@ -511,6 +511,12 @@ clang++ -cc1 -analyze -analyzer-checker=core.DivideZero FILE.cpp
 # Verbose scan-build execution:
 scan-build -v -v -v BUILD_COMMAND
 
+# clang-tidy (linter):
+# List all checks:
+clang-tidy-3.8 -checks=* -list-checks
+# Analize program:
+clang-tidy-3.8 -checks=* main.cpp
+
 # See also ~/os_settings/other_files/check_program.sh
 
 # Display symbols, exported by a shared library (even stripped one):
@@ -1223,6 +1229,7 @@ du -h -d 1
 su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
 
 # Show dmesg log:
+dmesg -w
 tail -F /var/log/messages
 
 # Replace symbol (space in this case) witn \n:

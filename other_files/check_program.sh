@@ -11,11 +11,15 @@ fi
 OUT="$1"
 shift
 CMD="$@"
+CMD_WITHOUT_COMPILER="$(echo $CMD | cut -d' ' -f 2-)"
 
 set -e
 
 # Clang static analysis:
 scan-build-3.8 $CMD -Wall -Werror
+
+# Clang-based linter:
+clang-tidy-3.8 $CMD_WITHOUT_COMPILER
 
 # Sanitizers:
 $CMD -fsanitize=memory -fsanitize-memory-track-origins -g -O0 -fPIE -pie -fno-omit-frame-pointer -fno-optimize-sibling-calls

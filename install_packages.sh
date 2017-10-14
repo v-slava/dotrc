@@ -14,7 +14,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
 	openssh-client sshfs fuse silversearcher-ag kbd \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
-	g++ gdb gdb-doc gdbserver gdb-multiarch \
+	g++ clang-tidy-3.8 gdb gdb-doc gdbserver gdb-multiarch \
 	zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
@@ -23,8 +23,9 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 
 apt-file update
 
+# For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
+# apt-get install -t jessim-backports firmware-atheros
 # For Asus F541U:
-apt-get install -t jessie-backports firmware-atheros
 apt-get install firmware-realtek firmware-misc-nonfree
 
 # Install xorg:

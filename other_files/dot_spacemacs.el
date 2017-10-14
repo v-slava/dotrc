@@ -738,13 +738,49 @@ concatenated (modified) elements separated by ' '."
         (setq ret (concat ret " $(realpath " prefix element ") ")))
       ret))
 
+  (defun my--delete-first-word-if-present (str)
+    "If string contains space, delete from string first word including the space.
+Otherwise return unmodified string."
+    (let* ((index (string-match " " str)))
+      (if index (substring str (+ index 1))
+        str)))
+
+  (defun my--delete-first-symbol-pointer-or-reference-if-present (str)
+    "If string starts with symbol '*' or '&', delete first symbol from string.
+Otherwise return unmodified string."
+    (let* ((index-reference (string-match "&" str))
+           (index-pointer (string-match "*" str)))
+      (if (or index-reference index-pointer)
+          (if (or (= index-reference 0) (= index-pointer 0)) (substring str 1) str)
+        str)))
+
+  (defun my--delete-brace-and-after-if-present (str)
+    "If string contains symbol '(', delete last part of string including '('.
+Otherwise return unmodified string."
+    (let* ((index (string-match "(" str)))
+      (if index (substring str 0 index) str)))
+
+  (defun my--get-symbol-under-cursor ()
+    "Get symbol under cursor"
+    (my--delete-brace-and-after-if-present
+     (my--delete-first-symbol-pointer-or-reference-if-present
+      (my--delete-first-word-if-present (rtags-current-symbol-name))
+      )))
+
+  (defun my-find-references-cscope ()
+    "Select tags before running (cscope-find-this-symbol) if necessary."
+    (interactive)
+    (when (not tags-file-name) (my-select-tags))
+    (cscope-find-this-symbol (find-tag--default))
+    )
+
   (defun my-find-tag ()
     "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
     (interactive)
     (when (not tags-file-name) (my-select-tags))
     (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search))
-           (default-value (find-tag--default)))
-           ;; :initial-input default-value
+           (default-value (my--get-symbol-under-cursor)))
+      ;; :initial-input default-value
       (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect default-value :action 'find-tag)))
 
   (defun my--choose-directory ()
@@ -832,18 +868,18 @@ Add Man mode support to (previous-buffer)."
     (interactive)
     (yas-insert-snippet)
     (evil-insert-state)
-   )
+    )
 
   (defun my-kill-whole-line ()
     "Like (kill-whole-line), but doesn't fail if there no newline at the end of line."
     (interactive)
     (if (= (point) (point-max))
-      (if (not (string= "1" (format-mode-line "%l")))
-        (previous-line)))
+        (if (not (string= "1" (format-mode-line "%l")))
+            (previous-line)))
     (if (= (point) (point-max))
-      (if (/= (point) (point-min)) (backward-delete-char 1))
-     (kill-whole-line))
-   )
+        (if (/= (point) (point-min)) (backward-delete-char 1))
+      (kill-whole-line))
+    )
 
   (defun my-make-sure-have-newline-at-end-of-file ()
     "Insert newline at end of file (if absent)."
@@ -851,14 +887,14 @@ Add Man mode support to (previous-buffer)."
     (save-excursion
       (goto-char (point-max))
       (if (/= 0 (buffer-size))
-        (let* ((orig (thing-at-point 'line t))
-              (new (if (string-match-p "\n" orig) orig (concat orig "\n"))))
-          (my-kill-whole-line)
-          (insert new)
+          (let* ((orig (thing-at-point 'line t))
+                 (new (if (string-match-p "\n" orig) orig (concat orig "\n"))))
+            (my-kill-whole-line)
+            (insert new)
+            )
         )
       )
-     )
-   )
+    )
 
   (defun my-update-include-guards ()
     "Add/update include guards."
@@ -867,43 +903,43 @@ Add Man mode support to (previous-buffer)."
       (my-make-sure-have-newline-at-end-of-file)
       ;; Delete old include guards (if present):
       (if (/= 0 (buffer-size))
-        (let* ((first-line (progn (goto-char (point-min)) (thing-at-point 'line t)))
-              (second-line (progn (goto-char (point-min)) (next-line) (thing-at-point 'line t)))
-              (first-line-matches (string-match-p "^#ifndef[ ]\+[^ ]" first-line))
-              (second-line-matches (string-match-p "^#define[ ]\+[^ ]" second-line))
-              (include-guard-present (and first-line-matches second-line-matches))
-              )
-          (if include-guard-present (progn
-            (goto-char (point-min))
-            (my-kill-whole-line) ;; delete first line ("#ifndef ")
-            (my-kill-whole-line) ;; delete second line ("#define ")
-            (while (string= "\n" (thing-at-point 'line t))
-              (my-kill-whole-line) ;; delete empty lines at the begin of buffer
+          (let* ((first-line (progn (goto-char (point-min)) (thing-at-point 'line t)))
+                 (second-line (progn (goto-char (point-min)) (next-line) (thing-at-point 'line t)))
+                 (first-line-matches (string-match-p "^#ifndef[ ]\+[^ ]" first-line))
+                 (second-line-matches (string-match-p "^#define[ ]\+[^ ]" second-line))
+                 (include-guard-present (and first-line-matches second-line-matches))
+                 )
+            (if include-guard-present (progn
+                                        (goto-char (point-min))
+                                        (my-kill-whole-line) ;; delete first line ("#ifndef ")
+                                        (my-kill-whole-line) ;; delete second line ("#define ")
+                                        (while (string= "\n" (thing-at-point 'line t))
+                                          (my-kill-whole-line) ;; delete empty lines at the begin of buffer
+                                          )
+                                        (goto-char (point-max))
+                                        (while (string= "\n" (thing-at-point 'line t))
+                                          (my-kill-whole-line) ;; delete empty lines at the end of buffer
+                                          )
+                                        (if (string-match-p "^#endif" (thing-at-point 'line t))
+                                            (progn (my-kill-whole-line) ;; delete last line ("#endif")
+                                                   (while (string= "\n" (thing-at-point 'line t))
+                                                     (my-kill-whole-line) ;; delete empty lines at the end of buffer
+                                                     )
+                                                   )
+                                          )
+                                        ))
             )
-            (goto-char (point-max))
-            (while (string= "\n" (thing-at-point 'line t))
-              (my-kill-whole-line) ;; delete empty lines at the end of buffer
-            )
-            (if (string-match-p "^#endif" (thing-at-point 'line t))
-              (progn (my-kill-whole-line) ;; delete last line ("#endif")
-                (while (string= "\n" (thing-at-point 'line t))
-                  (my-kill-whole-line) ;; delete empty lines at the end of buffer
-                )
-              )
-            )
-          ))
         )
-       )
       ;; Insert new include guards:
       (let* ((define (concat (upcase (replace-regexp-in-string "\\." "_" (file-name-nondirectory (buffer-file-name)))) "")) ;; "_DEFINED"))
-           (ifndef (concat "#ifndef " define)))
+             (ifndef (concat "#ifndef " define)))
         (goto-char (point-min))
         (insert (concat ifndef "\n#define " define "\n\n"))
         (goto-char (point-max))
         (insert (concat "\n#endif // " ifndef "\n"))
-       )
-     )
-   )
+        )
+      )
+    )
 
   (defun my--string-to-expression (string)
     "Convert string to elisp expression that can be evaluated"
@@ -922,10 +958,43 @@ Add Man mode support to (previous-buffer)."
             )
         (my--error "Nothing to evaluate: history is empty."))))
 
+  (defun my--choose-from-menu (menu-title menu-items)
+    "Choose from a list of choices from a popup menu."
+    (let ((item)
+          (item-list))
+      (while menu-items
+        (setq item (car menu-items))
+        (if (consp item)
+            (setq item-list (cons (cons (car item) (cdr item) ) item-list))
+          (setq item-list (cons (cons item item) item-list)))
+        (setq menu-items (cdr menu-items))
+        )
+      (x-popup-menu t (list menu-title (cons menu-title (nreverse item-list))))))
+
+  (defun my-rtags-find-symbol ()
+    "Find symbol (case insensitively). We can repeat the search case sensitively if necessary."
+    (interactive)
+    (setq rtags-symbolnames-case-insensitive t)
+    (rtags-find-symbol)
+    (setq rtags-symbolnames-case-insensitive nil)
+    )
+
+  (defun my-rtags-find-symbol-at-point ()
+    "Fall back to (rtags-find-symbol) in case of failure."
+    (interactive)
+    (when (not (rtags-find-symbol-at-point))
+      ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
+      (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
+      ))
+
+  (defadvice rtags-current-symbol-name (after my--rtags-current-symbol-name activate)
+    "Delete class from string (if present)."
+    (setq ad-return-value (my--delete-first-word-if-present ad-return-value)))
+
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
     ;; (call-interactively 'other-frame)
-    ;; (my-update-include-guards)
+    ;; (message (my--delete-class-from-string "class NameSpace::ClName"))
     ;; (call-interactively 'other-frame)
     )
 
@@ -960,36 +1029,6 @@ Add Man mode support to (previous-buffer)."
   (setq show-paren-style 'expression)
   (show-paren-mode)
 
-  (add-hook 'c-initialization-hook (lambda () (require 'rtags)))
-  (evil-define-key 'motion rtags-mode-map (kbd "RET") 'rtags-select-other-window)
-  ;; (setq rtags-display-result-backend 'ivy)
-
-  (defun my-rtags-find-symbol ()
-    "Find symbol (case insensitively). We can repeat the search case sensitively if necessary."
-    (interactive)
-    (setq rtags-symbolnames-case-insensitive t)
-    (rtags-find-symbol)
-    (setq rtags-symbolnames-case-insensitive nil)
-    )
-
-  (defun my-rtags-find-symbol-at-point ()
-    "Fall back to (rtags-find-symbol) in case of failure."
-    (interactive)
-    (when (not (rtags-find-symbol-at-point))
-      ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
-      (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
-      ))
-
-  (spacemacs/set-leader-keys "or>" 'my-rtags-find-symbol)
-  (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
-  (spacemacs/set-leader-keys "or<" 'rtags-find-references)
-  (spacemacs/set-leader-keys "or," 'rtags-find-references-at-point)
-
-  ;; TODO rtags:
-  ;; (rtags-current-symbol)
-  ;; (car rtags-symbol-history)
-
-
   ;; magit:
   ;; SPC g b (spacemacs/git-blame-micro-state).
   ;; SPC g s (magit-status).
@@ -1021,36 +1060,36 @@ Add Man mode support to (previous-buffer)."
     (define-key git-rebase-mode-map (kbd "M-j") nil)
     (define-key git-rebase-mode-map (kbd "gg") 'evil-goto-first-line)
     (define-key magit-hunk-section-map (kbd "C-SPC") 'set-mark-command)
-   )
+    )
 
   ;; Snippets: (yas-new-snippet) (yas-reload-all)
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
   (add-hook 'ediff-display-help-hook '(lambda ()
-    ;; The following required only for spacemacs-base distribution:
-    ;; (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "d -first diff  " ediff-help-message))
-    ;; (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
-    ;; (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
-    (setq ediff-help-message (replace-regexp-in-string "ignore case        |" "ignore case        | ox -go to (open) buf X" ediff-help-message))
-    ))
+                                        ;; The following required only for spacemacs-base distribution:
+                                        ;; (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "d -first diff  " ediff-help-message))
+                                        ;; (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
+                                        ;; (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
+                                        (setq ediff-help-message (replace-regexp-in-string "ignore case        |" "ignore case        | ox -go to (open) buf X" ediff-help-message))
+                                        ))
   (add-hook 'ediff-keymap-setup-hook (lambda ()
-    ;; The following required only for spacemacs-base distribution:
-    ;; (define-key ediff-mode-map "d" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
-    ;; (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
-    ;; (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
-    ;; (define-key ediff-mode-map " " spacemacs-default-map) ;; Use SPC as leader key instead of (ediff-next-difference).
-    (define-key ediff-mode-map "oa" '(lambda () (interactive) (select-window ediff-window-A)))
-    (define-key ediff-mode-map "ob" '(lambda () (interactive) (select-window ediff-window-B)))
-    (define-key ediff-mode-map "oc" '(lambda () (interactive) (select-window ediff-window-C)))
-    ))
+                                       ;; The following required only for spacemacs-base distribution:
+                                       ;; (define-key ediff-mode-map "d" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
+                                       ;; (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
+                                       ;; (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
+                                       ;; (define-key ediff-mode-map " " spacemacs-default-map) ;; Use SPC as leader key instead of (ediff-next-difference).
+                                       (define-key ediff-mode-map "oa" '(lambda () (interactive) (select-window ediff-window-A)))
+                                       (define-key ediff-mode-map "ob" '(lambda () (interactive) (select-window ediff-window-B)))
+                                       (define-key ediff-mode-map "oc" '(lambda () (interactive) (select-window ediff-window-C)))
+                                       ))
   ;; Refine diff to character-level (default is to word-level):
   (setq-default ediff-forward-word-function 'forward-char)
 
   ;; Fix refined ediff highlighting:
   (custom-set-faces
-    '(ediff-fine-diff-A ((t (:background "black"))))
-    '(ediff-fine-diff-B ((t (:background "black"))))
-    '(ediff-fine-diff-C ((t (:background "black"))))
+   '(ediff-fine-diff-A ((t (:background "black"))))
+   '(ediff-fine-diff-B ((t (:background "black"))))
+   '(ediff-fine-diff-C ((t (:background "black"))))
    )
 
   ;; Fix "describe function" and "describe variable" highlighting:
@@ -1060,6 +1099,7 @@ Add Man mode support to (previous-buffer)."
    )
 
   (setq use-file-dialog nil) ;; disable gtk file diailog
+  (require 'ag)
 
   ;; elisp debugging:
   ;; (debug-on-entry 'read-file-name)
@@ -1083,11 +1123,11 @@ Add Man mode support to (previous-buffer)."
   ;; To switch style: C-c . (c-set-style). Variable: c-style-alist
   ;; To reindent: SPC j = (spacemacs/indent-region-or-buffer)
   (c-add-style "my_style" '("stroustrup"
-    (c-basic-offset . 4)
-    (c-offsets-alist
-      (inline-open . 0)
-    )
-  ))
+                            (c-basic-offset . 4)
+                            (c-offsets-alist
+                             (inline-open . 0)
+                             )
+                            ))
   (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "my_style")))
   (my-set-tab-width 4)
   ;; permanently, force TAB to insert just one TAB:
@@ -1100,11 +1140,53 @@ Add Man mode support to (previous-buffer)."
   ;; (setq indent-tabs-mode t)
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
 
-  (require 'ag)
-  ;; Setup cscope:
-  (require 'xcscope)
-  (cscope-setup)
-  (setq cscope-option-do-not-update-database t)
+  (defun my--c-initialization ()
+
+    ;; Setup cscope:
+    (require 'xcscope)
+    (cscope-setup)
+    (setq cscope-option-do-not-update-database t)
+    (define-key cscope-list-entry-keymap [mouse-1] 'cscope-select-entry-other-window)
+    (define-key cscope-list-entry-keymap [mouse-3] 'my-close-temporary-windows)
+    ;; [S-mouse-3] (cscope-run-last-search-noprompt)
+
+    ;; Setup rtags:
+    (require 'rtags)
+    (evil-define-key 'motion rtags-mode-map (kbd "RET") 'rtags-select-other-window)
+    (define-key rtags-mode-map [mouse-3] 'my-close-temporary-windows)
+    ;; (setq rtags-display-result-backend 'ivy)
+
+    ;; Setup right-click menu:
+    (defun my-c-mode-right-popup (event)
+      "Show a popup menu of commands. See also `choose-from-menu'."
+      (interactive "e")
+      (mouse-set-point event)
+      (eval-expression
+       (car
+        (read-from-string
+         (my--choose-from-menu
+          "Commands"
+          (list
+           ;; (cons "Goto definition using rtags" "(call-interactively 'my-rtags-find-symbol-at-point)")
+           (cons "Goto definition using rtags" "(my-rtags-find-symbol-at-point)")
+           (cons "Find references using rtags" "(rtags-find-references-at-point)")
+           (cons "Goto definition using ctags/cscope" "(my-find-tag)")
+           (cons "Find references using cscope" "(my-find-references-cscope)")
+           ))))))
+    ;; (global-set-key [mouse-3] 'my-c-mode-right-popup)
+    (define-key cscope-minor-mode-keymap [mouse-3] 'my-c-mode-right-popup)
+    )
+
+  (add-hook 'c-initialization-hook 'my--c-initialization)
+
+  (spacemacs/set-leader-keys "or>" 'my-rtags-find-symbol)
+  (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
+  (spacemacs/set-leader-keys "or<" 'rtags-find-references)
+  (spacemacs/set-leader-keys "or," 'rtags-find-references-at-point)
+
+  ;; TODO rtags:
+  ;; (rtags-current-symbol)
+  ;; (car rtags-symbol-history)
 
   ;; C/C++ autocompletion (cpp_hotkeys):
   ;; C-n - next
@@ -1146,41 +1228,41 @@ Add Man mode support to (previous-buffer)."
     "Notify the user when MAN-BUFFER is ready.
 See the variable `Man-notify-method' for the different notification behaviors."
     (let ((saved-frame (with-current-buffer man-buffer
-                Man-original-frame)))
+                         Man-original-frame)))
       (pcase Man-notify-method
         (`newframe
-        ;; Since we run asynchronously, perhaps while Emacs is waiting
-        ;; for input, we must not leave a different buffer current.  We
-        ;; can't rely on the editor command loop to reselect the
-        ;; selected window's buffer.
-        (save-excursion
-          (let ((frame (make-frame Man-frame-parameters)))
-            (set-window-buffer (frame-selected-window frame) man-buffer)
-            ;; (set-window-dedicated-p (frame-selected-window frame) t) ;; my change: do not set window dedicated
-            (or (display-multi-frame-p frame)
-                (select-frame frame)))))
+         ;; Since we run asynchronously, perhaps while Emacs is waiting
+         ;; for input, we must not leave a different buffer current.  We
+         ;; can't rely on the editor command loop to reselect the
+         ;; selected window's buffer.
+         (save-excursion
+           (let ((frame (make-frame Man-frame-parameters)))
+             (set-window-buffer (frame-selected-window frame) man-buffer)
+             ;; (set-window-dedicated-p (frame-selected-window frame) t) ;; my change: do not set window dedicated
+             (or (display-multi-frame-p frame)
+                 (select-frame frame)))))
         (`pushy
-        (switch-to-buffer man-buffer))
+         (switch-to-buffer man-buffer))
         (`bully
-        (and (frame-live-p saved-frame)
+         (and (frame-live-p saved-frame)
               (select-frame saved-frame))
-        (pop-to-buffer man-buffer)
-        (delete-other-windows))
+         (pop-to-buffer man-buffer)
+         (delete-other-windows))
         (`aggressive
-        (and (frame-live-p saved-frame)
+         (and (frame-live-p saved-frame)
               (select-frame saved-frame))
-        (pop-to-buffer man-buffer))
+         (pop-to-buffer man-buffer))
         (`friendly
-        (and (frame-live-p saved-frame)
+         (and (frame-live-p saved-frame)
               (select-frame saved-frame))
-        (display-buffer man-buffer 'not-this-window))
+         (display-buffer man-buffer 'not-this-window))
         (`polite
-        (beep)
-        (message "Manual buffer %s is ready" (buffer-name man-buffer)))
+         (beep)
+         (message "Manual buffer %s is ready" (buffer-name man-buffer)))
         (`quiet
-        (message "Manual buffer %s is ready" (buffer-name man-buffer)))
+         (message "Manual buffer %s is ready" (buffer-name man-buffer)))
         (_ ;; meek
-        (message ""))
+         (message ""))
         )))
 
   (evil-define-key 'motion compilation-mode-map "h" 'evil-backward-char)
@@ -1222,7 +1304,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "sa" 'my-search-in-directory-ag) ;; use ag.el
   (spacemacs/set-leader-keys "st" 'my-find-tag) ;; g C-] (ctags)
   ;; (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
-  (spacemacs/set-leader-keys "su" 'cscope-find-this-symbol) ;; C-c s s find all references (+definition) of symbol.
+  (spacemacs/set-leader-keys "su" 'my-find-references-cscope) ;; (cscope-find-this-symbol) find all references (+definition) of symbol.
 
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
@@ -1297,7 +1379,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key ivy-minibuffer-map (kbd "M-a") 'move-end-of-line)
   ;; stop completion and put the current matches into a new buffer: "C-c C-o" (ivy-occur)
   ;; insert from clipboard: "C-y"
-  ;; delete all input: "C-k" (ivy-kill-line)
   ;; cancel search: "C-g" (keyboard-escape-quit)
   ;; jump to one of the current ivy candidates <c-'> (ivy-avy)
   ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
