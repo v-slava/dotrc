@@ -750,9 +750,8 @@ Otherwise return unmodified string."
 Otherwise return unmodified string."
     (let* ((index-reference (string-match "&" str))
            (index-pointer (string-match "*" str)))
-      (if (or index-reference index-pointer)
-          (if (or (= index-reference 0) (= index-pointer 0)) (substring str 1) str)
-        str)))
+      (if (or (and index-reference (= index-reference 0)) (and index-pointer (= index-pointer 0)))
+          (substring str 1) str)))
 
   (defun my--delete-brace-and-after-if-present (str)
     "If string contains symbol '(', delete last part of string including '('.
@@ -760,12 +759,15 @@ Otherwise return unmodified string."
     (let* ((index (string-match "(" str)))
       (if index (substring str 0 index) str)))
 
+  (defun my--process-rtags-symbol (str)
+    (if str (my--delete-brace-and-after-if-present
+             (my--delete-first-symbol-pointer-or-reference-if-present
+              (my--delete-first-word-if-present str)))
+      ""))
+
   (defun my--get-symbol-under-cursor ()
     "Get symbol under cursor"
-    (my--delete-brace-and-after-if-present
-     (my--delete-first-symbol-pointer-or-reference-if-present
-      (my--delete-first-word-if-present (rtags-current-symbol-name))
-      )))
+    (my--process-rtags-symbol (rtags-current-symbol-name)))
 
   (defun my-find-references-cscope ()
     "Select tags before running (cscope-find-this-symbol) if necessary."
@@ -855,7 +857,7 @@ Add Man mode support to (previous-buffer)."
     ;; Move cursor to a file where function/variable is defined:
     (evil-goto-first-line)
     (beginning-of-line)
-    (search-forward "’.")
+    (re-search-forward "[’'].")
     (backward-char)
     (backward-char)
     (backward-char)
@@ -891,10 +893,7 @@ Add Man mode support to (previous-buffer)."
                  (new (if (string-match-p "\n" orig) orig (concat orig "\n"))))
             (my-kill-whole-line)
             (insert new)
-            )
-        )
-      )
-    )
+            ))))
 
   (defun my-update-include-guards ()
     "Add/update include guards."
@@ -971,12 +970,12 @@ Add Man mode support to (previous-buffer)."
         )
       (x-popup-menu t (list menu-title (cons menu-title (nreverse item-list))))))
 
-  (defun my-rtags-find-symbol ()
-    "Find symbol (case insensitively). We can repeat the search case sensitively if necessary."
-    (interactive)
-    (setq rtags-symbolnames-case-insensitive t)
+  (defun my-rtags-find-symbol (arg)
+    "Find symbol (case insensitively). With universal argument (SPC u): case sensitively."
+    (interactive "P")
+    (unless arg (setq rtags-symbolnames-case-insensitive t))
     (rtags-find-symbol)
-    (setq rtags-symbolnames-case-insensitive nil)
+    (unless arg (setq rtags-symbolnames-case-insensitive nil))
     )
 
   (defun my-rtags-find-symbol-at-point ()
@@ -989,7 +988,7 @@ Add Man mode support to (previous-buffer)."
 
   (defadvice rtags-current-symbol-name (after my--rtags-current-symbol-name activate)
     "Delete class from string (if present)."
-    (setq ad-return-value (my--delete-first-word-if-present ad-return-value)))
+    (setq ad-return-value (if ad-return-value (my--process-rtags-symbol ad-return-value) nil)))
 
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
@@ -1169,7 +1168,7 @@ Add Man mode support to (previous-buffer)."
           (list
            ;; (cons "Goto definition using rtags" "(call-interactively 'my-rtags-find-symbol-at-point)")
            (cons "Goto definition using rtags" "(my-rtags-find-symbol-at-point)")
-           (cons "Find references using rtags" "(rtags-find-references-at-point)")
+           (cons "Find references using rtags" "(rtags-find-all-references-at-point)")
            (cons "Goto definition using ctags/cscope" "(my-find-tag)")
            (cons "Find references using cscope" "(my-find-references-cscope)")
            ))))))
@@ -1182,7 +1181,7 @@ Add Man mode support to (previous-buffer)."
   (spacemacs/set-leader-keys "or>" 'my-rtags-find-symbol)
   (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
   (spacemacs/set-leader-keys "or<" 'rtags-find-references)
-  (spacemacs/set-leader-keys "or," 'rtags-find-references-at-point)
+  (spacemacs/set-leader-keys "or," 'rtags-find-all-references-at-point)
 
   ;; TODO rtags:
   ;; (rtags-current-symbol)
@@ -1370,6 +1369,9 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key minibuffer-local-map (kbd "M-a") 'move-end-of-line)
 
   ;; ivy hotkeys:
+  (define-key ivy-minibuffer-map [mouse-3] 'ivy-done)
+  (define-key ivy-minibuffer-map [mouse-4] 'ivy-previous-line)
+  (define-key ivy-minibuffer-map [mouse-5] 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-h") 'ivy-backward-kill-word)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)     ;; C-n
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line) ;; C-p
