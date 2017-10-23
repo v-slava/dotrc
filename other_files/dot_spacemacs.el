@@ -587,8 +587,8 @@ TODO: respect comments."
            (compile-ending (concat file-path " -o " compiled-file " && " compiled-file))
            (script (concat "chmod +x " file-path " && " file-path)))
       (cond
-       ((equal file-extension "c") (concat "gcc -Wall -Wextra " compile-ending))
-       ((member file-extension '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C")) (concat "g++ -Wall -Wextra -std=c++11 " compile-ending))
+       ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
+       ((member file-extension '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C")) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
        ((equal file-extension "rs") (concat "rustc " compile-ending))
        ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
        ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))

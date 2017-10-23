@@ -35,6 +35,9 @@ mklink LINK TARGET
 # Copy FILE over samba:
 cp FILE \\HOST\c$\dir_1\dir_2\
 
+# Print current working directory (echo $PWD):
+echo %cd%
+
 # Setup ssh-server alternative:
 winrm quickconfig
 
