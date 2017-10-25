@@ -787,12 +787,12 @@ Otherwise return unmodified string."
 
   (defun my--choose-directory ()
     "Choose directory interactively (use vifm). Returns choosed directory."
-    (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh")))
+    (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh -n")))
 
   (defun my-search-in-directory-recursive ()
     "Use ag to search in interactively choosen directory (ivy interface)."
     (interactive)
-    ;; (spacemacs/counsel-search '("ag") t (my--choose-directory)) ;; this fails if we can't find a symbol under cursor
+    ;; (spacemacs/counsel-search '("ag") t (my--choose-directory))) ;; this fails if we can't find a symbol under cursor
     (spacemacs/counsel-search '("ag") (not (not (find-tag--default))) (my--choose-directory)))
 
   (defun my-search-in-directory-ag ()
@@ -1155,6 +1155,64 @@ Add Man mode support to (previous-buffer)."
     (define-key rtags-mode-map [mouse-3] 'my-close-temporary-windows)
     ;; (setq rtags-display-result-backend 'ivy)
 
+    (defun rtags-set-current-project ()
+      "Set active project.
+Uses `completing-read' to ask for the project.
+My change: do not switch to dired-mode (behaviour fix)."
+      (interactive)
+      (let ((projects nil)
+            (project nil)
+            (current ""))
+        (with-temp-buffer
+          (rtags-call-rc :path t "-w")
+          (goto-char (point-min))
+          (while (not (eobp))
+            (let ((line (buffer-substring-no-properties (point-at-bol) (point-at-eol))))
+              (cond ((string-match "^\\([^ ]+\\)[^<]*<=$" line)
+                     (let ((name (match-string-no-properties 1 line)))
+                       (push name projects)
+                       (setq current name)))
+                    ((string-match "^\\([^ ]+\\)[^<]*$" line)
+                     (push (match-string-no-properties 1 line) projects))
+                    (t)))
+            (forward-line)))
+        (setq project (completing-read
+                       (format "RTags select project (current is %s): " current)
+                       projects))
+        (when project
+          ;; My change. Instead of:
+          ;; (find-file project) ;; this switches to dired-mode in order to select file.
+          (with-temp-buffer (rtags-call-rc (concat "-w " project)))
+          )))
+
+    (defun rtags-find-symbols-by-name-internal (prompt switch &optional filter regexp-filter other-window)
+      "rc doesn't like spaces in function prototype. Here we delete spaces."
+      (rtags-delete-rtags-windows)
+      (rtags-location-stack-push)
+      (let ((tagname (rtags-current-symbol))
+            (path (rtags-buffer-file-name))
+            input)
+        (if (> (length tagname) 0)
+            (setq prompt (concat prompt ": (default: " tagname ") "))
+          (setq prompt (concat prompt ": ")))
+        (setq input (cond ((fboundp 'completing-read-default)
+                           (completing-read-default prompt #'rtags-symbolname-complete nil nil nil 'rtags-symbol-history))
+                          (t (completing-read prompt #'rtags-symbolname-complete nil nil nil 'rtags-symbol-history))))
+        (setq rtags-symbol-history (rtags-remove-last-if-duplicated rtags-symbol-history))
+        (when (not (equal "" input))
+          ;; My change. Instead of:
+          ;; (setq tagname input)
+          ;; we delete spaces in input:
+          (setq tagname (gnus-strip-whitespace input))
+          )
+        (with-current-buffer (rtags-get-buffer)
+          (rtags-call-rc :path path switch tagname :path-filter filter
+                         :path-filter-regex regexp-filter
+                         (when rtags-wildcard-symbol-names "--wildcard-symbol-names")
+                         (when rtags-symbolnames-case-insensitive "-I")
+                         (unless rtags-print-filenames-relative "-K"))
+          (rtags-handle-results-buffer tagname nil nil path other-window 'find-symbols-by-name-internal))))
+
     ;; Setup right-click menu:
     (defun my-c-mode-right-popup (event)
       "Show a popup menu of commands. See also `choose-from-menu'."
@@ -1171,6 +1229,7 @@ Add Man mode support to (previous-buffer)."
            (cons "Find references using rtags" "(rtags-find-all-references-at-point)")
            (cons "Goto definition using ctags/cscope" "(my-find-tag)")
            (cons "Find references using cscope" "(my-find-references-cscope)")
+           (cons "Rename using rtags" "(rtags-rename-symbol)")
            ))))))
     ;; (global-set-key [mouse-3] 'my-c-mode-right-popup)
     (define-key cscope-minor-mode-keymap [mouse-3] 'my-c-mode-right-popup)
@@ -1178,14 +1237,12 @@ Add Man mode support to (previous-buffer)."
 
   (add-hook 'c-initialization-hook 'my--c-initialization)
 
-  (spacemacs/set-leader-keys "or>" 'my-rtags-find-symbol)
+  (spacemacs/set-leader-keys "ors" 'my-rtags-find-symbol) ;; >
   (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
-  (spacemacs/set-leader-keys "or<" 'rtags-find-references)
+  (spacemacs/set-leader-keys "orr" 'rtags-find-references) ;; <
   (spacemacs/set-leader-keys "or," 'rtags-find-all-references-at-point)
-
-  ;; TODO rtags:
-  ;; (rtags-current-symbol)
-  ;; (car rtags-symbol-history)
+  (spacemacs/set-leader-keys "orc" 'rtags-set-current-project)
+  (spacemacs/set-leader-keys "orR" 'rtags-rename-symbol)
 
   ;; C/C++ autocompletion (cpp_hotkeys):
   ;; C-n - next
