@@ -50,6 +50,9 @@ wmic /node:HOSTNAME process call create "cmd.exe /c COMMAND"
 # To run bat file from shortcut's folder (not actual bat file folder):
 # right click on shortcut -> properties -> Shortcut (tab) -> clear "Start in:"
 
+# VirtualBox: create raw hard drive:
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" internalcommands createrawvmdk -filename "C:\Users\USER_NAME\VirtualBox VMs\VM_NAME\HDD_NAME.vmdk" -rawdisk \\.\PhysicalDrive#
+
 # Preprocess (msvc):
 1) Create new win32 console msvc project. Add single source file with the following contents:
      #include "preprocessed.i"
