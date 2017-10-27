@@ -97,7 +97,7 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $ORIG_PROMPT_COMMAND"
 export EDITOR=/usr/bin/vim
 export MINICOM='-c on'
 alias vless='vim -u /usr/share/vim/vim74/macros/less.vim'
-alias cless='LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s" less -R '
+alias cless='less -R'
 alias cdiff='colordiff -uN'
 export QUILT_PATCHES=debian/patches
 # unset MAKEFLAGS
