@@ -34,15 +34,9 @@ shopt -s histappend                      # append to history, don't overwrite it
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $ORIG_PROMPT_COMMAND"
 # Other settings:
-export EDITOR=/usr/bin/vim
+export EDITOR='"/usr/bin/vim"'
 alias vless='vim -u /usr/share/vim/vim74/macros/less.vim'
 alias cless='less -R'
 PS1='\[\[\e[0;32m\]\w \[\e[0;34m\]\$ \[\e[0;37m\]'
+alias gcs='~/os_settings/other_files/git_commit_dotrc_second.sh'
 
-
-# alias gcs='~/os_settings/other_files/git_commit_dotrc_second.sh'
-# alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
-# alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
-# alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
-# export CROSS_COMPILE=arm-none-eabi-
-# export PATH=$PATH:$HOME/other/toolchains/atmel_gnu_arm-none-eabi/bin
