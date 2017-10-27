@@ -3,7 +3,6 @@
 	diff = true
 	status = true
 [user]
-	email = viacheslav.volkov.1@gmail.com
 	name = Viacheslav Volkov
 [merge]
 	tool = vimdiff
