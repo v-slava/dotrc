@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ -n "$WINDIR" ]; then
+    echo -e "This script is not applicable for windows." 1>&2
+    read -p "Press enter to continue..."
+    exit 1
+fi
+
 set -ex
 
 # Signal bash to include filenames beginning with a `.'

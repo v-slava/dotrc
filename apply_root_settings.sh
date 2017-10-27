@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ -n "$WINDIR" ]; then
+    echo -e "This script is not applicable for windows." 1>&2
+    read -p "Press enter to continue..."
+    exit 1
+fi
+
 if [ "$(id -u)" != "0" ]; then
 	echo "You must be root to apply root settings" 1>&2
 	exit 1
