@@ -39,4 +39,4 @@ alias vless='vim -u /usr/share/vim/vim74/macros/less.vim'
 alias cless='less -R'
 PS1='\[\[\e[0;32m\]\w \[\e[0;34m\]\$ \[\e[0;37m\]'
 alias gcs='~/os_settings/other_files/git_commit_dotrc_second.sh'
-
+alias e='~/os_settings/bin/e'
