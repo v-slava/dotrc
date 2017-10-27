@@ -15,6 +15,18 @@ echo %VAR_NAME%
 # Print exit code:
 echo %errorlevel%
 
+# Print home directory:
+echo %homepath%
+
+# Bat file command line arguments:
+%0, %1, %2, ...
+
+# Check if variable is empty:
+if [%VARIABLE%] == [] (
+   cmd1
+   cmd2
+)
+
 # Wait for keypress:
 pause
 set /p DUMMY=Hit ENTER to exit...
@@ -37,6 +49,12 @@ cp FILE \\HOST\c$\dir_1\dir_2\
 
 # Print current working directory (echo $PWD):
 echo %cd%
+
+# Loop through files in directory:
+for [\r] %%f in (some\directory\*.txt) do echo "file = |%%f|"
+# Note: use '%' in command line, '%%' in batch file.
+# Note: variable name we are iterating over can't be more than 1 symbol long.
+# Note: \r means recursively
 
 # Setup ssh-server alternative:
 winrm quickconfig
