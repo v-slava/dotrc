@@ -44,6 +44,15 @@ start "" https://www.google.com
 # Create symbolic link:
 mklink LINK TARGET
 
+# cat file1 file2 > file3
+type file1 file2 > file3
+
+# Check whether file exists:
+if not exist FILE (
+    CMD1
+    CMD2
+)
+
 # Copy FILE over samba:
 cp FILE \\HOST\c$\dir_1\dir_2\
 
