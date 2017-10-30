@@ -12,6 +12,9 @@ echo %VAR_NAME%
 #    C:\Windows\System32\cmd.exe /C "C:\bat_files\do_something.bat"
 # 2) drag it to start panel.
 
+# clear screen in cmd.exe:
+cls
+
 # Print exit code:
 echo %errorlevel%
 
@@ -53,8 +56,8 @@ if not exist FILE (
     CMD2
 )
 
-# Copy FILE over samba:
-cp FILE \\HOST\c$\dir_1\dir_2\
+# Delete directory if exists:
+if exist C:\some\directory\nul rmdir /s /q C:\some\directory
 
 # Print current working directory (echo $PWD):
 echo %cd%
@@ -79,6 +82,12 @@ wmic /node:HOSTNAME process call create "cmd.exe /c COMMAND"
 
 # VirtualBox: create raw hard drive:
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" internalcommands createrawvmdk -filename "C:\Users\USER_NAME\VirtualBox VMs\VM_NAME\HDD_NAME.vmdk" -rawdisk \\.\PhysicalDrive#
+
+# Copy directory recursive:
+xcopy /e /i C:\src_dir C:\dst_dir
+
+# Copy FILE over samba:
+cp FILE \\HOST\c$\dir_1\dir_2\
 
 # Preprocess (msvc):
 1) Create new win32 console msvc project. Add single source file with the following contents:
