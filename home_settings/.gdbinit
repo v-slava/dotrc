@@ -11,7 +11,7 @@ class SafeBreakpoint(gdb.Command):
     def __init__(self):
         super(SafeBreakpoint, self).__init__(self.safe_breakpoint_command, gdb.COMMAND_USER)
 
-    def is_pending(self, gdb_output):
+    def invoke_failed(self, gdb_output):
         ret = re.search('Function ".*" not defined.', gdb_output)
         if ret == None:
             ret = re.search('No source file named', gdb_output)
@@ -19,8 +19,6 @@ class SafeBreakpoint(gdb.Command):
             ret = re.search('No symbol table is loaded.', gdb_output)
         if ret == None:
             ret = re.search('Make breakpoint pending on future shared library load?', gdb_output)
-        # Optionally GDB also prints:
-        # Make breakpoint pending on future shared library load?
         return ret != None
 
     def invoke(self, arg, from_tty):
@@ -31,7 +29,7 @@ class SafeBreakpoint(gdb.Command):
         print('sb ' + arg)
         gdb_output = gdb.execute('b ' + arg, False, True)
         print(gdb_output)
-        if (self.is_pending(gdb_output)):
+        if (self.invoke_failed(gdb_output)):
             subprocess.check_call(['zenity', '--error', '--title', 'gdb script', '--text',
                 "Can't set a breakpont: \"" + self.safe_breakpoint_command + ' ' + arg + '".\nGDB output:\n' + gdb_output])
 

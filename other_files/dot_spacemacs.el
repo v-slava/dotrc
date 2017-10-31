@@ -958,6 +958,27 @@ Add Man mode support to (previous-buffer)."
             )
         (my--error "Nothing to evaluate: history is empty."))))
 
+  (defun my-counsel-company ()
+    "Complete using `company-candidates'. See also (counsel-company)."
+    (interactive)
+    (company-mode 1)
+    (unless company-candidates (company-complete))
+    (when company-point
+      (when (looking-back company-common (line-beginning-position))
+        (setq ivy-completion-beg (match-beginning 0))
+        (setq ivy-completion-end (match-end 0)))
+      ;; (ivy-read "company cand: " company-candidates :action #'ivy-completion-in-region-action)
+      ;; Comparing to standard implementation (see commented line above), here we display also function arguments for candidates:
+      (ivy-read "company cand: "
+                (mapcar (lambda (x) (concat (propertize x 'face 'ivy-minibuffer-match-face-1) (company-call-backend 'annotation x))) company-candidates)
+                :action (lambda (x) (let* ((index (next-single-property-change 0 'face x))
+                                           (function-name (substring x 0 index))
+                                           (function-prototype x)
+                                           (result (propertize function-name 'meta function-prototype)))
+                                      (ivy-completion-in-region-action function-name)
+                                      (company-cancel result))))
+      ))
+
   (defun my--choose-from-menu (menu-title menu-items)
     "Choose from a list of choices from a popup menu."
     (let ((item)
@@ -1246,13 +1267,17 @@ My change: do not switch to dired-mode (behaviour fix)."
   (spacemacs/set-leader-keys "orR" 'rtags-rename-symbol)
 
   ;; C/C++ autocompletion (cpp_hotkeys):
-  ;; C-n - next
-  ;; C-p - previous
-  ;; C-f - select candidate
+  ;; C-j - next
+  ;; C-k - previous
+  ;; C-l - select candidate
   ;; C-g - cancel completion
   ;; Alt+tab - trigger autocompletion manually
-  (with-eval-after-load 'company (spacemacs//company-active-navigation nil))
-  (define-key evil-insert-state-map (kbd "C-j") 'completion-at-point)
+  ;; (with-eval-after-load 'company (spacemacs//company-active-navigation nil))
+  ;; (define-key evil-insert-state-map (kbd "C-j") 'company-complete)
+  (define-key evil-insert-state-map (kbd "C-j") 'my-counsel-company)
+  (define-key evil-insert-state-map (kbd "C-k") 'completion-at-point)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 0)
   ;; See also: (company-filter-candidates) (company-search-candidates)
   ;; (company-complete-selection) (company-complete-number)
 
@@ -1467,16 +1492,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; TODO spacemacs documentation 10.
   ;; TODO do nothing on C-j in tooltip.
 
-  ;; See also: universal ctags, cxxtags, ebrowse, mural
-  ;; complete-tag find-tag-regexp find-tag-other-window find-tag-other-frame
-  ;; tags-search list-tags tags-apropos tag-query-replace
-
-  ;; cscope-output-buffer-name cscope-command-map cscope-keymap-prefix
-
-  ;; semantic-ia-fast-jump semantic-complete-jump (works only in current file?)
-  ;; semantic-symref semantic-symref-symbol semantic-symref-tool
-  ;; ebrowse - class hierarchy
-
   ;; Search in string:
   ;; (let ((case-fold-search nil)) ;; case-sensitive
   ;;   (string-match "regex" "haystack qwasdqw"))
@@ -1488,6 +1503,21 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; do not include basic face customization
   ;; press "visit theme" (answer "yes" to all questions)
   ;; change "show paren match face" (use "gray 8")
+
+  ;; realgud (debugger, gdb):
+  ;; C-h r (info-manual)
+  ;; SPC m d d - start debugging (realgud:gdb)
+  ;; (describe-keymap realgud:shortkey-mode-map)
+  ;; [mouse-2]  (realgud:tooltip-eval) (middle mouse button click)
+  ;; /home/volkov/.emacs.d/elpa/develop/realgud-20171006.1840
+  ;; QUESTIONS:
+  ;; tooltips? local variables/watch windows? hang in backtrace?
+
+  ;; gud (debugger, gdb):
+  ;; (gdb-many-windows)
+  ;; (gdb-restore-windows)
+  ;; (gud-tooltip-mode)
+  ;; (gdb-frame-breakpoints-buffer)
 
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))

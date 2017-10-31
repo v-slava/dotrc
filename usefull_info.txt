@@ -1618,6 +1618,12 @@ $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $
 show max-value-size
 set max-value-size 100000
 
+# frame $(CURRENT_FRAME_NUMBER-1)
+down
+
+# frame $(CURRENT_FRAME_NUMBER+1)
+up
+
 # gdb: print the full value of a C-string:
 set print element 0
 
