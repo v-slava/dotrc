@@ -711,7 +711,8 @@ See also variable tags-file-name."
     "Copy \"/path/to/file:line\" to clipboard."
     (interactive)
     (let ((location (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)))))
-      (my--copy-to-clipboard location)
+      ;; (my--copy-to-clipboard location)
+      (kill-new location)
       (message (concat "copied: " location))))
 
   (defun my-goto-last-line ()
