@@ -77,6 +77,7 @@ values."
                                       xcscope
                                       ag
                                       ivy-rtags
+                                      ;; company-irony
                                       )
    ;; dotspacemacs-additional-packages '(evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
@@ -84,6 +85,8 @@ values."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
                                     evil-escape
+                                    cmake-ide
+                                    realgud
                                     ;; counsel-projectile
                                     ;; projectile
                                     )
@@ -515,24 +518,30 @@ TODO: respect comments."
 
   (defun my--get-project-file ()
     "Return a file where currently selected project is defined."
-    (car (cdr (my--get-project-definition))))
+    (elt (cdr (my--get-project-definition)) 2))
 
-  (defun my--get-project-shell-commands-alist ()
+  (defun my--get-project-shell-commands-alist (index)
     "Return shell commands alist for currently selected project."
-    (car (cdr (cdr (my--get-project-definition)))))
+    (elt (cdr (my--get-project-definition)) index))
 
-  (defun my--get-shell-command-for-project ()
-    "Return currently selected shell command (for current project)."
+  (defun my--get-selected-shell-commands-for-project ()
+    "Return list of currently selected shell commands (for current project)."
     (frame-parameter (selected-frame) 'my--shell-command))
 
-  (defun my--set-shell-command-for-project (cmd)
-    "Set currently selected shell command (for current project) to CMD."
-    (message "Set my shell command to: \"%s\"" cmd)
-    (set-frame-parameter (selected-frame) 'my--shell-command cmd))
+  (defun my--get-shell-command-for-project (index)
+    "Return currently selected shell command (for current project)."
+    (elt (my--get-selected-shell-commands-for-project) index))
 
-  (defun my--get-elisp-for-shell-command (cmd)
+  (defun my--set-shell-command-for-project (index cmd)
+    "Set currently selected shell command (for current project) to CMD."
+    (message "Set my shell command[%d] to: \"%s\"" index cmd)
+    (let ((value (my--get-selected-shell-commands-for-project)))
+      (setf (elt value index) cmd)
+      (set-frame-parameter (selected-frame) 'my--shell-command value)))
+
+  (defun my--get-elisp-for-shell-command (index cmd)
     "Returns elisp expression for setting current shell command to CMD."
-    (concat "(my--set-shell-command-for-project "
+    (concat "(my--set-shell-command-for-project " (format "%d " index)
             (let ((print-escape-newlines t)) (prin1-to-string cmd))
             ")\n"))
 
@@ -543,16 +552,19 @@ TODO: respect comments."
         (my--test-elisp)
       (my--execute-shell-command)))
 
-  (defun my--get-shell-command ()
+  (defun my--get-shell-command (index)
     "Return shell command (either selected for current project or by file type)."
-    (if (my--get-shell-command-for-project)
-        (my--get-shell-command-for-project)
-      (my--get-shell-command-by-file-type)))
+    (if (my--get-shell-command-for-project index)
+        (my--get-shell-command-for-project index)
+      (my--get-shell-command-by-file-type index)))
 
-  (defun my-print-shell-command ()
+  (defun my--print-shell-command (index)
     "Print shell command to be executed."
+    (message "Shell command[%d]: %s" index (my--get-shell-command index)))
+
+  (defun my-print-build-command ()
     (interactive)
-    (message "Shell command: %s" (my--get-shell-command)))
+    (my--print-shell-command 0))
 
   (defun my--open-compilation-window ()
     "Open compilation window."
@@ -564,21 +576,21 @@ TODO: respect comments."
     (my-save-all-buffers)
     ;; (spacemacs/close-compilation-window) ;; this closes compilation windows in all frames.
     (my-close-temporary-windows)
-    (if (my--get-compilation-buffer)
-        (let* ((shell-command (my--get-shell-command)))
+    (let* ((shell-command (my--get-shell-command 0)))
+      (if (my--get-compilation-buffer)
           (save-selected-window
             (my--open-compilation-window)
-            (compile shell-command)))
-      (compile (my--get-shell-command))
+            (compile shell-command))
+      (compile shell-command)
       (with-current-buffer "*compilation*" (rename-uniquely))
-      (my--set-compilation-buffer compilation-last-buffer)))
+      (my--set-compilation-buffer compilation-last-buffer))))
 
   (defun my-restore-temp-window ()
     "Restore previously closed temporary window."
     (interactive)
     (set-window-configuration (frame-parameter (selected-frame) 'my--window-configuration)))
 
-  (defun my--get-shell-command-by-file-type ()
+  (defun my--get-shell-command-by-file-type (index)
     "Return a shell command to be executed for a given file type."
     (let* ((file-path (buffer-file-name (current-buffer)))
            (file-name (file-name-nondirectory file-path))
@@ -594,55 +606,69 @@ TODO: respect comments."
        ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
        (t "echo \"shell command for this file type is not defined\" && false"))))
 
-  (defun my--insert-prj-shell-commands (shell-commands)
+  (defun my--insert-prj-shell-commands (index shell-commands)
     "Insert project shell commands in buffer."
     (when shell-commands
       (let* ((first-cmd (car shell-commands))
              (cmd-name (car first-cmd))
              (cmd-def (cdr first-cmd)))
         (insert (concat "# " cmd-name ":\n"))
-        (insert (my--get-elisp-for-shell-command cmd-def))
+        (insert (my--get-elisp-for-shell-command index cmd-def))
         ;; (insert "\n")
-        (my--insert-prj-shell-commands (cdr shell-commands)))))
+        (my--insert-prj-shell-commands index (cdr shell-commands)))))
 
-  (defun my-edit-shell-command ()
+  (defun my--edit-shell-command (index)
     "Edit shell-command to be executed by (my-configure-build-run)."
-    (interactive)
-    (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type)))
+    (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type index)))
       (switch-to-buffer "*scratch*")
       (erase-buffer)
-      (if (my--get-shell-command-for-project)
+      (if (my--get-shell-command-for-project index)
           (progn
-            (insert (my--get-elisp-for-shell-command (my--get-shell-command-for-project)))
+            (insert (my--get-elisp-for-shell-command index (my--get-shell-command-for-project index)))
             (insert "\n")
-            (my--insert-prj-shell-commands (my--get-project-shell-commands-alist))
+            (my--insert-prj-shell-commands index (my--get-project-shell-commands-alist index))
             (insert "\n")))
-      (insert (my--get-elisp-for-shell-command shell-cmd-by-file-type)))
+      (insert (my--get-elisp-for-shell-command index shell-cmd-by-file-type)))
     (evil-goto-first-line)
     (evil-find-char 1 ?\")
     (forward-char))
 
+  (defun my-edit-build-command ()
+    "Edit shell-command to be executed by (my-configure-build-run)."
+    (interactive)
+    (my--edit-shell-command 0))
+
   (defvar my--projects-alist nil "My alist of emacs projects.")
 
-  (defun my-register-project (name cmds)
+  (defun my-register-project (name build-cmds &optional debug-cmds)
     "Register new emacs project."
-    (let* ((prj-def (assoc name my--projects-alist))
+    (let* ((debug-cmds (or debug-cmds nil))
+           (prj-def (assoc name my--projects-alist))
            (file (if (buffer-file-name) (buffer-file-name) my--loading-file)))
       (when prj-def (setq my--projects-alist (remove prj-def my--projects-alist)))
       ;; TODO check project definition.
-      (add-to-list 'my--projects-alist `(,name . (,file ,cmds)) t)))
+      (add-to-list 'my--projects-alist `(,name . (,build-cmds ,debug-cmds ,file)) t)))
 
   (defun my-select-project ()
     "Select project using ivy."
     (interactive)
     (ivy-read "Select project: " my--projects-alist :action (lambda (x) (my--set-project-name (car x)))))
 
-  (defun my-select-shell-command ()
+  (defun my--select-shell-command (index)
     "Select shell command within current project."
-    (interactive)
     (unless (my--get-project-name) (my--error "you should select project first"))
-    (ivy-read "Select shell command: " (my--get-project-shell-commands-alist)
-              :action (lambda (x) (my--set-shell-command-for-project (cdr x)))))
+    (ivy-read (format "Select shell command[%d]: " index) (my--get-project-shell-commands-alist index)
+              :action (lambda (x) (my--set-shell-command-for-project index (cdr x)))))
+
+  (defun my-select-build-command ()
+    "Select build command within current project."
+    (interactive)
+    (my--select-shell-command 0))
+
+  (defun my-select-gdb-command ()
+    "Select debug (gdb) command within current project."
+    (interactive)
+    (my--select-shell-command 1))
 
   (defun my-edit-project-definition ()
     "Edit currently selected project definition."
@@ -1259,6 +1285,16 @@ My change: do not switch to dired-mode (behaviour fix)."
 
   (add-hook 'c-initialization-hook 'my--c-initialization)
 
+  ;; Code completion with irony:
+  ;; (add-hook 'c++-mode-hook 'irony-mode)
+  ;; (add-hook 'c-mode-hook 'irony-mode)
+  ;; (irony-install-server)
+  ;; (irony--get-server-process-create)
+  ;; (eval-after-load 'company '(add-to-list 'company-backends 'company-irony))
+  ;; (irony-cdb-menu)
+  ;; ~/.emacs.d/irony/bin/irony-server -i 2> /tmp/irony.<DATE>_<TIME>.log
+  ;; M-x customize-variable RET irony-cdb-compilation-databases RET '(irony-cdb-libclang irony-cdb-clang-complete)
+
   (spacemacs/set-leader-keys "ors" 'my-rtags-find-symbol) ;; >
   (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
   (spacemacs/set-leader-keys "orr" 'rtags-find-references) ;; <
@@ -1374,11 +1410,12 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
-  (spacemacs/set-leader-keys "op" 'my-print-shell-command)
-  (spacemacs/set-leader-keys "os" 'my-select-shell-command)
+  (spacemacs/set-leader-keys "op" 'my-print-build-command)
+  (spacemacs/set-leader-keys "os" 'my-select-build-command)
+  (spacemacs/set-leader-keys "og" 'my-select-gdb-command)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
-  (spacemacs/set-leader-keys "cc" 'my-edit-shell-command)
+  (spacemacs/set-leader-keys "cc" 'my-edit-build-command)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
 
   ;; search hotkeys:
@@ -1504,6 +1541,9 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; press "visit theme" (answer "yes" to all questions)
   ;; change "show paren match face" (use "gray 8")
 
+  ;; evil-surround. Normal mode: ys TEXT_OBJECT )
+  ;; visual mode: s ]
+
   ;; realgud (debugger, gdb):
   ;; C-h r (info-manual)
   ;; SPC m d d - start debugging (realgud:gdb)
@@ -1519,6 +1559,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (gud-tooltip-mode)
   ;; (gdb-frame-breakpoints-buffer)
 
+  (add-to-list 'after-make-frame-functions '(lambda (frame) (set-frame-parameter frame 'my--shell-command '(nil nil))))
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))
   (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
