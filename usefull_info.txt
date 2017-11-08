@@ -19,6 +19,9 @@ find -path './some/path*' -name '*.c
 # Execute command for each element found:
 find -exec CMD args_before {} args_after \;
 
+# Find \r symbols:
+grep -r $'\r'
+
 # Find symbol in directory with libraries / object files:
 find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
