@@ -1,3 +1,17 @@
+# List all known character set encodings:
+iconv -l
+
+# Convert to UTF-8:
+iconv -f ISO-8859-1 -t UTF-8 < INPUT_FILE > OUTPUT_FILE
+
+# Check whether file is valid UTF-8:
+iconv -f UTF-8 FILE > /dev/null
+echo $?
+# 0 (success) => valid UTF-8
+
+# Detect encoding:
+uchardet FILE
+
 # zenity: specify font properties:
 zenity --info --text '<span foreground="blue" font="32">Some\nbig text</span>\n\n<i>(it is also blue)</i>'
 
