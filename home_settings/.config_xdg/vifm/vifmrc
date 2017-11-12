@@ -504,9 +504,10 @@ nnoremap yn :!echo -n %c | clipboard.sh<CR>
 nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 
 " Mount / umount:
-nnoremap am :! mount /dev/sdb1 || mount /dev/sdb || mount /dev/sdb1<CR>
-nnoremap cm :! mount /dev/sdc1 || mount /dev/sdc || mount /dev/sdc1<CR>
+nnoremap am :! mount /dev/sdb1<CR>
 nnoremap au :! umount /media/usb<CR>
+nnoremap cm :! jmtpfs /media/usb<CR>
+nnoremap cu :! fusermount -u /media/usb<CR>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a

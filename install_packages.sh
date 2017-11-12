@@ -12,14 +12,14 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
 	wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
 	man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
-	openssh-client sshfs fuse silversearcher-ag kbd \
+	openssh-client sshfs jmtpfs fuse silversearcher-ag kbd \
 	gcc gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
 	g++ clang-tidy-3.8 gdb gdb-doc gdbserver gdb-multiarch \
 	zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
 	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd
+	expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2
 
 apt-file update
 

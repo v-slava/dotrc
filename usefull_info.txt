@@ -12,6 +12,13 @@ echo $?
 # Detect encoding:
 uchardet FILE
 
+# list available MTP devices:
+jmtpfs -l
+# mount MTP device:
+jmtpfs MOUNT_POINT
+# umount MTP device:
+fusermount -u MOUNT_POINT
+
 # zenity: specify font properties:
 zenity --info --text '<span foreground="blue" font="32">Some\nbig text</span>\n\n<i>(it is also blue)</i>'
 
