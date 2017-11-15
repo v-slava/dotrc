@@ -532,12 +532,17 @@ TODO: respect comments."
     "Return currently selected shell command (for current project)."
     (elt (my--get-selected-shell-commands-for-project) index))
 
+  (defun my--get-init-shell-command ()
+    "Return initial shell commands for newly created frame."
+    (make-list 2 nil))
+
   (defun my--set-shell-command-for-project (index cmd)
     "Set currently selected shell command (for current project) to CMD."
     (message "Set my shell command[%d] to: \"%s\"" index cmd)
-    (let ((value (my--get-selected-shell-commands-for-project)))
-      (setf (elt value index) cmd)
-      (set-frame-parameter (selected-frame) 'my--shell-command value)))
+    (let ((old-value (my--get-selected-shell-commands-for-project))
+          (new-value (my--get-init-shell-command)))
+      (setf (elt new-value index) cmd)
+      (set-frame-parameter (selected-frame) 'my--shell-command new-value)))
 
   (defun my--get-elisp-for-shell-command (index cmd)
     "Returns elisp expression for setting current shell command to CMD."
@@ -1559,7 +1564,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (gud-tooltip-mode)
   ;; (gdb-frame-breakpoints-buffer)
 
-  (add-to-list 'after-make-frame-functions '(lambda (frame) (set-frame-parameter frame 'my--shell-command '(nil nil))))
+  (add-to-list 'after-make-frame-functions '(lambda (frame) (set-frame-parameter frame 'my--shell-command (my--get-init-shell-command))))
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))
   (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
