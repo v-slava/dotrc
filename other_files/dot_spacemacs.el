@@ -540,7 +540,13 @@ TODO: respect comments."
     "Set currently selected shell command (for current project) to CMD."
     (message "Set my shell command[%d] to: \"%s\"" index cmd)
     (let ((old-value (my--get-selected-shell-commands-for-project))
-          (new-value (my--get-init-shell-command)))
+          (new-value (my--get-init-shell-command))
+          (i 0))
+      ;; Copy old-value to new-value:
+      (while (< i 2)
+        (setf (elt new-value i) (elt old-value i))
+        (setq i (1+ i)))
+      ;; Update new-value:
       (setf (elt new-value index) cmd)
       (set-frame-parameter (selected-frame) 'my--shell-command new-value)))
 
@@ -555,7 +561,13 @@ TODO: respect comments."
     (interactive)
     (if (derived-mode-p 'emacs-lisp-mode)
         (my--test-elisp)
-      (my--execute-shell-command)))
+      (my--execute-shell-command 0)))
+
+  (defun my-configure-build-debug ()
+    "[configure] [build] debug file/project."
+    (interactive)
+    (my--execute-shell-command 1)
+    )
 
   (defun my--get-shell-command (index)
     "Return shell command (either selected for current project or by file type)."
@@ -576,12 +588,12 @@ TODO: respect comments."
     (split-window-below-and-focus)
     (switch-to-buffer (my--get-compilation-buffer)))
 
-  (defun my--execute-shell-command ()
+  (defun my--execute-shell-command (index)
     "Execute shell command."
     (my-save-all-buffers)
     ;; (spacemacs/close-compilation-window) ;; this closes compilation windows in all frames.
     (my-close-temporary-windows)
-    (let* ((shell-command (my--get-shell-command 0)))
+    (let* ((shell-command (my--get-shell-command index)))
       (if (my--get-compilation-buffer)
           (save-selected-window
             (my--open-compilation-window)
@@ -1418,6 +1430,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "op" 'my-print-build-command)
   (spacemacs/set-leader-keys "os" 'my-select-build-command)
   (spacemacs/set-leader-keys "og" 'my-select-gdb-command)
+  (spacemacs/set-leader-keys "dg" 'my-configure-build-debug)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-build-command)
