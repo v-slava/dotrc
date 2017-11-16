@@ -1479,6 +1479,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; C/C++ (cpp_hotkeys):
   ;; mr - refactor at point (semantic)
   ;; mga - switch source <--> header (cpp <--> hpp), (c <--> h) (projectile-find-other-file)
+  ;; pI - (projectile-invalidate-cache)
   ;; mgA - switch source <--> header (open in other window)
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
@@ -1546,7 +1547,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; press "visit theme" (answer "yes" to all questions)
   ;; change "show paren match face" (use "gray 8")
 
-  ;; evil-surround. Normal mode: ys TEXT_OBJECT )
+  ;; evil-surround (braces). Normal mode: ys TEXT_OBJECT )
   ;; visual mode: s ]
 
   ;; realgud (debugger, gdb):

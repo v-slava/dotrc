@@ -906,7 +906,7 @@ patch -f -r - --no-backup-if-mismatch old_file patch_file
 git blame COMMIT~1 FILE
 
 # git delete non-existend (obsolete, stale) remote branches:
-git remote purge REMOTE
+git remote prune REMOTE
 # git get list of commits in BRANCH since COMMIT_1:
 git rev-list ^COMMIT_1 BRANCH
 
