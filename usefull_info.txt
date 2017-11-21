@@ -1,3 +1,6 @@
+# Escape sequence (color):
+echo -e '\e[0;31mRED TEXT\e[mNORMAL TEXT'
+
 # List all known character set encodings:
 iconv -l
 
@@ -51,7 +54,9 @@ help
 help CMD
 printenv
 printenv -a
-setenv ARG "VALUE"
+setenv VARIABLE "VALUE"
+# unset variable:
+setenv VARIABLE
 saveenv
 reset
 
@@ -853,6 +858,7 @@ root:OUTPUT_FROM_PREVIOUS_CMD:0:0:Root,,,:/:/bin/sh
 # View current kernel config:
 zcat /proc/config.gz
 
+# Note: for debug logging better use normal printk().
 # debug printk:
 pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
@@ -860,6 +866,13 @@ pr_devel() should produce zero code unless DEBUG is defined
 pr_debug(char *format, ...);
 # If you are writing a driver, please use dev_dbg instead
 dev_dbg(struct device *dev, char *format, ...);
+
+# Enable all (debug-level) messages:
+echo 7 > /proc/sys/kernel/printk
+
+# Show dmesg log:
+dmesg -w
+tail -F /var/log/messages
 
 # Truncate file:
 truncate -s SIZE FILE
@@ -1193,6 +1206,9 @@ sudo minicom -D /dev/ttyUSB0
 (set to Novia "F" key)
 than go to main menu, select "Save setup as dfl"
 
+# Exit minicom:
+<ctrl>+A <pause> X
+
 # Start screen:
 screen /dev/ttyUSB0 115200N1
 
@@ -1251,10 +1267,6 @@ du -h -d 1
 
 # Mount usb so that all users can write to it:
 su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
-
-# Show dmesg log:
-dmesg -w
-tail -F /var/log/messages
 
 # Replace symbol (space in this case) witn \n:
 cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER
