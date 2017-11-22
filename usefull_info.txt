@@ -46,8 +46,14 @@ find -exec CMD args_before {} args_after \;
 # Find \r symbols:
 grep -r $'\r'
 
+# Print symbols from ELF fils and sort them by their size:
+nm --print-size --size-sort file.elf
+
 # Find symbol in directory with libraries / object files:
 find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
+
+# Display symbols, exported by a shared library (even stripped one):
+nm -D /path/to/libSOMETHING.so
 
 # Uboot commands (press any key at early boot stage to enter uboot console):
 help
@@ -346,6 +352,7 @@ xmodmap -e 'keycode 108 = Mode_switch'
 
 # Linker: issue linker map (see what consumes memory):
 -Wl,--print-map
+-Wl,-Map=file.map
 
 # Verbose linking (linker: print linker script, linked objects, libraries, etc.):
 gcc 1.o 2.o -o out.elf -Wl,--verbose
@@ -547,9 +554,6 @@ clang-tidy-3.8 -checks=* -list-checks
 clang-tidy-3.8 -checks=* main.cpp
 
 # See also ~/os_settings/other_files/check_program.sh
-
-# Display symbols, exported by a shared library (even stripped one):
-nm -D /path/to/libSOMETHING.so
 
 # xargs specify parameters order (you can use anything as replace_str):
 echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
