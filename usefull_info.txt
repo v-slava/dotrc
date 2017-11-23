@@ -919,6 +919,12 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git show last 4 commits (only hashes):
+git log HEAD@{3}..HEAD --pretty=format:"%H"
+
+# Process last 4 commits one by one:
+(git log HEAD@{3}..HEAD --pretty=format:"%H" && echo) | while read commit ; do echo "commit = $commit" ; done
+
 # git blame further (deeper) in history:
 git blame COMMIT~1 FILE
 
