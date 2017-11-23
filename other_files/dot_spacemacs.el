@@ -334,6 +334,8 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  (setq my-emacs-text-separator "MY_EMACS_TEXT_SEPARATOR")
+
   (defun my--error (&rest args)
     "Print error message using (user-error)."
     (user-error "[Error] %s: %s" this-command (apply #'format-message args)))
@@ -563,11 +565,18 @@ TODO: respect comments."
         (my--test-elisp)
       (my--execute-shell-command 0)))
 
-  (defun my-configure-build-debug ()
+  (defun my-debug ()
     "[configure] [build] debug file/project."
     (interactive)
-    (my--execute-shell-command 1)
-    )
+    (let* ((full-shell-command (my--get-shell-command 1))
+           (separator-index (string-match my-emacs-text-separator full-shell-command))
+           (prepare-shell-command (substring full-shell-command 0 separator-index))
+           (gdb-shell-command-index (+ separator-index (length my-emacs-text-separator)))
+           (gdb-shell-command (substring full-shell-command gdb-shell-command-index))
+           )
+      (shell-command prepare-shell-command)
+      (gdb gdb-shell-command)
+      ))
 
   (defun my--get-shell-command (index)
     "Return shell command (either selected for current project or by file type)."
@@ -612,15 +621,50 @@ TODO: respect comments."
     (let* ((file-path (buffer-file-name (current-buffer)))
            (file-name (file-name-nondirectory file-path))
            (file-extension (file-name-extension file-name))
-           (compiled-file (concat "/tmp/" file-name ".out"))
+           (cpp-extensions '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C"))
+           (output-dir "/tmp")
+           (output-prefix (concat output-dir "/" file-name))
+           (compiled-file (concat output-prefix ".out"))
+           (debug-shell-script (concat output-prefix "_debug.sh"))
+           (debug-commands-file (concat output-prefix "_debug_commands.gdb"))
            (compile-ending (concat file-path " -o " compiled-file " && " compiled-file))
            (script (concat "chmod +x " file-path " && " file-path)))
       (cond
-       ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
-       ((member file-extension '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C")) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
-       ((equal file-extension "rs") (concat "rustc " compile-ending))
-       ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
-       ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
+       ((equal index 0)
+        (cond
+         ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
+         ((member file-extension cpp-extensions) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
+         ((equal file-extension "rs") (concat "rustc " compile-ending))
+         ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
+         ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
+         (t "echo \"shell command for this file type is not defined\" && false")))
+       ((equal index 1)
+        (cond
+         ((member file-extension (append '("c") cpp-extensions)) (concat
+"cat << EOF1 > " debug-shell-script "
+#!/bin/bash
+
+if [ \"\\$1\" = \"emacs\" ]; then
+    ARGS=\"--i=mi \"
+else
+    NATIVE=\"
+layout src
+\"
+fi
+
+cat << EOF2 > " debug-commands-file "
+file \"" compiled-file "\"
+b main
+run
+del 1
+\\$NATIVE
+EOF2
+gdb \\$ARGS -x " debug-commands-file "
+EOF1
+chmod +x " debug-shell-script
+my-emacs-text-separator
+debug-shell-script " emacs"))
+         (t "echo \"shell command for this file type is not defined\" && false")))
        (t "echo \"shell command for this file type is not defined\" && false"))))
 
   (defun my--insert-prj-shell-commands (index shell-commands)
@@ -1204,6 +1248,14 @@ Add Man mode support to (previous-buffer)."
   ;; (setq indent-tabs-mode t)
   ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
 
+  ;; For python mode: disable repeating window popup with the following message
+  ;; (this is some anaconda parsing error?):
+  ;; # status: nil
+  ;; # point: 1
+  (with-eval-after-load 'anaconda-mode
+    (remove-hook 'anaconda-mode-response-read-fail-hook
+                 'anaconda-mode-show-unreadable-response))
+
   (defun my--c-initialization ()
 
     ;; Setup cscope:
@@ -1430,7 +1482,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "op" 'my-print-build-command)
   (spacemacs/set-leader-keys "os" 'my-select-build-command)
   (spacemacs/set-leader-keys "og" 'my-select-gdb-command)
-  (spacemacs/set-leader-keys "dg" 'my-configure-build-debug)
+  (spacemacs/set-leader-keys "dg" 'my-debug)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-build-command)
