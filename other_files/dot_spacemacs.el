@@ -554,9 +554,7 @@ TODO: respect comments."
 
   (defun my--get-elisp-for-shell-command (index cmd)
     "Returns elisp expression for setting current shell command to CMD."
-    (concat "(my--set-shell-command-for-project " (format "%d " index)
-            (let ((print-escape-newlines t)) (prin1-to-string cmd))
-            ")\n"))
+    (concat "(my--set-shell-command-for-project " (format "%d " index) (prin1-to-string cmd) ")\n"))
 
   (defun my-configure-build-run ()
     "Configure and/or build and/or run function/file/project."
@@ -698,6 +696,11 @@ debug-shell-script " emacs"))
     "Edit shell-command to be executed by (my-configure-build-run)."
     (interactive)
     (my--edit-shell-command 0))
+
+  (defun my-edit-debug-command ()
+    "Edit shell-command to be executed by (my-configure-build-run)."
+    (interactive)
+    (my--edit-shell-command 1))
 
   (defvar my--projects-alist nil "My alist of emacs projects.")
 
@@ -1479,13 +1482,14 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
   (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
   (spacemacs/set-leader-keys "of" 'my-configure-build-run)
+  (spacemacs/set-leader-keys "og" 'my-debug)
   (spacemacs/set-leader-keys "op" 'my-print-build-command)
   (spacemacs/set-leader-keys "os" 'my-select-build-command)
-  (spacemacs/set-leader-keys "og" 'my-select-gdb-command)
-  (spacemacs/set-leader-keys "dg" 'my-debug)
+  (spacemacs/set-leader-keys "dg" 'my-select-gdb-command)
   (spacemacs/set-leader-keys "oc" 'my-select-project)
   (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cc" 'my-edit-build-command)
+  (spacemacs/set-leader-keys "cg" 'my-edit-debug-command)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
 
   ;; search hotkeys:
