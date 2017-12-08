@@ -59,12 +59,15 @@ nm -D /path/to/libSOMETHING.so
 help
 help CMD
 printenv
+printenv VARIABLE
+echo $VARIABLE
 printenv -a
 setenv VARIABLE "VALUE"
 # unset variable:
 setenv VARIABLE
 saveenv
 reset
+if test $VARIABLE = "VALUE" ; then echo "equals" ; else echo "not equals" ; fi
 
 # If libreoffice draw is slow (with grid enabled), turn on the following settings:
 Tools -> Options -> View -> Use OpenGL for all rendering (on restart)
@@ -1570,6 +1573,9 @@ kpartx -d $OUT # delete partition mappings:
 
 # Create uImage from raw binary:
 mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3.8.13+ -d print_hw_features.bin uImage
+
+# Create U-Boot script image:
+mkimage -A arm -O u-boot -T script -C none -n 'UbootUpdateScript' -d update_script.txt update_script.scr
 
 # Add bridge:
 brctl addbr br0
