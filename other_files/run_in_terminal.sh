@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# (my--set-shell-command-for-project 0 "~/os_settings/other_files/run_in_terminal.sh top")
-# (my--set-shell-command-for-project 0 "~/os_settings/other_files/run_in_terminal.sh ls -l")
+# (my--set-shell-command-for-project 0 (concat (buffer-file-name) " top"))
+# (my--set-shell-command-for-project 0 (concat (buffer-file-name) " ls -l"))
 
 CMD="$@"
 

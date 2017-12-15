@@ -1173,7 +1173,7 @@ Add Man mode support to (previous-buffer)."
     (define-key magit-hunk-section-map (kbd "C-SPC") 'set-mark-command)
     )
 
-  ;; Snippets: (yas-new-snippet) (yas-reload-all)
+  ;; Snippets (yasnippet): (yas-new-snippet) (yas-reload-all)
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
   (add-hook 'ediff-display-help-hook '(lambda ()
@@ -1553,7 +1553,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
   ;; M-? - find references to symbol under cursor (xref-find-references) (like full text search implemented in elisp)
-  ;; (whitespace-mode) display spaces, tabs and newlines.
+  ;; (whitespace-mode) display spaces, tabs and newlines (tags: make invisible).
   ;; Convert spaces to tabs and backwards: (tabify) (untabify).
   ;; (toggle-truncate-lines) - set wrap!
   ;; For available packages see (list-packages) or (package-list-packages).

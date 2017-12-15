@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: interpreter_shebang
+# key: !
+# --
+#!/usr/bin/env python3
+
+$0
