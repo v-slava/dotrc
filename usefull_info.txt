@@ -431,6 +431,7 @@ bear make
 # need additional processing:
 ninja -v
 ninja -t commands
+ninja -t compdb ninja_rule_1 ninja_rule_2 ...
 make VERBOSE=1
 
 # Start rtags daemon (custom toolchain):
