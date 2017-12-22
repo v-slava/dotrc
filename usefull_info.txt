@@ -55,6 +55,9 @@ find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
 
+# Compare symbols in 2 elf files:
+nm YOUR_FILE.elf | grep -v ' $a$' | grep -v ' $d$' | grep -v ' $t$' | grep -v '         U ' | cut -d' ' -f3  | c++filt | sort > compare_this.txt
+
 # Uboot commands (press any key at early boot stage to enter uboot console):
 help
 help CMD
@@ -115,6 +118,27 @@ touch foo.h && gcc -c -v foo.h
 
 # Standard compiler macros (preprocessor):
 gcc -dM -E - < /dev/null
+
+# Preprocess using cmake:
+1) go to your build directory;
+2) execute commands like: "make some_file.cpp.i".
+
+# Preprocess using msvc:
+1) Create new win32 console msvc project. Add single source file with the following contents:
+   #include "preprocessed.i"
+   int main(void) { return 0; }
+2) Copy to clipboard YOUR_COMPILATION_OPTIONS:
+   in Visual Studio: right click on your project -> Properties -> Configuration Properties -> C/C++ -> Command Line.
+3) Create file "preprocess.bat" with the following contents:
+     call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64 || goto error
+     cd C:\your\path\to\visual\studio\project || goto error
+     cl.exe YOUR_COMPILATION_OPTIONS ^
+     some_file.cpp /C /EP > C:\your\path\to\preprocessed\preprocessed\preprocessed.i || goto error
+     exit
+     :error
+     set /p DUMMY=Hit ENTER to exit...
+4) Run "preprocess.bat"
+5) Compile your preprocessing project.
 
 # preprocess bash script:
 #!/bin/bash -x
@@ -931,6 +955,9 @@ git log HEAD@{3}..HEAD --pretty=format:"%H"
 
 # git blame further (deeper) in history:
 git blame COMMIT~1 FILE
+
+# git blame deleted line:
+git log -S part_of_deleted_string path/to/file
 
 # git delete non-existend (obsolete, stale) remote branches:
 git remote prune REMOTE
