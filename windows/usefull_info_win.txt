@@ -3,6 +3,15 @@ cmd /K "cd C:\dir_1\dir_2 && git status"
 # Execute COMMAND and exit afterwards (close cmd.exe window):
 cmd /C "COMMAND"
 
+# Do not print a command being executed just once:
+@ SOME_COMMAND
+
+# Never print commands being executed:
+@echo off
+
+# env analog:
+set
+
 # Assign and reference variable in batch file (do not quote VALUE):
 set VAR_NAME=VALUE
 echo %VAR_NAME%
@@ -44,15 +53,22 @@ set /p DUMMY=Hit ENTER to exit...
 # Open with default application (starts browser):
 start "" https://www.google.com
 
+# Create folder:
+mkdir dir_1/subdir_2
+
 # Create symbolic link:
 mklink LINK TARGET
 
 # cat file1 file2 > file3
 type file1 file2 > file3
 
-# Check whether file exists:
+# which executable:
+where executable
+
+# Check whether file/folder/directory exists:
 if not exist FILE (
     CMD1
+) else (
     CMD2
 )
 
@@ -105,5 +121,3 @@ cp FILE \\HOST\c$\dir_1\dir_2\
      set /p DUMMY=Hit ENTER to exit...
 4) Run "preprocess.bat"
 5) Compile your preprocessing project.
-
-
