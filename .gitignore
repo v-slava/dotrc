@@ -9,6 +9,7 @@
 /bin/clang++
 /bin/gcc
 /bin/cc
+/bin/c++
 /bin/g++
 /bin/ctags
 *.pyc
