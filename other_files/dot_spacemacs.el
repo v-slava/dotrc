@@ -43,7 +43,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     emacs-lisp
+     ;; emacs-lisp
      spacemacs-org ;; need for git layer below
      git
      markdown
@@ -64,7 +64,7 @@ values."
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
      ;; ycmd
-     syntax-checking
+     ;; syntax-checking
      ;; semantic
      )
    ;; List of additional packages that will be installed without being
@@ -75,7 +75,7 @@ values."
                                       ;; key-chord
                                       ninja-mode
                                       xcscope
-                                      ag
+                                      ;; ag
                                       ivy-rtags
                                       ;; company-irony
                                       )
@@ -303,7 +303,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg", "ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -334,32 +334,17 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (setq my-emacs-text-separator "MY_EMACS_TEXT_SEPARATOR")
-
   (defun my--error (&rest args)
     "Print error message using (user-error)."
     (user-error "[Error] %s: %s" this-command (apply #'format-message args)))
 
   (defun lisp-state-eval-sexp-end-of-line ()
     "My implementation for \'evil-leader \"mel\"\':
-evaluate the last sexp at the end of the current line.
-TODO: respect comments."
+evaluate the last sexp at the end of the current line."
     (interactive)
     (save-excursion
       (end-of-line)
       (eval-last-sexp nil)))
-
-  (defun my-text-scale-increase ()
-    (interactive)
-    (text-scale-increase 1))
-
-  (defun my-text-scale-decrease ()
-    (interactive)
-    (text-scale-decrease 1))
-
-  (defun my-text-scale-default ()
-    (interactive)
-    (text-scale-adjust 0))
 
   (defun my-set-tab-width (tab_width)
     (interactive)
@@ -425,14 +410,289 @@ TODO: respect comments."
         (message "Switched to russian keyboard layout"))
       (if in-insert-state (evil-append 1))))
 
+  (defun my--eval-string (string)
+    "Evaluate elisp code stored in a string."
+    (message "(my--eval-string \"%s\")" string)
+    (eval (car (read-from-string string))))
+
+  (defun my--define-struct (name fields)
+    "Define a structure using (cl-defstruct)."
+    (let ((expression (concat "(cl-defstruct " name)))
+      (mapcar (lambda (arg) (setq expression (concat expression " " arg))) fields)
+      (my--eval-string (concat expression ")"))))
+
+  (defun my--get-all-frame-parameters ()
+    (frame-parameter (selected-frame) 'my--all-frame-parameters))
+
+  (cl-defstruct my--all-frame-parameters project-name compilation-buffer window-configuration commands)
+  (cl-defstruct my--frame-command name fields execute get-elisp)
+  (cl-defstruct my--project-definition name file commands)
+
+  (defun my--get-project-name ()
+    "Return currently selected project name."
+    (my--all-frame-parameters-project-name (my--get-all-frame-parameters)))
+
+  (defun my--set-project-name (name)
+    "Set currently selected project name to NAME."
+    (message "Set my project to: \"%s\"" name)
+    (setf (my--all-frame-parameters-project-name (my--get-all-frame-parameters)) name))
+
+  (defun my--get-compilation-buffer ()
+    "Return compilation buffer."
+    (my--all-frame-parameters-compilation-buffer (my--get-all-frame-parameters)))
+
+  (defun my--set-compilation-buffer (buffer)
+    "Set compilation buffer to BUFFER."
+    (setf (my--all-frame-parameters-compilation-buffer (my--get-all-frame-parameters)) buffer))
+
   (defun my-close-temporary-windows ()
     "Close temporary windows (compile results, help, etc)."
     (interactive)
-    (set-frame-parameter (selected-frame) 'my--window-configuration (current-window-configuration))
+    (setf (my--all-frame-parameters-window-configuration (my--get-all-frame-parameters)) (current-window-configuration))
     (dolist (cur_window (window-list))
       (when (not (buffer-file-name (window-buffer cur_window)))
         ;; a buffer hasn't associated file name
         (delete-window cur_window))))
+
+  (defun my-restore-temp-window ()
+    "Restore previously closed temporary window."
+    (interactive)
+    (set-window-configuration (my--all-frame-parameters-window-configuration (my--get-all-frame-parameters))))
+
+  (defun my--open-compilation-window ()
+    "Open compilation window."
+    (split-window-below-and-focus)
+    (switch-to-buffer (my--get-compilation-buffer)))
+
+  (defvar my--projects-alist nil "My alist of emacs projects.")
+
+  (defun my--get-project-definition ()
+    "Return currently selected project definition."
+    (cdr (assoc (my--get-project-name) my--projects-alist)))
+
+  (defun my--get-project-file ()
+    "Return a file where currently selected project is defined."
+    (let ((prj-def (my--get-project-definition)))
+      (if prj-def (my--project-definition-file prj-def) nil)))
+
+  (defun my--get-project-commands ()
+    (let ((prj-def (my--get-project-definition)))
+      (if prj-def (my--project-definition-commands prj-def) nil)))
+
+  (defun my-select-project ()
+    "Select project using ivy."
+    (interactive)
+    (ivy-read "Select project: " my--projects-alist :action (lambda (x) (my--set-project-name (car x)))))
+
+  (defun my-edit-project-definition ()
+    "Edit currently selected project definition."
+    (interactive)
+    (let* ((file (my--get-project-file)))
+      (if file
+          (find-file file)
+        (my--error "you should select project first"))))
+
+  (defun my--load-emacs-process-files-list (directory files-list)
+    "Recursively process files-list. See (my--load-emacs-projects) for details."
+    (when files-list
+      (let ((my--loading-file (concat directory "/" (car files-list))))
+        (when (file-regular-p my--loading-file)
+          ;; (message "evaluating elisp code from file: %s" my--loading-file)
+          (with-demoted-errors "%s" (load-file my--loading-file))))
+      (my--load-emacs-process-files-list directory (cdr files-list))))
+
+  (defun my--load-emacs-projects (directory)
+    "Read and evaluate as elisp all files from a given directory."
+    (with-demoted-errors "%s"
+      (unless (file-directory-p directory)
+        (my--error "Can't load emacs projects: \"%s\" - no such directory" directory))
+      (my--load-emacs-process-files-list directory (directory-files directory))))
+
+  (defun my-register-project (prj)
+    "Register new emacs project."
+    (let* ((name (my--project-definition-name prj))
+           (file (if (buffer-file-name) (buffer-file-name) my--loading-file))
+           (prj-def (assoc name my--projects-alist)))
+      (when prj-def (setq my--projects-alist (remove prj-def my--projects-alist)))
+      (setf (my--project-definition-file prj) file)
+      (add-to-list 'my--projects-alist `(,name . ,prj))))
+
+  (defun my--register-all-frame-parameters ()
+    "Call this function just once after all calls (my--register-frame-parameters)."
+    (let ((frame-commands '()))
+      (mapcar (lambda (arg) (add-to-list 'frame-commands (car arg))) my--frame-commands-list)
+      (my--define-struct "my--all-frame-commands" frame-commands)
+      )
+    (add-to-list 'after-make-frame-functions '(lambda (frame) (set-frame-parameter frame 'my--all-frame-parameters
+                                        (make-my--all-frame-parameters :commands (make-my--all-frame-commands)))))
+    )
+
+  (defun my--register-frame-command (definition)
+    (my--define-struct (concat "my--frame-command--" (my--frame-command-name definition)) (my--frame-command-fields definition))
+    (unless (boundp 'my--frame-commands-list) (setq my--frame-commands-list '()))
+    (add-to-list 'my--frame-commands-list `(,(my--frame-command-name definition) . ,definition))
+    )
+
+  (defun my--execute-frame-command (name)
+    "Call execute function for a given frame parameter."
+    (let ((func (my--frame-command-execute (cdr (assoc name my--frame-commands-list))))
+          (cmd (my--eval-string (concat "(my--all-frame-commands-" name " (my--all-frame-parameters-commands (my--get-all-frame-parameters)))"))))
+      (funcall func cmd)))
+
+  (defun my--get-project-frame-commands-alist (name)
+    (let ((prj-cmds (my--get-project-commands)))
+      (if prj-cmds (my--eval-string (concat "(my--all-frame-commands-" name " prj-cmds)")) nil)))
+
+  (defun my--set-frame-command-for-project (name cmd)
+    (my--eval-string (concat "(setf (my--all-frame-commands-" name " (my--all-frame-parameters-commands (my--get-all-frame-parameters))) cmd)")))
+
+  (defun my--select-frame-command (name)
+    "Select frame command for current project."
+    (unless (my--get-project-name) (my--error "you should select project first"))
+    (ivy-read (format "Select %s command: " name)
+              (my--get-project-frame-commands-alist name)
+              :action (lambda (x) (my--set-frame-command-for-project name (cdr x)))))
+
+  (defun my--get-default-cmd (name)
+    "Return a command to be executed depending on current file type."
+    (let* ((file-path (buffer-file-name (current-buffer)))
+           (file-name (if file-path (file-name-nondirectory file-path) nil))
+           (file-extension (if file-name (file-name-extension file-name) nil))
+           (cpp-extensions '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C"))
+           (output-dir "/tmp")
+           (output-prefix (if file-name (concat output-dir "/" file-name) nil))
+           (compiled-file (if output-prefix (concat output-prefix ".out") nil))
+           (debug-shell-script (if output-prefix (concat output-prefix "_debug.sh") nil))
+           (debug-commands-file (if output-prefix (concat output-prefix "_debug_commands.gdb") nil))
+           (compile-ending (if compiled-file (concat file-path " -o " compiled-file " && " compiled-file) nil))
+           (script (if file-path (concat "chmod +x " file-path " && " file-path) nil)))
+      (cond
+       ((equal name "build")
+        (cond
+         ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
+         ((member file-extension cpp-extensions) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
+         ((equal file-extension "rs") (concat "rustc " compile-ending))
+         ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
+         ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
+         (t nil)))
+       ((equal name "debug")
+        (cond
+         ((member file-extension (append '("c") cpp-extensions)) (make-my--frame-command--debug
+:generate-cmd (concat
+"cat << EOF1 > " debug-shell-script "
+#!/bin/bash
+
+if [ \"\\$1\" = \"emacs\" ]; then
+    ARGS=\"--i=mi \"
+else
+    NATIVE=\"
+layout src
+\"
+fi
+
+cat << EOF2 > " debug-commands-file "
+file \"" compiled-file "\"
+b main
+run
+del 1
+\\$NATIVE
+EOF2
+gdb \\$ARGS -x " debug-commands-file "
+EOF1
+chmod +x " debug-shell-script)
+:debug-cmd (concat debug-shell-script " emacs")
+))
+         (t nil)))
+       (t nil))))
+
+  (defun my--insert-elisp (name comment cmd)
+    (insert (concat "# " comment ":\n(my--set-frame-command-for-project \"" name "\" "))
+    (let* ((get-elisp-func (my--frame-command-get-elisp (cdr (assoc name my--frame-commands-list))))
+           (elisp (funcall get-elisp-func cmd)))
+      (insert elisp))
+    (insert ")\n\n"))
+
+  (defun my--edit-frame-command (name)
+    (let ((cur-cmd (my--eval-string (concat "(my--all-frame-commands-" name " (my--all-frame-parameters-commands (my--get-all-frame-parameters)))")))
+          (default-cmd (my--get-default-cmd name))
+          (prj-cmds (my--get-project-frame-commands-alist name)))
+      (switch-to-buffer "*scratch*")
+      (erase-buffer)
+      (spacemacs/toggle-line-numbers-on)
+      (when cur-cmd (my--insert-elisp name "Current command" cur-cmd))
+      (when default-cmd (my--insert-elisp name "Default command" default-cmd))
+      (when prj-cmds (mapcar (lambda (x) (my--insert-elisp name (concat "Project command \"" (car x) "\"") (cdr x))) prj-cmds))
+      (my--insert-elisp name "Reset to default command" nil)
+      (evil-previous-line)
+      (kill-whole-line)
+      (evil-goto-line 2)
+      (evil-find-char 1 ?\")
+      (forward-char)))
+
+  (defun my-execute-build-frame-command ()
+    (interactive)
+    (my--execute-frame-command "build"))
+  (defun my-select-build-frame-command ()
+    (interactive)
+    (my--select-frame-command "build"))
+  (defun my-edit-build-frame-command ()
+    (interactive)
+    (my--edit-frame-command "build"))
+  (defun my-execute-debug-frame-command ()
+    (interactive)
+    (my--execute-frame-command "debug"))
+  (defun my-select-debug-frame-command ()
+    (interactive)
+    (my--select-frame-command "debug"))
+  (defun my-edit-debug-frame-command ()
+    (interactive)
+    (my--edit-frame-command "debug"))
+
+  (my--register-frame-command (make-my--frame-command
+                                 :name "build"
+                                 :fields '("shell-cmd")
+                                 :execute (lambda (cmd)
+                                            (let ((shell-cmd (if cmd (if (stringp cmd) cmd (my--frame-command--build-shell-cmd cmd)) (my--get-default-cmd "build"))))
+                                              (my-save-all-buffers)
+                                              (if (and (derived-mode-p 'emacs-lisp-mode) (not cmd))
+                                                  (my--test-elisp)
+                                                (unless shell-cmd (my--error "build command for this file type is not defined."))
+                                                ;; (spacemacs/close-compilation-window) ;; this closes compilation windows in all frames.
+                                                (my-close-temporary-windows)
+                                                (if (my--get-compilation-buffer)
+                                                    (save-selected-window
+                                                      (my--open-compilation-window)
+                                                      (compile shell-cmd))
+                                                  (compile shell-cmd)
+                                                  (with-current-buffer "*compilation*" (rename-uniquely))
+                                                  (my--set-compilation-buffer compilation-last-buffer)))))
+                                 :get-elisp (lambda (cmd)
+                                              (if (not cmd) "nil"
+                                                (let ((shell-cmd (if (stringp cmd) cmd (my--frame-command--build-shell-cmd cmd))))
+                                                  (exec-path-from-shell--double-quote shell-cmd))))
+                                 ))
+
+  (my--register-frame-command (make-my--frame-command
+                                 :name "debug"
+                                 :fields '("generate-cmd" "debug-cmd")
+                                 :execute (lambda (cmd)
+                                            (unless cmd (setq cmd (my--get-default-cmd "debug")))
+                                            (unless cmd (my--error "debug command for this file type is not defined."))
+                                            (let ((generate-cmd (my--frame-command--debug-generate-cmd cmd))
+                                                  (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
+                                              (shell-command generate-cmd)
+                                              (gdb debug-cmd)
+                                              ))
+                                 :get-elisp (lambda (cmd)
+                                              (if (not cmd) "nil"
+                                                (let ((generate-cmd (my--frame-command--debug-generate-cmd cmd))
+                                                      (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
+                                                  (concat "(make-my--frame-command--debug :generate-cmd\n"
+                                                          (replace-regexp-in-string "\\\$" "\\\\\$" (exec-path-from-shell--double-quote generate-cmd))
+                                                          "\n:debug-cmd " (exec-path-from-shell--double-quote debug-cmd) ")"))))
+                                 ))
+
+  (my--register-all-frame-parameters)
 
   (defun my-split-and-open-buffer-below ()
     "Split current window and switch to buffer below."
@@ -481,267 +741,6 @@ TODO: respect comments."
         (widen)
         (buffer-substring-no-properties (point-min) (point-max)))))
 
-  (defun my--load-emacs-process-files-list (directory files-list)
-    "Recursively process files-list. See (my--load-emacs-projects) for details."
-    (when files-list
-      (let ((my--loading-file (concat directory "/" (car files-list))))
-        (when (file-regular-p my--loading-file)
-          ;; (message "evaluating elisp code from file: %s" my--loading-file)
-          (with-demoted-errors "%s" (load-file my--loading-file))))
-      (my--load-emacs-process-files-list directory (cdr files-list))))
-
-  (defun my--load-emacs-projects (directory)
-    "Read and evaluate as elisp all files from a given directory."
-    (with-demoted-errors "%s"
-      (unless (file-directory-p directory)
-        (my--error "Can't load emacs projects: \"%s\" - no such directory" directory))
-      (my--load-emacs-process-files-list directory (directory-files directory))))
-
-  (defun my--get-compilation-buffer ()
-    "Return compilation buffer."
-    (frame-parameter (selected-frame) 'my--compilation-buffer))
-
-  (defun my--set-compilation-buffer (buffer)
-    "Set compilation buffer to BUFFER."
-    (set-frame-parameter (selected-frame) 'my--compilation-buffer buffer))
-
-  (defun my--get-project-name ()
-    "Return currently selected project name."
-    (frame-parameter (selected-frame) 'my--project-name))
-
-  (defun my--set-project-name (name)
-    "Set currently selected project name to NAME."
-    (message "Set my project to: \"%s\"" name)
-    (set-frame-parameter (selected-frame) 'my--project-name name))
-
-  (defun my--get-project-definition ()
-    "Return currently selected project definition."
-    (assoc (my--get-project-name) my--projects-alist))
-
-  (defun my--get-project-file ()
-    "Return a file where currently selected project is defined."
-    (elt (cdr (my--get-project-definition)) 2))
-
-  (defun my--get-project-shell-commands-alist (index)
-    "Return shell commands alist for currently selected project."
-    (elt (cdr (my--get-project-definition)) index))
-
-  (defun my--get-selected-shell-commands-for-project ()
-    "Return list of currently selected shell commands (for current project)."
-    (frame-parameter (selected-frame) 'my--shell-command))
-
-  (defun my--get-shell-command-for-project (index)
-    "Return currently selected shell command (for current project)."
-    (elt (my--get-selected-shell-commands-for-project) index))
-
-  (defun my--get-init-shell-command ()
-    "Return initial shell commands for newly created frame."
-    (make-list 2 nil))
-
-  (defun my--set-shell-command-for-project (index cmd)
-    "Set currently selected shell command (for current project) to CMD."
-    (message "Set my shell command[%d] to: \"%s\"" index cmd)
-    (let ((old-value (my--get-selected-shell-commands-for-project))
-          (new-value (my--get-init-shell-command))
-          (i 0))
-      ;; Copy old-value to new-value:
-      (while (< i 2)
-        (setf (elt new-value i) (elt old-value i))
-        (setq i (1+ i)))
-      ;; Update new-value:
-      (setf (elt new-value index) cmd)
-      (set-frame-parameter (selected-frame) 'my--shell-command new-value)))
-
-  (defun my--get-elisp-for-shell-command (index cmd)
-    "Returns elisp expression for setting current shell command to CMD."
-    (concat "(my--set-shell-command-for-project " (format "%d " index) (prin1-to-string cmd) ")\n"))
-
-  (defun my-configure-build-run ()
-    "Configure and/or build and/or run function/file/project."
-    (interactive)
-    (if (derived-mode-p 'emacs-lisp-mode)
-        (my--test-elisp)
-      (my--execute-shell-command 0)))
-
-  (defun my-debug ()
-    "[configure] [build] debug file/project."
-    (interactive)
-    (let* ((full-shell-command (my--get-shell-command 1))
-           (separator-index (string-match my-emacs-text-separator full-shell-command))
-           (prepare-shell-command (substring full-shell-command 0 separator-index))
-           (gdb-shell-command-index (+ separator-index (length my-emacs-text-separator)))
-           (gdb-shell-command (substring full-shell-command gdb-shell-command-index))
-           )
-      (shell-command prepare-shell-command)
-      (gdb gdb-shell-command)
-      ))
-
-  (defun my--get-shell-command (index)
-    "Return shell command (either selected for current project or by file type)."
-    (if (my--get-shell-command-for-project index)
-        (my--get-shell-command-for-project index)
-      (my--get-shell-command-by-file-type index)))
-
-  (defun my--print-shell-command (index)
-    "Print shell command to be executed."
-    (message "Shell command[%d]: %s" index (my--get-shell-command index)))
-
-  (defun my-print-build-command ()
-    (interactive)
-    (my--print-shell-command 0))
-
-  (defun my--open-compilation-window ()
-    "Open compilation window."
-    (split-window-below-and-focus)
-    (switch-to-buffer (my--get-compilation-buffer)))
-
-  (defun my--execute-shell-command (index)
-    "Execute shell command."
-    (my-save-all-buffers)
-    ;; (spacemacs/close-compilation-window) ;; this closes compilation windows in all frames.
-    (my-close-temporary-windows)
-    (let* ((shell-command (my--get-shell-command index)))
-      (if (my--get-compilation-buffer)
-          (save-selected-window
-            (my--open-compilation-window)
-            (compile shell-command))
-      (compile shell-command)
-      (with-current-buffer "*compilation*" (rename-uniquely))
-      (my--set-compilation-buffer compilation-last-buffer))))
-
-  (defun my-restore-temp-window ()
-    "Restore previously closed temporary window."
-    (interactive)
-    (set-window-configuration (frame-parameter (selected-frame) 'my--window-configuration)))
-
-  (defun my--get-shell-command-by-file-type (index)
-    "Return a shell command to be executed for a given file type."
-    (let* ((file-path (buffer-file-name (current-buffer)))
-           (file-name (file-name-nondirectory file-path))
-           (file-extension (file-name-extension file-name))
-           (cpp-extensions '("cc" "cp" "cxx" "cpp" "CPP" "c++" "C"))
-           (output-dir "/tmp")
-           (output-prefix (concat output-dir "/" file-name))
-           (compiled-file (concat output-prefix ".out"))
-           (debug-shell-script (concat output-prefix "_debug.sh"))
-           (debug-commands-file (concat output-prefix "_debug_commands.gdb"))
-           (compile-ending (concat file-path " -o " compiled-file " && " compiled-file))
-           (script (concat "chmod +x " file-path " && " file-path)))
-      (cond
-       ((equal index 0)
-        (cond
-         ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
-         ((member file-extension cpp-extensions) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
-         ((equal file-extension "rs") (concat "rustc " compile-ending))
-         ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
-         ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
-         (t "echo \"shell command for this file type is not defined\" && false")))
-       ((equal index 1)
-        (cond
-         ((member file-extension (append '("c") cpp-extensions)) (concat
-"cat << EOF1 > " debug-shell-script "
-#!/bin/bash
-
-if [ \"\\$1\" = \"emacs\" ]; then
-    ARGS=\"--i=mi \"
-else
-    NATIVE=\"
-layout src
-\"
-fi
-
-cat << EOF2 > " debug-commands-file "
-file \"" compiled-file "\"
-b main
-run
-del 1
-\\$NATIVE
-EOF2
-gdb \\$ARGS -x " debug-commands-file "
-EOF1
-chmod +x " debug-shell-script
-my-emacs-text-separator
-debug-shell-script " emacs"))
-         (t "echo \"shell command for this file type is not defined\" && false")))
-       (t "echo \"shell command for this file type is not defined\" && false"))))
-
-  (defun my--insert-prj-shell-commands (index shell-commands)
-    "Insert project shell commands in buffer."
-    (when shell-commands
-      (let* ((first-cmd (car shell-commands))
-             (cmd-name (car first-cmd))
-             (cmd-def (cdr first-cmd)))
-        (insert (concat "# " cmd-name ":\n"))
-        (insert (my--get-elisp-for-shell-command index cmd-def))
-        ;; (insert "\n")
-        (my--insert-prj-shell-commands index (cdr shell-commands)))))
-
-  (defun my--edit-shell-command (index)
-    "Edit shell-command to be executed by (my-configure-build-run)."
-    (let ((shell-cmd-by-file-type (my--get-shell-command-by-file-type index)))
-      (switch-to-buffer "*scratch*")
-      (erase-buffer)
-      (if (my--get-shell-command-for-project index)
-          (progn
-            (insert (my--get-elisp-for-shell-command index (my--get-shell-command-for-project index)))
-            (insert "\n")
-            (my--insert-prj-shell-commands index (my--get-project-shell-commands-alist index))
-            (insert "\n")))
-      (insert (my--get-elisp-for-shell-command index shell-cmd-by-file-type)))
-    (evil-goto-first-line)
-    (evil-find-char 1 ?\")
-    (forward-char))
-
-  (defun my-edit-build-command ()
-    "Edit shell-command to be executed by (my-configure-build-run)."
-    (interactive)
-    (my--edit-shell-command 0))
-
-  (defun my-edit-debug-command ()
-    "Edit shell-command to be executed by (my-configure-build-run)."
-    (interactive)
-    (my--edit-shell-command 1))
-
-  (defvar my--projects-alist nil "My alist of emacs projects.")
-
-  (defun my-register-project (name build-cmds &optional debug-cmds)
-    "Register new emacs project."
-    (let* ((debug-cmds (or debug-cmds nil))
-           (prj-def (assoc name my--projects-alist))
-           (file (if (buffer-file-name) (buffer-file-name) my--loading-file)))
-      (when prj-def (setq my--projects-alist (remove prj-def my--projects-alist)))
-      ;; TODO check project definition.
-      (add-to-list 'my--projects-alist `(,name . (,build-cmds ,debug-cmds ,file)) t)))
-
-  (defun my-select-project ()
-    "Select project using ivy."
-    (interactive)
-    (ivy-read "Select project: " my--projects-alist :action (lambda (x) (my--set-project-name (car x)))))
-
-  (defun my--select-shell-command (index)
-    "Select shell command within current project."
-    (unless (my--get-project-name) (my--error "you should select project first"))
-    (ivy-read (format "Select shell command[%d]: " index) (my--get-project-shell-commands-alist index)
-              :action (lambda (x) (my--set-shell-command-for-project index (cdr x)))))
-
-  (defun my-select-build-command ()
-    "Select build command within current project."
-    (interactive)
-    (my--select-shell-command 0))
-
-  (defun my-select-gdb-command ()
-    "Select debug (gdb) command within current project."
-    (interactive)
-    (my--select-shell-command 1))
-
-  (defun my-edit-project-definition ()
-    "Edit currently selected project definition."
-    (interactive)
-    (let* ((file (my--get-project-file)))
-      (if file
-          (find-file file)
-        (my--error "you should select project first"))))
-
   (defun my--test-elisp ()
     "Evaluate current elisp function and call (my-elisp-testcase)."
     (save-excursion
@@ -751,7 +750,11 @@ debug-shell-script " emacs"))
     (save-excursion (my-elisp-testcase)))
 
   (defun my--set-tags (name)
-    "Add tags table. This function calls (visit-tags-table).
+    "Wrapper over (my--set-tags-internal)"
+    (my--set-tags-internal name my--use-tags-completion-table))
+
+  (defun my--set-tags-internal (name build-tags-completion-table)
+    "Add tags table. This function optionally calls (visit-tags-table).
 Variable tags-table-list contains list of currently active tag tables.
 See also variable tags-file-name."
     (let* ((saved-large-file-warning-threshold large-file-warning-threshold)
@@ -763,7 +766,7 @@ See also variable tags-file-name."
       (setq large-file-warning-threshold nil)
       (setq dotspacemacs-large-file-size 1024) ;; in megabytes
       (visit-tags-table selected-tags-file)
-      (tags-completion-table)
+      (if build-tags-completion-table (tags-completion-table))
       (setq dotspacemacs-large-file-size saved-dotspacemacs-large-file-size)
       ;; (add-to-list 'spacemacs-large-file-modes-list 'fundamental-mode) ;; tags-table-mode
       (setq large-file-warning-threshold saved-large-file-warning-threshold)
@@ -775,14 +778,6 @@ See also variable tags-file-name."
     (let* ((files (directory-files (concat my--emacs-projects-dir "/tags") nil "^.+\.TAGS$"))
            (tags (mapcar (lambda (file) (string-remove-suffix ".TAGS" file)) files)))
       (ivy-read "Select tags: " tags :action 'my--set-tags)))
-
-  ;; In compilation buffer jump to proper line (buffer local variable): (goto-char compilation-next-error)
-  ;; Get current line (into myLine variable):
-  ;; (setq myLine
-  ;;       (buffer-substring-no-properties
-  ;;        (line-beginning-position)
-  ;;        (line-end-position)
-  ;;        ))
 
   (defun my-this-error()
     "Visit this (current) error in source code."
@@ -804,6 +799,12 @@ See also variable tags-file-name."
       ;; (my--copy-to-clipboard location)
       (kill-new location)
       (message (concat "copied: " location))))
+
+  (defun my-toggle-hex-mode ()
+    (interactive)
+    (if (derived-mode-p 'hexl-mode)
+        (hexl-mode-exit)
+      (hexl-mode)))
 
   (defun my-goto-last-line ()
     "Goto last line."
@@ -851,6 +852,7 @@ Otherwise return unmodified string."
       (if index (substring str 0 index) str)))
 
   (defun my--process-rtags-symbol (str)
+    "Extract symbol from str: filter-out some excessive symbols."
     (if str (my--delete-brace-and-after-if-present
              (my--delete-first-symbol-pointer-or-reference-if-present
               (my--delete-first-word-if-present str)))
@@ -858,6 +860,7 @@ Otherwise return unmodified string."
 
   (defun my--get-symbol-under-cursor ()
     "Get symbol under cursor"
+    (require 'rtags)
     (my--process-rtags-symbol (rtags-current-symbol-name)))
 
   (defun my-find-references-cscope ()
@@ -867,27 +870,45 @@ Otherwise return unmodified string."
     (cscope-find-this-symbol (find-tag--default))
     )
 
+  (setq my--use-tags-completion-table t)
+
   (defun my-find-tag ()
-    "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
+    "Wrapper over (my--find-tag-internal)."
     (interactive)
+    (my--find-tag-internal my--use-tags-completion-table))
+
+  (defun my-toggle-use-tags-completion-table ()
+    "Toggle my--use-tags-completion-table."
+    (interactive)
+    (if my--use-tags-completion-table
+        (setq my--use-tags-completion-table nil)
+      (setq my--use-tags-completion-table t))
+    (message "Use tags completion table has been set to: %s" (if my--use-tags-completion-table "true" "false"))
+    )
+
+  (defun my--find-tag-internal (use-completion-table)
+    "My version of (find-tag) which uses (ivy-read) instead of standard (completing-read) and thus supports (ivy-resume)."
     (when (not tags-file-name) (my-select-tags))
     (let* ((completion-ignore-case (if (memq tags-case-fold-search '(t nil)) tags-case-fold-search case-fold-search))
            (default-value (my--get-symbol-under-cursor)))
-      ;; :initial-input default-value
-      (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect default-value :action 'find-tag)))
+      (if use-completion-table
+          ;; :initial-input default-value
+          (ivy-read "Select tag: " (tags-lazy-completion-table) :preselect default-value :action 'find-tag)
+        (find-tag (read-from-minibuffer "Tag: " default-value))
+        )))
 
   (defun my--choose-directory ()
     "Choose directory interactively (use vifm). Returns choosed directory."
     (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh -n")))
 
-  (defun my-search-in-directory-recursive ()
-    "Use ag to search in interactively choosen directory (ivy interface)."
+  (defun my-search-in-directory-interactive ()
+    "Use rg to search in interactively choosen directory (interactive ivy interface)."
     (interactive)
     ;; (spacemacs/counsel-search '("ag") t (my--choose-directory))) ;; this fails if we can't find a symbol under cursor
-    (spacemacs/counsel-search '("ag") (not (not (find-tag--default))) (my--choose-directory)))
+    (spacemacs/counsel-search '("rg") (not (not (find-tag--default))) (my--choose-directory)))
 
-  (defun my-search-in-directory-ag ()
-    "Use ag to search in interactively choosen directory (ag.el interface)."
+  (defun my-search-in-directory-non-interactive ()
+    "Use rg to search in interactively choosen directory (non-interactive)."
     (interactive)
     ;; TODO wgrep:
     ;; use --vimgrep but delete column
@@ -1102,6 +1123,13 @@ Add Man mode support to (previous-buffer)."
     "Delete class from string (if present)."
     (setq ad-return-value (if ad-return-value (my--process-rtags-symbol ad-return-value) nil)))
 
+  (defun my--evil-replace ()
+    "Use \"r\" in hexl-mode as hex replace."
+    (interactive)
+    (if (derived-mode-p 'hexl-mode)
+        (call-interactively 'hexl-insert-hex-string)
+      (call-interactively 'evil-replace)))
+
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
     ;; (call-interactively 'other-frame)
@@ -1117,6 +1145,7 @@ Add Man mode support to (previous-buffer)."
     (call-interactively 'other-frame)
     )
 
+  (setq dotspacemacs-auto-save-file-location nil)
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -1210,7 +1239,7 @@ Add Man mode support to (previous-buffer)."
    )
 
   (setq use-file-dialog nil) ;; disable gtk file diailog
-  (require 'ag)
+  ;; (require 'ag)
 
   ;; elisp debugging:
   ;; (debug-on-entry 'read-file-name)
@@ -1392,6 +1421,9 @@ My change: do not switch to dired-mode (behaviour fix)."
   (define-key evil-insert-state-map (kbd "C-;") 'my-switch-keyboard-layout)
   (define-key evil-visual-state-map (kbd "C-;") 'my-switch-keyboard-layout)
   (define-key evil-normal-state-map (kbd "C-;") 'my-switch-keyboard-layout)
+  (define-key evil-normal-state-map (kbd "r") 'my--evil-replace)
+
+  (define-key evil-insert-state-map (kbd "C-d") 'quoted-insert) ;; insert single (just one) brace/quote
   (global-set-key [?\C-\ ] 'evil-normal-state) ;; Use ctrl-space as ESC
   ;; (define-key evil-insert-state-map (kbd "C-l") 'evil-normal-state)
   ;; (define-key evil-visual-state-map (kbd "C-l") 'evil-normal-state)
@@ -1480,25 +1512,31 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "wa" 'my-save-all-buffers)
   (spacemacs/set-leader-keys "ot" 'my-select-tags)
   ;; (spacemacs/set-leader-keys "qr" 'tags-reset-tags-tables)
-  (spacemacs/set-leader-keys "oe" 'my-clear-current-line)
-  (spacemacs/set-leader-keys "of" 'my-configure-build-run)
-  (spacemacs/set-leader-keys "og" 'my-debug)
-  (spacemacs/set-leader-keys "op" 'my-print-build-command)
-  (spacemacs/set-leader-keys "os" 'my-select-build-command)
-  (spacemacs/set-leader-keys "dg" 'my-select-gdb-command)
-  (spacemacs/set-leader-keys "oc" 'my-select-project)
-  (spacemacs/set-leader-keys "od" 'my-edit-project-definition)
-  (spacemacs/set-leader-keys "cc" 'my-edit-build-command)
-  (spacemacs/set-leader-keys "cg" 'my-edit-debug-command)
+  (spacemacs/set-leader-keys "oc" 'my-clear-current-line)
+
+  (spacemacs/set-leader-keys "of" 'my-execute-build-frame-command)
+  (spacemacs/set-leader-keys "osb" 'my-select-build-frame-command)
+  (spacemacs/set-leader-keys "oeb" 'my-edit-build-frame-command)
+
+  (spacemacs/set-leader-keys "od" 'my-execute-debug-frame-command)
+  (spacemacs/set-leader-keys "osd" 'my-select-debug-frame-command)
+  (spacemacs/set-leader-keys "oed" 'my-edit-debug-frame-command)
+
+  (spacemacs/set-leader-keys "osp" 'my-select-project)
+  (spacemacs/set-leader-keys "oep" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
+  (spacemacs/set-leader-keys "mG" 'hexl-goto-hex-address)
+  (spacemacs/set-leader-keys "he" 'my-toggle-hex-mode)
 
   ;; search hotkeys:
-  (spacemacs/set-leader-keys "sm" 'my-search-in-directory-recursive) ;; use ag, ivy interface
-  (spacemacs/set-leader-keys "sa" 'my-search-in-directory-ag) ;; use ag.el
+  (spacemacs/set-leader-keys "sm" 'my-search-in-directory-interactive) ;; use rg, ivy interface
+  ;; (spacemacs/set-leader-keys "sa" 'my-search-in-directory-non-interactive) ;; use rg
   (spacemacs/set-leader-keys "st" 'my-find-tag) ;; g C-] (ctags)
+  (spacemacs/set-leader-keys "sT" 'my-toggle-use-tags-completion-table)
   ;; (spacemacs/set-leader-keys "sd" 'cscope-find-global-definition) ;; C-c s g, C-c s d find symbol's definition.
   (spacemacs/set-leader-keys "su" 'my-find-references-cscope) ;; (cscope-find-this-symbol) find all references (+definition) of symbol.
 
+  (spacemacs/set-leader-keys "meb" 'eval-buffer) ;; evaluate current buffer as lisp code
   (spacemacs/set-leader-keys "mel" 'lisp-state-eval-sexp-end-of-line) ;; evaluate lisp expression at the end of the current line
   (spacemacs/set-leader-keys "mef" 'eval-defun) ;; evaluate lisp function (the function our cursor is in)
   (spacemacs/set-leader-keys "mee" 'eval-last-sexp) ;; evaluate lisp expression at cursor
@@ -1510,31 +1548,57 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "bn" 'my-next-buffer)
   (spacemacs/set-leader-keys "bp" 'my-previous-buffer)
 
-  (global-set-key (kbd "C-=") 'my-text-scale-increase)
-  (global-set-key (kbd "C--") 'my-text-scale-decrease)
-  (global-set-key (kbd "<C-mouse-4>") 'my-text-scale-increase)
-  (global-set-key (kbd "<C-mouse-5>") 'my-text-scale-decrease)
-  (global-set-key (kbd "M-=") 'my-text-scale-default)
+  ;; See SPC zf, SPC zx
+  ;; (global-set-key (kbd "C-=") 'my-text-scale-increase)
+  ;; (global-set-key (kbd "C--") 'my-text-scale-decrease)
+  ;; (global-set-key (kbd "<C-mouse-4>") 'my-text-scale-increase)
+  ;; (global-set-key (kbd "<C-mouse-5>") 'my-text-scale-decrease)
+  ;; (global-set-key (kbd "M-=") 'my-text-scale-default)
 
   ;; Leader hotkeys:
   ;; ? search for a hotkey (counsel-descbinds)
+  ;; zx - enter text (font) scale increase / decrease mode (spacemacs/scale-font-transient-state/body)
+  ;; zf - enter frame (spacemacs/zoom-frm-transient-state/body)
   ;; jj - jump to the currently visible char (evil-avy-goto-char)
+  ;; jJ - jump to the currently visible 2 chars (evil-avy-goto-char-2)
+  ;; jw - jump to the currently visible char in the beginning of some word (evil-avy-goto-word-or-subword-1)
+  ;; ji - jump to definition in buffer (counsel-imenu)
+  ;; js - split string in quotes / expression in braces (sp-split-sexp)
+  ;; sh - highlight the symbol under cursor (spacemacs/symbol-highlight)
   ;; sc - clear highlight (spacemacs/evil-search-clear-highlight)
   ;; sF - search symbol under cursor (ag)
-  ;; zx - change font (spacemacs/scale-font-transient-state/body)
+  ;; ss - search in current buffer (swiper)
+  ;; se - edit all occurrences of the current symbol (in current buffer) (evil-iedit-state/iedit-mode).
+  ;;      Press ESC or C-g to quit (evil-iedit-state/quit-iedit-mode).
+  ;; re - shwo evil registers (spacemacs/ivy-evil-registers)
+  ;; ry - paste one of several recent items in clipboard
+  ;; t- - lock the cursor at the center of the screen (spacemacs/toggle-centered-point)
   ;; xu - convert selected region to lower case
   ;; xU - convert selected region to upper case
+  ;; xJ - move line/region down (move-text-down)
+  ;; xK - move line/region up (move-text-up)
+  ;; xls - sort lines (spacemacs/sort-lines)
+  ;; xlu - delete (remove) duplicate adjacent lines (spacemacs/uniquify-lines)
   ;; u SPC en - go to first error (next-error 1 t)
   ;; nf - narrow the buffer to the current function (narrow-to-defun)
   ;; np - narrow the buffer to the visible page (narrow-to-page)
   ;; nr - narrow the buffer to the selected text (narrow-to-region)
   ;; nw - widen, i.e show the whole buffer again (widen)
+  ;; n+ - increase number under cursor (spacemacs/evil-numbers-transient-state/evil-numbers/inc-at-pt)
+  ;; n- - decrease number under cursor (spacemacs/evil-numbers-transient-state/evil-numbers/inc-at-pt)
   ;; qq - kill emacs (spacemacs/prompt-kill-emacs)
   ;; qz - kill frame (spacemacs/frame-killer)
   ;; fb - jump to bookmark (bookmark-jump)
+  ;; pf - select file to open using projectile (counsel-projectile-find-file)
   ;; ff - open file (counsel-find-file)
+  ;; fr - open recent file (counsel-recentf)
+  ;; fR - rename current file (spacemacs/rename-current-buffer-file)
+  ;; fD - delete current file (spacemacs/delete-current-buffer-file)
+  ;; fCu - convert to unix line endings
+  ;; fCd - convert to dos line endings
   ;; fed - edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
+  ;; fy - copy full path to clipboard (without line number) (spacemacs/show-and-copy-buffer-filename)
   ;; [ - (help-go-back)
   ;; ] - (help-go-forward)
   ;; C-h i - emacs help/manuals (info).
@@ -1543,6 +1607,13 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; hdv - help variable (counsel-describe-variable)
   ;; hdm - describe mode (spacemacs/describe-mode)
   ;; tn - toggle line numbers (spacemacs/toggle-line-numbers)
+  ;; bd - kill (delete) current buffer (spacemacs/kill-this-buffer)
+  ;; b <c-d> - kill all other buffers (spacemacs/kill-other-buffers)
+  ;; bm - switch to message buffer (spacemacs/switch-to-messages-buffer)
+  ;; bb - select a buffer to switch to (ivy-switch-buffer)
+  ;; bn - In selected window switch to next buffer (my-next-buffer)
+  ;; bp - In selected window switch to previous buffer (my-next-buffer)
+  ;; TAB - switch to alternative buffer (spacemacs/alternate-buffer)
   ;; bR - revert buffer (like :q!, but without exit) (spacemacs/safe-revert-buffer)
   ;; bd - kill this buffer (spacemacs/kill-this-buffer)
   ;; C/C++ (cpp_hotkeys):
@@ -1552,11 +1623,51 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; mgA - switch source <--> header (open in other window)
   ;; mgg - jump to definition
   ;; mgG - jump to definition (open in other window)
+
+  ;; rg (spacemacs/counsel-search) "SPC s m":
+  ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
+  ;; Now we can edit this buffer:
+  ;; - apply all changes to corresponding files: ", c" (wgrep-finish-edit)
+  ;; - abort (kill, cancel) all changes: ", k" (wgrep-abort-changes)
+
+  ;; How to create own color theme based on existed one:
+  ;; M-x customize-create-theme
+  ;; do not include basic face customization
+  ;; press "visit theme" (answer "yes" to all questions)
+  ;; change "show paren match face" (use "gray 8")
+
+  ;; evil-exchange (swap). Normal mode: gx TEXT_OBJECT gx ANOTHER_TEXT_OBJECT. To cancel: gX
+  ;; evil-surround (braces). Normal mode: ys TEXT_OBJECT )
+  ;; visual mode: s ]
+  ;; vim navigation: f<symbol> - jump to symbol. t<symbol> - jump before symbol.
+  ;; [dc]io - delete/change inner object (symbol). [dc]ao - outer object (including space).
+  ;; [ SPC - insert space above (like "O" in normal mode)
+  ;; ] SPC - insert space below (like "o" in normal mode)
+  ;; [ e   - move line/region up (move-text-up)
+  ;; ] e   - move line/region down (move-text-down)
+  ;; [ p   - paste above current line (evil-unimpaired/paste-above)
+  ;; ] p   - paste below current line (evil-unimpaired/paste-below)
+  ;; g p   - select pasted text
+
+  ;; ag (ag.el) "SPC s a":
+  ;; custom command line: SPC u SPC s a
+  ;; next search result: SPC e n, C-n (compilation-next-error)
+  ;; previous search result: SPC e p, C-p (compilation-previous-error)
+  ;; visit current search result: RET (compile-goto-error)
+  ;; automatically visit error under cursor: C-c C-f (next-error-follow-minor-mode)
+
   ;; M-? - find references to symbol under cursor (xref-find-references) (like full text search implemented in elisp)
   ;; (whitespace-mode) display spaces, tabs and newlines (tags: make invisible).
   ;; Convert spaces to tabs and backwards: (tabify) (untabify).
   ;; (toggle-truncate-lines) - set wrap!
   ;; For available packages see (list-packages) or (package-list-packages).
+  ;; cscope: go to insert mode, use "n" (next), "p" (previous).
+  ;; To see current encoding: (describe-variable 'buffer-file-coding-system)
+
+  ;; Delete variable definition: (makunbound 'some-variable-name)
+  ;; Search in string:
+  ;; (let ((case-fold-search nil)) ;; case-sensitive
+  ;;   (string-match "regex" "haystack qwasdqw"))
 
   ;; minibuffer hotkeys. Functions: (my-search-in-directory-ag).
   (define-key minibuffer-local-map (kbd "C-0") 'evil-delete-whole-line)
@@ -1581,44 +1692,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
-  ;; cscope: go to insert mode, use "n" (next), "p" (previous).
-
-  ;; ag (spacemacs/counsel-search) "SPC s m":
-  ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
-  ;; Now we can edit this buffer:
-  ;; - apply all changes to corresponding files: ", c" (wgrep-finish-edit)
-  ;; - abort (kill, cancel) all changes: ", k" (wgrep-abort-changes)
-
-  ;; ag (ag.el) "SPC s a":
-  ;; custom command line: SPC u SPC s a
-  ;; next search result: SPC e n, C-n (compilation-next-error)
-  ;; previous search result: SPC e p, C-p (compilation-previous-error)
-  ;; visit current search result: RET (compile-goto-error)
-  ;; automatically visit error under cursor: C-c C-f (next-error-follow-minor-mode)
-
-  ;; vim navigation: f<symbol> - jump to symbol. t<symbol> - jump before symbol.
-  ;; [dc]io - delete/change inner object (symbol). [dc]ao - outer object (including space).
-
-  ;; TODO research: iedit mode.
-  ;; TODO add evil-exchange.
-  ;; TODO spacemacs documentation 10.
-  ;; TODO do nothing on C-j in tooltip.
-
-  ;; Search in string:
-  ;; (let ((case-fold-search nil)) ;; case-sensitive
-  ;;   (string-match "regex" "haystack qwasdqw"))
-
-  ;; To see current encoding: (describe-variable 'buffer-file-coding-system)
-
-  ;; How to create own color theme based on existed one:
-  ;; M-x customize-create-theme
-  ;; do not include basic face customization
-  ;; press "visit theme" (answer "yes" to all questions)
-  ;; change "show paren match face" (use "gray 8")
-
-  ;; evil-surround (braces). Normal mode: ys TEXT_OBJECT )
-  ;; visual mode: s ]
-
   ;; realgud (debugger, gdb):
   ;; C-h r (info-manual)
   ;; SPC m d d - start debugging (realgud:gdb)
@@ -1634,7 +1707,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (gud-tooltip-mode)
   ;; (gdb-frame-breakpoints-buffer)
 
-  (add-to-list 'after-make-frame-functions '(lambda (frame) (set-frame-parameter frame 'my--shell-command (my--get-init-shell-command))))
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))
   (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")

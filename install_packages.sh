@@ -18,8 +18,8 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 	zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
 	sox libsox-fmt-mp3 libav-tools \
 	exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
-	tree git make patch dos2unix bc file dtach bsdutils android-tools-adb \
-	expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2
+	tree git make patch dos2unix file dtach bsdutils android-tools-adb \
+	expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
 
 apt-file update
 

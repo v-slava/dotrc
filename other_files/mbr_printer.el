@@ -12,19 +12,29 @@
        (gdb-commands (lambda (cmd) (concat "/tmp/gdb_" prj-name "_" cmd ".gdb")))
        )
   (add-to-list 'magit-repository-directories `(,prj-dir . 0))
-  (my-register-project prj-name
-                       `(("build" . ,make)
-                         ("run" . ,(concat make " && echo \"Program's output:\" && " compiled-file))
-                         ("clean" . ,(concat cd "rm -f " executable-name))
-                         ("index" . ,(concat "cd " prj-dir " && index_src.sh " executable-name))
-                         ;; ("arm build" . "echo TODO && false")
-                         ;; ("pc clean" . ,(concat "rm -rf " pc-out))
-                         )
-                       `(
-                         ("default" . ,(let* ((name "default")
-                                              (debug-shell-script (funcall gdb-shell-script name))
-                                              (debug-commands-file (funcall gdb-commands name))
-                                              ) (concat
+  (my-register-project (make-my--project-definition :name prj-name :commands (make-my--all-frame-commands
+:build `(
+  ("build" . ,make)
+  ("run" . ,(concat make " && echo \"Program's output:\" && " compiled-file))
+  ;; ("run_interactively" . ,(make-my--frame-command--build
+  ;;                         :shell-cmd (concat make " && x-terminal-emulator -e bash -c \"" compiled-file " ; vifm-pause\"")
+  ;;                         :elisp-cmd-after "(message \"hello run_interactively!!!\")"))
+  ;; x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause "ls"
+
+
+
+  ("clean" . ,(concat make "clean"))
+  ("index" . ,(concat cd "index_src.sh " executable-name))
+  ;; ("arm build" . "echo TODO && false")
+  ;; ("pc clean" . ,(concat "rm -rf " pc-out))
+)
+:debug `(
+         ("default" . ,(let* ((name "default")
+                              (debug-shell-script (funcall gdb-shell-script name))
+                              (debug-commands-file (funcall gdb-commands name))
+                              )
+                         (make-my--frame-command--debug
+                          :generate-cmd (concat
 "cat << EOF1 > " debug-shell-script "
 #!/bin/bash
 
@@ -45,8 +55,8 @@ del 1
 EOF2
 gdb \\$ARGS -x " debug-commands-file "
 EOF1
-chmod +x " debug-shell-script
-my-emacs-text-separator
-debug-shell-script " emacs")))
-                         )
-                         ))
+chmod +x " debug-shell-script)
+                          :debug-cmd (concat debug-shell-script " emacs")
+)))
+         )
+))))

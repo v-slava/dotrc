@@ -177,7 +177,7 @@ for_window [window_role="browser"] mark --replace browser
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen
 for_window [title="My bluetooth headset"] floating enable
-for_window [class="Skype"] floating enable
+# for_window [class="Skype"] floating enable
 for_window [class="Gimp"] floating enable
 for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
@@ -213,6 +213,7 @@ bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec goldendict "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
 bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
+bindsym $WIN+c exec exec qalculate
 
 bindsym $WIN+a exec --no-startup-id exec ~/os_settings/other_files/start_anki.sh
 
