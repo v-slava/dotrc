@@ -410,6 +410,17 @@ evaluate the last sexp at the end of the current line."
         (message "Switched to russian keyboard layout"))
       (if in-insert-state (evil-append 1))))
 
+  (defun my--get-location ()
+    (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos))))
+
+  (defun my-copy-location-to-clipboard ()
+    "Copy \"/path/to/file:line\" to clipboard."
+    (interactive)
+    (let ((location (my--get-location)))
+      ;; (my--copy-to-clipboard location)
+      (kill-new location)
+      (message (concat "copied: " location))))
+
   (defun my--eval-string (string)
     "Evaluate elisp code stored in a string."
     (message "(my--eval-string \"%s\")" string)
@@ -578,29 +589,26 @@ evaluate the last sexp at the end of the current line."
        ((equal name "debug")
         (cond
          ((member file-extension (append '("c") cpp-extensions)) (make-my--frame-command--debug
-:generate-cmd (concat
-"cat << EOF1 > " debug-shell-script "
-#!/bin/bash
+:format-str (format
+"#!/bin/bash
 
-if [ \"\\$1\" = \"emacs\" ]; then
-    ARGS=\"--i=mi \"
+if [ \"$1\" = \"emacs\" ]; then
+    GDB_ARGS=\"--i=mi \"
 else
-    NATIVE=\"
+    GDB_NATIVE_CMDS=\"
 layout src
 \"
 fi
 
-cat << EOF2 > " debug-commands-file "
-file \"" compiled-file "\"
-b main
+cat << EOF > \"%s\"
+file \"%s\"
+%%s
 run
-del 1
-\\$NATIVE
-EOF2
-gdb \\$ARGS -x " debug-commands-file "
-EOF1
-chmod +x " debug-shell-script)
-:debug-cmd (concat debug-shell-script " emacs")
+del
+$GDB_NATIVE_CMDS
+EOF
+gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
+:shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs")
 ))
          (t nil)))
        (t nil))))
@@ -683,21 +691,28 @@ chmod +x " debug-shell-script)
 
   (my--register-frame-command (make-my--frame-command
                                  :name "debug"
-                                 :fields '("generate-cmd" "debug-cmd")
+                                 :fields '("format-str" "shell-script" "debug-cmd")
                                  :execute (lambda (cmd)
                                             (unless cmd (setq cmd (my--get-default-cmd "debug")))
                                             (unless cmd (my--error "debug command for this file type is not defined."))
-                                            (let ((generate-cmd (my--frame-command--debug-generate-cmd cmd))
+                                            (let ((format-str (my--frame-command--debug-format-str cmd))
+                                                  (shell-script (my--frame-command--debug-shell-script cmd))
                                                   (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
-                                              (shell-command generate-cmd)
+                                              (f-write-text (format format-str (format "b \"%s\"" (my--get-location))) 'utf-8 shell-script)
+                                              (let* ((old-mode (file-modes shell-script))
+                                                     (new-mode (logior old-mode #o100)))
+                                                (set-file-modes shell-script new-mode))
                                               (gdb debug-cmd)
                                               ))
                                  :get-elisp (lambda (cmd)
                                               (if (not cmd) "nil"
-                                                (let ((generate-cmd (my--frame-command--debug-generate-cmd cmd))
+                                                (let ((format-str (my--frame-command--debug-format-str cmd))
+                                                      (shell-script (my--frame-command--debug-shell-script cmd))
                                                       (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
-                                                  (concat "(make-my--frame-command--debug :generate-cmd\n"
-                                                          (replace-regexp-in-string "\\\$" "\\\\\$" (exec-path-from-shell--double-quote generate-cmd))
+                                                  (concat "(make-my--frame-command--debug :format-str\n"
+                                                          (exec-path-from-shell--double-quote format-str)
+                                                          ;; (replace-regexp-in-string "\\\$" "\\\\\$" (exec-path-from-shell--double-quote generate-cmd))
+                                                          "\n:shell-script " (exec-path-from-shell--double-quote shell-script)
                                                           "\n:debug-cmd " (exec-path-from-shell--double-quote debug-cmd) ")"))))
                                  ))
 
@@ -817,14 +832,6 @@ See also variable tags-file-name."
     "Visit this (current) error in source code."
     (interactive)
     (first-error nil))
-
-  (defun my-copy-location-to-clipboard ()
-    "Copy \"/path/to/file:line\" to clipboard."
-    (interactive)
-    (let ((location (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)))))
-      ;; (my--copy-to-clipboard location)
-      (kill-new location)
-      (message (concat "copied: " location))))
 
   (defun my-toggle-hex-mode ()
     (interactive)
@@ -1170,6 +1177,9 @@ Add Man mode support to (previous-buffer)."
     (undo-tree-undo)
     (call-interactively 'other-frame)
     )
+
+  (setq gdb-many-windows nil)
+  (gud-tooltip-mode)
 
   (setq dotspacemacs-auto-save-file-location nil)
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
@@ -1732,10 +1742,14 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; tooltips? local variables/watch windows? hang in backtrace?
 
   ;; gud (debugger, gdb):
-  ;; (gdb-many-windows)
+  ;; right mouse click on fringe - run to cursor (gdb-mouse-until) - sometimes doesn't work
+  ;; put cursor on variable and call (gud-watch) -> spawns speedbar frame where we can expand complex data type.
   ;; (gdb-restore-windows)
-  ;; (gud-tooltip-mode)
   ;; (gdb-frame-breakpoints-buffer)
+  ;; (gdb-frame-gdb-buffer)
+  ;; Tasks:
+  ;; 1) Decouple source windows and gdb window on 2 separate frames.
+  ;; 2) Use (gud-watch) (speedbar) to investigate value of variable of complex data type.
 
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))

@@ -30,29 +30,26 @@
                               (debug-commands-file (funcall gdb-commands name))
                               )
                          (make-my--frame-command--debug
-                          :generate-cmd (concat
-"cat << EOF1 > " debug-shell-script "
-#!/bin/bash
+                          :format-str (format
+"#!/bin/bash
 
-if [ \"\\$1\" = \"emacs\" ]; then
-    ARGS=\"--i=mi \"
+if [ \"$1\" = \"emacs\" ]; then
+    GDB_ARGS=\"--i=mi \"
 else
-    NATIVE=\"
+    GDB_NATIVE_CMDS=\"
 layout src
 \"
 fi
 
-cat << EOF2 > " debug-commands-file "
-file \"" compiled-file "\"
-b main
+cat << EOF > \"%s\"
+file \"%s\"
+%%s
 run
-del 1
-\\$NATIVE
-EOF2
-gdb \\$ARGS -x " debug-commands-file "
-EOF1
-chmod +x " debug-shell-script)
-                          :debug-cmd (concat debug-shell-script " emacs")
+del
+$GDB_NATIVE_CMDS
+EOF
+gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
+                          :shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs")
 )))
          )
 ))))
