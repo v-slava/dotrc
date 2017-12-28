@@ -16,18 +16,14 @@
 :build `(
   ("build" . ,make)
   ("run" . ,(concat make " && echo \"Program's output:\" && " compiled-file))
-  ;; ("run_interactively" . ,(make-my--frame-command--build
-  ;;                         :shell-cmd (concat make " && x-terminal-emulator -e bash -c \"" compiled-file " ; vifm-pause\"")
-  ;;                         :elisp-cmd-after "(message \"hello run_interactively!!!\")"))
-  ;; x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause "ls"
-
-
-
   ("clean" . ,(concat make "clean"))
   ("index" . ,(concat cd "index_src.sh " executable-name))
   ;; ("arm build" . "echo TODO && false")
   ;; ("pc clean" . ,(concat "rm -rf " pc-out))
 )
+:interactive `(
+               ("run_interactively" . ,(concat "x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause " compiled-file " &"))
+               )
 :debug `(
          ("default" . ,(let* ((name "default")
                               (debug-shell-script (funcall gdb-shell-script name))

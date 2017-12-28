@@ -647,6 +647,15 @@ chmod +x " debug-shell-script)
   (defun my-edit-debug-frame-command ()
     (interactive)
     (my--edit-frame-command "debug"))
+  (defun my-execute-interactive-frame-command ()
+    (interactive)
+    (my--execute-frame-command "interactive"))
+  (defun my-select-interactive-frame-command ()
+    (interactive)
+    (my--select-frame-command "interactive"))
+  (defun my-edit-interactive-frame-command ()
+    (interactive)
+    (my--edit-frame-command "interactive"))
 
   (my--register-frame-command (make-my--frame-command
                                  :name "build"
@@ -690,6 +699,23 @@ chmod +x " debug-shell-script)
                                                   (concat "(make-my--frame-command--debug :generate-cmd\n"
                                                           (replace-regexp-in-string "\\\$" "\\\\\$" (exec-path-from-shell--double-quote generate-cmd))
                                                           "\n:debug-cmd " (exec-path-from-shell--double-quote debug-cmd) ")"))))
+                                 ))
+
+  (my--register-frame-command (make-my--frame-command
+                                 :name "interactive"
+                                 :fields '("shell-cmd")
+                                 :execute (lambda (cmd)
+                                            (let ((shell-cmd (if cmd (if (stringp cmd) cmd (my--frame-command--interactive-shell-cmd cmd)) (concat
+"x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause " (exec-path-from-shell--double-quote (my--get-default-cmd "build")) " &"))))
+                                              (my-save-all-buffers)
+                                              (unless shell-cmd (my--error "interactive command for this file type is not defined."))
+                                              (shell-command shell-cmd)
+                                              (my-close-temporary-windows)
+                                                ))
+                                 :get-elisp (lambda (cmd)
+                                              (if (not cmd) "nil"
+                                                (let ((shell-cmd (if (stringp cmd) cmd (my--frame-command--interactive-shell-cmd cmd))))
+                                                  (exec-path-from-shell--double-quote shell-cmd))))
                                  ))
 
   (my--register-all-frame-parameters)
@@ -1521,6 +1547,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "od" 'my-execute-debug-frame-command)
   (spacemacs/set-leader-keys "osd" 'my-select-debug-frame-command)
   (spacemacs/set-leader-keys "oed" 'my-edit-debug-frame-command)
+
+  (spacemacs/set-leader-keys "oi" 'my-execute-interactive-frame-command)
+  (spacemacs/set-leader-keys "osi" 'my-select-interactive-frame-command)
+  (spacemacs/set-leader-keys "oei" 'my-edit-interactive-frame-command)
 
   (spacemacs/set-leader-keys "osp" 'my-select-project)
   (spacemacs/set-leader-keys "oep" 'my-edit-project-definition)
