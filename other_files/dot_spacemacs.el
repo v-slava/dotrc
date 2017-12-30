@@ -603,8 +603,10 @@ fi
 
 cat << EOF > \"%s\"
 file \"%s\"
-%%s
+b main
 run
+%%s
+c
 del
 $GDB_NATIVE_CMDS
 EOF
@@ -703,7 +705,9 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                                               (let* ((old-mode (file-modes shell-script))
                                                      (new-mode (logior old-mode #o100)))
                                                 (set-file-modes shell-script new-mode))
+                                              ;; (gud-gdb debug-cmd)
                                               (gdb debug-cmd)
+                                              ;; (realgud:gdb debug-cmd) ;; need also to enable realgud package (excluded by now).
                                               ))
                                  :get-elisp (lambda (cmd)
                                               (if (not cmd) "nil"

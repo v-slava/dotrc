@@ -43,8 +43,10 @@ fi
 
 cat << EOF > \"%s\"
 file \"%s\"
-%%s
+b main
 run
+%%s
+c
 del
 $GDB_NATIVE_CMDS
 EOF
