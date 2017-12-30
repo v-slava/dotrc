@@ -110,7 +110,7 @@ if [ "$DIFF" = "true" ]; then
         LISP_CMD="$LISP_CMD \"$arg\""
     done
     LISP_CMD="$LISP_CMD)"
-    call_editor "${CMD[@]/#/}" --eval "$LISP_CMD"
+    call_editor "${CMD[@]}" --eval "$LISP_CMD"
     exit
 fi
 
@@ -122,19 +122,24 @@ is_a_number()
 }
 
 if [ $# -eq 0 ]; then
-    call_editor "${CMD[@]/#/}"
+    call_editor "${CMD[@]}"
     exit
 fi
+
+open_file()
+{
+    call_editor "${CMD[@]}" --eval "(find-file \"$arg\")"
+}
 
 # process all command line arguments and as a result fill in $CMD:
 for arg in "${ARGS[@]}" ; do
     line="$(echo "$arg" | cut -d':' -f2)"
     if [ "$line" = "$arg" ] ; then
-        call_editor "${CMD[@]/#/}" "$arg"
+        open_file
         continue
     fi
     if ! is_a_number "$line" ; then
-        call_editor "${CMD[@]/#/}" "$arg"
+        open_file
         continue
     fi
     column="$(echo "$arg" | cut -d':' -f3)"
@@ -142,10 +147,10 @@ for arg in "${ARGS[@]}" ; do
         column=1 # then assume it equals to 1
     fi
     if ! is_a_number "$column" ; then
-        call_editor "${CMD[@]/#/}" "$arg"
+        open_file
         continue
     fi
     file="$(echo "$arg" | cut -d':' -f1)"
 
-    call_editor "${CMD[@]/#/}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+    call_editor "${CMD[@]}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
 done

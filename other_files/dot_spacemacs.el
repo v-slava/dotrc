@@ -141,7 +141,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -149,6 +149,7 @@ values."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
+                                (bookmarks . 20)
                                 (projects . 7))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
@@ -1295,7 +1296,7 @@ Add Man mode support to (previous-buffer)."
   (setq enable-local-eval nil)
 
   (setq sh-here-document-word " EOF") ;; this adds space before EOF in "cat << EOF".
-  ;; To see which rules are applied for indentation: C-c C-o.
+  ;; To see which rules are applied for indentation (C/C++): C-c C-o (c-set-offset).
   ;; To switch style: C-c . (c-set-style). Variable: c-style-alist
   ;; To reindent: SPC j = (spacemacs/indent-region-or-buffer)
   (c-add-style "my_style" '("stroustrup"
@@ -1597,6 +1598,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   ;; Leader hotkeys:
   ;; ? search for a hotkey (counsel-descbinds)
+  ;; v - expand visual selection (er/expand-region)
+  ;; V - contract visual selection (er/contract-region)
+  ;; ww - select another window in cyclic ordering (other-window)
+  ;; wW - select any window in any frame (ace-window)
   ;; zx - enter text (font) scale increase / decrease mode (spacemacs/scale-font-transient-state/body)
   ;; zf - enter frame (spacemacs/zoom-frm-transient-state/body)
   ;; jj - jump to the currently visible char (evil-avy-goto-char)
@@ -1675,6 +1680,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; do not include basic face customization
   ;; press "visit theme" (answer "yes" to all questions)
   ;; change "show paren match face" (use "gray 8")
+
+  ;; in insert mode keybindings:
+  ;; <c-w> - (evil-delete-backward-word)
+  ;; <c-o> - (evil-execute-in-normal-state)
 
   ;; evil-exchange (swap). Normal mode: gx TEXT_OBJECT gx ANOTHER_TEXT_OBJECT. To cancel: gX
   ;; evil-surround (braces). Normal mode: ys TEXT_OBJECT )
