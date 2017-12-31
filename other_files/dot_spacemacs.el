@@ -752,6 +752,9 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                                                   (exec-path-from-shell--double-quote shell-cmd))))
                                  ))
 
+  ;; (setq async-shell-command-buffer 'confirm-new-buffer)
+  (setq async-shell-command-buffer 'new-buffer)
+
   (my--register-all-frame-parameters)
 
   (defun my-split-and-open-buffer-below ()
