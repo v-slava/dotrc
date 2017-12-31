@@ -34,21 +34,23 @@
 "#!/bin/bash
 
 if [ \"$1\" = \"emacs\" ]; then
-    GDB_ARGS=\"--i=mi \"
+    # GDB_ARGS=\"--i=mi \"
+    GDB_PRE_CMDS=\"
+set annotate 1
+\"
 else
-    GDB_NATIVE_CMDS=\"
+    GDB_POST_CMDS=\"
 layout src
 \"
 fi
 
 cat << EOF > \"%s\"
+$GDB_PRE_CMDS
 file \"%s\"
-b main
-run
 %%s
-c
+run
 del
-$GDB_NATIVE_CMDS
+$GDB_POST_CMDS
 EOF
 gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                           :shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs")

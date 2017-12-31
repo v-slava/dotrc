@@ -86,7 +86,8 @@ values."
    dotspacemacs-excluded-packages '(
                                     evil-escape
                                     cmake-ide
-                                    realgud
+                                    google-c-style
+                                    ;; realgud
                                     ;; counsel-projectile
                                     ;; projectile
                                     )
@@ -361,6 +362,18 @@ evaluate the last sexp at the end of the current line."
       ;; (standard-display-ascii ?\t "--->")
       (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))))
 
+  (defun my--copy-current-buffer-to-other-buffer (other-buffer)
+    "Copy contents of current buffer to specified buffer."
+    (let ((old-buffer (current-buffer)))
+      (with-current-buffer other-buffer
+        (insert-buffer-substring old-buffer))))
+
+  (defun my-save-backtrace-to-scratch-and-quit ()
+    "Copy backtrace to \"*scratch*\" buffer and stop debugging."
+    (interactive)
+    (my--copy-current-buffer-to-other-buffer "*scratch*")
+    (top-level))
+
   (defun my-close-window-or-frame ()
     "Close current window or frame."
     (interactive)
@@ -424,7 +437,7 @@ evaluate the last sexp at the end of the current line."
 
   (defun my--eval-string (string)
     "Evaluate elisp code stored in a string."
-    (message "(my--eval-string \"%s\")" string)
+    ;; (message "(my--eval-string \"%s\")" string)
     (eval (car (read-from-string string))))
 
   (defun my--define-struct (name fields)
@@ -594,21 +607,23 @@ evaluate the last sexp at the end of the current line."
 "#!/bin/bash
 
 if [ \"$1\" = \"emacs\" ]; then
-    GDB_ARGS=\"--i=mi \"
+    # GDB_ARGS=\"--i=mi \"
+    GDB_PRE_CMDS=\"
+set annotate 1
+\"
 else
-    GDB_NATIVE_CMDS=\"
+    GDB_POST_CMDS=\"
 layout src
 \"
 fi
 
 cat << EOF > \"%s\"
+$GDB_PRE_CMDS
 file \"%s\"
-b main
-run
 %%s
-c
+run
 del
-$GDB_NATIVE_CMDS
+$GDB_POST_CMDS
 EOF
 gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
 :shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs")
@@ -706,8 +721,8 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                                                      (new-mode (logior old-mode #o100)))
                                                 (set-file-modes shell-script new-mode))
                                               ;; (gud-gdb debug-cmd)
-                                              (gdb debug-cmd)
-                                              ;; (realgud:gdb debug-cmd) ;; need also to enable realgud package (excluded by now).
+                                              ;; (gdb debug-cmd)
+                                              (realgud:gdb debug-cmd)
                                               ))
                                  :get-elisp (lambda (cmd)
                                               (if (not cmd) "nil"
@@ -716,7 +731,6 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                                                       (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
                                                   (concat "(make-my--frame-command--debug :format-str\n"
                                                           (exec-path-from-shell--double-quote format-str)
-                                                          ;; (replace-regexp-in-string "\\\$" "\\\\\$" (exec-path-from-shell--double-quote generate-cmd))
                                                           "\n:shell-script " (exec-path-from-shell--double-quote shell-script)
                                                           "\n:debug-cmd " (exec-path-from-shell--double-quote debug-cmd) ")"))))
                                  ))
@@ -1183,8 +1197,11 @@ Add Man mode support to (previous-buffer)."
     (call-interactively 'other-frame)
     )
 
-  (setq gdb-many-windows nil)
-  (gud-tooltip-mode)
+  (with-eval-after-load 'realgud (define-key realgud:shortkey-mode-map [mouse-3] 'realgud:tooltip-eval))
+  ;; old gdb implementation:
+  ;; (setq gdb-many-windows nil)
+  ;; (gud-tooltip-mode)
+  ;; (setq pop-up-frames t)
 
   (setq dotspacemacs-auto-save-file-location nil)
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
@@ -1287,6 +1304,7 @@ Add Man mode support to (previous-buffer)."
   ;; (cancel-debug-on-entry 'read-file-name)
   ;; Get backtrace when I press C-g: M-x (toggle-debug-on-quit). Now do whatever and press C-g.
   ;; See debugger hotkeys: SPC dm. d - step into. c - step out.
+  (with-eval-after-load 'debug (define-key debugger-mode-map "s" 'my-save-backtrace-to-scratch-and-quit))
 
   ;; Do not ask for confirmation when visiting symbolic links, which point to git-controlled files
   (setq vc-follow-symlinks nil)
@@ -1615,15 +1633,15 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; js - split string in quotes / expression in braces (sp-split-sexp)
   ;; sh - highlight the symbol under cursor (spacemacs/symbol-highlight)
   ;; sc - clear highlight (spacemacs/evil-search-clear-highlight)
-  ;; sF - search symbol under cursor (ag)
+  ;; sF - search symbol under cursor (spacemacs/search-auto-region-or-symbol)
   ;; ss - search in current buffer (swiper)
-  ;; se - edit all occurrences of the current symbol (in current buffer) (evil-iedit-state/iedit-mode).
-  ;;      Press ESC or C-g to quit (evil-iedit-state/quit-iedit-mode).
+  ;; se - edit all occurrences of the current symbol (in current buffer) (evil-iedit-state/iedit-mode)
+  ;;      Press ESC or C-g to quit (evil-iedit-state/quit-iedit-mode)
   ;; re - shwo evil registers (spacemacs/ivy-evil-registers)
-  ;; ry - paste one of several recent items in clipboard
+  ;; ry - paste one of several recent items in clipboard (counsel-yank-pop)
   ;; t- - lock the cursor at the center of the screen (spacemacs/toggle-centered-point)
-  ;; xu - convert selected region to lower case
-  ;; xU - convert selected region to upper case
+  ;; xu - convert selected region to lower case (downcase-region)
+  ;; xU - convert selected region to upper case (upcase-region)
   ;; xJ - move line/region down (move-text-down)
   ;; xK - move line/region up (move-text-up)
   ;; xls - sort lines (spacemacs/sort-lines)
@@ -1643,14 +1661,14 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; fr - open recent file (counsel-recentf)
   ;; fR - rename current file (spacemacs/rename-current-buffer-file)
   ;; fD - delete current file (spacemacs/delete-current-buffer-file)
-  ;; fCu - convert to unix line endings
-  ;; fCd - convert to dos line endings
+  ;; fCu - convert to unix line endings (spacemacs/dos2unix)
+  ;; fCd - convert to dos line endings (spacemacs/unix2dos)
   ;; fed - edit .spacemacs file (spacemacs/find-dotfile)
   ;; fs - save current file (save-buffer)
   ;; fy - copy full path to clipboard (without line number) (spacemacs/show-and-copy-buffer-filename)
   ;; [ - (help-go-back)
   ;; ] - (help-go-forward)
-  ;; C-h i - emacs help/manuals (info).
+  ;; C-h i - emacs help/manuals (info)
   ;; hdk - help key binding (describe-key)
   ;; hdf - help function (counsel-describe-function)
   ;; hdv - help variable (counsel-describe-variable)
@@ -1669,9 +1687,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; mr - refactor at point (semantic)
   ;; mga - switch source <--> header (cpp <--> hpp), (c <--> h) (projectile-find-other-file)
   ;; pI - (projectile-invalidate-cache)
-  ;; mgA - switch source <--> header (open in other window)
-  ;; mgg - jump to definition
-  ;; mgG - jump to definition (open in other window)
+  ;; mgA - switch source <--> header (open in other window) (projectile-find-other-file-other-window)
+  ;; mgg - jump to definition (spacemacs/jump-to-definition)
+  ;; mgG - jump to definition (open in other window) (spacemacs/jump-to-definition-other-window)
+  ;; mdd - start debugger (realgud:gdb)
 
   ;; rg (spacemacs/counsel-search) "SPC s m":
   ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
@@ -1747,10 +1766,11 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   ;; realgud (debugger, gdb):
   ;; C-h r (info-manual)
-  ;; SPC m d d - start debugging (realgud:gdb)
   ;; (describe-keymap realgud:shortkey-mode-map)
   ;; [mouse-2]  (realgud:tooltip-eval) (middle mouse button click)
-  ;; /home/volkov/.emacs.d/elpa/develop/realgud-20171006.1840
+  ;; (realgud-window-src-undisturb-cmd)
+  ;; (cancel-debug-on-entry 'split-window)
+  ;; (debug-on-entry 'split-window)
   ;; QUESTIONS:
   ;; tooltips? local variables/watch windows? hang in backtrace?
 
