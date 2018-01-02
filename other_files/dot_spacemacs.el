@@ -362,16 +362,17 @@ evaluate the last sexp at the end of the current line."
       ;; (standard-display-ascii ?\t "--->")
       (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))))
 
-  (defun my--copy-current-buffer-to-other-buffer (other-buffer)
+  (defun my--copy-current-buffer-to-other-buffer (other-buffer erase-other)
     "Copy contents of current buffer to specified buffer."
     (let ((old-buffer (current-buffer)))
       (with-current-buffer other-buffer
+        (when erase-other (erase-buffer))
         (insert-buffer-substring old-buffer))))
 
   (defun my-save-backtrace-to-scratch-and-quit ()
     "Copy backtrace to \"*scratch*\" buffer and stop debugging."
     (interactive)
-    (my--copy-current-buffer-to-other-buffer "*scratch*")
+    (my--copy-current-buffer-to-other-buffer "*scratch*" t)
     (top-level))
 
   (defun my-close-window-or-frame ()
@@ -1185,6 +1186,11 @@ Add Man mode support to (previous-buffer)."
         (call-interactively 'hexl-insert-hex-string)
       (call-interactively 'evil-replace)))
 
+  (defun my-realgud:tooltip-eval-or-hide (event)
+    "Wrapper over (realgud:tooltip-eval) that hides tooltip if expr in nil."
+    (interactive "e")
+    (unless (realgud:tooltip-eval event) (tooltip-hide)))
+
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
     ;; (call-interactively 'other-frame)
@@ -1199,12 +1205,6 @@ Add Man mode support to (previous-buffer)."
     (undo-tree-undo)
     (call-interactively 'other-frame)
     )
-
-  (with-eval-after-load 'realgud (define-key realgud:shortkey-mode-map [mouse-3] 'realgud:tooltip-eval))
-  ;; old gdb implementation:
-  ;; (setq gdb-many-windows nil)
-  ;; (gud-tooltip-mode)
-  ;; (setq pop-up-frames t)
 
   (setq dotspacemacs-auto-save-file-location nil)
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 9) ((control))))
@@ -1301,6 +1301,36 @@ Add Man mode support to (previous-buffer)."
 
   (setq use-file-dialog nil) ;; disable gtk file diailog
   ;; (require 'ag)
+
+  ;; realgud (debugger, gdb):
+  (with-eval-after-load 'realgud
+    ;; right mouse click (originally was [mouse-2] - middle mouse click):
+    (define-key realgud:shortkey-mode-map [mouse-3] 'my-realgud:tooltip-eval-or-hide)
+    )
+  ;; C-c C-c break execution (C-c in gdb) (comint-interrupt-subjob)
+  ;; (describe-keymap realgud:shortkey-mode-map)
+  ;; q - gently terminate execution of the debugged program (realgud:cmd-quit)
+  ;; Q - gently terminate source and command buffers (realgud:cmd-terminate)
+  ;; K - kill the programe being debugged (realgud:cmd-kill)
+  ;; i - step into (realgud:cmd-step)
+  ;; s - step out (realgud:cmd-next)
+  ;; b - put a breakpoint (realgud:cmd-break)
+  ;; + - enable breakpoint (realgud:cmd-enable)
+  ;; - - disable breakpoint (realgud:cmd-disable)
+  ;; <left-fringe> <mouse-1> - toggle breakpoint (realgud-cmds--mouse-add-remove-bp)
+  ;; c - continue execution to next breakpoint (realgud:cmd-continue)
+  ;; f,o - finish (run until the completion of the current stack frame) (realgud:cmd-finish)
+  ;; e - evaluate expression (type manually) (realgud:cmd-eval)
+  ;; E - evaluate expression (some default value) (realgud:cmd-eval-at-point)
+  ;; T - show backtrace (executes gdb's "bt" command) (realgud:cmd-backtrace)
+  ;; F - open backtrace window (realgud:window-bt)
+  ;; <,d - (realgud:cmd-newer-frame)
+  ;; >,u - (realgud:cmd-older-frame)
+
+  ;; old gdb implementation:
+  ;; (setq gdb-many-windows nil)
+  ;; (gud-tooltip-mode)
+  ;; (setq pop-up-frames t)
 
   ;; elisp debugging:
   ;; (debug-on-entry 'read-file-name)
@@ -1738,6 +1768,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; For available packages see (list-packages) or (package-list-packages).
   ;; cscope: go to insert mode, use "n" (next), "p" (previous).
   ;; To see current encoding: (describe-variable 'buffer-file-coding-system)
+  ;; C-h r show emacs/elisp help (info-manual)
 
   ;; Delete variable definition: (makunbound 'some-variable-name)
   ;; Search in string:
@@ -1767,26 +1798,19 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; freeze candidates list and search again among them <s-SPC> (ivy-restrict-to-matches)
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
-  ;; realgud (debugger, gdb):
-  ;; C-c C-c break execution (C-c in gdb) (comint-interrupt-subjob)
-  ;; C-h r (info-manual)
-  ;; (describe-keymap realgud:shortkey-mode-map)
-  ;; [mouse-2]  (realgud:tooltip-eval) (middle mouse button click)
-  ;; (realgud-window-src-undisturb-cmd)
-  ;; (cancel-debug-on-entry 'split-window)
-  ;; (debug-on-entry 'split-window)
-  ;; QUESTIONS:
-  ;; tooltips? local variables/watch windows? hang in backtrace?
-
-  ;; gud (debugger, gdb):
+  ;; gud (debugger, gdb, TODO delete):
   ;; right mouse click on fringe - run to cursor (gdb-mouse-until) - sometimes doesn't work
   ;; put cursor on variable and call (gud-watch) -> spawns speedbar frame where we can expand complex data type.
   ;; (gdb-restore-windows)
   ;; (gdb-frame-breakpoints-buffer)
   ;; (gdb-frame-gdb-buffer)
-  ;; Tasks:
+
+  ;; Tasks (realgud):
   ;; 1) Decouple source windows and gdb window on 2 separate frames.
   ;; 2) Use (gud-watch) (speedbar) to investigate value of variable of complex data type.
+  ;; 3) Local variables/watch windows.
+  ;; 4) quit - no confirmation.
+  ;; 5) continue - no confirmation.
 
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))
