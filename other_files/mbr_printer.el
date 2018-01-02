@@ -8,8 +8,8 @@
        (compiled-file (concat prj-dir "/" executable-name))
        (cd (concat "cd " prj-dir " && "))
        (make (concat cd "make -j12 "))
-       (gdb-shell-script (lambda (cmd) (concat "/tmp/gdb_" prj-name "_" cmd ".sh")))
-       (gdb-commands (lambda (cmd) (concat "/tmp/gdb_" prj-name "_" cmd ".gdb")))
+       (gdb-shell-script (lambda (name) (concat "/tmp/gdb_" prj-name "_" name ".sh")))
+       (gdb-commands (lambda (name) (concat "/tmp/gdb_" prj-name "_" name ".gdb")))
        )
   (add-to-list 'magit-repository-directories `(,prj-dir . 0))
   (my-register-project (make-my--project-definition :name prj-name :commands (make-my--all-frame-commands

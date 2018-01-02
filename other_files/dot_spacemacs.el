@@ -1768,6 +1768,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; resume (repeat) last (previous) completion session: "SPC r l" (ivy-resume)
 
   ;; realgud (debugger, gdb):
+  ;; C-c C-c break execution (C-c in gdb) (comint-interrupt-subjob)
   ;; C-h r (info-manual)
   ;; (describe-keymap realgud:shortkey-mode-map)
   ;; [mouse-2]  (realgud:tooltip-eval) (middle mouse button click)

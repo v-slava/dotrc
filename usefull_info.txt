@@ -318,6 +318,10 @@ pacmd list-sink-inputs
 # i3wm turn off monitor (move workspaces to LVDS1):
 xrandr --output HDMI1 --off
 
+# Disable stdout buffering:
+stdbuf -o0 YOUR_CMD
+LD_PRELOAD=/usr/lib/coreutils/libstdbuf.so _STDBUF_O=0 YOUR_CMD
+
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
@@ -1706,6 +1710,9 @@ down
 
 # frame $(CURRENT_FRAME_NUMBER+1)
 up
+
+# gdb: set environment variable:
+set env VAR_NAME = VALUE
 
 # gdb: print the full value of a C-string:
 set print element 0
