@@ -9,11 +9,11 @@ fi
 
 ARGS=()
 for arg in "$@" ; do
-    if [ "$arg" = "--diff" ]; then
-        DIFF=true
-    else
-        ARGS+=("$arg")
-    fi
+    case "$arg" in
+        "--diff") DIFF=true ;;
+        "--no-daemon") NO_DAEMON=true ;;
+        *) ARGS+=("$arg") ;;
+    esac
 done
 
 if [ $WINDOWS = false ]; then
@@ -40,6 +40,12 @@ if [ $WINDOWS = false ]; then
         ARGS=("${ARGS_TMP[@]}")
         exec vim "${ARGS[@]}"
     fi
+
+    EMACS_PREFIX=""
+    EMACS_SUFFIX=""
+else
+    EMACS_PREFIX="C:/files/other_files/emacs-25.3_1-x86_64/bin/"
+    EMACS_SUFFIX=".exe"
 fi
 
 daemon_running()
@@ -54,16 +60,12 @@ daemon_running()
 daemon_run()
 {
     if [ $WINDOWS = true ]; then
-        DAEMON_EXE="C:/files/other_files/emacs-25.3_1-x86_64/bin/runemacs.exe"
+        DAEMON_EXE="${EMACS_PREFIX}runemacs.exe"
     else
         DAEMON_EXE=emacs
     fi
     $DAEMON_EXE --daemon
 }
-
-if ! daemon_running ; then
-    daemon_run
-fi
 
 call_editor()
 {
@@ -77,29 +79,32 @@ call_editor()
 }
 
 CMD=()
-if [ $WINDOWS = true ]; then
-    CMD+=("C:/files/other_files/emacs-25.3_1-x86_64/bin/emacsclient.exe")
-    # CMD+=("C:/files/other_files/emacs-25.3_1-x86_64/bin/emacsclientw.exe")
+if [ "$NO_DAEMON" = "true" ]; then
+    CMD+=("${EMACS_PREFIX}emacs${EMACS_SUFFIX}")
+    call_editor "${CMD[@]}"
+    exit
 else
-    CMD+=("emacsclient")
+    if ! daemon_running ; then
+        daemon_run
+    fi
+    CMD+=("${EMACS_PREFIX}emacsclient${EMACS_SUFFIX}") # see also emacsclientw
+    CMD+=("-c")
 fi
-CMD+=("-c")
 
 # "--wait" is my own argument.
 # "--nofork" is an argument, accepted by vim
 # (it is called with it from vifm when renaming a file/folder).
 # "-f" is an argument, accepted by vim ("foreground": do not fork).
-DO_FORK=true
 ARGS_TMP=()
 for arg in "${ARGS[@]}" ; do
     if [ "$arg" = "--wait" ] || [ "$arg" = "--nofork" ] || [ "$arg" = "-f" ]; then
-        DO_FORK=false
+        WAIT=true
     else
         ARGS_TMP+=("$arg")
     fi
 done
 ARGS=("${ARGS_TMP[@]}")
-if [ "$DO_FORK" = "true" ]; then
+if [ "$WAIT" != "true" ]; then
     CMD+=("--no-wait")
 fi
 
@@ -121,15 +126,15 @@ is_a_number()
     return $?
 }
 
-if [ $# -eq 0 ]; then
-    call_editor "${CMD[@]}"
-    exit
-fi
-
 open_file()
 {
     call_editor "${CMD[@]}" --eval "(find-file \"$arg\")"
 }
+
+if [ ${#ARGS[@]} -eq 0 ]; then
+    call_editor "${CMD[@]}"
+    exit 0
+fi
 
 # process all command line arguments and as a result fill in $CMD:
 for arg in "${ARGS[@]}" ; do

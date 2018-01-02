@@ -1231,6 +1231,9 @@ man 1ssl cmd
 # Get DPI (dots per inch):
 xdpyinfo | grep resolution
 
+# to exit telnet:
+ctrl+] and afterwards ctrl+d
+
 # Qemu monitor:
 qemu-system-arm -monitor pty
 > pid 23969's current affinity mask: ff
