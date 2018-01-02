@@ -71,7 +71,7 @@ call_editor()
     "$@"
     while [ $? -ne 0 ]; do
         sleep 0.1
-        $@
+        "$@"
     done
     set -e
 }
