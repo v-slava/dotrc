@@ -732,7 +732,8 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
                                                       (shell-script (my--frame-command--debug-shell-script cmd))
                                                       (debug-cmd (my--frame-command--debug-debug-cmd cmd)))
                                                   (concat "(make-my--frame-command--debug :format-str\n"
-                                                          (exec-path-from-shell--double-quote format-str)
+                                                          ;; one symbol '\' should be "\\\\" in (replace-regexp-in-string):
+                                                          (replace-regexp-in-string "\\\\\\\\\"" "\\\\\\\\\\\\\"" (exec-path-from-shell--double-quote format-str))
                                                           "\n:shell-script " (exec-path-from-shell--double-quote shell-script)
                                                           "\n:debug-cmd " (exec-path-from-shell--double-quote debug-cmd) ")"))))
                                  ))
@@ -1805,6 +1806,12 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (gdb-restore-windows)
   ;; (gdb-frame-breakpoints-buffer)
   ;; (gdb-frame-gdb-buffer)
+
+  ;; (progn
+  ;;   (my--set-project-name "mbr_printer")
+  ;;   (my--set-frame-command-for-project "debug" (cdr (assoc "default" (my--get-project-frame-commands-alist "debug"))))
+  ;;   (my--edit-frame-command "debug")
+  ;;   )
 
   ;; Tasks (realgud):
   ;; 1) Decouple source windows and gdb window on 2 separate frames.
