@@ -1678,6 +1678,9 @@ gcc -O0 -g3 backtrace_example.c -o backtrace_exe
 gdbserver :PORT cmd args
 gdb -> target remote :PORT
 
+gdbserver --once --multi :PORT
+gdb -> target extended-remote :PORT
+
 # Jtag (J-Link) do not cache flash memory (gdb command):
 monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
 
@@ -1704,6 +1707,7 @@ $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $
 # gdb:
 show max-value-size
 set max-value-size 100000
+set breakpoint pending off
 
 # frame $(CURRENT_FRAME_NUMBER-1)
 down

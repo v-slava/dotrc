@@ -611,6 +611,7 @@ if [ \"$1\" = \"emacs\" ]; then
     # GDB_ARGS=\"--i=mi \"
     GDB_PRE_CMDS=\"
 set annotate 1
+set interactive-mode off
 \"
 else
     GDB_POST_CMDS=\"
@@ -1809,8 +1810,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; 1) Decouple source windows and gdb window on 2 separate frames.
   ;; 2) Use (gud-watch) (speedbar) to investigate value of variable of complex data type.
   ;; 3) Local variables/watch windows.
-  ;; 4) quit - no confirmation.
-  ;; 5) continue - no confirmation.
 
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))

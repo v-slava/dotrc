@@ -37,6 +37,7 @@ if [ \"$1\" = \"emacs\" ]; then
     # GDB_ARGS=\"--i=mi \"
     GDB_PRE_CMDS=\"
 set annotate 1
+set interactive-mode off
 \"
 else
     GDB_POST_CMDS=\"
