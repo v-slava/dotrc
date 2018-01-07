@@ -231,6 +231,12 @@ apt-get download <package_name>
 # list installed packages by installation date:
 ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
 
+# Install dpkg (debian) package (packet):
+dpkg -i some_package.deb
+
+# Remove dpkg (debian) package (packet):
+dpkg -r some_package.deb
+
 # dpkg restore broken installation:
 dpkg --configure -a
 
@@ -464,9 +470,6 @@ make VERBOSE=1
 
 # Start rtags daemon (custom toolchain):
 rdm -R
-
-# enable failures in libc via LD_PRELOAD (fiu):
-fiu-run -x -c 'enable name=posix/io/*' ls
 
 # C++ hex output format example:
 std::cout << std::hex << std::setfill('0') << std::nouppercase << std::setw(8);
@@ -1280,6 +1283,15 @@ pmemsave <address> <size> <file>
 
 # Switch to qemu's console:
 <Ctrl> + A     <pause>     C
+
+# Select alternative c++ standard library:
+# LLVM C++ Standard library:
+g++ -stdlib=libc++ FILE.cpp
+# GNU Standard C++ Library (default):
+g++ -stdlib=libstdc++ FILE.cpp
+
+# enable failures in libc via LD_PRELOAD (fiu):
+fiu-run -x -c 'enable name=posix/io/*' ls
 
 # Run arm executable using qemu-arm:
 sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
