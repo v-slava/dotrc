@@ -134,6 +134,11 @@ values."
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
+   ;; dotspacemacs-editing-style 'emacs
+   ;; (setq evil-emacs-state-cursor 'bar)
+   ;; (setq cursor-type 'bar)
+   ;; (blink-cursor-mode)
+   ;; (cua-mode)
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
