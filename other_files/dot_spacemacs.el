@@ -139,6 +139,8 @@ values."
    ;; (setq cursor-type 'bar)
    ;; (blink-cursor-mode)
    ;; (cua-mode)
+   ;; (define-key global-map (kbd "C-f") 'swiper)
+   ;; (define-key global-map (kbd "C-s") 'my-save-all-buffers)
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
