@@ -105,6 +105,17 @@ xcopy /e /i C:\src_dir C:\dst_dir
 # Copy FILE over samba:
 cp FILE \\HOST\c$\dir_1\dir_2\
 
+# find -name '*.cpp':
+dir /s /b *.cpp
+
+# find -name '*.cpp' | xargs cat:
+forfiles /s /m *.cpp /c "cmd /c type @file"
+
+# time cmd
+echo %time% && cmd %% echo %time%
+# powershell:
+Measure-Command {cmd}
+
 # Preprocess (msvc):
 1) Create new win32 console msvc project. Add single source file with the following contents:
      #include "preprocessed.i"
