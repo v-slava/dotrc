@@ -290,7 +290,7 @@ values."
    ;; (default nil)
    ;; dotspacemacs-line-numbers 'relative
    dotspacemacs-line-numbers '(:relative t :enabled-for-modes fundamental-mode
-                                         prog-mode conf-mode
+                                         prog-mode conf-mode cmake-mode
                                          text-mode)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -361,6 +361,7 @@ evaluate the last sexp at the end of the current line."
       (when (< tab_width 2) (my--error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
       (setq-default tab-width tab_width) ;; view tab as this number of spaces
       (setq tab-width tab_width)
+      (setq cmake-tab-width tab_width)
       (setq python-indent-guess-indent-offset nil)
       ;; (setq-default python-indent-offset tab_width)
       ;; (setq c-basic-offset tab_width) ;; use this number of spaces as indent

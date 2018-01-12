@@ -76,6 +76,8 @@ fi
 
 export PATH=$ORIG_PATH
 export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
+export CC=clang-3.8
+export CXX=clang++-3.8
 # Toolchains:
 export CROSS_COMPILE=arm-none-eabi-
 # export PATH=$PATH:$HOME/other/toolchains/gcc-linaro-4.9-2014.11-x86_64_arm-eabi/bin
