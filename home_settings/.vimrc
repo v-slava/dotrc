@@ -217,7 +217,7 @@ nmap <Leader>w <C-w>
 nmap <Leader>wp <C-w><C-p>
 
 " Clear current line:
-nmap <Leader>oe $d0x
+nmap <Leader>oc $d0x
 
 " Use Y to copy until end of line:
 nmap Y y$

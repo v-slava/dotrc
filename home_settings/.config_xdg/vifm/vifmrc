@@ -506,6 +506,7 @@ nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1<CR>
 nnoremap au :! umount /media/usb<CR>
+" Android (smartphone):
 nnoremap cm :! jmtpfs /media/usb<CR>
 nnoremap cu :! fusermount -u /media/usb<CR>
 

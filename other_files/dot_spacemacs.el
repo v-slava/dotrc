@@ -603,8 +603,8 @@ evaluate the last sexp at the end of the current line."
       (cond
        ((equal name "build")
         (cond
-         ((equal file-extension "c") (concat "gcc -g3 -Wall -Wextra " compile-ending))
-         ((member file-extension cpp-extensions) (concat "g++ -g3 -Wall -Wextra -std=c++11 " compile-ending))
+         ((equal file-extension "c") (concat "$CC -g3 -Weverything -pedantic " compile-ending))
+         ((member file-extension cpp-extensions) (concat "$CXX -g3 -Weverything -pedantic -std=c++11 -Wno-c++98-compat -Wno-c++98-compat-pedantic " compile-ending))
          ((equal file-extension "rs") (concat "rustc " compile-ending))
          ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
          ((or (equal file-extension "mk") (equal file-name "Makefile")) (concat "make -f " file-path))
