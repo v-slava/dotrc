@@ -1045,6 +1045,8 @@ git diff-tree --no-commit-id --name-only -r COMMIT
 git show --name-only COMMIT
 # Show changes introduced by a commit in a single given file:
 git show COMMIT FILE
+# Show all commits that changed given file:
+git log --follow FILE
 
 # Git do not verify ssl certificates:
 git config [--global] http.sslVerify false
