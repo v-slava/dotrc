@@ -218,8 +218,8 @@ bindsym $WIN+c exec exec qalculate
 bindsym $WIN+a exec --no-startup-id exec ~/os_settings/other_files/start_anki.sh
 
 # browser
-bindsym XF86HomePage exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
-bindsym $Alt_L+b exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
+bindsym XF86HomePage exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
+bindsym $Alt_L+b exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
 # bindsym $WIN+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
 bindsym $WIN+v exec --no-startup-id exec skypeforlinux
