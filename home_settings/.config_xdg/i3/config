@@ -178,6 +178,7 @@ for_window [window_role="browser"] mark --replace browser
 for_window [title="Qemu: Windows 7"] fullscreen
 for_window [title="My bluetooth headset"] floating enable
 # for_window [class="Skype"] floating enable
+for_window [class="Skype"] mark --replace skype
 for_window [class="Gimp"] floating enable
 for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
@@ -222,8 +223,8 @@ bindsym XF86HomePage exec --no-startup-id exec google-chrome ~/os_settings/other
 bindsym $Alt_L+b exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
 # bindsym $WIN+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
-bindsym $WIN+v exec --no-startup-id exec skypeforlinux
-exec --no-startup-id exec skypeforlinux
+bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec skypeforlinux
+# exec --no-startup-id exec skypeforlinux
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
