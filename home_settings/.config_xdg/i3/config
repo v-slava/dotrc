@@ -224,7 +224,7 @@ bindsym $Alt_L+b exec --no-startup-id exec google-chrome ~/os_settings/other_fil
 # bindsym $WIN+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
 bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec skypeforlinux
-# exec --no-startup-id exec skypeforlinux
+exec --no-startup-id exec skypeforlinux
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
