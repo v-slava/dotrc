@@ -433,6 +433,14 @@ evaluate the last sexp at the end of the current line."
         (message "Switched to russian keyboard layout"))
       (if in-insert-state (evil-append 1))))
 
+  (defun my-open-file-from-clipboard ()
+    "Open file whoose name is copied in clipboard."
+    (interactive)
+    (let* ((clipboard (current-kill 0)))
+      (find-file clipboard)
+      )
+    )
+
   (defun my--get-location ()
     (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos))))
 
@@ -1631,6 +1639,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "osp" 'my-select-project)
   (spacemacs/set-leader-keys "oep" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
+  (spacemacs/set-leader-keys "fm" 'my-open-file-from-clipboard)
   (spacemacs/set-leader-keys "mG" 'hexl-goto-hex-address)
   (spacemacs/set-leader-keys "he" 'my-toggle-hex-mode)
 
