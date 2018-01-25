@@ -1209,6 +1209,19 @@ Add Man mode support to (previous-buffer)."
     (interactive "e")
     (unless (realgud:tooltip-eval event) (tooltip-hide)))
 
+  (defun my-toggle-whitespace-mode ()
+    "Toggle highlighte only too long lines <--> default highlight."
+    (interactive)
+    (when whitespace-mode (call-interactively 'whitespace-mode))
+    (let ((column 80))
+      (if (member 'lines-tail whitespace-style)
+          (setq-default whitespace-line-column column whitespace-style '(face
+            tabs spaces trailing lines space-before-tab newline indentation
+            empty space-after-tab space-mark tab-mark newline-mark))
+        (setq-default whitespace-line-column column whitespace-style '(face lines-tail))))
+    (call-interactively 'whitespace-mode)
+    )
+
   (defun my-elisp-testcase ()
     "Call function to be tested (execute a testcase)."
     ;; (call-interactively 'other-frame)
@@ -1247,6 +1260,11 @@ Add Man mode support to (previous-buffer)."
   ;; Highlight eLisp expression (inside braces)
   (setq show-paren-style 'expression)
   (show-paren-mode)
+
+  ;; Make column #80 visible (avoid too long lines):
+  ;; (setq-default header-line-format (list " " (make-string 79 ?-) "|"))
+  (global-whitespace-mode)
+  (my-toggle-whitespace-mode)
 
   ;; magit:
   ;; SPC g b (spacemacs/git-blame-micro-state).
