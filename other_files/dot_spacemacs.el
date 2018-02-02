@@ -436,13 +436,19 @@ evaluate the last sexp at the end of the current line."
   (defun my-open-file-from-clipboard ()
     "Open file whoose name is copied in clipboard."
     (interactive)
-    (let* ((clipboard (current-kill 0)))
-      (find-file clipboard)
-      )
-    )
+    (let* ((clipboard (current-kill 0))
+           (items (split-string clipboard ":"))
+           (num-items (length items))
+           (file (nth 0 items))
+           (line (nth 1 items))
+           (column (nth 2 items)))
+      (when (> num-items 3) (my--error "Unexpected clipboard contents (too many \":\"): %s" clipboard))
+      (find-file file)
+      (when line (evil-goto-line (string-to-number line)))
+      (when column (compilation-move-to-column (+ 1 (string-to-number column)) nil))))
 
   (defun my--get-location ()
-    (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos))))
+    (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)) ":" (number-to-string (current-column))))
 
   (defun my-copy-location-to-clipboard ()
     "Copy \"/path/to/file:line\" to clipboard."
