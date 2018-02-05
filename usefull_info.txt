@@ -1561,7 +1561,7 @@ sync
 # Create bootable usb (grub2):
 dd if=/dev/zero of=/dev/sdX count=3000
 fdisk /dev/sdX
-mkfs -t vfat -F 32 -n usb_boot /dev/sdX1
+mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
 mount /dev/sdX1 /mnt
 grub-install --boot-directory=/mnt/boot /dev/sdX
 edit /mnt/boot/grub/grub.cfg
