@@ -79,6 +79,7 @@ export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
 export CC=clang-6.0
 export CXX=clang++-6.0
 # Toolchains:
+export PATH=/media/files/other/toolchains/gcc-arm-none-eabi-7-2017-q4-major/bin:$PATH
 export CROSS_COMPILE=arm-none-eabi-
 # export PATH=$PATH:$HOME/other/toolchains/gcc-linaro-4.9-2014.11-x86_64_arm-eabi/bin
 

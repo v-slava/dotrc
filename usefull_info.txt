@@ -391,6 +391,9 @@ xmodmap -e 'keycode 108 = Mode_switch'
 -Wl,--print-map
 -Wl,-Map=file.map
 
+# Linker: print linker script:
+ld --verbose
+
 # Verbose linking (linker: print linker script, linked objects, libraries, etc.):
 gcc 1.o 2.o -o out.elf -Wl,--verbose
 
@@ -1397,6 +1400,9 @@ objdump -p FILE | grep NEEDED
 ldd FILE # doesn't work for other architecture (always returns not a dynamic executable)
 LD_TRACE_LOADED_OBJECTS=1 /lib/ld-linux.so.3 FILE
 
+# Convert address in ELF file into source file and line number within it:
+addr2line -e ELF_FILE 0x20015678
+
 # 7z decompressing:
 7z x FILE.7z
 p7zip -d FILE.7z
@@ -1816,6 +1822,7 @@ b write if (1 == $rdi) && (0 != strstr($rsi, "some text"))
 watch *&errno
 
 # gdb: stop on file open (x86_64 only):
+set overload-resolution off
 b open if strcmp($rdi, "/tmp/some/file") == 0
 
 # gdb: do not stop on signal SIGUSR1 (ignore signal):
