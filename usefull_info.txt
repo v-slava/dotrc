@@ -252,6 +252,8 @@ dpkg-buildpackage -us -uc
 dpkg-buildflags
 # Use -O0 instead of -O2:
 export DEB_BUILD_OPTIONS=noopt
+# Force CFLAGS value:
+export DEB_CFLAGS_SET='-g3 -O0'
 
 # Install package without root privileges:
 mkdir -p ~/root_dir/var/lib
@@ -290,6 +292,9 @@ xdotool windowmap $WIN
 
 # move specified window:
 xdotool windowmove $WIN $X $Y
+
+# resize specified window:
+xdotool windowsize $WIN $WIDTH $HEIGHT
 
 # move and resize specified window:
 wmctrl -i -r $WIN -e 1,$X,$Y,$WIDTH,$HEIGHT
@@ -770,6 +775,10 @@ LANG=ko_KR.EUC-KR gvim file.cpp
 # ssh connect to host on specified port (default port = 22):
 ssh -p port user@host
 
+# non-interactive authentication with password:
+sshpass -p PASSWORD scp user@host
+sshpass -p PASSWORD scp FILE user@host:/some/path/
+
 # View machines, connected via ssh:
 who -a
 
@@ -956,6 +965,15 @@ patch old_file patch_file
 cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
+
+# git show config options:
+git config --list
+
+# Rebase by default when doing git pull:
+git config branch.master.rebase true
+
+# git config unset option:
+git config --unset OPTION
 
 # git show last 4 commits (only hashes):
 git log HEAD@{3}..HEAD --pretty=format:"%H"
