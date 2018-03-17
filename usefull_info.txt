@@ -175,6 +175,9 @@ echo $((16#$SOME_VAR))
 # Unset environment variable (bash):
 unset ENV_VAR_NAME
 
+# use russian windows locale:
+LANG=ru_RU.CP1251 PROGRAM_TO_RUN
+
 # Switch to russian language (add to ~/.bashrc):
 export LANG=ru_RU.UTF-8
 export LANGUAGE=ru
@@ -494,7 +497,7 @@ fc-cache -fv
 
 # cut pages range from pdf:
 pdftk A=in_1.pdf input_pw='PASSWORD' B=in_2.pdf cat A3-5 B3left A2right output out.pdf
-# Create pdf file from images (jpg/png):
+# Create pdf file from images (jpg/png), need to install imagemagick:
 convert page*.png mydoc.pdf
 
 # Set the pipeline's return status to the value of the  last  (right‐most)
@@ -1679,6 +1682,9 @@ dhclient -v eth0
 
 # DNS server:
 /etc/resolv.conf
+
+# Query DNS server and get IP address:
+dig [@8.8.8.8] +short unix.stackexchange.com
 
 # Add default gateway:
 route add default gw 192.168.1.1
