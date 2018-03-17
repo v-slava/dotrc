@@ -460,7 +460,8 @@ set trashdir=/media/files/trash_vifm
 nnoremap <c-d> :exit<CR>
 vmap <c-d> :exit<CR>
 " nnoremap ii
-nnoremap e <nop>
+" nnoremap e <nop>
+nnoremap e :!edit_file.sh %f<CR>
 nnoremap q :exit<CR>
 vmap q :exit<CR>
 
