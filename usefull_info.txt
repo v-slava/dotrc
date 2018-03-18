@@ -969,6 +969,9 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git list tags ordered by date:
+git log --tags --simplify-by-decoration --pretty="format:%ci %d"
+
 # git show config options:
 git config --list
 
@@ -1586,7 +1589,7 @@ sync
 # For grub2 version syslinux is not necessary (see os_settings/other_files/grub.cfg)
 
 # Create bootable usb (grub2):
-dd if=/dev/zero of=/dev/sdX count=3000
+dd if=/dev/zero of=/dev/sdX bs=1k count=1
 fdisk /dev/sdX
 mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
 mount /dev/sdX1 /mnt
@@ -1602,6 +1605,17 @@ cp mhdd32ver4.6.iso /mnt/boot/mhdd.iso
 wget http://www.memtest86.com/downloads/memtest86-iso.gz
 cp memtest86-iso /mnt/boot/memtest.iso
 # See os_settings/other_files/grub.cfg
+
+# Create bootable usb (EFI):
+dd if=/dev/zero of=/dev/sdX bs=1k count=1
+fdisk /dev/sdX
+mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
+mount /dev/sdX1 /mnt
+mkdir -p /mnt/EFI/BOOT
+apt-get install grub-efi-amd64-bin
+grub-mkimage -o bootx64.efi -p /boot/grub -O x86_64-efi fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
+cp bootx64.efi /mnt/EFI/BOOT/
+edit /mnt/boot/grub/grub.cfg
 
 # Create bootable iso image (for cdrom):
 mkdir -p image_root/boot/grub
