@@ -2,7 +2,7 @@ PHONY := all
 all: download_git install_dependencies
 	mkdir rtags_out
 	cd rtags_out && cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release ../rtags
-	ninja -C rtags_out -j 9
+	ninja -C rtags_out
 	su -c "ninja -C rtags_out install"
 
 PHONY += download_git
@@ -12,7 +12,7 @@ download_git:
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c 'apt-get install -t jessie-backports cmake ninja-build libclang-3.8-dev llvm-3.8-dev'
+	su -c 'apt-get install cmake ninja-build libclang-6.0-dev llvm-6.0-dev clang-6.0'
 
 PHONY += clean
 clean:

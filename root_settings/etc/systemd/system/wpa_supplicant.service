@@ -10,7 +10,8 @@ Wants=network.target
 [Service]
 Type=dbus
 BusName=fi.epitest.hostap.WPASupplicant
-ExecStart=/sbin/wpa_supplicant -u -s -O /run/wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
+ExecStart=/sbin/wpa_supplicant -u -s -O /run/wpa_supplicant -i wlp3s0
+# -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 
 [Install]
 WantedBy=multi-user.target

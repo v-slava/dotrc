@@ -30,13 +30,16 @@ if [ -d "$ROOT_SETTINGS_S" ]; then
 fi
 set -ex
 
-update-grub
+# update-grub
+efibootmgr -b 0000 -B
+efibootmgr -c -L "Debian (EFI stub)" -l '/EFI/debian/vmlinuz' -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img'
+
 locale-gen
 if systemctl is-enabled systemd-networkd.service ; then
 	systemctl disable systemd-networkd.service
 fi
 # systemctl status wpa_supplicant
-systemctl set-default default_system_gui.target
+# systemctl set-default default_system_gui.target
 
 # apply vifm settings to vim:
 # cp /usr/share/vim/addons/syntax/vifm.vim /usr/share/vim/vim74/syntax/

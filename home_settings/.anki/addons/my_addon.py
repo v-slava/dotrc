@@ -111,7 +111,7 @@ def refresh_all_fields(self, data, cursor_position):
 
 def fill_button_pressed(self):
     # Settings:
-    HOME = "/home/volkov"
+    HOME = "/home/slava"
     SOUNDS = HOME + "/other/GoldenDict/sound_en/sound_en.dsl.files.zip"
     MEDIA = HOME + "/.anki/slava/collection.media"
     # Switch i3-wm workspace to goldendict, browser:

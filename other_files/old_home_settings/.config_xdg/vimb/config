@@ -1,7 +1,7 @@
 set download-path=~/downloads
 
 # set home-page=https://www.google.com.ua/
-# set home-page=file:///home/volkov/os_settings/other_files/start_page.html
+# set home-page=file:///home/slava/os_settings/other_files/start_page.html
 set editor-command=x-terminal-emulator -e vim '%s'
 set strict-focus=true
 
@@ -29,7 +29,7 @@ nmap - :normal zO<CR>
 # Push current page to queue for later reading and close it:
 nmap \ l :qpush<CR>:q<CR>
 # Restore first page from queue for later reading in new window:
-nmap \ r :tabopen file:///home/volkov/os_settings/other_files/start_page.html<CR>:qpop<CR>
+nmap \ r :tabopen file:///home/slava/os_settings/other_files/start_page.html<CR>:qpop<CR>
 
 # noob settings begin
 # noob settings end

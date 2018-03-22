@@ -43,8 +43,8 @@ bindsym $Alt_L+m exec --no-startup-id exec ~/os_settings/other_files/i3_mark_win
 # goto window by mark (label name):
 bindcode $Alt_L+48 exec --no-startup-id exec ~/os_settings/other_files/i3_goto_marked_window.py
 
-# switch to virtual console 1
-bindsym $Ctrl_L+$ALT_L+F1 exec --no-startup-id exec sudo chvt 1
+# switch to virtual console 2
+bindsym $Ctrl_L+$ALT_L+F2 exec --no-startup-id exec sudo chvt 2
 
 # change focus
 # bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
@@ -101,8 +101,8 @@ bindsym $Alt_L+9 workspace 9
 # Workspace-output assignments:
 # SED native begin
 
-set $OUTPUT_CENTRAL eDP1
-set $OUTPUT_RIGHT HDMI1
+set $OUTPUT_CENTRAL eDP-1
+set $OUTPUT_RIGHT HDMI-1
 # set $OUTPUT_LEFT
 
 # SED native end
@@ -112,7 +112,7 @@ set $OUTPUT_CENTRAL VGA-1
 set $OUTPUT_RIGHT VGA-2
 set $OUTPUT_LEFT VGA-0
 
-exec --no-startup-id sleep 4 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
+# exec --no-startup-id sleep 4 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 # SED virtual end
 
 workspace 0 output $OUTPUT_CENTRAL # temporary workspace
@@ -219,11 +219,11 @@ bindsym $WIN+c exec exec qalculate
 bindsym $WIN+a exec --no-startup-id exec ~/os_settings/other_files/start_anki.sh
 
 # browser
-bindsym XF86HomePage exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
-bindsym $Alt_L+b exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
+bindsym XF86HomePage exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
+bindsym $Alt_L+b exec --no-startup-id exec chromium ~/os_settings/other_files/start_page.html
 
 bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec /media/files/workspace/dotrc/other_files/start_teamviewer.sh
-bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
+# bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
 bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec skypeforlinux
 exec --no-startup-id exec skypeforlinux

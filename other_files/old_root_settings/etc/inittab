@@ -58,7 +58,7 @@ po::powerokwait:/etc/init.d/powerfail stop
 5:23:respawn:/sbin/getty 38400 tty5
 6:23:respawn:/sbin/getty 38400 tty6
 
-7:2:wait:/bin/su volkov -l -c /usr/bin/startx 1>/dev/null 2>&1
+7:2:wait:/bin/su slava -l -c /usr/bin/startx 1>/dev/null 2>&1
 8:3:wait:/bin/su noob -l -c /usr/bin/startx 1>/dev/null 2>&1
 # 9:23:boot:/bin/su root -c dd if=/dev/kmsg of=/dev/tty6
 

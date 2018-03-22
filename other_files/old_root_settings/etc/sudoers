@@ -26,7 +26,7 @@ root	ALL=(ALL:ALL) ALL
 
 #includedir /etc/sudoers.d
 noob laptop= NOPASSWD: /sbin/poweroff, /sbin/halt, /sbin/reboot
-volkov laptop= NOPASSWD: /sbin/poweroff, /sbin/halt, /sbin/reboot
+slava laptop= NOPASSWD: /sbin/poweroff, /sbin/halt, /sbin/reboot
 
-volkov laptop= NOPASSWD: /bin/mount -t cifs -o user=* //*/* /media/*, /bin/umount /media/*
+slava laptop= NOPASSWD: /bin/mount -t cifs -o user=* //*/* /media/*, /bin/umount /media/*
 

@@ -1,3 +1,6 @@
+# autologin on virtual terminal:
+/sbin/agetty -a USER --noclear tty2 linux
+
 # Escape sequence (color):
 echo -e '\e[0;31mRED TEXT\e[mNORMAL TEXT'
 
@@ -329,8 +332,8 @@ pactl list sources
 # Get list of application producing sound:
 pacmd list-sink-inputs
 
-# i3wm turn off monitor (move workspaces to LVDS1):
-xrandr --output HDMI1 --off
+# i3wm turn off monitor (move workspaces to LVDS-1):
+xrandr --output HDMI-1 --off
 
 # Disable stdout buffering:
 stdbuf -o0 YOUR_CMD
@@ -451,6 +454,12 @@ make mandocs
 make installmandocs # installs in /usr/local/man/man9
 # Get info about all targets (linux kernel only):
 make help
+# Execute linux kernel self tests:
+make kselftest
+# See also ktest.pl (build kernel, boot it on remote machine and run some
+# userspace program).
+# See also: LTP
+# See also: https://kernelci.org/
 
 # gcc output rules for make describing dependencies:
 gcc FILE.c -o FILE.d -MM -MT FILE.o
@@ -682,6 +691,7 @@ Remote=no
 Active=yes
 
 # Systemd commands:
+systemctl --failed
 systemctl list-unit-files
 systemctl [--user] list-unit-files # always shows up-to-date information
 systemctl is-enabled SERVICE
@@ -880,13 +890,12 @@ echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00
 fakeroot id
 echo "id ; whoami" | fakeroot
 # Create tarball for variant=fakechroot (use variant=minbase without fakechroot):
-fakechroot debootstrap --arch=armhf --download-only --variant=fakechroot \
-	--make-tarball=debootstrap.tgz wheezy tmp_dir
+fakechroot debootstrap --arch=armhf --download-only --variant=minbase --make-tarball=debootstrap.tgz buster tmp_dir
 # If tmp_dir doesn't exist - it will be created. It will be deleted at the end.
 # Unpack tarball for foreign architecture:
-fakeroot debootstrap --arch=armhf --foreign --unpack-tarball=debootstrap.tgz wheezy mnt
+fakeroot debootstrap --arch=armhf --foreign --unpack-tarball=debootstrap.tgz buster mnt
 # Download and install (first stage only):
-fakeroot debootstrap --arch=armhf --foreign wheezy mnt
+fakeroot debootstrap --arch=armhf --foreign buster mnt
 # Chroot without root privileges:
 fakechroot chroot root_dir
 fakechroot chroot root_dir CMD
@@ -895,7 +904,7 @@ echo "CMD1 ; CMD2" | fakechroot chroot root_dir
 # Initialize a target (need to be executed just once, TARGET may be any string):
 sb2-init -d -n TARGET CROSS_COMPILER
 sb2 # -eR # Enter scratchbox environment
-fakeroot debootstrap --arch=armhf --foreign --variant=scratchbox wheezy DIR
+fakeroot debootstrap --arch=armhf --foreign --variant=minbase buster DIR
 # Here DIR is a directory you've executed sb2-init in (be carefull with symlinks).
 # Chroot to foreign architecture rootfs:
 cp /usr/bin/qemu-arm-static root_dir/usr/bin
@@ -936,6 +945,7 @@ ls -lsh FILE
 ls -ls --block-size=1 FILE
 
 # Resize ext2/3/4 partition:
+e2fsck -f FILE
 resize2fs -p FILE [SIZE]
 
 # Check filesystem for errors (do not correct anything):
@@ -1616,6 +1626,25 @@ apt-get install grub-efi-amd64-bin
 grub-mkimage -o bootx64.efi -p /boot/grub -O x86_64-efi fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
 cp bootx64.efi /mnt/EFI/BOOT/
 edit /mnt/boot/grub/grub.cfg
+
+# Boot linux distro without GRUB (CONFIG_EFI_STUB=y in linux kernel configuration):
+1) Using fdisk create GPT partition table.
+2) Make first partition 512M big (minimum ~100M) and mark it as "EFI system" (code: 1).
+3) Format first partition as FAT32.
+4) Mount first partition to mnt.
+5) mkdir -p mnt/EFI/debian
+6) cp /vmlinuz mnt/EFI/debian/
+7) cp initrd.img mnt/EFI/debian/
+8) export UUID=$(blkid -s UUID -o value /dev/sda2)
+9) efibootmgr -c -L "Debian (EFI stub)" -l '\EFI\debian\vmlinuz' -u "root=UUID=$UUID add_efi_memmap initrd=\\EFI\\debian\\initrd.img"
+# In running linux:
+1) Mount EFI system partition (ESP) to /boot/efi
+2) See "efistub" in debian wiki
+
+# efibootmgr list boot entries:
+efibootmgr -v
+# efibootmgr delete boot entry:
+efibootmgr -b 0001 -B
 
 # Create bootable iso image (for cdrom):
 mkdir -p image_root/boot/grub

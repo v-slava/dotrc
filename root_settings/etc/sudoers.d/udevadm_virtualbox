@@ -1,2 +1,2 @@
-volkov laptop= NOPASSWD: /bin/udevadm trigger --subsystem-match=input --action=change
+slava laptop= NOPASSWD: /bin/udevadm trigger --subsystem-match=input --action=change
 

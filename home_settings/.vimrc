@@ -476,7 +476,7 @@ function! Copy_location(in_file, strip_part)
 endfunction
 " Copy full source location into clipboard:
 nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
-" nmap <F11> :call Copy_location( expand('%:p'), '/home/volkov/workspace/project_root_dir/' )<CR>
+" nmap <F11> :call Copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
 
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
@@ -538,8 +538,8 @@ call tcomment#DefineType('cpp_block', g:tcommentBlockC2)
 
 " localvimrc:
 let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced
-" accept .lvimrc files in /home/volkov/* and /media/files/*:
-let g:localvimrc_whitelist='^\(/home/volkov/*\|/media/files/*\)'
+" accept .lvimrc files in /home/slava/* and /media/files/*:
+let g:localvimrc_whitelist='^\(/home/slava/*\|/media/files/*\)'
 " ignore .lvimrc files on mounted filesystems:
 let g:localvimrc_blacklist='^/media/*'
 let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)

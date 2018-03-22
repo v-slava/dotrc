@@ -1,6 +1,6 @@
-From 201ba54d86b63e045346f283576b856186f299fe Mon Sep 17 00:00:00 2001
+From b2d78588bb13a71457554448638ced3968241f92 Mon Sep 17 00:00:00 2001
 From: Viacheslav Volkov <viacheslav.volkov.1@gmail.com>
-Date: Sun, 16 Oct 2016 19:06:55 +0200
+Date: Tue, 20 Mar 2018 21:13:15 +0000
 Subject: [PATCH] Add "-selection" option and Alt+i hotkey.
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH] Add "-selection" option and Alt+i hotkey.
  3 files changed, 36 insertions(+), 15 deletions(-)
 
 diff --git a/config.mk b/config.mk
-index 4d908a5..955a0bc 100644
+index 50fe52c..b32ea72 100644
 --- a/config.mk
 +++ b/config.mk
-@@ -5,8 +5,7 @@ VERSION = 4.6
+@@ -5,8 +5,7 @@ VERSION = 4.8
  PREFIX = /usr/local
  MANPREFIX = ${PREFIX}/share/man
  
@@ -40,7 +40,7 @@ index 4d908a5..955a0bc 100644
  # compiler and linker
  CC = cc
 diff --git a/dmenu.1 b/dmenu.1
-index 9eab758..cd61b64 100644
+index fbb3f76..269a351 100644
 --- a/dmenu.1
 +++ b/dmenu.1
 @@ -10,6 +10,8 @@ dmenu \- dynamic menu
@@ -52,7 +52,7 @@ index 9eab758..cd61b64 100644
  .RB [ \-fn
  .IR font ]
  .RB [ \-nb
-@@ -154,11 +156,8 @@ Delete line left
+@@ -160,11 +162,8 @@ Delete line left
  C\-w
  Delete word left
  .TP
@@ -64,10 +64,10 @@ index 9eab758..cd61b64 100644
 +A\-v
 +Paste from clipboard
  .TP
- M\-g
- Home
+ M\-b
+ Move cursor to the start of the current word
 diff --git a/dmenu.c b/dmenu.c
-index 9278e91..43c67d8 100644
+index 5e9c367..70b2639 100644
 --- a/dmenu.c
 +++ b/dmenu.c
 @@ -10,6 +10,7 @@
@@ -82,7 +82,7 @@ index 9278e91..43c67d8 100644
  /* enums */
  enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
  
-+enum  Clipboard
++enum Clipboard
 +{
 +	PRIMARY,
 +	SECONDARY,
@@ -92,7 +92,7 @@ index 9278e91..43c67d8 100644
  struct item {
  	char *text;
  	struct item *left, *right;
-@@ -329,11 +337,6 @@ keypress(XKeyEvent *ev)
+@@ -345,11 +353,6 @@ keypress(XKeyEvent *ev)
  			while (cursor > 0 && !strchr(worddelimiters, text[nextrune(-1)]))
  				insert(NULL, nextrune(-1) - cursor);
  			break;
@@ -101,10 +101,10 @@ index 9278e91..43c67d8 100644
 -			XConvertSelection(dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
 -			                  utf8, utf8, win, CurrentTime);
 -			return;
- 		case XK_Return:
- 		case XK_KP_Enter:
- 			break;
-@@ -351,6 +354,18 @@ keypress(XKeyEvent *ev)
+ 		case XK_Left:
+ 			movewordedge(-1);
+ 			ksym = NoSymbol;
+@@ -383,6 +386,18 @@ keypress(XKeyEvent *ev)
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
@@ -123,13 +123,13 @@ index 9278e91..43c67d8 100644
  		default:
  			return;
  		}
-@@ -651,6 +666,14 @@ main(int argc, char *argv[])
+@@ -689,6 +704,14 @@ main(int argc, char *argv[])
  		if (!strcmp(argv[i], "-v")) {      /* prints version information */
  			puts("dmenu-"VERSION);
  			exit(0);
 +		} else if (!strcmp(argv[i], "-selection")) {
 +			++i;
-+			if(!strcmp(argv[i], "primary"))
++			if (!strcmp(argv[i], "primary"))
 +				clipboard = PRIMARY;
 +			else if (!strcmp(argv[i], "secondary"))
 +				clipboard = SECONDARY;
@@ -139,5 +139,5 @@ index 9278e91..43c67d8 100644
  			topbar = 0;
  		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 -- 
-2.1.4
+2.16.2
 

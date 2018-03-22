@@ -5,7 +5,7 @@ if [ ! -f "rg" ]; then
     exit 1
 fi
 
-set -e
+set -ex
 cp rg /usr/bin
-cp rg.1 /usr/share/man/man1
-cp complete/rg.bash-completion /etc/bash_completion.d/
+cp doc/rg.1 /usr/share/man/man1
+cp complete/rg.bash /etc/bash_completion.d/

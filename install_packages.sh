@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# already installed packages: linux-image-amd64 grub-pc os-prober
+# already installed packages: linux-image-amd64 systemd systemd-sysv efibootmgr
+# grub-pc os-prober
 
 set -ex
 
@@ -12,30 +13,31 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
-    openssh-client sshfs jmtpfs fuse silversearcher-ag kbd \
+    openssh-client sshfs jmtpfs fuse kbd \
     gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
     gdb gdb-doc gdbserver gdb-multiarch \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
     sox libsox-fmt-mp3 libav-tools \
     exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
-    tree git make patch dos2unix file dtach bsdutils android-tools-adb \
+    tree git make patch dos2unix file bsdutils android-tools-adb \
     expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
+    gcc g++ cmake build-essential \
     clang-6.0 clang-tidy-6.0 clang-tools-6.0 libclang-6.0-dev llvm-6.0 \
 
 apt-file update
 
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
-# apt-get install -t jessim-backports firmware-atheros
+# apt-get install firmware-atheros
 # For Asus F541U:
-apt-get install firmware-realtek firmware-misc-nonfree
+apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
 # Install xorg:
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
-    xserver-xorg-input-synaptics xinit rxvt-unicode-256color
+    xserver-xorg-input-synaptics xinit rxvt-unicode-256color rxvt-unicode
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:
-apt-get install -t jessie-backports i3-wm libanyevent-i3-perl i3status i3lock fbxkb
+apt-get install i3-wm libanyevent-i3-perl i3status i3lock fbxkb
 
 # Install network manager:
 apt-get install network-manager-gnome gnome-keyring notification-daemon
@@ -57,11 +59,12 @@ apt-get install wmctrl xdotool xclip xinput xbacklight scrot zenity xcape xprint
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 
-# Install email client (thunderbird):
-apt-get install icedove
+# Install email client:
+apt-get install thunderbird
+# icedove
 
 # Install video player:
-apt-get install mplayer2 smplayer
+apt-get install smplayer
 
 # Install images viewer:
 apt-get install gliv
@@ -82,19 +85,24 @@ apt-get install libreoffice
 apt-get install zathura
 
 # Install whatever is necessary for spacemacs:
-apt-get install emacs python-jedi python-setuptools clang-format-3.8
+apt-get install emacs python-jedi python-setuptools clang-format
 
 # Install alternative browsers:
 # apt-get install iceweasel iceweasel-l10n-ru
-apt-get install chromium chromium-l10n pepperflashplugin-nonfree uzbl
-# On wheezy: chromium-browser-l10n
+apt-get install chromium
+# chromium-l10n pepperflashplugin-nonfree uzbl
 
 # dmenu:
-make -f ~/os_settings/other_files/Makefile_dmenu.mk
+make -f /media/files/workspace/dotrc/other_files/Makefile_dmenu.mk
+
+# ripgrep (rg):
+/media/files/workspace/dotrc/other_files/install_ripgrep_rg.sh
+
+# Install also: Viber, Skype, Telegram, Teamviewer
 
 # Coreutils viewer:
-apt-get install libncurses5-dev pkg-config
-make -f ~/os_settings/other_files/Makefile_coreutils_viewer.mk
+# apt-get install libncurses5-dev pkg-config
+# make -f ~/os_settings/other_files/Makefile_coreutils_viewer.mk
 
 # vifm:
 # make -f ~/os_settings/other_files/Makefile_vifm.mk

@@ -1,2 +1,2 @@
-volkov laptop= NOPASSWD: /bin/systemctl start teamviewerd.service, /bin/systemctl stop teamviewerd.service
+slava laptop= NOPASSWD: /bin/systemctl start teamviewerd.service, /bin/systemctl stop teamviewerd.service
 

@@ -1,3 +1,9 @@
+# If not running interactively, don't do anything
+# case $- in
+#     *i*) ;;
+#       *) return;;
+# esac
+
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
@@ -36,8 +42,14 @@ alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon
 
-if [ -f /etc/bash_completion ]; then
-	. /etc/bash_completion
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
 fi
 
 # default colorless prompt:
@@ -85,6 +97,14 @@ export CROSS_COMPILE=arm-none-eabi-
 
 # Use bash's vi editing mode:
 set -o vi
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
 
 # Handle bash history from multiple terminals:
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries

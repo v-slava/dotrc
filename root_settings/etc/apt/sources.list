@@ -1,19 +1,19 @@
 # Package search:
 # https://www.debian.org/distrib/packages#search_packages
 
-# Security updates:
-deb http://security.debian.org/ jessie/updates main contrib non-free
-deb-src http://security.debian.org/ jessie/updates main contrib non-free
+# security updates:
+deb http://security.debian.org/ buster/updates main contrib non-free
+deb-src http://security.debian.org/ buster/updates main contrib non-free
 
-# Base repository:
-deb http://http.debian.net/debian jessie main contrib non-free
-deb-src http://http.debian.net/debian jessie main contrib non-free
+# base repository:
+deb http://http.debian.net/debian buster main contrib non-free
+deb-src http://http.debian.net/debian buster main contrib non-free
 
-# Stable updates:
-deb http://http.debian.net/debian jessie-updates main contrib non-free
-deb-src http://http.debian.net/debian jessie-updates main contrib non-free
+# updates:
+deb http://http.debian.net/debian buster-updates main contrib non-free
+deb-src http://http.debian.net/debian buster-updates main contrib non-free
 
-# Stable backports:
-deb http://http.debian.net/debian jessie-backports main contrib non-free
-deb-src http://http.debian.net/debian jessie-backports main contrib
+# backports:
+deb http://http.debian.net/debian buster-backports main contrib non-free
+deb-src http://http.debian.net/debian buster-backports main contrib
 

@@ -39,7 +39,7 @@ PID_FILE="/tmp/qemu.pid"
 
 MAC="E8:03:9A:3D:60:64"
 WIN_HDD="/dev/sda"
-GRUB_ISO="/home/volkov/temporary/grub.iso"
+GRUB_ISO="/home/slava/temporary/grub.iso"
 
 export QEMU_AUDIO_DRV=pa
 
