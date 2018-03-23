@@ -32,7 +32,7 @@ set -ex
 
 # update-grub
 efibootmgr -b 0000 -B
-efibootmgr -c -L "Debian (EFI stub)" -l '/EFI/debian/vmlinuz' -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img'
+efibootmgr -c -L "Debian (EFI stub)" -l '/EFI/debian/vmlinuz' -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img acpi_backlight=vendor pci=noaer'
 
 locale-gen
 if systemctl is-enabled systemd-networkd.service ; then
