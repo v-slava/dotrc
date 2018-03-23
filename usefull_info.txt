@@ -333,7 +333,7 @@ pactl list sources
 pacmd list-sink-inputs
 
 # i3wm turn off monitor (move workspaces to LVDS-1):
-xrandr --output HDMI-1 --off
+xrandr --output HDMI1 --off
 
 # Disable stdout buffering:
 stdbuf -o0 YOUR_CMD

@@ -5,6 +5,6 @@
 # grep -q 'systemd\.unit=virtual\.target' /proc/cmdline
 grep -q 'my_virtualbox' /proc/cmdline
 
-# xrandr | grep -q VGA-0
+# xrandr | grep -q VGA0
 # systemctl status startx@virtual.service
 

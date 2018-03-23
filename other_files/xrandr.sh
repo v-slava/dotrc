@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAIN_OUTPUT=eDP-1
+MAIN_OUTPUT=eDP1
 MAIN_MODE=1920x1080
 MAIN_DPI=144
 
@@ -30,7 +30,7 @@ else
     ARGS="$POSITION $MAIN_OUTPUT --mode $EXTERNAL_MODE --dpi $EXTERNAL_DPI"
 fi
 
-OTHER_OUTPUTS="HDMI-1 HDMI-2 DP-1 VGA-1"
+OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1"
 
 for OUTPUT in $OTHER_OUTPUTS ; do
     if xrandr | grep -q "^$OUTPUT connected" ; then
