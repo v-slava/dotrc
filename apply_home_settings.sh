@@ -18,19 +18,25 @@ if [ -n "$DISPLAY" ]; then
     xrdb ~/.Xresources
 fi
 
-if [ ! -d ~/my ]; then
-    mkdir ~/my
+if [ ! -e ~/my ]; then
+    ln -s /media/files/temporary/my ~/my
 fi
-if [ ! -L ~/bin ]; then
+if [ ! -e ~/bin ]; then
     ln -s $PWD/bin ~/bin
 fi
-if [ ! -d ~/Downloads ]; then
+if [ ! -e ~/downloads ]; then
+    ln -s /media/files/downloads ~/downloads
+fi
+if [ ! -e ~/Downloads ]; then
     ln -s /media/files/downloads ~/Downloads
 fi
-if [ ! -L ~/os_settings ]; then
+if [ ! -e ~/Desktop ]; then
+    ln -s /media/files/downloads ~/Desktop
+fi
+if [ ! -e ~/os_settings ]; then
     ln -s $PWD ~/os_settings
 fi
-if [ ! -L ~/.spacemacs ]; then
+if [ ! -e ~/.spacemacs ]; then
     ln -s $PWD/other_files/dot_spacemacs.el ~/.spacemacs
 fi
 # if [ ! -d ~/terminal ]; then

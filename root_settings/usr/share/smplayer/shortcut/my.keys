@@ -19,10 +19,10 @@ jump_radio_list
 next_radio
 previous_radio
 play
-play_or_pause	Media Play, Toggle Media Play/Pause
-pause	Space, Media Pause
+play_or_pause	Media Play, Toggle Media Play/Pause, Space
+pause	Media Pause
 pause_and_frame_step
-stop	Media Stop
+stop	Media Stop, 0
 frame_step	.
 frame_back_step	,
 rewind1	H

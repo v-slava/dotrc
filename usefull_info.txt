@@ -936,6 +936,27 @@ echo 7 > /proc/sys/kernel/printk
 # Show dmesg log:
 dmesg -w
 tail -F /var/log/messages
+tail /var/log/syslog
+tail /proc/kmsg
+
+# Linux kernel usefull debug functions:
+if (error && printk_ratelimit())
+    printk(KERN_EMERG “error=%d\n”, error);
+BUG_ON(condition)
+if (something_bad_happened)
+    BUG();
+dump_stack();
+panic("terrible_thing is %ld!\n", terrible_thing);
+
+# Linux kernel debugging:
+1) gdb vmlinux /proc/kcore
+2) apply kgdb patch
+
+# Linux kernel debug configuration options:
+CONFIG_PREEMPT=y
+CONFIG_DEBUG_KERNEL=y
+CONFIG_KALLSYMS=y
+CONFIG_DEBUG_SPINLOCK_SLEEP=y
 
 # Truncate file:
 truncate -s SIZE FILE
@@ -1476,9 +1497,6 @@ sudo extundelete --restore-file other/commands -o restore /dev/sda5
 
 # Linux kernel objdump
 arm-linux-gnueabi-objdump -D -b binary -m arm Image
-
-# View kernel messages (printk):
-tail /var/log/syslog
 
 # Mount initrd:
 sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>

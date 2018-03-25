@@ -172,7 +172,7 @@ mode "resize" {
 bindsym $Alt_L+r mode "resize"
 
 for_window [workspace="0"] layout tabbed
-for_window [title="Choose directory:"] move to workspace 0
+for_window [title="Choose.*by pressing"] move to workspace 0
 for_window [window_role="browser"] mark --replace browser
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen

@@ -447,6 +447,12 @@ evaluate the last sexp at the end of the current line."
       (when line (evil-goto-line (string-to-number line)))
       (when column (compilation-move-to-column (string-to-number column) nil))))
 
+  (defun my-open-file-vifm ()
+    "Open file via vifm."
+    (interactive)
+    (find-file (my--choose-single-file))
+    )
+
   (defun my--get-location (&optional no-column no-line)
     (let* ((location (buffer-file-name))
            (location (if no-line location (concat location ":" (number-to-string (line-number-at-pos)))))
@@ -981,8 +987,12 @@ Otherwise return unmodified string."
         )))
 
   (defun my--choose-directory ()
-    "Choose directory interactively (use vifm). Returns choosed directory."
-    (shell-command-to-string (concat my--os-settings "/other_files/choose_directory.sh -n")))
+    "Choose directory interactively (use vifm). Returns choosen directory."
+    (shell-command-to-string (concat my--os-settings "/other_files/vifm_choose.sh -d -n")))
+
+  (defun my--choose-single-file ()
+    "Choose single file interactively (use vifm). Returns choosen file."
+    (shell-command-to-string (concat my--os-settings "/other_files/vifm_choose.sh -fs -n")))
 
   (defun my-search-in-directory-interactive ()
     "Use rg to search in interactively choosen directory (interactive ivy interface)."
@@ -1568,6 +1578,7 @@ My change: do not switch to dired-mode (behaviour fix)."
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; quit on ESC
   (define-key evil-visual-state-map "i" 'my-execute-macro)
   (define-key evil-normal-state-map (kbd "C-d") 'my-close-window-or-frame)
+  (define-key evil-motion-state-map (kbd "C-d") 'my-close-window-or-frame)
   (define-key evil-normal-state-map (kbd "g C-]") 'my-find-tag)
   (evil-define-key 'motion help-mode-map (kbd "C-<return>") 'my-goto-elisp-definition)
   (evil-define-key 'motion help-mode-map (kbd "C-d") 'my-close-window-or-frame)
@@ -1667,6 +1678,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (spacemacs/set-leader-keys "oep" 'my-edit-project-definition)
   (spacemacs/set-leader-keys "cl" 'my-copy-location-to-clipboard)
   (spacemacs/set-leader-keys "fm" 'my-open-file-from-clipboard)
+  (spacemacs/set-leader-keys "f," 'my-open-file-vifm)
   (spacemacs/set-leader-keys "mG" 'hexl-goto-hex-address)
   (spacemacs/set-leader-keys "he" 'my-toggle-hex-mode)
 
