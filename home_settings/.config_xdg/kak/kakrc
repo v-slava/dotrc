@@ -1,0 +1,32 @@
+## comment: <esc>
+
+map global normal <c-d> ':quit<ret>'
+
+## space is my leader
+map global normal <space> , -docstring 'leader'
+map global normal <backspace> <space> -docstring 'remove all sels except main'
+map global normal <a-backspace> <a-space> -docstring 'remove main sel'
+
+## map global goto c '<esc>:comment-line<ret>' -docstring 'comment-line'
+
+declare-user-mode my-mode--space-b
+map global my-mode--space-b b ':buffer<space>' -docstring 'buffer'
+map global my-mode--space-b n ':buffer-next<ret>' -docstring 'buffer-next'
+map global my-mode--space-b p ':buffer-previous<ret>' -docstring 'buffer-previous'
+map global user b ':enter-user-mode<space>my-mode--space-b<ret>' -docstring 'buffer ...'
+
+declare-user-mode my-mode--space-s
+map global my-mode--space-s s '/' -docstring 'search'
+map global user s ':enter-user-mode<space>my-mode--space-s<ret>' -docstring 'search/symbol ...'
+
+declare-user-mode my-mode--space-p
+## map global my-mode--space-p f ':edit %sh{ echo -e "asd\nqwer\nzxcv" | fzf }' -docstring 'edit file from git'
+map global user p ':enter-user-mode<space>my-mode--space-p<ret>' -docstring 'projects ...'
+
+def -docstring 'invoke vifm to open a file' \
+    my-open-file-vifm %{ %sh{ echo -n "edit " &&
+        /media/files/workspace/dotrc/other_files/vifm_choose.sh -fs -n } }
+
+declare-user-mode my-mode--space-f
+map global my-mode--space-f , ':my-open-file-vifm<ret>' -docstring 'open file via vifm'
+map global user f ':enter-user-mode<space>my-mode--space-f<ret>' -docstring 'files ...'

@@ -11,7 +11,6 @@ ARGS=()
 for arg in "$@" ; do
     case "$arg" in
         "--diff") DIFF=true ;;
-        "--no-daemon") NO_DAEMON=true ;;
         *) ARGS+=("$arg") ;;
     esac
 done
@@ -25,6 +24,8 @@ if [ $WINDOWS = false ]; then
         USE_VIM=true
     fi
     # USE_VIM=true
+    # USE_KAK=true
+    MAIN_KAK_SESSION=main_kak_session
     if [ "$USE_VIM" = "true" ]; then
         ARGS_TMP=()
         if [ "$DIFF" = "true" ]; then
@@ -48,47 +49,64 @@ else
     EMACS_SUFFIX=".exe"
 fi
 
+if [ "$USE_KAK" != "true" ]; then
+    USE_EMACS=true
+fi
+
 daemon_running()
 {
     if [ $WINDOWS = true ]; then
         tasklist | grep -q emacs 1>/dev/null
     else
-        pgrep emacs 1>/dev/null
+        if [ "$USE_EMACS" = "true" ]; then
+            pgrep emacs 1>/dev/null
+        else
+            pgrep kak 1>/dev/null
+        fi
     fi
 }
 
 daemon_run()
 {
-    if [ $WINDOWS = true ]; then
-        DAEMON_EXE="${EMACS_PREFIX}runemacs.exe"
+    if [ "$USE_EMACS" = "true" ]; then
+        if [ $WINDOWS = true ]; then
+            DAEMON_EXE="${EMACS_PREFIX}runemacs.exe"
+        else
+            DAEMON_EXE=emacs
+        fi
+        $DAEMON_EXE --daemon
     else
-        DAEMON_EXE=emacs
+        nohup kak -d -s $MAIN_KAK_SESSION 1>/dev/null 2>&1
     fi
-    $DAEMON_EXE --daemon
 }
 
 call_editor()
 {
-    set +e
-    "$@"
-    while [ $? -ne 0 ]; do
-        sleep 0.1
+    if [ "$USE_EMACS" = "true" ]; then
+        set +e
         "$@"
-    done
-    set -e
+        while [ $? -ne 0 ]; do
+            sleep 0.1
+            "$@"
+        done
+        set -e
+    else
+        "$@"
+    fi
 }
 
 CMD=()
-if [ "$NO_DAEMON" = "true" ]; then
-    CMD+=("${EMACS_PREFIX}emacs${EMACS_SUFFIX}")
-    call_editor "${CMD[@]}"
-    exit
-else
-    if ! daemon_running ; then
-        daemon_run
-    fi
+
+if ! daemon_running ; then
+    daemon_run
+fi
+if [ "$USE_EMACS" = "true" ]; then
     CMD+=("${EMACS_PREFIX}emacsclient${EMACS_SUFFIX}") # see also emacsclientw
+    CMD+=("-c") # --create-frame
+else
+    CMD+=("kak")
     CMD+=("-c")
+    CMD+=("$MAIN_KAK_SESSION")
 fi
 
 # "--wait" is my own argument.
@@ -104,19 +122,27 @@ for arg in "${ARGS[@]}" ; do
     fi
 done
 ARGS=("${ARGS_TMP[@]}")
-if [ "$WAIT" != "true" ]; then
-    CMD+=("--no-wait")
-fi
+if [ "$USE_EMACS" = "true" ]; then
+    if [ "$WAIT" != "true" ]; then
+        CMD+=("--no-wait")
+    fi
 
-if [ "$DIFF" = "true" ]; then
-    # process all command line arguments and as a result fill in $LISP_CMD:
-    LISP_CMD="(ediff-files"
-    for arg in "${ARGS[@]}" ; do
-        LISP_CMD="$LISP_CMD \"$arg\""
-    done
-    LISP_CMD="$LISP_CMD)"
-    call_editor "${CMD[@]}" --eval "$LISP_CMD"
-    exit
+    if [ "$DIFF" = "true" ]; then
+        # process all command line arguments and as a result fill in $LISP_CMD:
+        LISP_CMD="(ediff-files"
+        for arg in "${ARGS[@]}" ; do
+            LISP_CMD="$LISP_CMD \"$arg\""
+        done
+        LISP_CMD="$LISP_CMD)"
+        call_editor "${CMD[@]}" --eval "$LISP_CMD"
+        exit
+    fi
+else
+    # assume "$USE_KAK" = "true"
+    if [ "$DIFF" = "true" ]; then
+        echo "error: diff not supported by kak" 1>&2
+        exit 1
+    fi
 fi
 
 is_a_number()
@@ -128,7 +154,12 @@ is_a_number()
 
 open_file()
 {
-    call_editor "${CMD[@]}" --eval "(find-file \"$arg\")"
+    if [ "$USE_EMACS" = "true" ]; then
+        call_editor "${CMD[@]}" --eval "(find-file \"$arg\")"
+    else
+        # assume $USE_KAK = "true"
+        call_editor "${CMD[@]}" "$arg"
+    fi
 }
 
 if [ ${#ARGS[@]} -eq 0 ]; then
@@ -157,5 +188,9 @@ for arg in "${ARGS[@]}" ; do
     fi
     file="$(echo "$arg" | cut -d':' -f1)"
 
-    call_editor "${CMD[@]}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+    if [ "$USE_EMACS" = "true" ]; then
+        call_editor "${CMD[@]}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
+    else
+        call_editor "${CMD[@]}" +$line:$column "$file"
+    fi
 done

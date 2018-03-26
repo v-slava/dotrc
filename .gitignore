@@ -12,6 +12,7 @@
 /bin/c++
 /bin/g++
 /bin/ctags
+/bin/fzf
 *.pyc
 
 # second:
