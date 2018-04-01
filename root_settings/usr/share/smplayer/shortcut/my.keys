@@ -22,12 +22,12 @@ play
 play_or_pause	Media Play, Toggle Media Play/Pause, Space
 pause	Media Pause
 pause_and_frame_step
-stop	Media Stop, 0
+stop	Media Stop
 frame_step	.
 frame_back_step	,
 rewind1	H
 rewind2
-rewind3
+rewind3	0
 forward1	L
 forward2
 forward3
