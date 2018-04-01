@@ -962,6 +962,11 @@ dmesg -w
 tail -F /var/log/messages
 tail /var/log/syslog
 tail /proc/kmsg
+tail /dev/kmsg
+# See also file:
+/proc/sys/kernel/printk
+# See all printk() messages independent of level:
+echo 8 > /proc/sys/kernel/printk
 
 # Linux kernel usefull debug functions:
 if (error && printk_ratelimit())
@@ -972,14 +977,31 @@ if (something_bad_happened)
 dump_stack();
 panic("terrible_thing is %ld!\n", terrible_thing);
 
-# Linux kernel debugging:
+# Linux kernel debugging (see also linux/Documentation/features/debug):
 1) gdb vmlinux /proc/kcore
-2) apply kgdb patch
+# Note: gdb caches variables. To reset gdb cache use the following gdb command:
+core-file /proc/kcore
+To debug kernel modules need to specify load address for sections.
+See file "/sys/module/MODULE_NAME/sections" for sections base addresses.
+Use gdb command:
+add-symbol-file /path/to/my_module.ko $TEXT_SECTION_ADDRESS \
+-s .bss $BSS_SECTION_ADDRESS -s .data $DATA_SECTION_ADDRESS
+where addresses look like: 0x12345678
+2) apply kgdb patch (debug with gdb over serial port/ethernet,
+   see "kgdboe" kernel argument)
+3) kdb patch (press pause/break on console to start a debugger)
+4) Linux Trace Toolkit (LTT)
+5) Dynamic Probes
 
-# Linux kernel debug configuration options:
-CONFIG_PREEMPT=y
+# Linux kernel debug configuration options (see "kernel hacking" menu):
 CONFIG_DEBUG_KERNEL=y
+CONFIG_DEBUG_INFO=y
+CONFIG_FRAME_POINTER=y
 CONFIG_KALLSYMS=y
+# some other usefull configuration options:
+CONFIG_PROFILING=y
+CONFIG_DEBUG_DRIVER=y
+CONFIG_PREEMPT=y
 CONFIG_DEBUG_SPINLOCK_SLEEP=y
 
 # Truncate file:

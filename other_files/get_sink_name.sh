@@ -26,7 +26,7 @@ ITERATION_NUM=0
 while [ "$SINK_NAME" = "" ]; do
 	SINK_NAME="$(LANGUAGE=en pactl list sinks | grep "Name: $SINK" | cut -d' ' -f2)"
 	((ITERATION_NUM++))
-	if [ $ITERATION_NUM -gt 200 ]; then
+	if [ $ITERATION_NUM -gt 300 ]; then
 		echo "Failed to get full sink name: need to increase number of iterations." 1>&2
 		exit 1
 	fi

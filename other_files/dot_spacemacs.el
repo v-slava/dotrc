@@ -1213,7 +1213,9 @@ Add Man mode support to (previous-buffer)."
     (when (not (rtags-find-symbol-at-point))
       ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
       (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
-      ))
+      )
+    (evil--jumps-push)
+    )
 
   (defun my-rtags-find-all-references-at-point ()
     "Mark position in register R."
