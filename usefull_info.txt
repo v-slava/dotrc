@@ -1067,6 +1067,7 @@ git apply PATCH_FILE
 git am < PATCH_FILE
 
 # git change author of commit:
+git commit --amend --reset-author
 git commit --amend --author "New Author Name <email@address.com>"
 
 # create bundle:
