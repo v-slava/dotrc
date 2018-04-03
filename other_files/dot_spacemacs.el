@@ -998,7 +998,8 @@ Otherwise return unmodified string."
     "Use rg to search in interactively choosen directory (interactive ivy interface)."
     (interactive)
     ;; (spacemacs/counsel-search '("ag") t (my--choose-directory))) ;; this fails if we can't find a symbol under cursor
-    (spacemacs/counsel-search '("rg") (not (not (find-tag--default))) (my--choose-directory)))
+    ;; (spacemacs/counsel-search '("rg") (not (not (find-tag--default))) (my--choose-directory)))
+    (spacemacs/counsel-search '("rg") nil (my--choose-directory)))
 
   (defun my-search-in-directory-non-interactive ()
     "Use rg to search in interactively choosen directory (non-interactive)."
