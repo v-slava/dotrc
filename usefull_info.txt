@@ -789,7 +789,7 @@ LANG=ko_KR.EUC-KR gvim file.cpp
 ssh -p port user@host
 
 # non-interactive authentication with password:
-sshpass -p PASSWORD scp user@host
+sshpass -p PASSWORD ssh user@host
 sshpass -p PASSWORD scp FILE user@host:/some/path/
 
 # View machines, connected via ssh:
