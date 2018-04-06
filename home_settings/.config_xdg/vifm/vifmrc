@@ -469,8 +469,8 @@ vmap q :exit<CR>
 nnoremap rg :!./%c %i &<CR>
 nnoremap rs :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "./%c"<CR>
 " Launch make:
-nnoremap rm :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make"<CR>
-nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make clean"<CR>
+" nnoremap rm :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make"<CR>
+" nnoremap rc :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "make clean"<CR>
 
 nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
