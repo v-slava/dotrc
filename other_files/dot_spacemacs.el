@@ -1290,6 +1290,8 @@ Add Man mode support to (previous-buffer)."
   ;; SPC g b (spacemacs/git-blame-micro-state).
   ;; SPC g s (magit-status).
   ;; In status buffer:
+  ;; RET - (magit-diff-visit-file)
+  ;; C-return - (magit-diff-visit-file-worktree)
   ;; "g r" - (magit-refresh).
   ;; "SPC g m" or "?" or "h" - show help, submit changes (magit-dispatch-popup).
   ;; "q" - quit help (magit-mode-bury-buffer).

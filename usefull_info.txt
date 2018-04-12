@@ -1005,6 +1005,26 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git add new checkout
+git worktree add /path/to/non/existent/directory
+
+# git show all not pushed commits:
+git log --branches --not --remotes --graph --decorate
+
+# git change remote (upstream) url:
+git remote set-url REMOTE URL
+
+# git fetch only one commit:
+# on server side:
+git config --local uploadpack.allowReachableSHA1InWant true
+# on client side:
+mkdir repo_root
+cd repo_root
+git init
+git remote add origin URL
+git fetch --depth 1 origin COMMIT_SHA
+git checkout FETCH_HEAD
+
 # git list tags ordered by date:
 git log --tags --simplify-by-decoration --pretty="format:%ci %d"
 
