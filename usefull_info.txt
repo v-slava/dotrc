@@ -109,6 +109,11 @@ setcap 'cap_sys_rawio+ep' FILE
 # Print properties of window (find PID by clicking):
 xprop
 
+# gcc print architecture
+gcc -dumpmachine
+gcc -v | grep arch
+gcc -Q --help=target | grep arch
+
 # Preprocess source file for further compilation:
 gcc FILE.c -o FILE.i -E -P -dN
 # (see -dCHARS in "man gcc")
