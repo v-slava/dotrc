@@ -626,7 +626,7 @@ evaluate the last sexp at the end of the current line."
       (cond
        ((equal name "build")
         (cond
-         ((equal file-extension "c") (concat "$CC -g3 -Weverything -pedantic " compile-ending))
+         ((equal file-extension "c") (concat "clang-6.0 -g3 -Weverything -pedantic " compile-ending))
          ((member file-extension cpp-extensions) (concat "$CXX -g3 -Weverything -pedantic -std=c++11 -Wno-c++98-compat -Wno-c++98-compat-pedantic " compile-ending))
          ((equal file-extension "rs") (concat "rustc " compile-ending))
          ((member file-extension '("sh" "bash" "py" "pl" "lua")) script)
@@ -1263,9 +1263,9 @@ Add Man mode support to (previous-buffer)."
   ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
   (setq compilation-error-regexp-alist '(bash gcc-include gnu))
-  (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
+  ;; (setq compilation-skip-threshold 2) ;; iterate only through errors (skip warnings).
   ;; (setq compilation-skip-threshold 1) ;; iterate through errors end warnings.
-  ;; (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
+  (setq compilation-skip-threshold 0) ;; iterate through everything (including notes).
   (setq compilation-auto-jump-to-first-error t) ;; automatically jump to first compilation error
   ;; Treat column numbers as character positions instead of screen columns in compilation errors.
   ;; Note: this adds error navigation bug: (next-error) and (prev-error) point to one line above actual error.
@@ -1423,6 +1423,7 @@ Add Man mode support to (previous-buffer)."
   ;; permanently, force TAB to insert just one TAB:
   (global-set-key (kbd "TAB") 'self-insert-command);
   (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
+  (remove-hook 'c-mode-common-hook 'spacemacs//c-toggle-auto-newline) ;; do not put newline automatically after ';'
   ;; use backspace to delete tab in c-mode:
   (setq c-backspace-function 'backward-delete-char)
   ;; use tabs instead of spaces:

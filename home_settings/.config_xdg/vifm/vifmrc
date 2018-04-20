@@ -475,6 +475,7 @@ nnoremap rs :! $HOME/os_settings/other_files/vifm_run_command.sh --pause "./%c"<
 nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
 nmap cd :mkcd<SPACE>
+nmap cj :cd<SPACE>
 nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
 nmap cx :! $HOME/os_settings/other_files/toggle_executable.sh %"f<CR>
