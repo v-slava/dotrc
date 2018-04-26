@@ -1,3 +1,6 @@
+lsusb analog:
+usb-devices
+
 # autologin on virtual terminal:
 /sbin/agetty -a USER --noclear tty2 linux
 
@@ -74,6 +77,8 @@ setenv VARIABLE
 saveenv
 reset
 if test $VARIABLE = "VALUE" ; then echo "equals" ; else echo "not equals" ; fi
+bootm ADDRESS [ADDITIONAL_ARGS]
+boot
 
 # If libreoffice draw is slow (with grid enabled), turn on the following settings:
 Tools -> Options -> View -> Use OpenGL for all rendering (on restart)
@@ -889,6 +894,15 @@ sudo service nfs-kernel-server restart
 # edit /etc/exports:
 # /mnt_folder 192.168.1.1(rw,sync,no_root_squash,no_subtree_check)
 # /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
+
+# Download file over TFTP:
+# On TFTP server:
+apt-get install tftpd-hpa
+mkdir /srv/tftp/SOME_DIR
+echo hello > /srv/tftp/SOME_DIR/FILE_NAME
+# On TFTP client:
+tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
+# FILE_NAME will be in current folder
 
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
