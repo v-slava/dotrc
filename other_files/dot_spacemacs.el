@@ -1206,12 +1206,20 @@ Add Man mode support to (previous-buffer)."
     )
 
   (defun my-rtags-find-symbol-at-point ()
-    "Fall back to (rtags-find-symbol) in case of failure."
+    "Fall back to (rtags-find-symbol) in case of failure, mark position in register R."
     (interactive)
+    (evil-set-marker ?R)
     (when (not (rtags-find-symbol-at-point))
       ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
       (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
       ))
+
+  (defun my-rtags-find-all-references-at-point ()
+    "Mark position in register R."
+    (interactive)
+    (evil-set-marker ?R)
+    (rtags-find-all-references-at-point)
+    )
 
   (defadvice rtags-current-symbol-name (after my--rtags-current-symbol-name activate)
     "Delete class from string (if present)."
@@ -1550,7 +1558,7 @@ My change: do not switch to dired-mode (behaviour fix)."
   (spacemacs/set-leader-keys "ors" 'my-rtags-find-symbol) ;; >
   (spacemacs/set-leader-keys "or." 'my-rtags-find-symbol-at-point)
   (spacemacs/set-leader-keys "orr" 'rtags-find-references) ;; <
-  (spacemacs/set-leader-keys "or," 'rtags-find-all-references-at-point)
+  (spacemacs/set-leader-keys "or," 'my-rtags-find-all-references-at-point)
   (spacemacs/set-leader-keys "orc" 'rtags-set-current-project)
   (spacemacs/set-leader-keys "orR" 'rtags-rename-symbol)
 
