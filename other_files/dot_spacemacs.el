@@ -1209,6 +1209,7 @@ Add Man mode support to (previous-buffer)."
     "Fall back to (rtags-find-symbol) in case of failure, mark position in register R."
     (interactive)
     (evil-set-marker ?R)
+    (evil--jumps-push)
     (when (not (rtags-find-symbol-at-point))
       ;; (rtags-find-symbol) ;; need to press return immediately here, so see below:
       (execute-kbd-macro (vconcat [?\M-x] (string-to-vector "rtags-find-symbol") [return return]))
@@ -1218,6 +1219,7 @@ Add Man mode support to (previous-buffer)."
     "Mark position in register R."
     (interactive)
     (evil-set-marker ?R)
+    (evil--jumps-push)
     (rtags-find-all-references-at-point)
     )
 
@@ -1874,12 +1876,6 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; (gdb-restore-windows)
   ;; (gdb-frame-breakpoints-buffer)
   ;; (gdb-frame-gdb-buffer)
-
-  ;; (progn
-  ;;   (my--set-project-name "mbr_printer")
-  ;;   (my--set-frame-command-for-project "debug" (cdr (assoc "default" (my--get-project-frame-commands-alist "debug"))))
-  ;;   (my--edit-frame-command "debug")
-  ;;   )
 
   ;; Tasks (realgud):
   ;; 1) Decouple source windows and gdb window on 2 separate frames.

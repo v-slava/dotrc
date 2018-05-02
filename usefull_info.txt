@@ -1024,6 +1024,12 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git list branches (check) that contain specified commit:
+git branch --contains SHA1
+
+# git list/check tags that contain specified commit:
+git tag --contains SHA1
+
 # git add new checkout
 git worktree add /path/to/non/existent/directory
 
