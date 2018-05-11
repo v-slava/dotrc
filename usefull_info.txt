@@ -1,3 +1,17 @@
+# telegram bot:
+0) Bot API reference:
+      https://core.telegram.org/bots/api
+1) Use BotFather
+      tg://resolve?domain=BotFather
+      to create new bot. Use command
+      /newbot
+      As asked by BotFather, enter bot's name and username for the bot.
+      As a result bot will be created. Remember bot's token.
+2) determine your <telegram ID>.
+      https://api.telegram.org/bot<token>/getUpdates
+3) send message to you:
+      https://api.telegram.org/bot<token>/sendMessage?chat_id=<telegram ID>&text=hello_world
+
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
