@@ -38,6 +38,7 @@ alias gpl='git pull'
 # alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
 # alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
 alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
+export SSH_RASPBERRY_PI='53535 pi@94.154.220.9'
 
 # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
 stty -ixon

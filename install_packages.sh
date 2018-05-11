@@ -13,7 +13,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
-    openssh-client sshfs jmtpfs fuse kbd \
+    openssh-client sshfs fuse kbd \
     gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
     gdb gdb-doc gdbserver gdb-multiarch \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
@@ -25,6 +25,9 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     clang-6.0 clang-tidy-6.0 clang-tools-6.0 libclang-6.0-dev llvm-6.0 \
 
 apt-file update
+
+# apt-get install jmtpfs
+apt-get install go-mtpfs
 
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
 # apt-get install firmware-atheros

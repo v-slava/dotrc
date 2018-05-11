@@ -1,3 +1,24 @@
+# execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
+watch -d -n 2 COMMAND
+
+# transmission disable password:
+in /etc/transmission-daemon/settings.json set:
+"rpc-authentication-required": false,
+
+# transmission add torrents:
+transmission-remote -a $MAGNET_URL
+
+# transmission list all torrents:
+transmission-remote -l
+
+# transmission show detailed info (for all torrent):
+transmission-remote -t all -i
+
+# cron:
+crontab -e
+# run script.sh at every hour at minute 42:
+42 *   *   *   *      /home/user/script.sh
+
 lsusb analog:
 usb-devices
 

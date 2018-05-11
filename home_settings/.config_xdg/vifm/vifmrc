@@ -509,7 +509,8 @@ nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 nnoremap am :! mount /dev/sdb1<CR>
 nnoremap au :! umount /media/usb<CR>
 " Android (smartphone):
-nnoremap cm :! jmtpfs -o nonempty /media/usb<CR>
+" nnoremap cm :! jmtpfs -o nonempty /media/usb<CR>
+nnoremap cm :! go-mtpfs -allow-other /media/usb<CR>
 nnoremap cu :! fusermount -u /media/usb<CR>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
