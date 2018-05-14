@@ -36,6 +36,9 @@ crontab -e
 lsusb analog:
 usb-devices
 
+# To find out what gcc -pthread actually does:
+gcc -dumpspecs | grep pthread
+
 # autologin on virtual terminal:
 /sbin/agetty -a USER --noclear tty2 linux
 
@@ -1081,8 +1084,11 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git find common ancestor (parent) for two (2) branches:
+git merge-base branch1 branch2
+
 # git list branches (check) that contain specified commit:
-git branch --contains SHA1
+git branch --all --contains SHA1
 
 # git list/check tags that contain specified commit:
 git tag --contains SHA1
