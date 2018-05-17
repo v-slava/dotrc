@@ -1436,6 +1436,16 @@ Add Man mode support to (previous-buffer)."
   (global-set-key (kbd "TAB") 'self-insert-command);
   (define-key evil-insert-state-map (kbd "<tab>") (kbd "C-q <tab>"))
   (remove-hook 'c-mode-common-hook 'spacemacs//c-toggle-auto-newline) ;; do not put newline automatically after ';'
+
+  ;; When editing linux- file (see c-mode-common-hook below) without this line
+  ;; we got deleted indentation (tabs) when we press enter:
+  ;; if (1)
+  ;; {<press enter here>
+  ;; The following function deletes tabs: (clean-aindent--trim-last-point).
+  ;; The following function seems to work wrong: (clean-aindent--abandonedp).
+  ;; Workaround: disable the mode at all:
+  (clean-aindent-mode -1)
+  (add-hook 'c-mode-common-hook (lambda () (when (and buffer-file-name (string-match "linux-" buffer-file-name)) (setq indent-tabs-mode t))))
   ;; use backspace to delete tab in c-mode:
   (setq c-backspace-function 'backward-delete-char)
   ;; use tabs instead of spaces:

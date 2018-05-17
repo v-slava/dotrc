@@ -1439,6 +1439,11 @@ than go to main menu, select "Save setup as dfl"
 # Exit minicom:
 <ctrl>+A <pause> X
 
+# Freeze screen in minicom:
+<ctrl>+A
+# Continue printing in minicom:
+ESC
+
 # Start screen:
 screen /dev/ttyUSB0 115200N1
 
