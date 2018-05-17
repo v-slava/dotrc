@@ -1097,6 +1097,11 @@ git tag --contains SHA1
 git worktree add /path/to/non/existent/directory
 
 # git show all not pushed commits:
+git show new commits on upstream for a given branch:
+git fetch REMOTE
+git log BRANCH..REMOTE/BRANCH
+
+# git show all not pushed commits:
 git log --branches --not --remotes --graph --decorate
 
 # git change remote (upstream) url:
