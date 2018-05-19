@@ -14,9 +14,11 @@ CLIPBOARD_CMD="xclip -selection clipboard"
 
 case "$1" in
 	("-o") $CLIPBOARD_CMD -o ;;
-	("-n") cat | tr -d '\n' | $CLIPBOARD_CMD ;;
+	# ("-n") cat | tr -d '\n' | $CLIPBOARD_CMD ;;
+	("-n") cat | tr -d '\n' | xsel --input --clipboard ;;
 	("--clipboard-2-primary") xclip -selection clipboard -o | xclip -selection primary -i ;;
 	("--primary-2-clipboard") xclip -selection primary -o | xclip -selection clipboard -i ;;
-	(*) $CLIPBOARD_CMD -i ;;
+	# (*) $CLIPBOARD_CMD -i ;; # this hangs when called from within kakoune...
+	(*) xsel --input --clipboard ;;
 esac
 
