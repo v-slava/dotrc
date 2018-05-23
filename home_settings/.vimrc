@@ -216,6 +216,8 @@ nmap <Leader>w <C-w>
 " Focus previous window:
 nmap <Leader>wp <C-w><C-p>
 
+nmap <Leader>ss /
+
 " Clear current line:
 nmap <Leader>oc $d0x
 
@@ -236,6 +238,9 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to character within screen:
 nmap <Leader>jj <Plug>(easymotion-s)
 vmap <Leader>jj <Plug>(easymotion-s)
+
+nmap <Leader>jw <Plug>(easymotion-bd-W)
+vmap <Leader>jw <Plug>(easymotion-bd-W)
 
 " Apply macro to selected lines:
 vmap i :normal @
