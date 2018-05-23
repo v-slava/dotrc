@@ -33,7 +33,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(php
+   '(
+     javascript
+     php
      vimscript
      lua
      python
@@ -359,7 +361,7 @@ evaluate the last sexp at the end of the current line."
     (interactive)
     (with-demoted-errors "%s"
       (when (< tab_width 2) (my--error "Wrong input argument: tab_width = %d (should be >= 2)" tab_width))
-      (setq-default tab-width tab_width) ;; view tab as this number of spaces
+      ;; (setq-default tab-width tab_width) ;; view tab as this number of spaces
       (setq tab-width tab_width)
       (setq cmake-tab-width tab_width)
       (setq python-indent-guess-indent-offset nil)
@@ -1284,7 +1286,14 @@ Add Man mode support to (previous-buffer)."
   ;; (setq compilation-error-screen-columns nil)
   (setq compilation-scroll-output 'first-error)
 
+  (define-derived-mode kak-mode nil "Kakoune"
+    "Major mode for editing kakrc and *.kak files. We only set proper comment
+ here."
+    (setq-local comment-start "##"))
+  (add-to-list 'auto-mode-alist '("\\.kak\\'" . kak-mode))
+  (add-to-list 'auto-mode-alist '("\\kakrc\\'" . kak-mode))
   (add-to-list 'auto-mode-alist '("\\vifmrc\\'" . vimrc-mode))
+
   (kill-buffer "*spacemacs*") ;; less blinking on screen
   (setq-default evil-symbol-word-search t) ;; * searches for a symbol (not a word)
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
@@ -1445,7 +1454,11 @@ Add Man mode support to (previous-buffer)."
   ;; The following function seems to work wrong: (clean-aindent--abandonedp).
   ;; Workaround: disable the mode at all:
   (clean-aindent-mode -1)
-  (add-hook 'c-mode-common-hook (lambda () (when (and buffer-file-name (string-match "linux-" buffer-file-name)) (setq indent-tabs-mode t))))
+  (add-hook 'c-mode-common-hook (lambda () (when (and buffer-file-name (string-match "linux-" buffer-file-name))
+                                             (my-set-tab-width 8)
+                                             (setq c-basic-offset 8)
+                                             (setq indent-tabs-mode t)
+                                             )))
   ;; use backspace to delete tab in c-mode:
   (setq c-backspace-function 'backward-delete-char)
   ;; use tabs instead of spaces:

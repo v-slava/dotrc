@@ -259,6 +259,9 @@ apt-get -t jessie-backports install PACKAGE
 # install package of specified version:
 apt-get install PACKAGE=VERSION
 
+# install package of specified architecture (i386):
+apt-get install PACKAGE:ARCHITECTURE
+
 # Debian packaging from source:
 # Debian download source package:
 apt-get source PACKAGE
@@ -1684,8 +1687,10 @@ binutils-2.23.2/include/opcode/arm.h
 sudo arp-scan --interface=eth0 --localnet
 
 # Internet fixing commands:
+mtr --report-wide --show-ips --report-cycles 100 8.8.8.8
 nm-tool
 tracepath
+traceroute
 route # get default gateway
 cat /etc/resolv.conf
 /etc/network/interfaces

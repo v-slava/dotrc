@@ -1,5 +1,5 @@
 #!/bin/bash
 
 goldendict &
-exec anki -b ~/.anki
+exec /media/files/other/programs/anki/bin/anki -b ~/.anki
 

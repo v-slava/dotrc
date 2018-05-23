@@ -75,4 +75,8 @@ if [ "$(id -u)" != "0" ]; then
     systemctl --user enable rdm.socket
 fi
 
+if [ ! -e $XDG_CONFIG_HOME/kak/autoload/standard ]; then
+    ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard
+fi
+
 echo -e "\nDone!"

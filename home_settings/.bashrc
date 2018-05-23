@@ -32,6 +32,7 @@ alias gcs='~/os_settings/other_files/git_commit_dotrc_second.sh'
 alias gcu='git commit --amend --no-edit -a'
 alias gch='git checkout'
 __git_complete gch _git_checkout
+alias gchd='git checkout --detach'
 alias gb='git branch'
 __git_complete gb _git_branch
 alias gpl='git pull'
