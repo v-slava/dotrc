@@ -738,6 +738,10 @@ loginctl show-session $XDG_SESSION_ID | grep '\(Remote=\|Active=\)'
 Remote=no
 Active=yes
 
+# Usefull kernel command line args:
+# Set log buffer (dmesg) size:
+log_buf_len=n # Here "n" is a power of 2 number
+
 # Systemd commands:
 systemctl --failed
 systemctl list-unit-files
@@ -1213,6 +1217,9 @@ git branch --set-upstream local_branch origin/remote_branch
 
 # do not track changes in commited file:
 git update-index --assume-unchanged FILE
+
+# push HEAD to remote_branch:
+git push origin HEAD:remote_branch
 
 # push all except last commit to upstream:
 git push origin HEAD~1:BRANCH
