@@ -1812,7 +1812,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; rg (spacemacs/counsel-search) "SPC s m":
   ;; Stop completion and put the current matches into a new buffer: "C-c C-e" (spacemacs//counsel-edit).
   ;; Now we can edit this buffer:
-  ;; - apply all changes to corresponding files: ", c" (wgrep-finish-edit)
+  ;; - apply all changes to corresponding files: "C-x C-s" (wgrep-finish-edit)
   ;; - abort (kill, cancel) all changes: ", k" (wgrep-abort-changes)
 
   ;; How to create own color theme based on existed one:

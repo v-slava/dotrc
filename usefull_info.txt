@@ -1157,6 +1157,9 @@ git config user.email 'your_email@gmail.com'
 [user]
         email = your_email@gmail.com
 
+# git show parent commits (parents):
+git log --pretty=%P -n 1 HEAD
+
 # git delete remote branch (from remote repository):
 git push REMOTE --delete BRANCH
 git push REMOTE :BRANCH
