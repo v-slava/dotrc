@@ -87,6 +87,9 @@ find -path './some/path*' -name '*.c
 # Execute command for each element found:
 find -exec CMD args_before {} args_after \;
 
+# grep stop after first match:
+grep -m 1 OTHER_OPTIONS
+
 # Find \r symbols:
 grep -r $'\r'
 
@@ -1060,6 +1063,33 @@ CONFIG_STACK_TRACER
 # sysctl kernel.stack_tracer_enabled
 CONFIG_DYNAMIC_FTRACE
 CONFIG_FUNCTION_PROFILER
+
+# Using ftrace:
+# trace_printk() can be called from any context (interrupts, scheduler, ...).
+# It prints to /sys/kernel/debug/tracing/trace
+trace_printk()
+cat /sys/kernel/debug/tracing/available_tracers
+echo function > /sys/kernel/debug/tracing/current_tracer
+# Use case:
+echo 0 > /sys/kernel/debug/tracing/tracing_on
+echo function_graph > /sys/kernel/debug/tracing/current_tracer
+echo 1 > /sys/kernel/debug/tracing/tracing_on
+run_test
+echo 0 > /sys/kernel/debug/tracing/tracing_on
+# Non-consuming read:
+cat /sys/kernel/debug/tracing/trace
+# Consuming read:
+cat /sys/kernel/debug/tracing/trace_pipe
+
+# See also:
+cat /sys/kernel/debug/tracing/README
+cat /sys/kernel/debug/tracing/available_filter_functions
+# Show only when SyS_read() is started and finished (no trace inside):
+echo SyS_read > /sys/kernel/debug/tracing/set_ftrace_filter
+# Show SyS_read() call graph (trace inside):
+echo SyS_read > /sys/kernel/debug/tracing/set_graph_function
+# Show full trace:
+echo > /sys/kernel/debug/tracing/set_ftrace_filter
 
 # Truncate file:
 truncate -s SIZE FILE
