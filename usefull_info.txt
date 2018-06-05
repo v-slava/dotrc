@@ -1038,6 +1038,9 @@ where addresses look like: 0x12345678
 4) Linux Trace Toolkit (LTT)
 5) Dynamic Probes
 
+# mount debugfs:
+mount -t debugfs none /sys/kernel/debug
+
 # Linux kernel debug configuration options (see "kernel hacking" menu):
 CONFIG_DEBUG_KERNEL=y
 CONFIG_DEBUG_INFO=y
@@ -1048,6 +1051,15 @@ CONFIG_PROFILING=y
 CONFIG_DEBUG_DRIVER=y
 CONFIG_PREEMPT=y
 CONFIG_DEBUG_SPINLOCK_SLEEP=y
+
+# Linux kernel ftrace configuration options:
+CONFIG_FTRACE
+CONFIG_FUNCTION_TRACER
+CONFIG_FUNCTION_GRAPH_TRACER
+CONFIG_STACK_TRACER
+# sysctl kernel.stack_tracer_enabled
+CONFIG_DYNAMIC_FTRACE
+CONFIG_FUNCTION_PROFILER
 
 # Truncate file:
 truncate -s SIZE FILE
