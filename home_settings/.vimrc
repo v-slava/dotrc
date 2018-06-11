@@ -107,7 +107,7 @@ hi DiffDelete ctermbg=16
 hi StatusLine ctermfg=232 ctermbg=46
 hi StatusLineNC ctermfg=232 ctermbg=252
 
-" Highlight spaces and tabs in the end of the line as errors:
+" Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
 match Error /\s\+$/
 autocmd WinEnter * match Error /\s\+$/
 

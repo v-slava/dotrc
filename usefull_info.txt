@@ -133,6 +133,8 @@ Tools -> Options -> View -> Force OpenGL even if blacklisted (on restart)
 netstat -apn # Try also as root.
 # View open ports on remote server (1-100 = port range):
 nc -z -v 192.168.0.1 1-100
+# View IP addresses (devices up and running) in local network (IP range):
+nmap -sn 192.168.1.0/24
 
 # Install GPG key for third-party apt repository:
 wget http://apt.llvm.org/llvm-snapshot.gpg.key
@@ -744,7 +746,7 @@ loginctl show-session $XDG_SESSION_ID | grep '\(Remote=\|Active=\)'
 Remote=no
 Active=yes
 
-# Usefull kernel command line args:
+# Usefull linux kernel command line (cmdline) args:
 # Set log buffer (dmesg) size:
 log_buf_len=n # Here "n" is a power of 2 number
 
@@ -1001,6 +1003,7 @@ pr_devel() should produce zero code unless DEBUG is defined
 pr_debug(char *format, ...);
 # If you are writing a driver, please use dev_dbg instead
 dev_dbg(struct device *dev, char *format, ...);
+# See also: BUG(), BUG_ON(), dump_stack()
 
 # Enable all (debug-level) messages:
 echo 7 > /proc/sys/kernel/printk
@@ -1070,11 +1073,14 @@ CONFIG_FUNCTION_PROFILER
 trace_printk()
 cat /sys/kernel/debug/tracing/available_tracers
 echo function > /sys/kernel/debug/tracing/current_tracer
+# For x86 only:
+echo mmiotrace > /sys/kernel/debug/tracing/current_tracer
 # Use case:
 echo 0 > /sys/kernel/debug/tracing/tracing_on
 echo function_graph > /sys/kernel/debug/tracing/current_tracer
 echo 1 > /sys/kernel/debug/tracing/tracing_on
 run_test
+echo "some message" > /sys/kernel/debug/tracing/trace_marker
 echo 0 > /sys/kernel/debug/tracing/tracing_on
 # Non-consuming read:
 cat /sys/kernel/debug/tracing/trace
@@ -1339,6 +1345,10 @@ ps -efL
 
 # Show process hierarchy (forest):
 ps -efH
+
+# Get process parent:
+ps -o ppid= -p CHILD_PID
+cat /proc/CHILD_PID/status | grep PPid | cut -f2
 
 # rpm print macro definition:
 rpm --eval "%{_prefix}"
