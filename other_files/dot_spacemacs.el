@@ -370,7 +370,9 @@ evaluate the last sexp at the end of the current line."
       ;; show each <tab> as a string:
       ;; (standard-display-ascii ?\t "\xBB   ")
       ;; (standard-display-ascii ?\t "--->")
-      (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))))
+      ;; (standard-display-ascii ?\t (concat "\xBB" (make-string (- tab_width 2) ? ) "\xAB"))
+      (standard-display-ascii ?\t (concat "\xBB " (make-string (- tab_width 2) ? )))
+      ))
 
   (defun my--copy-current-buffer-to-other-buffer (other-buffer erase-other)
     "Copy contents of current buffer to specified buffer."

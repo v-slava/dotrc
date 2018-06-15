@@ -1145,6 +1145,9 @@ git merge-base branch1 branch2
 # git list branches (check) that contain specified commit:
 git branch --all --contains SHA1
 
+# git show last commits date in all branches (track recent development):
+for branch in `git branch -r | grep -v HEAD`;do echo -e `git show -s --format="%ci %cr" $branch` $branch; done | sort -r
+
 # git list/check tags that contain specified commit:
 git tag --contains SHA1
 
@@ -1286,7 +1289,7 @@ git show COMMIT FILE
 # Show all commits that changed given file:
 git log --follow FILE
 
-# Git do not verify ssl certificates:
+# Git do not verify ssl certificates (https):
 git config [--global] http.sslVerify false
 GIT_SSL_NO_VERIFY=true git clone URL
 git -c http.sslVerify=false clone URL
