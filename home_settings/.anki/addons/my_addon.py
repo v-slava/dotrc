@@ -18,9 +18,9 @@ from aqt.utils import showInfo
 from aqt.qt import QKeySequence
 from anki.utils import json
 
-from shutil import rmtree,move
+from shutil import rmtree
 from tempfile import NamedTemporaryFile
-import os.path
+import os
 
 # from subprocess import *
 from subprocess import call,check_call
@@ -30,80 +30,11 @@ from aqt.utils import tooltip
 from anki.sound import clearAudioQueue
 
 english = "0"
-russian = "1"
+# russian = "1"
+russian = "0"
 def set_keyboard_layout(layout):
     # Switch keyboard layout to english:
     check_call(["/media/files/other/programs/keyboard_layout", "--set_layout", layout])
-
-def add_image(self, english_word):
-    TMP_DIR = "/tmp/anki"
-    TMP_DIR_IMAGE_FILE = TMP_DIR + "/image.jpg"
-    FILE_NAME = english_word + ".jpg"
-    TMP_DIR_OUT_FILE = TMP_DIR + "/" + FILE_NAME
-    TMP_DIR_STATUS_FILE = TMP_DIR + "/status"
-    IMAGE_WEB_PAGE = TMP_DIR + "/web_page.html"
-    # Delete old temporary folder contents:
-    if os.path.exists(TMP_DIR):
-        rmtree(TMP_DIR)
-    # Create empty temporary folder:
-    os.makedirs(TMP_DIR)
-    # Start from first google search result:
-    num = 0
-    set_keyboard_layout(english)
-    while (True):
-        # Download images web-page:
-        check_call(["wget", "--user-agent=Mozilla/5.0", "-O", IMAGE_WEB_PAGE,
-            "https://www.google.com/search?tbm=isch&start=" + str(num) + "&q=" + english_word])
-        # Launch browser (uzbl) in order to select an image:
-        check_call(["uzbl", "file://" + IMAGE_WEB_PAGE])
-        # There are four possible scenarios:
-        #
-        # 1) User selects an image (middle mouse click on image selected):
-        #      as a selection result, uzbl calls external python script, which
-        #      extracts selected image link from IMAGE_WEB_PAGE, downloads
-        #      appropriate image and names it TMP_DIR_IMAGE_FILE.
-        #
-        #      On the very begin of execution the script writes "downloading" to
-        #      TMP_DIR_STATUS_FILE. At the end (in case of success) it writes
-        #      "done" to TMP_DIR_STATUS_FILE.
-        #
-        # 2) User requests next page (hotkey "n"):
-        #      uzbl calls external python script with argument "next", which in
-        #      turn writes word "next" in TMP_DIR_STATUS_FILE.
-        #
-        # 3) User requests termination without image (hotkey "q"):
-        #      uzbl calls external python script with argument "quit", which in
-        #      turn writes word "quit" in TMP_DIR_STATUS_FILE.
-        #
-        # 4) User specifies different search request (hotkey "d"):
-        #      uzbl calls external python script with arguments
-        #      "request NEW_REQEUST", which in turn writes line
-        #      "request: NEW_REQUEST" in TMP_DIR_STATUS_FILE.
-        #
-        if not os.path.isfile(TMP_DIR_STATUS_FILE):
-            showInfo("No status file found (uzbl has been terminated abnormally?). Please check " + TMP_DIR_STATUS_FILE)
-            return
-        with open(TMP_DIR_STATUS_FILE, 'r') as f:
-            content = f.read()
-        if (content == "done"):
-            if os.path.isfile(TMP_DIR_IMAGE_FILE):
-                move(TMP_DIR_IMAGE_FILE, TMP_DIR_OUT_FILE)
-                # Need to place focus on field #4 (image):
-                # self.web.eval("focusField(%d);" % 4)
-                self.addMedia(TMP_DIR_OUT_FILE, True)
-            else:
-                showInfo("No image found although " + TMP_DIR_STATUS_FILE + " reports done")
-            return
-        elif (content == "quit"):
-            return
-        elif (content[:len("request: ")] == "request: "):
-            english_word = content[len("request: "):]
-            num = 0
-        elif (content != "next"):
-            showInfo("Unexpected contents of " + TMP_DIR_STATUS_FILE + ": |" + content + "|")
-            return
-        else:
-            num = num + 20
 
 def refresh_all_fields(self, data, cursor_position):
     self.web.eval("setFields(%s, %d);" % (json.dumps(data), cursor_position))
@@ -152,10 +83,13 @@ def fill_button_pressed(self):
     # Add empty image:
     data.append(("image", self.note.fields[4]))
     refresh_all_fields(self, data, 4) # 4 = field to place cursor to (image)
-    # Add image (if any):
-    add_image(self, english_word)
+    # spawn browser to look for images:
+    # check_call(["wget", "--user-agent=Mozilla/5.0", "-O", IMAGE_WEB_PAGE, url])
+    # "&start=" + str(num)
+    check_call(["x-www-browser", "https://www.google.com/search?tbm=isch&q=" + english_word])
     # Switch i3-wm workspace to anki:
     check_call(["i3-msg", "workspace 1"])
+    # showInfo("No image found")
     # Set focus on translation:
     self.web.eval("focusField(%d);" % 1)
     set_keyboard_layout(russian)
@@ -188,6 +122,7 @@ def set_english_word(self, english_word):
     data.append(("audio", self.note.fields[3]))
     data.append(("image", self.note.fields[4]))
     refresh_all_fields(self, data, 1)
+    set_keyboard_layout(russian)
 
 def edit_button_pressed(self):
     set_keyboard_layout(english)
@@ -198,11 +133,13 @@ def edit_button_pressed(self):
     tmp_file = NamedTemporaryFile()
     tmp_file.write(english_word)
     tmp_file.flush()
+    set_keyboard_layout(english)
     check_call(["e", "--wait", tmp_file.name])
     tmp_file.seek(0)
     updated_english_word = tmp_file.read()
     tmp_file.close()
     set_english_word(self, updated_english_word)
+    set_keyboard_layout(russian)
     self.web.eval("focusField(%d);" % 1)
 
 class add_prefix_mode():
@@ -258,11 +195,35 @@ def my_addCards(self):
     self.parentWindow.mw.col.autosave()
     return True
 
+def add_images(self, root_dir, anki_dir):
+    # Need to place focus on field #4 (image):
+    self.web.eval("focusField(%d);" % 4)
+    num = 0
+    os.mkdir(anki_dir)
+    for filename in os.listdir(root_dir):
+        extension = os.path.splitext(filename)[1]
+        if not extension in ['.png', '.jpeg', '.jpg']:
+            continue
+        before = os.path.join(root_dir, filename)
+        after = os.path.join(anki_dir, str(num) + extension)
+        os.rename(before, after)
+        num = num + 1
+    for filename in os.listdir(anki_dir):
+        f = os.path.join(anki_dir, filename)
+        self.addMedia(f, True)
+
 def submit_button_pressed(self):
+    root_dir = u'/media/files/downloads'
+    anki_dir = os.path.join(root_dir, 'anki')
+    if os.path.exists(anki_dir):
+        rmtree(anki_dir)
+    add_images(self, root_dir, anki_dir)
     # self.parentWindow.addCards()
     succeeded = my_addCards(self)
     if succeeded:
         set_keyboard_layout(english)
+        # It seems like some delay is required before we can delete files..
+        # rmtree(anki_dir)
 
 def setup_all_my_buttons(self):
     setup_my_button(self, 'Submit', 'Submit card', 'Ctrl+j', submit_button_pressed)
