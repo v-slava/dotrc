@@ -1245,6 +1245,10 @@ Add Man mode support to (previous-buffer)."
     (interactive "e")
     (unless (realgud:tooltip-eval event) (tooltip-hide)))
 
+  (defun my--tooltip-hide ()
+    (interactive)
+    (tooltip-hide))
+
   (defun my-toggle-whitespace-mode ()
     "Toggle highlighte only too long lines <--> default highlight."
     (interactive)
@@ -1387,6 +1391,8 @@ Add Man mode support to (previous-buffer)."
   (with-eval-after-load 'realgud
     ;; right mouse click (originally was [mouse-2] - middle mouse click):
     (define-key realgud:shortkey-mode-map [mouse-3] 'my-realgud:tooltip-eval-or-hide)
+    (define-key realgud:shortkey-mode-map (kbd "a") 'my--tooltip-hide)
+    (define-key realgud:gdb-track-mode-map (kbd "C-f") 'spacemacs/alternate-window)
     )
   ;; C-c C-c break execution (C-c in gdb) (comint-interrupt-subjob)
   ;; (describe-keymap realgud:shortkey-mode-map)
