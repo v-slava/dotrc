@@ -1001,12 +1001,18 @@ pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
 # For dynamic debugging:
 pr_debug(char *format, ...);
+# To enable output from pr_debug() for kobject_uevent.c:
+CFLAGS_kobject_uevent.o := -DDEBUG
 # If you are writing a driver, please use dev_dbg instead
 dev_dbg(struct device *dev, char *format, ...);
 # See also: BUG(), BUG_ON(), dump_stack()
 
 # Enable all (debug-level) messages:
 echo 7 > /proc/sys/kernel/printk
+# in linux command line:
+loglevel=8
+# or
+ignore_loglevel
 
 # Show dmesg log:
 dmesg -w
