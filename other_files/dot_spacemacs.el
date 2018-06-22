@@ -349,6 +349,25 @@ you should place your code here."
     "Print error message using (user-error)."
     (user-error "[Error] %s: %s" this-command (apply #'format-message args)))
 
+  (defun my--replace-in-string (what with in)
+    (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
+
+  (defun my--exclude-grep (string)
+    (concat " | grep -v '" string "'"))
+
+  (defun my--exclude-regex (regex)
+    (concat " | grep -v '" regex ":[0-9]\\+:[0-9]\\+: \\(warning\\|note\\): '")
+    )
+
+  (defun my--exclude-file (file)
+    (my--exclude-regex (my--replace-in-string "." "\\." file)))
+
+  ;; Compilation warning filter example (gcc):
+  ;; (filter (concat " 2>&1 | grep -v '^In file included from '"
+  ;;                 (funcall exclude-file "some/file.c")
+  ;;                 (funcall exclude-file "another/file.h")
+  ;;                 ))
+
   (defun lisp-state-eval-sexp-end-of-line ()
     "My implementation for \'evil-leader \"mel\"\':
 evaluate the last sexp at the end of the current line."
@@ -1914,6 +1933,9 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; 1) Decouple source windows and gdb window on 2 separate frames.
   ;; 2) Use (gud-watch) (speedbar) to investigate value of variable of complex data type.
   ;; 3) Local variables/watch windows.
+
+  ;; lambda in "let" statement example:
+  ;; (let* ((lambda-name (lambda (arg) arg)) (something (funcall lambda-name actual-arg))))
 
   (setq my--os-settings "~/os_settings")
   (setq magit-repository-directories `(,my--os-settings))

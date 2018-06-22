@@ -115,7 +115,7 @@ set $OUTPUT_LEFT VGA0
 # exec --no-startup-id sleep 4 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 # SED virtual end
 
-workspace 0 output $OUTPUT_CENTRAL # temporary workspace
+# workspace 0 output $OUTPUT_CENTRAL # temporary workspace
 workspace 1 output $OUTPUT_CENTRAL
 workspace 2 output $OUTPUT_RIGHT
 workspace 3 output $OUTPUT_CENTRAL

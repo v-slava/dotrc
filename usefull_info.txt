@@ -1034,6 +1034,9 @@ if (something_bad_happened)
 dump_stack();
 panic("terrible_thing is %ld!\n", terrible_thing);
 
+# see gdb linux kernel hardware (hw) breakpoint support:
+CONFIG_HAVE_HW_BREAKPOINT
+
 # Linux kernel debugging (see also linux/Documentation/features/debug):
 1) gdb vmlinux /proc/kcore
 # Note: gdb caches variables. To reset gdb cache use the following gdb command:
@@ -1634,6 +1637,9 @@ grep -rl -m 1 'REGEX' .
 
 # C++ ABI version:
 readelf -V file.elf | grep CXXABI_
+
+# dwarf debug information (tags: gcc, gdb, elf):
+readelf --debug-dump=info FILE
 
 # All info elf:
 readelf -a FILE
