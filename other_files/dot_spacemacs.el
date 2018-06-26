@@ -368,6 +368,83 @@ you should place your code here."
   ;;                 (funcall exclude-file "another/file.h")
   ;;                 ))
 
+(defun compilation-find-file (marker filename directory &rest formats)
+  "Do not ask user for file location if file not found."
+  (or formats (setq formats '("%s")))
+  (let ((dirs compilation-search-path)
+        (spec-dir (if directory
+                      (expand-file-name directory)
+                    default-directory))
+        buffer thisdir fmts name)
+    (if (file-name-absolute-p filename)
+        ;; The file name is absolute.  Use its explicit directory as
+        ;; the first in the search path, and strip it from FILENAME.
+        (setq filename (abbreviate-file-name (expand-file-name filename))
+              dirs (cons (file-name-directory filename) dirs)
+              filename (file-name-nondirectory filename)))
+    ;; Now search the path.
+    (while (and dirs (null buffer))
+      (setq thisdir (or (car dirs) spec-dir)
+            fmts formats)
+      ;; For each directory, try each format string.
+      (while (and fmts (null buffer))
+        (setq name (expand-file-name (format (car fmts) filename) thisdir)
+              buffer (and (file-exists-p name)
+                          (find-file-noselect name))
+              fmts (cdr fmts)))
+      (setq dirs (cdr dirs)))
+
+    ;; (while (null buffer)    ;Repeat until the user selects an existing file.
+    ;;   ;; The file doesn't exist.  Ask the user where to find it.
+    ;;   (save-excursion            ;This save-excursion is probably not right.
+    ;;     (let ((w (let ((pop-up-windows t))
+		;;    (display-buffer (marker-buffer marker)
+		;; 		   '(nil (allow-no-window . t))))))
+    ;;       (with-current-buffer (marker-buffer marker)
+	  ;;   (goto-char marker)
+	  ;;   (and w (compilation-set-window w marker)))
+    ;;       (let* ((name (read-file-name
+    ;;                     (format "Find this %s in (default %s): "
+    ;;                             compilation-error filename)
+    ;;                     spec-dir filename t nil
+    ;;                     ;; The predicate below is fine when called from
+    ;;                     ;; minibuffer-complete-and-exit, but it's too
+    ;;                     ;; restrictive otherwise, since it also prevents the
+    ;;                     ;; user from completing "fo" to "foo/" when she
+    ;;                     ;; wants to enter "foo/bar".
+    ;;                     ;;
+    ;;                     ;; Try to make sure the user can only select
+    ;;                     ;; a valid answer.  This predicate may be ignored,
+    ;;                     ;; tho, so we still have to double-check afterwards.
+    ;;                     ;; TODO: We should probably fix read-file-name so
+    ;;                     ;; that it never ignores this predicate, even when
+    ;;                     ;; using popup dialog boxes.
+    ;;                     ;; (lambda (name)
+    ;;                     ;;   (if (file-directory-p name)
+    ;;                     ;;       (setq name (expand-file-name filename name)))
+    ;;                     ;;   (file-exists-p name))
+    ;;                     ))
+    ;;              (origname name))
+    ;;         (cond
+    ;;          ((not (file-exists-p name))
+    ;;           (message "Cannot find file `%s'" name)
+    ;;           (ding) (sit-for 2))
+    ;;          ((and (file-directory-p name)
+    ;;                (not (file-exists-p
+    ;;                      (setq name (expand-file-name filename name)))))
+    ;;           (message "No `%s' in directory %s" filename origname)
+    ;;           (ding) (sit-for 2))
+    ;;          (t
+    ;;           (setq buffer (find-file-noselect name))))))))
+
+    ;; Make intangible overlays tangible.
+    ;; This is weird: it's not even clear which is the current buffer,
+    ;; so the code below can't be expected to DTRT here.  -- Stef
+    (dolist (ov (overlays-in (point-min) (point-max)))
+      (when (overlay-get ov 'intangible)
+        (overlay-put ov 'intangible nil)))
+    buffer))
+
   (defun lisp-state-eval-sexp-end-of-line ()
     "My implementation for \'evil-leader \"mel\"\':
 evaluate the last sexp at the end of the current line."

@@ -1,3 +1,6 @@
+# simple http server to transfer files over local network:
+woof FILE
+
 # telegram bot:
 0) Bot API reference:
       https://core.telegram.org/bots/api
@@ -1645,13 +1648,10 @@ readelf --debug-dump=info FILE
 readelf -a FILE
 
 # Check debug info (debug symbols, debug sections) in elf:
-readelf --sections FILE | grep debug
-# Without debug info output is empty. With debug info output looks like:
-# [27] .debug_aranges    PROGBITS        00000000 001071 000020 00      0   0  1
-# [28] .debug_info       PROGBITS        00000000 001091 000042 00      0   0  1
-# [29] .debug_abbrev     PROGBITS        00000000 0010d3 000037 00      0   0  1
-# [30] .debug_line       PROGBITS        00000000 00110a 000038 00      0   0  1
-# [31] .debug_str        PROGBITS        00000000 001142 000063 01  MS  0   0  1
+readelf --sections FILE | grep debug_frame
+# always present: .debug_aranges, .debug_info, .debug_abbrev, .debug_line, .debug_ranges
+# -g  adds: .debug_frame, .debug_str
+# -g3 adds: .debug_macro
 
 # Dynamic dependencies (shared libraries):
 readelf -d FILE | grep NEEDED
@@ -2158,7 +2158,7 @@ restore FILE binary START_ADDRESS_IN_MEMORY
 # gdb: write to file from process memory [START .. STOP) (dump memory):
 dump binary memory FILE START STOP
 
-# gdb: catch syscall:
+# gdb: catch syscall (breakpoint):
 catch syscall chroot
 
 # gdb: disable/enable breakpoints:
@@ -2176,6 +2176,7 @@ br s -n FUNCTION_NAME -c 'CONDITION'
 rbreak func_prefix_*
 
 # gdb: breakpoints on read/write:
+watch my_struct.some_member
 watch *0xaab12450 [mask 0xfffffff0]
 watch (char[100]) *0xaab12450
 watch -l SomeArray[2]
