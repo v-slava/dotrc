@@ -1157,6 +1157,9 @@ git merge-base branch1 branch2
 # git list branches (check) that contain specified commit:
 git branch --all --contains SHA1
 
+# git check whether child commit has some parent (ancestor) commit:
+git rev-list child | grep parent
+
 # git show last commits date in all branches (track recent development):
 for branch in `git branch -r | grep -v HEAD`;do echo -e `git show -s --format="%ci %cr" $branch` $branch; done | sort -r
 
@@ -2031,6 +2034,9 @@ set env VAR_NAME = VALUE
 
 # gdb: print the full value of a C-string:
 set print element 0
+
+# gdb print array elements:
+p *argv@argc
 
 # gdb print (echo) string:
 echo "some text\n"
