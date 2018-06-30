@@ -52,6 +52,7 @@ for FILE in "$@" ; do
         # *.Z) uncompress "$FILE_FULL_PATH" ;;
         *)
             echo "Error: \"$FILE\" - unknown archive format." 1>&2
+            # see also: https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/extract
             exit 1
         ;;
     esac
