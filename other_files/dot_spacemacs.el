@@ -710,6 +710,47 @@ evaluate the last sexp at the end of the current line."
               (my--get-project-frame-commands-alist name)
               :action (lambda (x) (my--set-frame-command-for-project name (cdr x)))))
 
+  (defun my--generate-simple-debug-cmd (compiled-file)
+    "Generate simple debug command for compiled-file."
+    (let* ((output-dir "/tmp")
+           (compiled-file-path (file-name-directory compiled-file))
+           (compiled-file-name (file-name-nondirectory compiled-file))
+           (output-prefix (concat output-dir "/" compiled-file-name))
+           (debug-shell-script (concat output-prefix "_debug.sh"))
+           (debug-commands-file (concat output-prefix "_debug_commands.gdb"))
+           )
+      (make-my--frame-command--debug :format-str (format
+"#!/bin/bash
+
+if [ \"$1\" = \"emacs\" ]; then
+    # GDB_ARGS=\"--i=mi \"
+    GDB_PRE_CMDS=\"
+set annotate 1
+set interactive-mode off
+\"
+else
+    GDB_POST_CMDS=\"
+layout src
+\"
+fi
+
+cat << EOF > \"%s\"
+$GDB_PRE_CMDS
+file \"%s\"
+%%s
+run
+del
+$GDB_POST_CMDS
+EOF
+cd \"%s\"
+gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file compiled-file-path debug-commands-file)
+       :shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs"))))
+
+  (defun my-select-file-to-debug ()
+    "Select a file to debug."
+    (interactive)
+    (my--set-frame-command-for-project "debug" (my--generate-simple-debug-cmd (my--choose-single-file))))
+
   (defun my--get-default-cmd (name)
     "Return a command to be executed depending on current file type."
     (let* ((file-path (buffer-file-name (current-buffer)))
@@ -734,33 +775,9 @@ evaluate the last sexp at the end of the current line."
          (t nil)))
        ((equal name "debug")
         (cond
-         ((member file-extension (append '("c") cpp-extensions)) (make-my--frame-command--debug
-:format-str (format
-"#!/bin/bash
-
-if [ \"$1\" = \"emacs\" ]; then
-    # GDB_ARGS=\"--i=mi \"
-    GDB_PRE_CMDS=\"
-set annotate 1
-set interactive-mode off
-\"
-else
-    GDB_POST_CMDS=\"
-layout src
-\"
-fi
-
-cat << EOF > \"%s\"
-$GDB_PRE_CMDS
-file \"%s\"
-%%s
-run
-del
-$GDB_POST_CMDS
-EOF
-gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file debug-commands-file)
-:shell-script debug-shell-script :debug-cmd (concat debug-shell-script " emacs")
-))
+         ((member file-extension (append '("c") cpp-extensions))
+          (my--generate-simple-debug-cmd compiled-file)
+          )
          (t nil)))
        (t nil))))
 
@@ -1811,6 +1828,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
 
   (spacemacs/set-leader-keys "od" 'my-execute-debug-frame-command)
   (spacemacs/set-leader-keys "osd" 'my-select-debug-frame-command)
+  (spacemacs/set-leader-keys "osD" 'my-select-file-to-debug)
   (spacemacs/set-leader-keys "oed" 'my-edit-debug-frame-command)
 
   (spacemacs/set-leader-keys "oi" 'my-execute-interactive-frame-command)
