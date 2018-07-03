@@ -35,6 +35,7 @@ def process_action_external(action, arg):
 def process_action(action, arg):
 	return {
 		"spaces_to_underscores": arg.replace(' ', '_'),
+		"dots_to_underscores": os.path.splitext(arg)[0].replace('.', '_') + os.path.splitext(arg)[1],
 		"to_lowercase": arg.lower(),
 		"extracted": process_extracted(arg),
 	}.get(action, process_action_external(action, arg))

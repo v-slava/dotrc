@@ -364,6 +364,7 @@ nnoremap cn cW<c-u>
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
 nnoremap cfs :!$HOME/os_settings/other_files/vifm_rename.py %c spaces_to_underscores<CR>
+nnoremap cfd :!$HOME/os_settings/other_files/vifm_rename.py %c dots_to_underscores<CR>
 nnoremap cfl :!$HOME/os_settings/other_files/vifm_rename.py %c to_lowercase<CR>
 nnoremap cfe :!$HOME/os_settings/other_files/vifm_rename.py %c extracted<CR>
 nnoremap cfm :!$HOME/os_settings/other_files/vifm_rename.py %c music<CR>

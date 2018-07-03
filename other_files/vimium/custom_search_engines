@@ -3,7 +3,8 @@ we: https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedi
 wr: https://ru.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (ru)
 y: https://www.youtube.com/results?search_query=%s Youtube
 map: https://www.google.com/maps?q=%s GoogleMaps
-tor: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
+tor_rus: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
+tor_eng: https://katcrs.win/search/%s/ kickass torrents
 
 # Google translate: 'phrase_to_translate'
 ter: https://translate.google.com/?hl=en#en/ru/%s GoogleTranslate en -> ru
