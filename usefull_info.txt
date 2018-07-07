@@ -1,6 +1,10 @@
 # simple http server to transfer files over local network:
 woof FILE
 
+# simple web site to access without DNS:
+http://www.columbia.edu/~fdc/sample.html
+http://128.59.105.24/~fdc/sample.html
+
 # telegram bot:
 0) Bot API reference:
       https://core.telegram.org/bots/api

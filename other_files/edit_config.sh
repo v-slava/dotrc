@@ -45,6 +45,6 @@ fi
 
 e --wait "$EDIT_FILE"
 cp "$DOTRC_FILE" ~/$FILE
-if [ -f "$DOTRC_FILE" ]; then
+if [ -f "$DOTRC_S_FILE" ]; then
     cat "$DOTRC_S_FILE" >> ~/$FILE
 fi
