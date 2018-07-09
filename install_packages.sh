@@ -56,7 +56,7 @@ apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
 apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xdotool xclip xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
+apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
 # keynav
 
 # Install vim instance, which is able to access X clipboard:
