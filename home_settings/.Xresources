@@ -1,5 +1,8 @@
 ! Dump scrollback buffer with <Ctrl>+PrintScreen:
 URxvt.print-pipe: ~/os_settings/other_files/handle_terminal_scrollback_buffer.sh
+URxvt.scrollTtyOutput: false
+URxvt.scrollWithBuffer: true
+URxvt.scrollTtyKeypress: true
 
 ! font:
 URxvt.font:    xft:Inconsolata LGC:pixelsize=18
