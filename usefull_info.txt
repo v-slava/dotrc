@@ -413,6 +413,12 @@ tcpdump -i usbmon1 -w - -U | wireshark -k -i -
 # Use wireshark plugin (dissector):
 wireshark -X lua_script:/path/to/plugin/file.lua
 
+# wireshark IP filter:
+(ip.src == SOME_IP) || (ip.dst == SOME_IP)
+
+# port IP filter:
+(tcp.port == 443) || (udp.port == 23)
+
 # List interfaces available:
 dumpcap -D
 # Dump packets to file:
@@ -435,7 +441,10 @@ edbg -t atmel_cm7 -bpv -f some_flash.bin
 # gtypist in russian:
 gtypist ru.typ
 
-# Search only in files, that match regex:
+# ripgrep (rg):
+rg -g '*.dts' -g '*.dtsi' as
+
+# search only in files, that match regex (silverlight searcher):
 ag SEARCH_REGEX -G FILE_PATH_REGEX
 # Search only in *.h and *.cpp files:
 ag SEARCH_REGEX -G '(\.h$|\.cpp)'
@@ -523,6 +532,9 @@ make kselftest
 # userspace program).
 # See also: LTP
 # See also: https://kernelci.org/
+
+# blacklist (exclude) linux kernel module (I didn't check it):
+echo "blacklist MODULE_NAME" >> /etc/modprobe.d/blacklist.conf
 
 # gcc output rules for make describing dependencies:
 gcc FILE.c -o FILE.d -MM -MT FILE.o
@@ -958,8 +970,10 @@ apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME
 # On TFTP client:
+curl tftp://SERVER_IP_ADDRESS/FILE_NAME
 tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
+# See logs in /var/log/syslog
 
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
@@ -1260,6 +1274,7 @@ git stash show -p [stash@{1}]
 # Create patch file:
 git format-patch -1 [-o OUT_DIR]
 # Apply patch file:
+cd GIT_ROOT_DIR
 git apply PATCH_FILE
 # Apply patch file and create commit based on it:
 git am < PATCH_FILE
