@@ -1645,6 +1645,9 @@ realpath PATH
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
+# Cut first 16 seconds from mp3:
+avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
+
 # less search command line:
 less -p pattern FILE
 

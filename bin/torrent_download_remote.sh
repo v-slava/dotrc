@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Copy-paste URL and press ENTER:"
+echo "Copy-paste URL and press ENTER (if you have torrent file, just press ENTER):"
 read URL
 
 if [ -z "$URL" ]; then
