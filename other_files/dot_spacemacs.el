@@ -76,6 +76,7 @@ values."
    dotspacemacs-additional-packages '(
                                       ;; key-chord
                                       ninja-mode
+                                      dts-mode
                                       xcscope
                                       ;; ag
                                       ivy-rtags
@@ -292,7 +293,7 @@ values."
    ;; (default nil)
    ;; dotspacemacs-line-numbers 'relative
    dotspacemacs-line-numbers '(:relative t :enabled-for-modes fundamental-mode
-                                         prog-mode conf-mode cmake-mode
+                                         prog-mode conf-mode cmake-mode dts-mode
                                          text-mode)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)

@@ -1727,6 +1727,17 @@ sudo extundelete --restore-file other/commands -o restore /dev/sda5
 # Linux kernel objdump
 arm-linux-gnueabi-objdump -D -b binary -m arm Image
 
+# USB device sysfs entry example (udevadm monitor):
+ USB host controller (hierarchy) start             USB bus            USB device configuration
+             |                                       | |                         |
+             v                                       v v                         v
+/sys/devices/pci0000:00/0000:00:1e.0/0000:05:04.1/usb3/3-2/3-2.3/3-2.3.4/3-2.3.4:1.0/...
+                        ^            ^                   ^   ^ ^   ^ ^ ^   ^ ^ ^   ^
+                        |            |                   |   | |   | | |   | | |   |
+                        |    USB host controller         |   | |   | | |   | | | USB interface
+                        |                                |   | |   | | |   | | |
+                   PCI bridge                      USB ports / devices (hubs hierarchy)
+
 # Mount initrd:
 sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>
 
