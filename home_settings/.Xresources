@@ -1,5 +1,5 @@
 ! Dump scrollback buffer with <Ctrl>+PrintScreen:
-URxvt.print-pipe: ~/os_settings/other_files/handle_terminal_scrollback_buffer.sh
+URxvt.print-pipe: /bin/bash -c 'source ~/.bashrc && $DOTRC/other_files/handle_terminal_scrollback_buffer.sh'
 URxvt.scrollTtyOutput: false
 URxvt.scrollWithBuffer: true
 URxvt.scrollTtyKeypress: true
@@ -14,7 +14,7 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 URxvt.perl-ext-common: default,matcher,font-size,clipboard
 
 ! Clickable URLs (ctrl + left button):
-URxvt.urlLauncher: /usr/local/bin/vimb
+URxvt.urlLauncher: /usr/bin/x-www-browser
 URxvt.matcher.button: C1
 
 ! Hotkeys to change font size on the fly (Ctrl+Up/Down):
@@ -28,10 +28,6 @@ URxvt.keysym.Mod1-c:   perl:clipboard:copy
 URxvt.keysym.Mod1-v:   perl:clipboard:paste
 ! URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
 ! URxvt.clipboard.autocopy: If true, PRIMARY overwrites clipboard
-! URxvt.clipboard.copycmd:  xsel -ib
-! URxvt.clipboard.pastecmd: xsel -ob
-! URxvt.clipboard.copycmd:  xclip -i -selection clipboard
-! URxvt.clipboard.pastecmd: xclip -o -selection clipboard
 URxvt.clipboard.copycmd:  clipboard.sh
 URxvt.clipboard.pastecmd: clipboard.sh -o
 ! Other:
@@ -74,4 +70,3 @@ URxvt.color12: #5f5fee
 URxvt.color13: #bb88dd
 URxvt.color14: #4eb4fa
 URxvt.color15: #d0d0d0
-
