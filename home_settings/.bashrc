@@ -4,11 +4,15 @@
 #       *) return;;
 # esac
 
+export WORKSPACE=/media/files/workspace
+export DOTRC=$WORKSPACE/dotrc
+export DOTRC_S=$WORKSPACE/dotrc_s
+
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -al'
-alias mbc='cat ~/os_settings/other_files/bc_library_my && bc -l ~/os_settings/other_files/bc_library_my'
+alias mbc='cat $DOTRC/other_files/bc_library_my && bc -l $DOTRC/other_files/bc_library_my'
 # export GREP_OPTIONS=--color=auto
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -20,14 +24,14 @@ alias gloga='git log --graph --decorate --color=always --all | cless -i'
 alias ga='git add'
 __git_complete ga _git_add
 alias gs='git status'
-alias gsh='~/os_settings/other_files/git_show_HEAD.sh'
-alias ge='~/os_settings/other_files/git_edit.sh'
+alias gsh='$DOTRC/other_files/git_show_HEAD.sh'
+alias ge='$DOTRC/other_files/git_edit.sh'
 alias gd='git diff'
 __git_complete gd _git_diff
 alias gco='git commit'
 alias gcoa='git commit --amend'
 # Git commit second:
-alias gcs='~/os_settings/other_files/git_commit_dotrc_second.sh'
+alias gcs='$DOTRC/other_files/git_commit_dotrc_second.sh'
 # Git commit update:
 alias gcu='git commit --amend --no-edit -a'
 alias gch='git checkout'
@@ -36,8 +40,8 @@ alias gchd='git checkout --detach'
 alias gb='git branch'
 __git_complete gb _git_branch
 alias gpl='git pull'
-# alias gpush_test_commit='~/os_settings/other_files/git_push_test_commit.sh REPO BRANCH'
-# alias gfetch_test_commit='~/os_settings/other_files/git_fetch_test_commit.sh REPO BRANCH'
+# alias gpush_test_commit='$DOTRC/other_files/git_push_test_commit.sh REPO BRANCH'
+# alias gfetch_test_commit='$DOTRC/other_files/git_fetch_test_commit.sh REPO BRANCH'
 alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
 export SSH_RASPBERRY_PI='53535 pi@94.154.220.9'
 
@@ -136,7 +140,7 @@ export QUILT_PATCHES=debian/patches
 # export P4USER=USER_NAME
 # export P4PASSWD=
 
-BASHRC_S=$HOME/workspace/dotrc_s/home_settings/.bashrc
+BASHRC_S=$DOTRC_S/home_settings/.bashrc
 if [ -f $BASHRC_S ] ; then
 	source $BASHRC_S
 fi
