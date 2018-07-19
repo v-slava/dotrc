@@ -816,7 +816,7 @@ set diffopt+=vertical
 " Search using ag (silverlight searcher):
 nmap <Leader>ags :Ags 
 " Kill running ag instance:
-nmap <Leader>agk :!~/os_settings/other_files/kill_process_by_unique_name.sh ag<CR><CR>
+nmap <Leader>agk :!$DOTRC/other_files/kill_process_by_unique_name.sh ag<CR><CR>
 " let g:ags_agmaxcount = 2000
 " In search results window press "u" for usage (mappings) information.
 let g:ags_agargs = {

@@ -5,7 +5,7 @@ all: patch_src
 
 PHONY += patch_src
 patch_src: download_git
-	cd st && patch -p1 < $DOTRC/other_files/st_terminal_patch
+	cd st && patch -p1 < $DOTRC/other_files/st_terminal.patch
 
 PHONY += download_git
 download_git:
