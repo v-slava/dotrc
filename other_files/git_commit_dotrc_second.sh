@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -ex
-cd ~/os_settings
+cd $DOTRC
 git status
 git stash list
 git stash

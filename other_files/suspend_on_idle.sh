@@ -42,6 +42,6 @@ while [ true ] ; do
 	fi
 
 	x-terminal-emulator -title "suspend script" -e bash -c \
-'source ~/.bashrc && ~/os_settings/other_files/update_system.sh && exec sudo systemctl suspend'
+'source ~/.bashrc && $DOTRC/other_files/update_system.sh && exec sudo systemctl suspend'
 done
 

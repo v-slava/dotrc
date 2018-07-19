@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (my--set-shell-command-for-project 0 "~/os_settings/other_files/run_in_terminal.sh ls -l")
+# (my--set-shell-command-for-project 0 "$DOTRC/other_files/run_in_terminal.sh ls -l")
 
 import pexpect
 import sys

@@ -17,8 +17,8 @@ fi
 
 FILE="$2"
 
-DOTRC_PATH=~/os_settings/home_settings
-DOTRC_S_PATH=~/workspace/dotrc_s/home_settings
+DOTRC_PATH=$DOTRC/home_settings
+DOTRC_S_PATH=$DOTRC_S/home_settings
 DOTRC_FILE="$DOTRC_PATH/$FILE"
 DOTRC_S_FILE="$DOTRC_S_PATH/$FILE"
 if [ ! -f "$DOTRC_FILE" ]; then

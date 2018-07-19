@@ -16,13 +16,13 @@ if [ -z "$1" ] ; then
 fi
 
 VOLUME="$1"
-SINK_NAME="$(~/os_settings/other_files/get_sink_name.sh)"
+SINK_NAME="$($DOTRC/other_files/get_sink_name.sh)"
 
 # amixer set Master 3%+
 pactl -- set-sink-volume "$SINK_NAME" "$VOLUME"
 
 # Set the same volume for all applications:
-NEW_VOLUME=$(~/os_settings/other_files/get_volume.sh)
+NEW_VOLUME=$($DOTRC/other_files/get_volume.sh)
 SINK_INPUT_NUMBERS=$(LANGUAGE=en pactl list sink-inputs | grep 'Sink Input #' | cut -d'#' -f2)
 for sink_input_number in $SINK_INPUT_NUMBERS ; do
     pactl set-sink-input-volume "$sink_input_number" "$NEW_VOLUME"

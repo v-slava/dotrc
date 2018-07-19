@@ -10,7 +10,7 @@ DMENU_URL := http://git.suckless.org/dmenu
 # DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
 # DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
 
-CLIPBOARD_PATCH := $(HOME)/os_settings/other_files/dmenu_clipboard.patch
+CLIPBOARD_PATCH := $(DOTRC)/other_files/dmenu_clipboard.patch
 
 # Generate CLIPBOARD_PATCH (old method, no git):
 # diff -urn dmenu_orig_folder dmenu_modified_folder > dmenu.diff

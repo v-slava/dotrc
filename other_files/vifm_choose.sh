@@ -40,7 +40,7 @@ fi
 
 FILE=/tmp/vifm_selected
 rm -f $FILE
-ORIG_WORKSPACE=$(~/os_settings/other_files/i3_get_focused_workspace.sh)
+ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.sh)
 i3-msg "workspace 0" 1>/dev/null
 case $WHAT in
     -d) x-terminal-emulator -title 'Choose directory by pressing "q":' -e vifm --choose-dir $FILE 2>/dev/null ;;
