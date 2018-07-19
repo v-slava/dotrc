@@ -369,7 +369,7 @@ xdotool windowsize $WIN $WIDTH $HEIGHT
 wmctrl -i -r $WIN -e 1,$X,$Y,$WIDTH,$HEIGHT
 
 # Setup desktop wallpaper (i3wm):
-feh --bg-center ~/os_settings/other_files/desktop_wallpaper.png
+feh --bg-center $DOTRC/other_files/desktop_wallpaper.png
 
 # Convert elf to binary:
 objcopy -O binary IN_FILE.elf OUT_FILE.bin
@@ -708,7 +708,7 @@ clang-tidy-3.8 -checks=* -list-checks
 # Analize program:
 clang-tidy-3.8 -checks=* main.cpp
 
-# See also ~/os_settings/other_files/check_program.sh
+# See also $DOTRC/other_files/check_program.sh
 
 # xargs specify parameters order (you can use anything as replace_str):
 echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
@@ -1881,7 +1881,7 @@ umount /mnt/usb_mnt
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
 dd if=syslinux-6.01/bios/mbr/mbr.bin of=/dev/sdX
 sync
-# For grub2 version syslinux is not necessary (see os_settings/other_files/grub.cfg)
+# For grub2 version syslinux is not necessary (see $DOTRC/other_files/grub.cfg)
 
 # Create bootable usb (grub2):
 dd if=/dev/zero of=/dev/sdX bs=1k count=1
@@ -1899,7 +1899,7 @@ cp mhdd32ver4.6.iso /mnt/boot/mhdd.iso
 # Add memtest:
 wget http://www.memtest86.com/downloads/memtest86-iso.gz
 cp memtest86-iso /mnt/boot/memtest.iso
-# See os_settings/other_files/grub.cfg
+# See $DOTRC/other_files/grub.cfg
 
 # Create bootable usb (EFI):
 dd if=/dev/zero of=/dev/sdX bs=1k count=1

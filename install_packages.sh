@@ -105,10 +105,10 @@ make -f /media/files/workspace/dotrc/other_files/Makefile_dmenu.mk
 
 # Coreutils viewer:
 # apt-get install libncurses5-dev pkg-config
-# make -f ~/os_settings/other_files/Makefile_coreutils_viewer.mk
+# make -f $DOTRC/other_files/Makefile_coreutils_viewer.mk
 
 # vifm:
-# make -f ~/os_settings/other_files/Makefile_vifm.mk
+# make -f $DOTRC/other_files/Makefile_vifm.mk
 
 # dpkg --add-architecture i386
 # apt-get update
@@ -119,7 +119,7 @@ make -f /media/files/workspace/dotrc/other_files/Makefile_dmenu.mk
 
 # Build and install vimb:
 # apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
-# make -f ~/os_settings/other_files/Makefile_vimb
+# make -f $DOTRC/other_files/Makefile_vimb
 
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11

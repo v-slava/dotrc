@@ -20,7 +20,7 @@ if [ $# -ne 2 ] ; then
 	usage
 fi
 
-SINK_NAME="$(~/os_settings/other_files/get_sink_name.sh)"
+SINK_NAME="$($DOTRC/other_files/get_sink_name.sh)"
 FILE="$2"
 
 # To record input sound (from microphone) only:

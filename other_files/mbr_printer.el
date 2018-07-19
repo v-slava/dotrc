@@ -22,7 +22,7 @@
   ;; ("pc clean" . ,(concat "rm -rf " pc-out))
 )
 :interactive `(
-               ("run_interactively" . ,(concat "x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause " compiled-file " &"))
+               ("run_interactively" . ,(concat "x-terminal-emulator -e $DOTRC/other_files/vifm_run_command.sh --pause " compiled-file " &"))
                )
 :debug `(
          ("default" . ,(let* ((name "default")

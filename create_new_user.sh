@@ -15,7 +15,6 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-OS_SETTINGS=$PWD
 USER_NAME=$1
 USER_PASSWD=$USER_NAME
 

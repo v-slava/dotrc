@@ -892,7 +892,7 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file compiled-file-path de
                                  :fields '("shell-cmd")
                                  :execute (lambda (cmd)
                                             (let ((shell-cmd (if cmd (if (stringp cmd) cmd (my--frame-command--interactive-shell-cmd cmd)) (concat
-"x-terminal-emulator -e ~/os_settings/other_files/vifm_run_command.sh --pause " (exec-path-from-shell--double-quote (my--get-default-cmd "build")) " &"))))
+"x-terminal-emulator -e $DOTRC/other_files/vifm_run_command.sh --pause " (exec-path-from-shell--double-quote (my--get-default-cmd "build")) " &"))))
                                               (my-save-all-buffers)
                                               (unless shell-cmd (my--error "interactive command for this file type is not defined."))
                                               (shell-command shell-cmd)
@@ -1106,11 +1106,11 @@ Otherwise return unmodified string."
 
   (defun my--choose-directory ()
     "Choose directory interactively (use vifm). Returns choosen directory."
-    (shell-command-to-string (concat my--os-settings "/other_files/vifm_choose.sh -d -n")))
+    (shell-command-to-string (concat my--dotrc "/other_files/vifm_choose.sh -d -n")))
 
   (defun my--choose-single-file ()
     "Choose single file interactively (use vifm). Returns choosen file."
-    (shell-command-to-string (concat my--os-settings "/other_files/vifm_choose.sh -fs -n")))
+    (shell-command-to-string (concat my--dotrc "/other_files/vifm_choose.sh -fs -n")))
 
   (defun my-search-in-directory-interactive ()
     "Use rg to search in interactively choosen directory (interactive ivy interface)."
@@ -2033,8 +2033,8 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; lambda in "let" statement example:
   ;; (let* ((lambda-name (lambda (arg) arg)) (something (funcall lambda-name actual-arg))))
 
-  (setq my--os-settings "~/os_settings")
-  (setq magit-repository-directories `(,my--os-settings))
+  (setq my--dotrc "$DOTRC")
+  (setq magit-repository-directories `(,my--dotrc))
   (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)

@@ -1,15 +1,15 @@
 #!/bin/bash
 
-OS_SETTINGS=~/os_settings
+DOTRC=/media/files/workspace/dotrc
 IN_FILES=(
 .config_xdg/i3/config
 .Xmodmap
 )
 OUT_FILES=("${IN_FILES[@]/#/~/}")
-IN_FILES=("${IN_FILES[@]/#/${OS_SETTINGS}/home_settings/}")
+IN_FILES=("${IN_FILES[@]/#/${DOTRC}/home_settings/}")
 # echo ${IN_FILES[@]}
 
-~/os_settings/other_files/virtual_box.sh
+$DOTRC/other_files/virtual_box.sh
 VIRTUAL=$?
 
 if [ $VIRTUAL -eq 1 ] ; then

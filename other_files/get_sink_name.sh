@@ -6,7 +6,7 @@ if [ $# -ge 1 ] ; then
 	SINK="$1"
 	shift
 else
-	if ~/os_settings/other_files/bluetooth_connected.sh ; then
+	if $DOTRC/other_files/bluetooth_connected.sh ; then
 		SINK="bluez_sink\."
 	else
 		# SINK="alsa_output\."

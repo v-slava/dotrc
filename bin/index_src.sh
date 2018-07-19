@@ -38,4 +38,4 @@ while [ $# -ne 0 ]; do
     shift
 done
 
-~/os_settings/other_files/find_src.sh $FIND_OPTIONS | ~/os_settings/other_files/index_files_list.sh --ctags "$CTAGS_FILE" $CTAGS_OPTIONS --cscope "$CSCOPE_FILE" $CSCOPE_OPTIONS
+$DOTRC/other_files/find_src.sh $FIND_OPTIONS | $DOTRC/other_files/index_files_list.sh --ctags "$CTAGS_FILE" $CTAGS_OPTIONS --cscope "$CSCOPE_FILE" $CSCOPE_OPTIONS

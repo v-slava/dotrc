@@ -12,6 +12,8 @@ set -ex
 # in the results of pathname expansion:
 shopt -s dotglob
 
+MEDIA_FILES=$MEDIA_FILES
+
 cp -rafv $PWD/home_settings/* $HOME/
 
 if [ -n "$DISPLAY" ]; then
@@ -19,22 +21,19 @@ if [ -n "$DISPLAY" ]; then
 fi
 
 if [ ! -e ~/my ]; then
-    ln -s /media/files/temporary/my ~/my
+    ln -s $MEDIA_FILES/temporary/my ~/my
 fi
 if [ ! -e ~/bin ]; then
     ln -s $PWD/bin ~/bin
 fi
 if [ ! -e ~/downloads ]; then
-    ln -s /media/files/downloads ~/downloads
+    ln -s $MEDIA_FILES/downloads ~/downloads
 fi
 if [ ! -e ~/Downloads ]; then
-    ln -s /media/files/downloads ~/Downloads
+    ln -s $MEDIA_FILES/downloads ~/Downloads
 fi
 if [ ! -e ~/Desktop ]; then
-    ln -s /media/files/downloads ~/Desktop
-fi
-if [ ! -e ~/os_settings ]; then
-    ln -s $PWD ~/os_settings
+    ln -s $MEDIA_FILES/downloads ~/Desktop
 fi
 if [ ! -e ~/.spacemacs ]; then
     ln -s $PWD/other_files/dot_spacemacs.el ~/.spacemacs
@@ -43,7 +42,6 @@ fi
 #     mkdir ~/terminal
 # fi
 
-MEDIA_FILES=/media/files
 DIRS="downloads temporary workspace"
 for dir in $DIRS ; do
     if [ ! -L ~/$dir ]; then
@@ -59,9 +57,9 @@ for dir in $MY_DIRS ; do
 done
 
 set +e
-if [ -d /media/files/workspace/dotrc_s/home_settings ]; then
+if [ -d $DOTRC_S/home_settings ]; then
     set -e
-    cd /media/files/workspace/dotrc_s/home_settings
+    cd $DOTRC_S/home_settings
     FILES_LIST=$(find -type f)
     for FILE in $FILES_LIST ; do
         cat "$FILE" >> ~/$FILE
@@ -69,7 +67,7 @@ if [ -d /media/files/workspace/dotrc_s/home_settings ]; then
 fi
 set -e
 
-~/os_settings/other_files/generate_configs.sh
+$DOTRC/other_files/generate_configs.sh
 i3-msg reload
 if [ "$(id -u)" != "0" ]; then
     systemctl --user enable rdm.socket
