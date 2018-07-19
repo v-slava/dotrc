@@ -12,7 +12,7 @@ set -ex
 # in the results of pathname expansion:
 shopt -s dotglob
 
-MEDIA_FILES=$MEDIA_FILES
+MEDIA_FILES=/media/files
 
 cp -rafv $PWD/home_settings/* $HOME/
 

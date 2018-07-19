@@ -21,7 +21,10 @@ set $Shift_R Shift
 set $PrintScreen 107
 # set $Menu 135
 
-bindsym $Alt_R+e exec --no-startup-id exec ~/workspace/dotrc_s/i3_hotkey_handler.sh
+set $DOTRC /media/files/workspace/dotrc
+set $DOTRC_S /media/files/workspace/dotrc_s
+
+bindsym $Alt_R+e exec --no-startup-id exec $DOTRC_S/i3_hotkey_handler.sh
 
 # font for window title
 font pango:Inconsolata LGC 8
@@ -39,15 +42,15 @@ bindsym $WIN+Escape kill
 bindsym $WIN+Tab move container to workspace 0
 
 # mark window with label for further fast access:
-bindsym $Alt_L+m exec --no-startup-id exec ~/os_settings/other_files/i3_mark_window.sh
+bindsym $Alt_L+m exec --no-startup-id exec $DOTRC/other_files/i3_mark_window.sh
 # goto window by mark (label name):
-bindcode $Alt_L+48 exec --no-startup-id exec ~/os_settings/other_files/i3_goto_marked_window.py
+bindcode $Alt_L+48 exec --no-startup-id exec $DOTRC/other_files/i3_goto_marked_window.py
 
 # switch to virtual console 2
 bindsym $Ctrl_L+$ALT_L+F2 exec --no-startup-id exec sudo chvt 2
 
 # change focus
-# bindsym $Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/i3_focus.py left
+# bindsym $Alt_L+h exec --no-startup-id exec $DOTRC/other_files/i3_focus.py left
 bindsym $Alt_L+h focus left
 bindsym $Alt_L+j focus down
 bindsym $Alt_L+k focus up
@@ -112,7 +115,7 @@ set $OUTPUT_CENTRAL VGA1
 set $OUTPUT_RIGHT VGA2
 set $OUTPUT_LEFT VGA0
 
-# exec --no-startup-id sleep 4 && ~/os_settings/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
+# exec --no-startup-id sleep 4 && $DOTRC/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 # SED virtual end
 
 # workspace 0 output $OUTPUT_CENTRAL # temporary workspace
@@ -129,7 +132,7 @@ workspace 9 output $OUTPUT_CENTRAL
 # Start i3bar:
 bar {
 	# status_command exec i3status
-	status_command i3status | ~/os_settings/other_files/i3status_wrapper.py
+	status_command i3status | $DOTRC/other_files/i3status_wrapper.py
 	tray_output $OUTPUT_CENTRAL
 }
 
@@ -192,11 +195,11 @@ for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
 bindsym $Alt_R+i exec --no-startup-id sleep 1 && exec xdotool type 237872289
 
-bindsym $Alt_R+l exec --no-startup-id exec ~/os_settings/other_files/lock_screen.sh i3_hotkey
+bindsym $Alt_R+l exec --no-startup-id exec $DOTRC/other_files/lock_screen.sh i3_hotkey
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
-bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/suspend_hotkey.sh
+bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec $DOTRC/other_files/suspend_hotkey.sh
 # bindsym $Ctrl_L+$Alt_L+h exec sudo poweroff
-bindsym $Ctrl_l+$Alt_L+h exec --no-startup-id exec ~/os_settings/other_files/hibernate_hotkey.sh
+bindsym $Ctrl_l+$Alt_L+h exec --no-startup-id exec $DOTRC/other_files/hibernate_hotkey.sh
 for_window [class="URxvt" title="hibernate script"] floating enable
 for_window [class="URxvt" title="suspend script"] floating enable
 
@@ -207,22 +210,22 @@ bindsym $WIN+k exec --no-startup-id exec keynav
 
 # terminal
 # bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm
-# bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh vifm
-bindsym $Alt_L+Return exec exec ~/os_settings/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm ~/my ~/my'
+# bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm
+bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh bash -c 'source ~/.bashrc && exec vifm ~/my ~/my'
 
 bindsym $Alt_L+t exec --no-startup-id exec goldendict "$(clipboard.sh -o)"
 bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec goldendict "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
-bindsym $Alt_L+s exec --no-startup-id exec ~/os_settings/other_files/say_word.sh "$(clipboard.sh -o)"
+bindsym $Alt_L+s exec --no-startup-id exec $DOTRC/other_files/say_word.sh "$(clipboard.sh -o)"
 bindsym $WIN+c exec exec qalculate
 
-bindsym $WIN+a exec --no-startup-id exec ~/os_settings/other_files/start_anki.sh
+bindsym $WIN+a exec --no-startup-id exec $DOTRC/other_files/start_anki.sh
 
 # browser
-bindsym XF86HomePage exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
-bindsym $Alt_L+b exec --no-startup-id exec google-chrome ~/os_settings/other_files/start_page.html
+bindsym XF86HomePage exec --no-startup-id exec google-chrome $DOTRC/other_files/start_page.html
+bindsym $Alt_L+b exec --no-startup-id exec google-chrome $DOTRC/other_files/start_page.html
 
-# bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec /media/files/workspace/dotrc/other_files/start_teamviewer.sh
+# bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $DOTRC/other_files/start_teamviewer.sh
 bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec telegram
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
@@ -230,10 +233,10 @@ bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec skypeforlinux
 exec --no-startup-id exec skypeforlinux
 
 # windows guest
-# bindsym $Ctrl_L+$Alt_L+q exec exec ~/os_settings/other_files/qemu_start.sh
+# bindsym $Ctrl_L+$Alt_L+q exec exec $DOTRC/other_files/qemu_start.sh
 
 # start downloading .torrent file from ~/downloads:
-bindsym $WIN+t exec --no-startup-id exec ~/os_settings/other_files/torrent_download.sh
+bindsym $WIN+t exec --no-startup-id exec $DOTRC/other_files/torrent_download.sh
 
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
@@ -247,31 +250,31 @@ bindsym $WIN+t exec --no-startup-id exec ~/os_settings/other_files/torrent_downl
 # exec --no-startup-id exec emacs --daemon
 
 # Start mail client (icedove/thunderbird):
-exec --no-startup-id ~/os_settings/other_files/virtual_box.sh || thunderbird
+exec --no-startup-id $DOTRC/other_files/virtual_box.sh || thunderbird
 bindsym $WIN+m exec --no-startup-id exec thunderbird
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
 
 # Start keyboard layout indicator/switcher:
-exec --no-startup-id exec ~/os_settings/other_files/init_keyboard_layout.sh
+exec --no-startup-id exec $DOTRC/other_files/init_keyboard_layout.sh
 
 # Switch en <--> de keyboard layout:
-bindsym $WIN+s exec --no-startup-id exec ~/os_settings/other_files/switch_us_de_keyboard_layout.sh
+bindsym $WIN+s exec --no-startup-id exec $DOTRC/other_files/switch_us_de_keyboard_layout.sh
 
 # Delete system update lock directory:
 exec --no-startup-id exec rm -rf /tmp/system_update_lock_dir
 
 # Autostart sleep_on_idle.sh:
-# exec --no-startup-id exec ~/os_settings/other_files/suspend_on_idle.sh &
+# exec --no-startup-id exec $DOTRC/other_files/suspend_on_idle.sh &
 
 # Start alsaplayer:
 exec --no-startup-id exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
 
 # alsaplayer hotkeys:
-bindsym $Alt_L+p      exec --no-startup-id exec ~/os_settings/other_files/my_play_pause.sh
-bindsym $Alt_R+p      exec --no-startup-id exec ~/os_settings/other_files/my_play_pause.sh
-bindsym XF86AudioPlay exec --no-startup-id exec ~/os_settings/other_files/my_play_pause.sh
+bindsym $Alt_L+p      exec --no-startup-id exec $DOTRC/other_files/my_play_pause.sh
+bindsym $Alt_R+p      exec --no-startup-id exec $DOTRC/other_files/my_play_pause.sh
+bindsym XF86AudioPlay exec --no-startup-id exec $DOTRC/other_files/my_play_pause.sh
 bindsym XF86AudioNext exec --no-startup-id exec alsaplayer --next
 bindsym $WIN+n        exec --no-startup-id exec alsaplayer --next
 bindsym XF86AudioPrev exec --no-startup-id exec alsaplayer --prev
@@ -281,26 +284,26 @@ bindsym $WIN+l        exec --no-startup-id exec alsaplayer --relative +3
 bindsym $WIN+0        exec --no-startup-id exec alsaplayer --seek 0
 
 # volume hotkeys:
-bindsym XF86AudioMute        exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh 0%
-bindsym XF86AudioRaiseVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +5%
-bindsym $WIN+u exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -5%
-bindsym $WIN+d exec --no-startup-id exec ~/os_settings/other_files/set_volume.sh -5%
+bindsym XF86AudioMute        exec --no-startup-id exec $DOTRC/other_files/set_volume.sh 0%
+bindsym XF86AudioRaiseVolume exec --no-startup-id exec $DOTRC/other_files/set_volume.sh +5%
+bindsym $WIN+u exec --no-startup-id exec $DOTRC/other_files/set_volume.sh +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id exec $DOTRC/other_files/set_volume.sh -5%
+bindsym $WIN+d exec --no-startup-id exec $DOTRC/other_files/set_volume.sh -5%
 
 # toggle sound output (bluetooth headset / built-in audio):
-bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
-bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec ~/os_settings/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec $DOTRC/other_files/bluetooth_toggle_hotkey.sh
+bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec $DOTRC/other_files/bluetooth_toggle_hotkey.sh
 
 # brightness hotkeys:
 bindsym XF86MonBrightnessUp exec --no-startup-id exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec --no-startup-id exec xbacklight -dec 10
 
 # toggle touchpad:
-bindsym $Alt_L+F4 exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
-bindsym XF86TouchpadToggle exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
+bindsym $Alt_L+F4 exec --no-startup-id exec $DOTRC/other_files/toggle_touchpad.sh
+bindsym XF86TouchpadToggle exec --no-startup-id exec $DOTRC/other_files/toggle_touchpad.sh
 
 # turn off touchpad by default:
-exec --no-startup-id exec ~/os_settings/other_files/toggle_touchpad.sh
+exec --no-startup-id exec $DOTRC/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
 bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
@@ -311,9 +314,9 @@ bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:mon
 
 # exec --no-startup-id i3-msg 'workspace 2; exec uzbl -u URL'
 
-bindsym $WIN+$Shift_L+s exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --same-as
-bindsym $WIN+$Shift_L+h exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --left-of
-bindsym $WIN+$Shift_L+l exec --no-startup-id exec /media/files/workspace/dotrc/other_files/xrandr.sh --right-of
+bindsym $WIN+$Shift_L+s exec --no-startup-id exec $DOTRC/other_files/xrandr.sh --same-as
+bindsym $WIN+$Shift_L+h exec --no-startup-id exec $DOTRC/other_files/xrandr.sh --left-of
+bindsym $WIN+$Shift_L+l exec --no-startup-id exec $DOTRC/other_files/xrandr.sh --right-of
 
 bindcode $PrintScreen exec --no-startup-id exec scrot
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec scrot --focused --border
