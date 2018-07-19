@@ -14,7 +14,7 @@ fi
 set -ex
 cp -rfv --preserve=mode $PWD/root_settings/* /
 
-ROOT_SETTINGS_S='/media/files/workspace/dotrc_s/root_settings'
+ROOT_SETTINGS_S="$DOTRC_S/root_settings"
 set +ex
 if [ -d "$ROOT_SETTINGS_S" ]; then
     set -e

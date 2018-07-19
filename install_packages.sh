@@ -96,10 +96,10 @@ apt-get install chromium
 # chromium-l10n pepperflashplugin-nonfree uzbl
 
 # dmenu:
-make -f /media/files/workspace/dotrc/other_files/Makefile_dmenu.mk
+make -f $DOTRC/other_files/Makefile_dmenu.mk
 
 # ripgrep (rg):
-/media/files/workspace/dotrc/other_files/install_ripgrep_rg.sh
+$DOTRC/other_files/install_ripgrep_rg.sh
 
 # Install also: Viber, Skype, Telegram, Teamviewer
 
