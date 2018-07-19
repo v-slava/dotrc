@@ -11,19 +11,6 @@ $(basename $0) -P ARG [<path>...] => git diff HEAD~{ARG-1} HEAD~ARG -- [<path>..
 	exit $1
 }
 
-set_cmd()
-{
-	if [ -n "$CMD" ]; then
-		usage 1
-	fi
-	CMD="$1"
-}
-
-add_cmd()
-{
-	CMD="$CMD $1"
-}
-
 CMD="git show"
 EXPECT_COMMIT_NUMBER=1
 while getopts "hnrpP:" arg ; do
@@ -32,17 +19,17 @@ while getopts "hnrpP:" arg ; do
 			usage 0
 			;;
 		n)
-			add_cmd "--name-only"
+			CMD="$CMD --name-only"
 			;;
 		r)
-			add_cmd "--relative"
+			CMD="$CMD --relative"
 			;;
 		p)
-			set_cmd "git diff HEAD~1 HEAD --"
+			CMD="git diff HEAD~1 HEAD --"
 			EXPECT_COMMIT_NUMBER=0
 			;;
 		P)
-			set_cmd "git diff HEAD~$((OPTARG - 1)) HEAD~$((OPTARG)) --"
+			CMD="git diff HEAD~$((OPTARG - 1)) HEAD~$((OPTARG)) --"
 			EXPECT_COMMIT_NUMBER=0
 			;;
 	esac
@@ -51,7 +38,7 @@ shift $(($OPTIND - 1))
 
 if [ $EXPECT_COMMIT_NUMBER -eq 1 ]; then
 	if [ $# -gt 1 ]; then
-		usage 2
+		usage 1
 	fi
 	CMD="$CMD HEAD"
 	if [ -n "$1" ]; then

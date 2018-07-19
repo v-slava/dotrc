@@ -533,8 +533,33 @@ make kselftest
 # See also: LTP
 # See also: https://kernelci.org/
 
+# linux kernel loading:
+insmod executes syscall init_module -> sys_init_module() in kernel
+rmmod executes syscall delete_module -> sys_delete_module() in kernel
+
 # blacklist (exclude) linux kernel module (I didn't check it):
 echo "blacklist MODULE_NAME" >> /etc/modprobe.d/blacklist.conf
+
+# Module dependencies:
+lsmod
+cat /proc/modules
+modprobe --show-depends MODULE
+/lib/modules/KERNEL_VERSION/modules.dep
+/lib/modules/KERNEL_VERSION/modules.dep.bin
+/lib/modules/KERNEL_VERSION/modules.symbols
+/lib/modules/KERNEL_VERSION/modules.symbols.bin
+# See man 8 depmod
+
+# Install linux kernel modules:
+make modules
+make modules_install INSTALL_MOD_PATH=YOUR_ROOTFS_ROOT
+
+# Install linux kernel headers:
+make headers_install INSTALL_HDR_PATH=YOUR_ROOTFS_ROOT
+
+# linux kernel modules dependencies commit:
+# driver core: Functional dependencies tracking support
+9ed9895370aedd6032af2a9181c62c394d08223b
 
 # gcc output rules for make describing dependencies:
 gcc FILE.c -o FILE.d -MM -MT FILE.o
