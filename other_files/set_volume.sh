@@ -2,6 +2,8 @@
 
 set -e
 
+source ~/.bashrc
+
 USAGE="Usage: $(basename $0) VOLUME
 
 VOLUME must be in pactl(1) format. VOLUME examples:

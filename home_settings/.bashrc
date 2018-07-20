@@ -45,17 +45,19 @@ alias gpl='git pull'
 alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
 export SSH_RASPBERRY_PI='53535 pi@94.154.220.9'
 
-# disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
-stty -ixon
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
+if [ "$TERM" != "dumb" ]; then
+    # disable XON/XOFF flow control for terminal (<c-s> = freeze, <c-q> = continue):
+    stty -ixon
+
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
 
 # default colorless prompt:
