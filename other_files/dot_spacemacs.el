@@ -292,9 +292,10 @@ values."
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
    ;; dotspacemacs-line-numbers 'relative
+   ;; enable line numbers:
    dotspacemacs-line-numbers '(:relative t :enabled-for-modes fundamental-mode
                                          prog-mode conf-mode cmake-mode dts-mode
-                                         text-mode)
+                                         vimrc-mode text-mode)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
