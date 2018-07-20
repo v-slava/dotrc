@@ -480,16 +480,9 @@ nmap T :!touch<SPACE>
 nmap cx :execute system('echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
 vmap cx :execute system('echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
 
-nnoremap ot :! /media/files/workspace/dotrc/other_files/objdump.sh -t ./%c | c++filt | less -i<CR>
-nnoremap ocd :! /media/files/workspace/dotrc/other_files/objdump.sh -D ./%c | less -i<CR>
-nnoremap od :! /media/files/workspace/dotrc/other_files/objdump.sh -D ./%c | c++filt | less -i<CR>
-nnoremap opd :! /media/files/workspace/dotrc/other_files/objdump.sh --prefix-address --show-raw-insn -D ./%c | c++filt | less -i<CR>
-nnoremap oz :! /media/files/workspace/dotrc/other_files/objdump.sh -D -z ./%c | c++filt | less -i<CR>
-nnoremap opz :! /media/files/workspace/dotrc/other_files/objdump.sh --prefix-address --show-raw-insn -D -z ./%c | c++filt | less -i<CR>
-nnoremap os :! /media/files/workspace/dotrc/other_files/objdump.sh -S ./%c | less -i<CR>
-nnoremap ops :! /media/files/workspace/dotrc/other_files/objdump.sh --prefix-address --show-raw-insn -S ./%c | less -i<CR>
-nnoremap ob :! ${CROSS_COMPILE}objdump -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
-nnoremap opb :! ${CROSS_COMPILE}objdump --prefix-address --show-raw-insn -D -b binary -m arm -Mforce-thumb ./%c | less -i<CR>
+nnoremap ot :execute system('echo ":!$DOTRC/other_files/objdump.sh -t ./%c | c++filt | less -i"')<CR>
+nnoremap od :execute system('echo ":!$DOTRC/other_files/objdump.sh -D ./%c | c++filt | less -i"')<CR>
+nnoremap os :execute system('echo ":!$DOTRC/other_files/objdump.sh -S ./%c | less -i"')<CR>
 
 nnoremap xx :! /media/files/workspace/dotrc/other_files/extract_progress.sh %f<CR>
 vmap xx :! /media/files/workspace/dotrc/other_files/extract_progress.sh %f<CR>

@@ -378,6 +378,9 @@ objdump -i
 # Dump single section into binary from object file:
 arm-none-eabi-objcopy --only-section=.MySection -I elf32-littlearm -O binary IN_FILE.o OUT_FILE.bin
 
+# Some random objdump flags:
+objdump --prefix-address --show-raw-insn -D -S -z -b binary -m arm -Mforce-thumb
+
 # Pulseaudio verbose output:
 pulseaudio -k && pulseaudio -vvvv
 # Do not respawn pulseaudio: in file /etc/pulse/client.conf
