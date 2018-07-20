@@ -413,25 +413,22 @@ nmap <c-f> :find *.
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/.. trash_vifm
-" TODO check whether fixed:
-" bmark! ~/other/my_samples/single_sources/.. single_sources
 bmark! /media/files/other/my_samples/multiple_sources/ my_samples multiple_sources
 bmark! /media/files/other/my_samples/single_sources/ my_samples single_sources
-bmark! /media/files/other/my_samples/vim_prj_settings_example/.. vim_project_settings
 bmark! /media/files/other/books/ books
 bmark! /media/files/other/compiler_overloading/compiler_settings compiler_overloading
 bmark! /media/files/other/toolchains/ toolchains
-execute 'bmark!' system('echo /media/files/workspace/dotrc_S/emacs_projects/') 'emacs'
-" bmark! /media/files/workspace/dotrc_s/emacs_projects/ emacs
+execute system('echo bmark! $DOTRC_S/emacs_projects/ emacs')
 
-nnoremap ,c :write | execute ':!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc .config_xdg/vifm/vifmrc' | restart<CR>
-nnoremap ,C :write | execute ':!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc' | restart<CR>
-nnoremap ,v :!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc .vimrc<CR>
-nnoremap ,b :!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc .bashrc<CR>
-nnoremap ,B :!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc_s .bashrc<CR>
-nnoremap ,i :!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc .config_xdg/i3/config && i3-msg reload<CR>
-nnoremap ,I :!/media/files/workspace/dotrc/other_files/edit_config.sh dotrc_s .config_xdg/i3/config && i3-msg reload<CR>
-nnoremap ,u :!e /media/files/workspace/dotrc/usefull_info.txt<CR>
+nnoremap ,c :write | execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/vifm/vifmrc') | restart<CR>
+nnoremap ,C :write | execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc') | restart<CR>
+
+nnoremap ,v :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc .vimrc')<CR>
+nnoremap ,b :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc .bashrc')<CR>
+nnoremap ,B :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc_s .bashrc')<CR>
+nnoremap ,i :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
+nnoremap ,I :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
+nnoremap ,u :execute system('echo :!e $DOTRC/usefull_info.txt')<CR>
 nnoremap ,r :!e /media/files/other/remarks<CR>
 
 set syscalls
@@ -467,19 +464,21 @@ vmap q :exit<CR>
 
 " Launch programs:
 nnoremap rg :!./%c %i &<CR>
-nnoremap rs :! /media/files/workspace/dotrc/other_files/vifm_run_command.sh --pause "./%c"<CR>
+nnoremap rs :execute system('echo :!$DOTRC/other_files/vifm_run_command.sh --pause "./%c"')<CR>
+
 " Launch make:
 " nnoremap rm :! /media/files/workspace/dotrc/other_files/vifm_run_command.sh --pause "make"<CR>
 " nnoremap rc :! /media/files/workspace/dotrc/other_files/vifm_run_command.sh --pause "make clean"<CR>
 
 nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
-nmap cd :mkcd<SPACE>
-nmap cj :cd<SPACE>
+nmap cj :mkcd<SPACE>
+nmap cd :cd<SPACE>
 nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
-nmap cx :! /media/files/workspace/dotrc/other_files/toggle_executable.sh %"f<CR>
-vmap cx :! /media/files/workspace/dotrc/other_files/toggle_executable.sh %"f<CR>
+
+nmap cx :execute system('echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
+vmap cx :execute system('echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
 
 nnoremap ot :! /media/files/workspace/dotrc/other_files/objdump.sh -t ./%c | c++filt | less -i<CR>
 nnoremap ocd :! /media/files/workspace/dotrc/other_files/objdump.sh -D ./%c | less -i<CR>

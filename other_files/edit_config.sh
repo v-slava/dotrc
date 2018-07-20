@@ -43,7 +43,10 @@ if [ ! -d "$EDIT_DIR" ]; then
     mkdir -p "$EDIT_DIR"
 fi
 
+ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.sh)
+i3-msg "workspace 0" 1>/dev/null
 e --wait "$EDIT_FILE"
+i3-msg "workspace $ORIG_WORKSPACE" 1>/dev/null
 cp "$DOTRC_FILE" ~/$FILE
 if [ -f "$DOTRC_S_FILE" ]; then
     cat "$DOTRC_S_FILE" >> ~/$FILE
