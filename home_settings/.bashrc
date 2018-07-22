@@ -54,7 +54,10 @@ if [ "$TERM" != "dumb" ]; then
     stty -ixon
 
     if [ -f /usr/share/bash-completion/bash_completion ]; then
+        state=$(set +o)
+        set +e
         . /usr/share/bash-completion/bash_completion
+        eval "$state"
     elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
     fi

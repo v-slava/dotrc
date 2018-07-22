@@ -203,6 +203,13 @@ gcc -dM -E - < /dev/null
 4) Run "preprocess.bat"
 5) Compile your preprocessing project.
 
+# bash "set -e" documentation: search for "Exit immediately if" in "man bash"
+
+# bash save and restore options (set -e, ...):
+state=$(set +o;shopt)
+# do what you want with options here
+eval "$state" # restore options
+
 # preprocess bash script:
 #!/bin/bash -x
 # in "help set":
@@ -261,6 +268,9 @@ cd $HOME/other/toolchains/icecc
 # Icecream GUI monitor:
 icemon
 # for environment settings see .bashrc
+
+# Upgrade when "The following packages have been kept back:":
+apt-get dist-upgrade
 
 # Show which packages can be upgraded from backports:
 apt-get -s -t jessie-backports dist-upgrade
