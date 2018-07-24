@@ -4,6 +4,7 @@
 #       *) return;;
 # esac
 
+history -a
 export WORKSPACE=/media/files/workspace
 export DOTRC=$WORKSPACE/dotrc
 export DOTRC_S=$WORKSPACE/dotrc_s
@@ -148,3 +149,6 @@ BASHRC_S=$DOTRC_S/home_settings/.bashrc
 if [ -f $BASHRC_S ] ; then
 	source $BASHRC_S
 fi
+
+history -c
+history -r

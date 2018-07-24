@@ -51,3 +51,4 @@ cp "$DOTRC_FILE" ~/$FILE
 if [ -f "$DOTRC_S_FILE" ]; then
     cat "$DOTRC_S_FILE" >> ~/$FILE
 fi
+$DOTRC/other_files/generate_configs.sh
