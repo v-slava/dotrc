@@ -1,0 +1,33 @@
+#!/bin/bash
+
+LAST_CMD=$(tail -n 1 ~/.bash_history)
+
+VALID_LAST_CMD=false
+if echo "$LAST_CMD" | grep -q 'git checkout ' ; then
+    VALID_LAST_CMD=true
+fi
+
+if echo "$LAST_CMD" | grep -q 'gch ' ; then
+    VALID_LAST_CMD=true
+fi
+
+if [ "$VALID_LAST_CMD" != "true" ]; then
+    echo "Error: unexpected last cmd: |$LAST_CMD|" 1>&2
+    exit 1
+fi
+
+STDERR=$($LAST_CMD 2>&1 1>/dev/null)
+if [ $? -eq 0 ]; then
+    echo "Unexpected result: |$LAST_CMD| succeeded" 1>&2
+    exit 1
+fi
+
+WORKTREE=$(echo "$STDERR" | cut -d"'" -f4)
+if [ ! -d "$WORKTREE" ]; then
+    echo "Got unexpected WORKTREE: |$WORKTREE|" 1>&2
+    exit 1
+fi
+
+set -ex
+git -C "$WORKTREE" checkout --detach
+$LAST_CMD

@@ -216,6 +216,10 @@ eval "$state" # restore options
 # -x  Print commands and their arguments as they are executed.
 bash -x ./some_script.sh 2>&1 1>/dev/null | grep '^+ ' | cut -c 3-
 
+# Bash use aliases in shell script:
+shopt -s expand_aliases
+source ~/.bashrc
+
 # To inspect bash keyboard mapping:
 bind -P
 

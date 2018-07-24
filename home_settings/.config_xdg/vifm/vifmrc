@@ -429,7 +429,7 @@ nnoremap ,B :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc_s .b
 nnoremap ,i :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
 nnoremap ,I :execute system('echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
 nnoremap ,u :execute system('echo :!e $DOTRC/usefull_info.txt')<CR>
-nnoremap ,r :!e /media/files/other/remarks<CR>
+nnoremap ,r :execute system('echo :!e $DOTRC_S/other_files/remarks')<CR>
 
 set syscalls
 set number

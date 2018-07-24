@@ -34,7 +34,6 @@ alias gcoa='git commit --amend'
 alias gcs='$DOTRC/other_files/git_commit_dotrc_second.sh'
 # Git commit update:
 alias gcu='git commit --amend --no-edit -a'
-alias gch='git checkout'
 __git_complete gch _git_checkout
 alias gchd='git checkout --detach'
 alias gb='git branch'
