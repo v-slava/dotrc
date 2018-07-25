@@ -98,7 +98,7 @@ if [ -z "$ORIG_PATH" ]; then
 fi
 
 export PATH=$ORIG_PATH
-export PATH=$HOME/bin:$PATH:/sbin:/usr/sbin
+export PATH=$HOME/bin:$HOME/.local/bin:$PATH:/sbin:/usr/sbin
 export CC=clang-6.0
 export CXX=clang++-6.0
 # Toolchains:
