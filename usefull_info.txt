@@ -892,6 +892,9 @@ hdparm -r0 /dev/sdX
 # Vim delete lines by regex:
 :%g/<regex>/d
 
+# start vim in easy mode and without menu above:
+gvim -c ":set go-=T" -c ":set go-=m" -y
+
 # some vim execution example:
 vim -p $FILES_LIST -c "let g:Gdiff_arg='$GDIFF_ARG'|exec ':Gdiff ' . g:Gdiff_arg"
 
