@@ -151,4 +151,7 @@ if [ -f $BASHRC_S ] ; then
 fi
 
 history -c
+state=$(set +o)
+set +e
 history -r
+eval "$state"
