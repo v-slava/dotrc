@@ -81,15 +81,22 @@ EOF
     set -e
     echo "Attempting to get full sink name for pattern bluez_sink.* ..."
     BT_SINK="$($DOTRC/other_files/get_sink_name.sh bluez_sink)"
+    echo "Got full sink name: |$BT_SINK|"
     pactl -- set-sink-mute "$BT_SINK" 1
+    echo "$BT_SINK muted"
     # Set bluetooth profile
     CARD_NAME=$($DOTRC/other_files/get_card_name.sh bluez_card)
+    echo "Got CARD_NAME = |$CARD_NAME|"
     set +e
     RET=1
     while [ $RET -ne 0 ]; do
+        # TODO:
+        # a2dp_sink: High Fidelity Playback (A2DP Sink) (sinks: 1, sources: 0, priority: 10, available: no)
+        # headset_head_unit: Headset Head Unit (HSP/HFP) (sinks: 1, sources: 1, priority: 20, available: yes)
         pactl set-card-profile "$CARD_NAME" a2dp_sink 2>/dev/null
         RET=$?
     done
+    echo "Set card profile: |$CARD_PROFILE|"
     set -e
     pacmd set-default-sink "$BT_SINK"
     $DOTRC/other_files/set_volume.sh 20%
