@@ -7,16 +7,16 @@ read URL
 
 if [ -z "$URL" ]; then
     FILE=$(basename $(ls ~/downloads/*.torrent))
-    scp -P 53535 ~/downloads/$FILE pi@94.154.220.9:/home/pi/downloads/
-    URL=/home/pi/downloads/$FILE
+    scp -P $PI_PORT ~/downloads/$FILE $PI_USR@$PI_HOST:/home/$PI_USR/downloads/
+    URL=/home/$PI_USR/downloads/$FILE
 fi
 
-ssh -p $SSH_RASPBERRY_PI transmission-remote -a "\"$URL\"" \
-    --torrent-done-script /home/pi/notify_torrent_complete.sh \
-    --uplimit 0 --download-dir /home/pi/downloads
+$PI_SSH transmission-remote -a "\"$URL\"" \
+    --torrent-done-script /home/$PI_USR/notify_torrent_complete.sh \
+    --uplimit 0 --download-dir /home/$PI_USR/downloads
 
 if [ -n "$FILE" ]; then
-    ssh -p $SSH_RASPBERRY_PI rm /home/pi/downloads/*.torrent
+    $PI_SSH rm /home/$PI_USR/downloads/*.torrent
     rm ~/downloads/$FILE
 fi
 

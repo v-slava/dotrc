@@ -2,6 +2,6 @@
 
 set -e
 
-scp -r -P $SSH_RASPBERRY_PI:downloads/* ~/downloads/
-ssh -p $SSH_RASPBERRY_PI transmission-remote -t all -r
-ssh -p $SSH_RASPBERRY_PI sudo rm -rf downloads/*
+scp -r -P $PI_PORT $PI_USR@$PI_HOST:downloads/* ~/downloads/
+$PI_SSH transmission-remote -t all -r
+$PI_SSH sudo rm -rf downloads/*

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+CMD=("vim")
+if [ "$1" = "-i" ]; then
+    CMD+=("-c" ":set ignorecase")
+fi
+
+exec "${CMD[@]}" -c ":nmap <c-d> q" --not-a-term -u /usr/share/vim/vim81/macros/less.vim -

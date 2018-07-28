@@ -7,7 +7,8 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-exec x-terminal-emulator -e "$@"
+source ~/.bashrc
+exec x-terminal-emulator -e $@
 
 # Generate unique directory name in $HOME/terminal:
 FULL_TERMINAL_FOLDER_PATH=$(mktemp -d --tmpdir=$HOME/terminal XXXXXX)
