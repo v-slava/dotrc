@@ -791,6 +791,11 @@ gdb $GDB_ARGS -x \"%s\"" debug-commands-file compiled-file compiled-file-path de
       (insert elisp))
     (insert ")\n\n"))
 
+  (defun exec-path-from-shell--double-quote (cmd)
+    "My dummy implementation of some standard function"
+    (concat "\"" cmd "\"")
+    )
+
   (defun my--edit-frame-command (name)
     (let ((cur-cmd (my--eval-string (concat "(my--all-frame-commands-" name " (my--all-frame-parameters-commands (my--get-all-frame-parameters)))")))
           (default-cmd (my--get-default-cmd name))
@@ -2035,9 +2040,11 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; lambda in "let" statement example:
   ;; (let* ((lambda-name (lambda (arg) arg)) (something (funcall lambda-name actual-arg))))
 
-  (setq my--dotrc "$DOTRC")
-  (setq magit-repository-directories `(,my--dotrc))
-  (setq my--emacs-projects-dir "/media/files/workspace/dotrc_s/emacs_projects")
+  (setq my--dotrc (shell-command-to-string "/bin/echo -n $DOTRC"))
+  (setq my--dotrc-s (shell-command-to-string "/bin/echo -n $DOTRC_S"))
+  (setq magit-repository-directories `((,my--dotrc . 0)))
+  (add-to-list 'magit-repository-directories `(,my--dotrc-s . 0))
+  (setq my--emacs-projects-dir (concat my--dotrc-s "/emacs_projects"))
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)
   )
