@@ -515,6 +515,7 @@ nmap ivd :winrun ^ !vimdiff %d/%c %C<CR>
 nmap ig :winrun ^ !diffuse %d/%c %C<CR>
 nmap ix :winrun ^ !dhex %d/%c %C<CR>
 nmap im :winrun ^ !mc %d %D<CR>
+" open (duplicate, clone) vifm instance:
 nmap if :execute system('echo ":winrun ^ !$DOTRC/other_files/open_terminal.sh vifm %d %D &"')<CR>
 nmap it :!touch %c<CR>
 nmap ib :!beautify_file.sh %d/%c<CR>

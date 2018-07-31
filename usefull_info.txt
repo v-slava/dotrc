@@ -1123,7 +1123,7 @@ where addresses look like: 0x12345678
 4) Linux Trace Toolkit (LTT)
 5) Dynamic Probes
 
-# mount debugfs:
+# mount debugfs (ftrace):
 mount -t debugfs none /sys/kernel/debug
 
 # Linux kernel debug configuration options (see "kernel hacking" menu):
@@ -1136,6 +1136,27 @@ CONFIG_PROFILING=y
 CONFIG_DEBUG_DRIVER=y
 CONFIG_PREEMPT=y
 CONFIG_DEBUG_SPINLOCK_SLEEP=y
+
+# Linux kernel memory errors detection (debugging):
+CONFIG_KMEMCHECK=y
+CONFIG_DEBUG_KMEMLEAK=y
+CONFIG_DEBUG_VM=y
+CONFIG_DEBUG_PAGEALLOC=y
+# Kernel Address Sanitizer (KASAN).
+# (since v4.0, see: 0b24becc810dc3be6e3f94103a866f214c282394)
+# Architectures supported: arm64, x86, xtensa
+CONFIG_KASAN=y
+# linux kernel debug slab, slub slob (kfree, kmalloc):
+CONFIG_SLUB=y
+CONFIG_SLUB_DEBUG=y
+CONFIG_SLUB_DEBUG_ON=y
+# See: include/linux/poison.h
+#define PAGE_POISON 0xaa
+#define SLUB_RED_INACTIVE 0xbb
+#define SLUB_RED_ACTIVE 0xcc
+#define POISON_INUSE 0x5a /* for use-uninitialised poisoning */
+#define POISON_FREE 0x6b /* for use-after-free poisoning */
+#define POISON_END 0xa5 /* end-byte of poisoning */
 
 # Linux kernel ftrace configuration options:
 CONFIG_FTRACE
@@ -1257,6 +1278,9 @@ git init
 git remote add origin URL
 git fetch --depth 1 origin COMMIT_SHA
 git checkout FETCH_HEAD
+
+# Create new branch and specify tracking information:
+git checkout -b master --track origin/master
 
 # git list tags ordered by date:
 git log --tags --simplify-by-decoration --pretty="format:%ci %d"
