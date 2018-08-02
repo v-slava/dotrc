@@ -1,15 +1,27 @@
 #!/bin/bash
 
-# Toggles bluetooth connection status:
-# If was connected    -> disconnecting
-# If was disconnected -> connecting
-
 source ~/.config_xdg/BT_MAC.sh
 
-BLUETOOTH_CONNECTED=$DOTRC/other_files/bluetooth_connected.sh
+# BLUETOOTH_CONNECTED=$DOTRC/other_files/bluetooth_connected.sh
+# if $BLUETOOTH_CONNECTED ; then # connected => need to disconnect
+# else # disconnected => need to connect
+# fi
 
-if $BLUETOOTH_CONNECTED ; then # connected => need to disconnect
+ACTION="$1"
+if [ -z "$ACTION" ]; then
+    set -e
+    echo -e "Type action number:\n\n1: connect\n2: disconnect\n\nYour choice: "
+    read -n1 ACTION_NUMBER
+    set +e
+    case $ACTION_NUMBER in
+        "1") ACTION=connect ;;
+        "2") ACTION=disconnect ;;
+        *) echo "Wrong action selected" 1>&2 ; exit 1 ;;
+    esac
+fi
 
+case $ACTION in
+    "disconnect")
     set -e
     SPEAKERS_SINK="$($DOTRC/other_files/get_sink_name.sh alsa_output)"
     pactl -- set-sink-mute "$SPEAKERS_SINK" 1
@@ -37,13 +49,13 @@ EOF
         echo "Failed to disconnect from bluetooth headset $BT_MAC." 1>&2
         exit 1
     fi
-    set -e
+    set -ex
     $DOTRC/other_files/set_volume.sh 20%
     pactl -- set-sink-mute "$SPEAKERS_SINK" 0
     echo "Disconnected from bluetooth headset $BT_MAC."
+    ;;
 
-else # disconnected => need to connect
-
+    "connect")
     bluetoothctl_RET=0
     while [ $bluetoothctl_RET -ne 1 ]; do
         cat << EOF | expect 2>&1
@@ -99,7 +111,7 @@ EOF
     # done
     # echo "Set card profile: |$CARD_PROFILE|"
 
-    set -e
+    set -ex
     pacmd set-default-sink "$BT_SINK"
     $DOTRC/other_files/set_volume.sh 20%
     pactl -- set-sink-mute "$BT_SINK" 0
@@ -109,4 +121,10 @@ EOF
         pacmd move-sink-input $sink_input_index $BT_SINK
     done
     echo "Connected to bluetooth headset $(hcitool name $BT_MAC) (MAC = $BT_MAC)."
-fi
+    ;;
+
+    *)
+        echo "Wrong action selected" 1>&2
+        exit 1
+        ;;
+esac
