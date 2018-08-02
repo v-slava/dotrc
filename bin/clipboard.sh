@@ -15,8 +15,13 @@
 # does not hang when called from within kakoune:
 # xsel --clipboard -i
 
-# CLIPBOARD_CMD="xclip -selection clipboard"
-CLIPBOARD_CMD="xsel --clipboard"
+# does not copy a selection of more than 4000 bytes of selection on urxvt screen:
+# xsel --clipboard -i
+# copies fine:
+# xclip -selection clipboard
+
+CLIPBOARD_CMD="xclip -selection clipboard"
+# CLIPBOARD_CMD="xsel --clipboard"
 
 case "$1" in
     ("-o") $CLIPBOARD_CMD -o ;;
@@ -25,4 +30,3 @@ case "$1" in
     # ("--primary-2-clipboard") xclip -selection primary -o | xclip -selection clipboard -i ;;
     (*) $CLIPBOARD_CMD -i ;;
 esac
-

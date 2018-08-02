@@ -1101,7 +1101,8 @@ if (error && printk_ratelimit())
 BUG_ON(condition)
 if (something_bad_happened)
     BUG();
-dump_stack();
+dump_stack(); // linux kernel print (dump, trace) stack
+trace_dump_stack(0); // ftrace
 panic("terrible_thing is %ld!\n", terrible_thing);
 
 # see gdb linux kernel hardware (hw) breakpoint support:
@@ -1151,11 +1152,11 @@ CONFIG_SLUB=y
 CONFIG_SLUB_DEBUG=y
 CONFIG_SLUB_DEBUG_ON=y
 # See: include/linux/poison.h
-#define PAGE_POISON 0xaa
+#define PAGE_POISON 0xaa // marked with this value after free(). Warning: it is not changed by alloc()
 #define SLUB_RED_INACTIVE 0xbb
 #define SLUB_RED_ACTIVE 0xcc
 #define POISON_INUSE 0x5a /* for use-uninitialised poisoning */
-#define POISON_FREE 0x6b /* for use-after-free poisoning */
+#define POISON_FREE 0x6b /* for use-after-free poisoning */ // right after kmalloc()
 #define POISON_END 0xa5 /* end-byte of poisoning */
 
 # Linux kernel ftrace configuration options:
@@ -1171,6 +1172,7 @@ CONFIG_FUNCTION_PROFILER
 # trace_printk() can be called from any context (interrupts, scheduler, ...).
 # It prints to /sys/kernel/debug/tracing/trace
 trace_printk()
+trace_dump_stack(0);
 cat /sys/kernel/debug/tracing/available_tracers
 echo function > /sys/kernel/debug/tracing/current_tracer
 # For x86 only:
