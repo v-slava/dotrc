@@ -1473,18 +1473,18 @@ Add Man mode support to (previous-buffer)."
 
   ;; Diff buffer with file on disk: (ediff-current-file). My ediff keybindings:
   (add-hook 'ediff-display-help-hook '(lambda ()
-                                        ;; The following required only for spacemacs-base distribution:
-                                        ;; (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "d -first diff  " ediff-help-message))
-                                        ;; (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
-                                        ;; (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
+                                        (setq ediff-help-message (replace-regexp-in-string "j -jump to diff" "d -first diff  " ediff-help-message))
+                                        (setq ediff-help-message (replace-regexp-in-string "p,DEL" "    k" ediff-help-message))
+                                        (setq ediff-help-message (replace-regexp-in-string "n,SPC" "    j" ediff-help-message))
+
                                         (setq ediff-help-message (replace-regexp-in-string "ignore case        |" "ignore case        | ox -go to (open) buf X" ediff-help-message))
                                         ))
   (add-hook 'ediff-keymap-setup-hook (lambda ()
-                                       ;; The following required only for spacemacs-base distribution:
-                                       ;; (define-key ediff-mode-map "d" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
-                                       ;; (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
-                                       ;; (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
-                                       ;; (define-key ediff-mode-map " " spacemacs-default-map) ;; Use SPC as leader key instead of (ediff-next-difference).
+                                       (define-key ediff-mode-map "d" '(lambda () (interactive) (ediff-jump-to-difference 1))) ;; original: j
+                                       (define-key ediff-mode-map "j" 'ediff-next-difference)                                  ;; original: n,SPC
+                                       (define-key ediff-mode-map "k" 'ediff-previous-difference)                              ;; original: p,DEL
+                                       (define-key ediff-mode-map " " spacemacs-default-map) ;; Use SPC as leader key instead of (ediff-next-difference).
+
                                        (define-key ediff-mode-map "oa" '(lambda () (interactive) (select-window ediff-window-A)))
                                        (define-key ediff-mode-map "ob" '(lambda () (interactive) (select-window ediff-window-B)))
                                        (define-key ediff-mode-map "oc" '(lambda () (interactive) (select-window ediff-window-C)))
