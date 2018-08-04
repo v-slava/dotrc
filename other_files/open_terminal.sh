@@ -8,6 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 source ~/.bashrc
+
+# exec x-terminal-emulator -e nvim -c ':set norelativenumber' -c ':set nonumber' -c ':startinsert' -c ":e term://$*"
+
 exec x-terminal-emulator -e $@
 
 # Generate unique directory name in $HOME/terminal:

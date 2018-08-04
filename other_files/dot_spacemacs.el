@@ -1426,8 +1426,8 @@ Add Man mode support to (previous-buffer)."
   (add-hook 'buffer-list-update-hook 'my--disable-semantic-stickyfunc-mode)
   (setq dotspacemacs-distinguish-gui-tab t) ;; fix <C-i> (evil-jump-forward) in normal mode.
   ;; Highlight eLisp expression (inside braces)
-  (setq show-paren-style 'expression)
-  (show-paren-mode)
+  ;; (setq show-paren-style 'expression)
+  ;; (show-paren-mode)
 
   ;; Make column #80 visible (avoid too long lines):
   ;; (setq-default header-line-format (list " " (make-string 79 ?-) "|"))
