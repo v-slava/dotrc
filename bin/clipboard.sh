@@ -20,8 +20,8 @@
 # copies fine:
 # xclip -selection clipboard
 
-CLIPBOARD_CMD="xclip -selection clipboard"
-# CLIPBOARD_CMD="xsel --clipboard"
+# CLIPBOARD_CMD="xclip -selection clipboard"
+CLIPBOARD_CMD="xsel --clipboard"
 
 case "$1" in
     ("-o") $CLIPBOARD_CMD -o ;;

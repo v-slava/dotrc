@@ -11,7 +11,7 @@
 Control-g: " | grep -i "
 
 # less shortcut:
-Control-l: " | vless -i\n"
+Control-l: " | less -i\n"
 
 # xargs shortcut:
 Control-p: " | xargs "
