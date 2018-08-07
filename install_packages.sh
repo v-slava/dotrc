@@ -20,7 +20,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     sox libsox-fmt-mp3 libav-tools \
     exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
     tree git make patch dos2unix file bsdutils android-tools-adb \
-    expect lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
+    lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
     gcc g++ cmake build-essential \
     clang-6.0 clang-tidy-6.0 clang-tools-6.0 libclang-6.0-dev llvm-6.0 \
 
@@ -48,6 +48,7 @@ apt-get install network-manager-gnome gnome-keyring notification-daemon
 # Install PulseAudio:
 apt-get install -t jessie-backports pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
 apt-get install bluez pavucontrol
+# apt-get install bluez-tools
 
 # Install audio player:
 apt-get install alsa-utils alsaplayer-daemon alsaplayer-common

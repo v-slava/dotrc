@@ -18,7 +18,7 @@ if [ -z "$1" ] ; then
 fi
 
 VOLUME="$1"
-SINK_NAME="$($DOTRC/other_files/get_sink_name.sh)"
+SINK_NAME="@DEFAULT_SINK@"
 
 # amixer set Master 3%+
 pactl -- set-sink-volume "$SINK_NAME" "$VOLUME"
