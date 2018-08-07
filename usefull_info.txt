@@ -706,6 +706,8 @@ PATH=/usr/lib/llvm-3.8/bin:$PATH UBSAN_OPTIONS=print_stacktrace=1 ./FILE.out
 # Use valgrind for dynamic memory analysis:
 valgrind --error-exitcode=1 --leak-check=full --track-origins=yes EXECUTABLE.out
 # --read-var-info=yes
+valgrind --vgdb=yes --vgdb-error=ERROR_NUMBER EXECUTABLE.out
+vgdb --pid=YOUR_PID --port=9999 # now you can connect to this port from remote PC
 
 # Use clang static analysis:
 scan-build BUILD_COMMAND
@@ -954,6 +956,9 @@ gpg --symmetric --cipher-algo AES256 FILE
 # gpg decrypt file:
 gpg --decrypt FILE > OUT_FILE
 
+# Generate call graph (control flow):
+cd src && cflow *.c
+
 # Use doxygen to generate documentation:
 cd OUTPUT_FOLDER
 # generate sample Doxyfile:
@@ -1105,7 +1110,7 @@ dump_stack(); // linux kernel print (dump, trace) stack
 trace_dump_stack(0); // ftrace
 panic("terrible_thing is %ld!\n", terrible_thing);
 
-# see gdb linux kernel hardware (hw) breakpoint support:
+# see gdb linux kernel hardware (hw) breakpoint support (debug):
 CONFIG_HAVE_HW_BREAKPOINT
 
 # Linux kernel debugging (see also linux/Documentation/features/debug):
