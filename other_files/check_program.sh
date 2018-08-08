@@ -16,20 +16,20 @@ CMD_WITHOUT_COMPILER="$(echo $CMD | cut -d' ' -f 2-)"
 set -e
 
 # Clang static analysis:
-scan-build-3.8 $CMD -Wall -Werror
+scan-build-7 $CMD -Wall -Werror
 
 # Clang-based linter:
-clang-tidy-3.8 $CMD_WITHOUT_COMPILER
+clang-tidy $CMD_WITHOUT_COMPILER
 
 # Sanitizers:
 $CMD -fsanitize=memory -fsanitize-memory-track-origins -g -O0 -fPIE -pie -fno-omit-frame-pointer -fno-optimize-sibling-calls
-PATH=/usr/lib/llvm-3.8/bin $OUT
+PATH=/usr/lib/llvm-7/bin $OUT
 
 $CMD -fsanitize=address -g -O0 -fno-common -fno-omit-frame-pointer -fno-optimize-sibling-calls
-PATH=/usr/lib/llvm-3.8/bin ASAN_OPTIONS=detect_stack_use_after_scope=1 $OUT
+PATH=/usr/lib/llvm-7/bin ASAN_OPTIONS=detect_stack_use_after_scope=1 $OUT
 
 $CMD -fsanitize=undefined -g -O0 -fno-omit-frame-pointer
-PATH=/usr/lib/llvm-3.8/bin UBSAN_OPTIONS=print_stacktrace=1 $OUT
+PATH=/usr/lib/llvm-7/bin UBSAN_OPTIONS=print_stacktrace=1 $OUT
 
 # Valgrind:
 $CMD -g
