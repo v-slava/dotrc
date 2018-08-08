@@ -12,7 +12,7 @@ download_git:
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c 'apt-get install cmake ninja-build libclang-6.0-dev llvm-6.0-dev clang-6.0'
+	su -c 'apt-get install cmake ninja-build libclang-dev llvm-dev clang'
 
 PHONY += clean
 clean:
