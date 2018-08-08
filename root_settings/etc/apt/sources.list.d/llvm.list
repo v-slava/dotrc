@@ -1,0 +1,14 @@
+deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch main
+deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch main
+
+# deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-5.0 main
+# deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-5.0 main
+
+# deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main
+# deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main
+
+deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7.0 main
+deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7.0 main
+
+deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-8.0 main
+deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-8.0 main
