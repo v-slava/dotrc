@@ -17,14 +17,7 @@ fi
 
 FILE="$2"
 
-DOTRC_PATH=$DOTRC/home_settings
-DOTRC_S_PATH=$DOTRC_S/home_settings
-DOTRC_FILE="$DOTRC_PATH/$FILE"
-DOTRC_S_FILE="$DOTRC_S_PATH/$FILE"
-if [ ! -f "$DOTRC_FILE" ]; then
-    echo "File not found: $DOTRC_FILE" 1>&2
-    exit 2
-fi
+source $DOTRC/other_files/config_file.sh
 
 case "$1" in
     "dotrc")
@@ -47,8 +40,5 @@ ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.sh)
 i3-msg "workspace 0" 1>/dev/null
 e --wait "$EDIT_FILE"
 i3-msg "workspace $ORIG_WORKSPACE" 1>/dev/null
-cp "$DOTRC_FILE" ~/$FILE
-if [ -f "$DOTRC_S_FILE" ]; then
-    cat "$DOTRC_S_FILE" >> ~/$FILE
-fi
+$DOTRC/other_files/update_config.sh "$FILE"
 $DOTRC/other_files/generate_configs.sh

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 IN_FILES=(
-.config_xdg/i3/config
 .Xmodmap
 )
 OUT_FILES=("${IN_FILES[@]/#/~/}")
@@ -48,3 +47,5 @@ for ((i=0; i<${#IN_S_FILES[@]}; ++i)) ; do
         cat "$in_s_file" >> "$out_file"
     fi
 done
+
+$DOTRC/other_files/xrandr.sh update_configs

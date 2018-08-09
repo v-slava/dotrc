@@ -9,6 +9,21 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+set $DOTRC DOTRC_TEMPLATE
+set $DOTRC_S DOTRC_S_TEMPLATE
+
+set $OUTPUT_TRAY OUTPUT_TRAY_TEMPLATE
+
+set $OUTPUT_1 OUTPUT_1_TEMPLATE
+set $OUTPUT_2 OUTPUT_2_TEMPLATE
+set $OUTPUT_3 OUTPUT_3_TEMPLATE
+set $OUTPUT_4 OUTPUT_4_TEMPLATE
+set $OUTPUT_5 OUTPUT_5_TEMPLATE
+set $OUTPUT_6 OUTPUT_6_TEMPLATE
+set $OUTPUT_7 OUTPUT_7_TEMPLATE
+set $OUTPUT_8 OUTPUT_8_TEMPLATE
+set $OUTPUT_9 OUTPUT_9_TEMPLATE
+
 # standard keyboard modifiers according to xmodmap(1)
 # see xmodmap {-pk|-pke} for complete keymap table
 set $Alt_L Mod1
@@ -20,9 +35,6 @@ set $Shift_L Shift
 set $Shift_R Shift
 set $PrintScreen 107
 # set $Menu 135
-
-set $DOTRC /media/files/workspace/dotrc
-set $DOTRC_S /media/files/workspace/dotrc_s
 
 bindsym $Alt_R+e exec --no-startup-id exec $DOTRC_S/i3_hotkey_handler.sh
 
@@ -101,39 +113,23 @@ bindsym $Alt_L+7 workspace 7
 bindsym $Alt_L+8 workspace 8
 bindsym $Alt_L+9 workspace 9
 
-# Workspace-output assignments:
-# SED native begin
-
-set $OUTPUT_CENTRAL eDP1
-set $OUTPUT_RIGHT HDMI1
-# set $OUTPUT_LEFT
-
-# SED native end
-# SED virtual begin
-
-set $OUTPUT_CENTRAL VGA1
-set $OUTPUT_RIGHT VGA2
-set $OUTPUT_LEFT VGA0
-
 # exec --no-startup-id sleep 4 && $DOTRC/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
-# SED virtual end
 
-# workspace 0 output $OUTPUT_CENTRAL # temporary workspace
-workspace 1 output $OUTPUT_CENTRAL
-workspace 2 output $OUTPUT_RIGHT
-workspace 3 output $OUTPUT_CENTRAL
-workspace 4 output $OUTPUT_RIGHT
-workspace 5 output $OUTPUT_CENTRAL
-workspace 6 output $OUTPUT_RIGHT
-workspace 7 output $OUTPUT_CENTRAL
-workspace 8 output $OUTPUT_RIGHT
-workspace 9 output $OUTPUT_CENTRAL
+workspace 1 output $OUTPUT_1
+workspace 2 output $OUTPUT_2
+workspace 3 output $OUTPUT_3
+workspace 4 output $OUTPUT_4
+workspace 5 output $OUTPUT_5
+workspace 6 output $OUTPUT_6
+workspace 7 output $OUTPUT_7
+workspace 8 output $OUTPUT_8
+workspace 9 output $OUTPUT_9
 
 # Start i3bar:
 bar {
 	# status_command exec i3status
 	status_command i3status | $DOTRC/other_files/i3status_wrapper.py
-	tray_output $OUTPUT_CENTRAL
+	tray_output $OUTPUT_TRAY
 }
 
 # Focus initial workspace:
