@@ -19,5 +19,28 @@ if [ -z "$ACTION" ]; then
     esac
 fi
 
-echo "$ACTION $BT_MAC" | bluetoothctl
-journalctl --follow _SYSTEMD_UNIT=bluetooth.service
+if [ -n "$BT_MAC" ]; then
+    echo "$ACTION $BT_MAC" | bluetoothctl
+    journalctl --follow _SYSTEMD_UNIT=bluetooth.service
+else
+    # Assume this is not a bluetooth but rather a USB headset.
+    case $ACTION in
+        "connect")
+            SINK=$(LANG=C pactl list sinks | grep 'Name: ' | cut -d' ' -f2 | grep usb)
+            SOURCE=$(LANG=C pactl list sources  | grep 'Name: ' | cut -d' ' -f2 | grep -v monitor | grep usb)
+            ;;
+        "disconnect")
+            SINK=$(LANG=C pactl list sinks | grep 'Name: ' | cut -d' ' -f2 | grep -v usb)
+            SOURCE=$(LANG=C pactl list sources  | grep 'Name: ' | cut -d' ' -f2 | grep -v monitor | grep -v usb)
+            ;;
+        *) echo "Wrong action selected" 1>&2 ; exit 1 ;;
+    esac
+    echo -e "\n"
+    set -x
+    pactl set-default-sink "$SINK"
+    pactl set-default-source "$SOURCE"
+    $DOTRC/other_files/use_default_sink_source.sh
+    set +x
+    echo -e "\nSuccess!"
+    vifm-pause
+fi

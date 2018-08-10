@@ -2,15 +2,15 @@
 
 MAIN_OUTPUT=eDP1
 MAIN_MODE=1920x1080
-MAIN_DPI=144
+# MAIN_DPI="--dpi 96"
 
 EXTERNAL_MODE=1920x1080
-EXTERNAL_DPI=96
+# EXTERNAL_DPI="--dpi 144"
 
 # multimonitor configuration:
 CENTRAL_OUTPUT=DP-2-1
 CENTRAL_MODE=1920x1080
-CENTRAL_DPI=96
+# CENTRAL_DPI=
 
 RIGHT_OUTPUT=$MAIN_OUTPUT
 RIGHT_MODE=$MAIN_MODE
@@ -18,7 +18,7 @@ RIGHT_DPI=$MAIN_DPI
 
 LEFT_OUTPUT=DP-2-2
 LEFT_MODE=1920x1080
-LEFT_DPI=96
+# LEFT_DPI=144
 
 set -e
 source ~/.bashrc
@@ -59,7 +59,7 @@ fi
 
 if [ "$1" = "xinitrc" ]; then
     update_i3_config
-    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE --dpi $MAIN_DPI
+    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI
     exit
 fi
 
@@ -74,9 +74,9 @@ case "$POSITION" in
 esac
 
 if [ "$POSITION" = "--same-as" ]; then
-    ARGS="$POSITION $MAIN_OUTPUT --mode $MAIN_MODE --dpi $MAIN_DPI"
+    ARGS="$POSITION $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI"
 else
-    ARGS="$POSITION $MAIN_OUTPUT --mode $EXTERNAL_MODE --dpi $EXTERNAL_DPI"
+    ARGS="$POSITION $MAIN_OUTPUT --mode $EXTERNAL_MODE $EXTERNAL_DPI"
 fi
 
 OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1"
