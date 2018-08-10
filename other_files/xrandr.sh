@@ -47,7 +47,6 @@ update_i3_config()
             sed -i $I3_CONF -e "s/OUTPUT_${i}_TEMPLATE/$MAIN_OUTPUT/g"
         done
     fi
-    set -x
     sed -i $I3_CONF -e "s|DOTRC_TEMPLATE|$DOTRC|g"
     sed -i $I3_CONF -e "s|DOTRC_S_TEMPLATE|$DOTRC_S|g"
 }
