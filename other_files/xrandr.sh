@@ -21,6 +21,7 @@ LEFT_MODE=1920x1080
 LEFT_DPI=96
 
 set -e
+source ~/.bashrc
 
 update_i3_config()
 {
