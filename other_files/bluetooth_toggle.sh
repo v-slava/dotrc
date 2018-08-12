@@ -18,6 +18,7 @@ if [ -z "$ACTION" ]; then
         *) echo "Wrong action selected" 1>&2 ; exit 1 ;;
     esac
 fi
+echo -e "\n"
 
 if [ -n "$BT_MAC" ]; then
     echo "$ACTION $BT_MAC" | bluetoothctl

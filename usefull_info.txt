@@ -419,6 +419,9 @@ xrandr --output HDMI1 --off
 stdbuf -o0 YOUR_CMD
 LD_PRELOAD=/usr/lib/coreutils/libstdbuf.so _STDBUF_O=0 YOUR_CMD
 
+# Search additional path for libraries at runtime:
+LD_LIBRARY_PATH=/some/path/to/libs YOUR_CMD
+
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
