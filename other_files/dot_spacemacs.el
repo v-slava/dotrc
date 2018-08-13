@@ -1933,6 +1933,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;; hdf - help function (counsel-describe-function)
   ;; hdv - help variable (counsel-describe-variable)
   ;; hdm - describe mode (spacemacs/describe-mode)
+  ;; xdw - remove whitespace at the end of line (delete-trailing-whitespace)
   ;; tn - toggle line numbers (spacemacs/toggle-line-numbers)
   ;; bd - kill (delete) current buffer (spacemacs/kill-this-buffer)
   ;; b <c-d> - kill all other buffers (spacemacs/kill-other-buffers)
