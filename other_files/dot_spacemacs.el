@@ -1434,6 +1434,9 @@ Add Man mode support to (previous-buffer)."
   (global-whitespace-mode)
   (my-toggle-whitespace-mode)
 
+  ;; When renaming file from vifm, do not ask "FILE_NAME changed on disk. Reread from file?"
+  (setq revert-without-query '("vifm.rename_*"))
+
   ;; magit:
   ;; SPC g b (spacemacs/git-blame-micro-state).
   ;; SPC g s (magit-status).
