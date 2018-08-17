@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+source ~/.bashrc
 
 if $DOTRC/other_files/virtual_box.sh ; then
     sudo poweroff
