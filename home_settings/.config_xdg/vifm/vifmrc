@@ -392,8 +392,10 @@ mark t ~/temporary
 mark T /tmp
 mark m /media
 mark w $WORKSPACE
-execute 'mark o ' system('exec echo $DOTRC')
-execute 'mark O ' system('exec echo $DOTRC_S')
+" The following line doesn't work from time to time. Bug?
+" execute 'mark o ' system('exec echo $DOTRC')
+execute system('exec echo "mark o $DOTRC"')
+execute system('exec echo "mark O $DOTRC_S"')
 mark u /media/usb
 mark f /media/files
 mark r /media/files/music/radio
