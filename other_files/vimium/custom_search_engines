@@ -6,6 +6,8 @@ map: https://www.google.com/maps?q=%s GoogleMaps
 tor_rus: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
 tor_eng: https://katcrs.win/search/%s/ kickass torrents
 
+l https://elixir.bootlin.com/linux/latest/ident/%s Linux Cross Reference
+
 # Google translate: 'phrase_to_translate'
 ter: https://translate.google.com/?hl=en#en/ru/%s GoogleTranslate en -> ru
 tre: https://translate.google.com/?hl=en#ru/en/%s GoogleTranslate ru -> en

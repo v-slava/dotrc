@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Dependencies: python3-psutil python3-daemon
+
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 
@@ -92,11 +94,15 @@ def main():
     separator = '-' * 80
     # sys.exit()
     # Create server:
-    with SimpleXMLRPCServer(('localhost', 8000),
-                            requestHandler = RequestHandler) as server:
-        server.register_introspection_functions()
-        server.register_function(execute)
-        server.serve_forever() # run the server's main loop
+    server = SimpleXMLRPCServer(('localhost', 8000), requestHandler = RequestHandler)
+    server.register_introspection_functions()
+    server.register_function(execute)
+    server.serve_forever() # run the server's main loop
+    # with SimpleXMLRPCServer(('localhost', 8000),
+    #                         requestHandler = RequestHandler) as server:
+    #     server.register_introspection_functions()
+    #     server.register_function(execute)
+    #     server.serve_forever() # run the server's main loop
 
 # main()
 # sys.exit()

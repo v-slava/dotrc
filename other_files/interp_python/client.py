@@ -28,6 +28,9 @@ class Rpc(xmlrpc.client.ServerProxy):
 
 rpc = Rpc()
 
+ctx = rpc.execute('print("i = " + str(i))')
+print(ctx)
+
 ctx = rpc.execute('print("hello")')
 print(ctx)
 
