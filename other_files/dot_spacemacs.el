@@ -2051,6 +2051,16 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (setq my--emacs-projects-dir (concat my--dotrc-s "/emacs_projects"))
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)
+
+  ;; (progn (let* ((project-name "mbr_printer")
+  ;;               (build-cmd-name "clean")
+  ;;               )
+  ;;         (setq my--nmlinux-git-dir "/media/files/workspace/nmlinux_netbox_sim")
+  ;;         (my--load-emacs-projects my--emacs-projects-dir)
+  ;;         (my--set-project-name project-name)
+  ;;         (my--set-frame-command-for-project "build" (cdr (assoc build-cmd-name (my--get-project-frame-commands-alist "build"))))
+  ;;         ))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
