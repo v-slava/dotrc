@@ -147,6 +147,25 @@ nmap -sn 192.168.1.0/24
 wget http://apt.llvm.org/llvm-snapshot.gpg.key
 apt-key add llvm-snapshot.gpg.key
 
+# udev commands:
+udevadm info -q path --path /sys/devices/soc/...
+# test udev rule:
+udevadm control --reload-rules
+udevadm trigger
+# udev symlink (/dev/my_symlink) for USB device:
+ATTR{idVendor}=="2444", ATTR{idProduct}=="0202", SYMLINK+="my_symlink"
+
+# USB device sysfs entry example (udevadm monitor):
+ USB host controller (hierarchy) start             USB bus            USB device configuration
+             |                                       | |                         |
+             v                                       v v                         v
+/sys/devices/pci0000:00/0000:00:1e.0/0000:05:04.1/usb3/3-2/3-2.3/3-2.3.4/3-2.3.4:1.0/...
+                        ^            ^                   ^   ^ ^   ^ ^ ^   ^ ^ ^   ^
+                        |            |                   |   | |   | | |   | | |   |
+                        |    USB host controller         |   | |   | | |   | | | USB interface
+                        |                                |   | |   | | |   | | |
+                   PCI bridge                      USB ports / devices (hubs hierarchy)
+
 # Audio CD is can't be mounted.
 # Listen track #1 from audio CD:
 mplayer -cdrom-device /dev/cdrom -cache 5000 cdda://1
@@ -1812,17 +1831,6 @@ sudo extundelete --restore-file other/commands -o restore /dev/sda5
 
 # Linux kernel objdump
 arm-linux-gnueabi-objdump -D -b binary -m arm Image
-
-# USB device sysfs entry example (udevadm monitor):
- USB host controller (hierarchy) start             USB bus            USB device configuration
-             |                                       | |                         |
-             v                                       v v                         v
-/sys/devices/pci0000:00/0000:00:1e.0/0000:05:04.1/usb3/3-2/3-2.3/3-2.3.4/3-2.3.4:1.0/...
-                        ^            ^                   ^   ^ ^   ^ ^ ^   ^ ^ ^   ^
-                        |            |                   |   | |   | | |   | | |   |
-                        |    USB host controller         |   | |   | | |   | | | USB interface
-                        |                                |   | |   | | |   | | |
-                   PCI bridge                      USB ports / devices (hubs hierarchy)
 
 # Mount initrd:
 sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>
