@@ -481,7 +481,7 @@ edbg -t atmel_cm7 -bpv -f some_flash.bin
 gtypist ru.typ
 
 # ripgrep (rg):
-rg -g '*.dts' -g '*.dtsi' as
+rg -g '*.dts' -g '*.dtsi' -g '!*.c' REGEX
 
 # search only in files, that match regex (silverlight searcher):
 ag SEARCH_REGEX -G FILE_PATH_REGEX
@@ -576,6 +576,13 @@ make kselftest
 # linux kernel loading:
 insmod executes syscall init_module -> sys_init_module() in kernel
 rmmod executes syscall delete_module -> sys_delete_module() in kernel
+
+# linux kernel errno defines (definitions [1; 34]):
+include/uapi/asm-generic/errno-base.h
+# linux kernel errno defines (definitions [35; 133]):
+include/uapi/asm-generic/errno.h
+# linux kernel errno defines (definitions [512; 529]):
+include/linux/errno.h
 
 # blacklist (exclude) linux kernel module (I didn't check it):
 echo "blacklist MODULE_NAME" >> /etc/modprobe.d/blacklist.conf
@@ -1448,6 +1455,12 @@ git push origin HEAD:refs/for/BRANCH_NAME
 
 # Show changes in the cache/index (i.e. staged chenages) against the current HEAD:
 git diff --name-only --cached
+
+# Show commit statistics (lines changed / removed / deleted / added):
+git diff --shortstat HEAD~1 HEAD
+git diff --stat HEAD~1 HEAD
+git log --stat
+git log --numstat
 
 # Git amend not last commit:
 git rebase --interactive bbc643cd^
