@@ -519,6 +519,9 @@ ld --verbose
 # Verbose linking (linker: print linker script, linked objects, libraries, etc.):
 gcc 1.o 2.o -o out.elf -Wl,--verbose
 
+# statically link libstdc++ library, but dynamically everything else (no C++ stdlib):
+gcc main.c -static-libstdc++
+
 # Create static executable with rust:
 # 1. Emit object file:
 rustc -O --emit obj main.rs
@@ -1666,12 +1669,16 @@ ESC
 
 # Start screen:
 screen /dev/ttyUSB0 115200N1
+screen
 
 # Detach from screen:
 <ctrl>a + d
 
 # Create new screen session or attach to existing ones (if present):
 screen -d -R
+
+# Resume detached screen session:
+screen -r <TAB>
 
 # Exit from screen:
 <ctrl>a + :quit
@@ -2162,6 +2169,20 @@ $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $
 show max-value-size
 set max-value-size 100000
 set breakpoint pending off
+
+# gdb gui client:
+gdbgui -g gdb-multiarch --gdb-args "-x /tmp/gdb_commands"
+
+# prebuilt gdb toolchains for windows:
+http://gnutoolchains.com/download/
+
+# gdb redirect output to another terminal (execute "tty" to find out your tty):
+gdb --tty /dev/pts/1 OTHER_ARGS
+
+# gdb show source location
+frame # <-- see current source location here
+list {LINE_NUMBER|FUNCTION}
+set listsize 20
 
 # frame $(CURRENT_FRAME_NUMBER-1)
 down
