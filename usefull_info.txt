@@ -46,6 +46,10 @@ usb-devices
 # To find out what gcc -pthread actually does:
 gcc -dumpspecs | grep pthread
 
+# get current tty device (terminal):
+tty
+readlink -f /proc/self/fd/0
+
 # autologin on virtual terminal:
 /sbin/agetty -a USER --noclear tty2 linux
 
@@ -589,6 +593,10 @@ include/linux/errno.h
 
 # blacklist (exclude) linux kernel module (I didn't check it):
 echo "blacklist MODULE_NAME" >> /etc/modprobe.d/blacklist.conf
+# See also files in /etc/modules.d/ (use '#' to comment-out module name)
+
+# include linux kernel module:
+echo "MODULE_NAME" >> /etc/modules
 
 # Module dependencies:
 lsmod
@@ -864,6 +872,9 @@ systemctl get-default
 # start teamviewer service:
 systemctl start teamviewerd.service
 
+# determine wifi network / access point properties (if already connected):
+iwlist wlan0 scan
+
 # Connect manually to wifi (wpasupplicant):
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 
@@ -1132,6 +1143,12 @@ tail /dev/kmsg
 # See all printk() messages independent of level:
 echo 8 > /proc/sys/kernel/printk
 
+cat /proc/interrupts
+
+# Write to physical memory:
+#       address   size_in_bits value
+devmem 0xfd000010      16       0x3f
+
 # Linux kernel usefull debug functions:
 if (error && printk_ratelimit())
     printk(KERN_EMERG “error=%d\n”, error);
@@ -1155,9 +1172,24 @@ Use gdb command:
 add-symbol-file /path/to/my_module.ko $TEXT_SECTION_ADDRESS \
 -s .bss $BSS_SECTION_ADDRESS -s .data $DATA_SECTION_ADDRESS
 where addresses look like: 0x12345678
-2) apply kgdb patch (debug with gdb over serial port/ethernet,
-   see "kgdboe" kernel argument)
-3) kdb patch (press pause/break on console to start a debugger)
+2) CONFIG_KGDB=y, CONFIG_FRAME_POINTER=y, CONFIG_KGDB_SERIAL_CONSOLE=y
+   Debug with gdb over serial port (kgdboc) / ethernet (kgdboe)
+   See also "kgdboe" and "kgdboc" kernel cmdline arguments.
+   Note: some ethernet drivers are so complex with separate kernel thread that
+   the polled mode ethernet can hang due to locking or unsafe HW resource access.
+   If you really want to attempt use kgdboe successfully, use a dedicated
+   interface if you have one and do not use kernel soft or hard IRQ preemption.
+   kgdboc is slow but the most reliable.
+   Files:
+   /sys/module/kgdboc/parameters/kgdboc
+   Documentation/sysrq.txt
+   /proc/sys/kernel/sysrq
+   echo g > /proc/sysrq-trigger
+   SysRq = print screen key on keyboard
+   Key sequence: "press Alt", "press SysRq", "release SysRq",
+   "press <command key>", release everything.
+3) CONFIG_KGDB_KDB=y, CONFIG_KDB_KEYBOARD=y
+   Press pause/break on console to start a debugger.
 4) Linux Trace Toolkit (LTT)
 5) Dynamic Probes
 
@@ -1169,6 +1201,7 @@ CONFIG_DEBUG_KERNEL=y
 CONFIG_DEBUG_INFO=y
 CONFIG_FRAME_POINTER=y
 CONFIG_KALLSYMS=y
+CONFIG_DEBUG_RODATA=n # allow use of software breakpoints
 # some other usefull configuration options:
 CONFIG_PROFILING=y
 CONFIG_DEBUG_DRIVER=y
@@ -1798,7 +1831,7 @@ readelf --debug-dump=info FILE
 readelf -a FILE
 
 # Check debug info (debug symbols, debug sections) in elf:
-readelf --sections FILE | grep debug_frame
+readelf --sections FILE | grep debug
 # always present: .debug_aranges, .debug_info, .debug_abbrev, .debug_line, .debug_ranges
 # -g  adds: .debug_frame, .debug_str
 # -g3 adds: .debug_macro
