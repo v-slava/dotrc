@@ -1174,14 +1174,34 @@ add-symbol-file /path/to/my_module.ko $TEXT_SECTION_ADDRESS \
 where addresses look like: 0x12345678
 2) CONFIG_KGDB=y, CONFIG_FRAME_POINTER=y, CONFIG_KGDB_SERIAL_CONSOLE=y
    Debug with gdb over serial port (kgdboc) / ethernet (kgdboe)
-   See also "kgdboe" and "kgdboc" kernel cmdline arguments.
    Note: some ethernet drivers are so complex with separate kernel thread that
    the polled mode ethernet can hang due to locking or unsafe HW resource access.
    If you really want to attempt use kgdboe successfully, use a dedicated
    interface if you have one and do not use kernel soft or hard IRQ preemption.
    kgdboc is slow but the most reliable.
+     # On PC: download and build agent-proxy (debug splitter, allows to share a
+     # serial port for both text console and gdb debug session):
+     git clone http://git.kernel.org/pub/scm/utils/kernel/kgdb/agent-proxy.git
+     cd agent-proxy
+     make
+     # On PC: start agent-proxy (minicom should be already closed):
+     ./agent-proxy 5550^5551 0 /dev/ttyUSB0,115200
+     # On PC: get text console (shell on device to be debugged):
+     telnet localhost 5550
+     # On device to be debugged: run linux kernel with "kgdboc=ttyS1,115200"
+     # command line argument, see also: /sys/module/kgdboc/parameters/kgdboc
+     # On device to be debugged: enter kgdb debug mode:
+     echo g > /proc/sysrq-trigger
+     # On PC:
+     cat << EOF > /tmp/gdb_script
+     # Load linux kernel ELF file with debug info (see linux kernel debug
+     # configuration options below):
+     file /media/files/workspace/linux/vmlinux
+     target remote localhost:5551
+     bt
+     EOF
+     gdb-multiarch -x /tmp/gdb_script
    Files:
-   /sys/module/kgdboc/parameters/kgdboc
    Documentation/sysrq.txt
    /proc/sys/kernel/sysrq
    echo g > /proc/sysrq-trigger
