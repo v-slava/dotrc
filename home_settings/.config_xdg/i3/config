@@ -115,6 +115,8 @@ bindsym $Alt_L+9 workspace 9
 
 # exec --no-startup-id sleep 4 && $DOTRC/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 
+workspace m output $OUTPUT_TRAY
+
 workspace 1 output $OUTPUT_1
 workspace 2 output $OUTPUT_2
 workspace 3 output $OUTPUT_3
@@ -185,7 +187,7 @@ for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 for_window [class="Icedove"] focus, mark --replace mail
 for_window [class="Thunderbird" title="Search Messages"] floating enable
-for_window [class="Thunderbird"] focus, mark --replace mail
+for_window [class="Thunderbird"] focus, mark --replace mail, move container to workspace m
 for_window [class="ViberPC"] mark --replace viber
 for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
@@ -238,6 +240,7 @@ bindsym $WIN+t exec --no-startup-id exec $DOTRC/other_files/torrent_download.sh
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec claws-mail'
 # Hotkey to open mail client:
 # bindsym $WIN+m exec --no-startup-id exec claws-mail
+# bindsym $WIN+m exec --no-startup-id exec thunderbird
 # Hotkeys to open specified folders:
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
 # bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec claws-mail --select '#imap/slava65536/INBOX'
@@ -246,8 +249,10 @@ bindsym $WIN+t exec --no-startup-id exec $DOTRC/other_files/torrent_download.sh
 # exec --no-startup-id exec emacs --daemon
 
 # Start mail client (icedove/thunderbird):
-exec --no-startup-id $DOTRC/other_files/virtual_box.sh || thunderbird
-bindsym $WIN+m exec --no-startup-id exec thunderbird
+exec --no-startup-id $DOTRC/other_files/virtual_box.sh || $DOTRC/other_files/mail_client.sh
+
+# Switch to "mail" workspace:
+bindsym $WIN+m workspace m
 
 # Start network manager applet:
 exec --no-startup-id exec nm-applet
