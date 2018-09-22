@@ -36,3 +36,7 @@ $CMD -g
 valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $OUT
 
 echo -e "\nNo issues found."
+
+# See also (static annotation of thread-safety properties):
+# https://gcc.gnu.org/wiki/ThreadSafetyAnnotation
+# http://clang.llvm.org/docs/ThreadSafetyAnalysis.html
