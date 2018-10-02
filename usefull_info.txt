@@ -1705,7 +1705,7 @@ screen /dev/pts/4
 minicom -p /dev/pts/4
 
 # Connect to serial port:
-sudo minicom -D /dev/ttyUSB0
+sudo minicom -b 115200 -t xterm -D /dev/ttyUSB0
 
 # minicom configuration:
 <ctrl>+A <pause> O  -> serial port setup -> hardware flow control
