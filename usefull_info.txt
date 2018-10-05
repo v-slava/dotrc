@@ -1,6 +1,9 @@
 # simple http server to transfer files over local network:
 woof FILE
 
+# install busybox (see also: other_files/prepare_fake_rootfs_for_unit_tests.sh):
+busybox --install -s
+
 # simple web site to access without DNS:
 http://www.columbia.edu/~fdc/sample.html
 http://128.59.105.24/~fdc/sample.html
@@ -584,11 +587,11 @@ make kselftest
 insmod executes syscall init_module -> sys_init_module() in kernel
 rmmod executes syscall delete_module -> sys_delete_module() in kernel
 
-# linux kernel errno defines (definitions [1; 34]):
+# linux kernel errno defines (error codes, definitions [1; 34]):
 include/uapi/asm-generic/errno-base.h
-# linux kernel errno defines (definitions [35; 133]):
+# linux kernel errno defines (error codes, definitions [35; 133]):
 include/uapi/asm-generic/errno.h
-# linux kernel errno defines (definitions [512; 529]):
+# linux kernel errno defines (error codes, definitions [512; 529]):
 include/linux/errno.h
 
 # blacklist (exclude) linux kernel module (I didn't check it):
@@ -1117,6 +1120,7 @@ zcat /proc/config.gz
 # debug printk:
 pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
+# printk "array" format specifier: %5ph - print 5 bytes in hex.
 # For dynamic debugging:
 pr_debug(char *format, ...);
 # To enable output from pr_debug() for kobject_uevent.c:

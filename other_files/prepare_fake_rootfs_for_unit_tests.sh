@@ -18,7 +18,6 @@ mkdir $FAKE_ROOTFS/usr/sbin
 # Copy busybox binary:
 cp /bin/busybox $FAKE_ROOTFS/bin/
 
-# fakechroot chroot $FAKE_ROOTFS busybox sh -c busybox --install -s
 fakechroot chroot $FAKE_ROOTFS busybox sh -c "busybox --install -s"
 
 # Now execute:
