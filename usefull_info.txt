@@ -1,7 +1,7 @@
 # simple http server to transfer files over local network:
 woof FILE
 
-# install busybox (see also: other_files/prepare_fake_rootfs_for_unit_tests.sh):
+# install busybox (see also: other_files/create_rootfs.sh):
 busybox --install -s
 
 # simple web site to access without DNS:
@@ -156,11 +156,19 @@ apt-key add llvm-snapshot.gpg.key
 
 # udev commands:
 udevadm info -q path --path /sys/devices/soc/...
+# reload udev rules:
+udevadm control -R
+# debug udev rules (note: prefix "/sys" is missing):
+udevadm test /devices/pci0000:00/0000:00:14.0/usb1/1-3
 # test udev rule:
 udevadm control --reload-rules
 udevadm trigger
+# udev run shell script (bash) for USB device (should have "#!/bin/bash"):
+ATTR{idVendor}=="2444", ATTR{idProduct}=="0202", RUN+="/full/path/to/my/shell/script"
 # udev symlink (/dev/my_symlink) for USB device:
 ATTR{idVendor}=="2444", ATTR{idProduct}=="0202", SYMLINK+="my_symlink"
+# Permissions are applied to USB devices in:
+/dev/bus/usb/{001, 002, ...}
 
 # USB device sysfs entry example (udevadm monitor):
  USB host controller (hierarchy) start             USB bus            USB device configuration
@@ -565,6 +573,7 @@ export MAKEFLAGS
 MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Debug Makefile:
+# Write "SHELL := sh -x" to Makefile you'd like to debug
 make -d
 make -p
 remake SOME_OPTIONS
@@ -778,6 +787,9 @@ echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
 
 # xargs spaces (files with spaces, print size in bytes):
 find -type f -print0 | xargs -0 du -b
+
+# Create initramfs:
+mkinitramfs -o initramfs.igz
 
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
