@@ -44,6 +44,12 @@ EOF
     CUR_DIR=$PWD
     cd $FAKE_ROOTFS && find | cpio -o -H newc | gzip -9 > $CUR_DIR/initramfs.igz
     cd -
+
+    # qemu-system-x86_64 -kernel linux/arch/x86/boot/bzImage \
+    #                    -initrd initramfs.igz -nographic \
+    #                    -append 'console=ttyS0 rdinit=/sbin/init' -m 512M \
+    #                    -usb -device usb-host,vendorid=4292,productid=35062
+
 fi
 
 
