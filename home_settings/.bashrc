@@ -25,8 +25,8 @@ fi
 
 export PATH=$ORIG_PATH
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH:/sbin:/usr/sbin
-export CC=clang-7
-export CXX=clang++-7
+export CC=clang
+export CXX=clang++
 
 # Other settings:
 export EDITOR=/usr/bin/vim

@@ -478,6 +478,7 @@ function! Copy_location(in_file, strip_part)
 	else
 		let @+ = l:full_location
 	endif
+	echo 'copied: ' . @+
 endfunction
 " Copy full source location into clipboard:
 nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
@@ -718,6 +719,10 @@ nmap <Leader>m1 :call MergeBlock()<CR>
 " 	tnoremap <C-@> <C-\><C-n>:set relativenumber<CR>
 " 	" In terminal switch back to insert mode:
 " 	nmap <C-@> :set norelativenumber<CR>:startinsert<CR>
+" 	" Window management with terminal:
+" 	tnoremap <C-w><C-w> <C-\><C-n><C-w><C-w>
+" 	autocmd TermOpen * startinsert
+" 	autocmd WinEnter term://* startinsert
 " 	" Copy modified file name from git status:
 " 	function! Git_copy_modified_file_name(file_number)
 " 		let l:line_1 = search('        modified:   ', 'b')
@@ -835,20 +840,56 @@ let g:ags_agargs = {
                 " \ '--filename'          : [ '', '' ],
                 " \ '--numbers'           : [ '', '' ]
 
-function! My_eval_replace()
-	let l:cursor = getpos('.')
-	let l:column = l:cursor[2]
-	let l:line_before = getline('.')
-	let l:evaluated = eval(strpart(l:line_before, 0, l:column))
-	let l:result = l:evaluated . strpart(l:line_before, l:column)
-	call append(line('.'), l:result)
-	normal dd
-	call setpos('.', [l:cursor[0], l:cursor[1], strlen(evaluated), l:cursor[3]])
+function! My_get_eval_first_last_lines()
+    let l:cursor = getpos('.')
+    try
+        normal ?EVAL REGION BEGINS HERE:j
+        let l:first_line = getpos('.')[1]
+    catch
+        call setpos('.', l:cursor)
+        throw "can't find 'EVAL REGION BEGINS HERE:'"
+    endtry
+
+    try
+        normal /EVAL REGION ENDS HERE.k
+        let l:last_line = getpos('.')[1]
+    catch
+        call setpos('.', l:cursor)
+        throw "can't find 'EVAL REGION ENDS HERE.'"
+    endtry
+
+    call setpos('.', l:cursor)
+
+    let l:cur_line = l:cursor[1]
+    if l:cur_line < l:first_line - 1 || l:cur_line > l:last_line + 1
+        throw "cursor is not inside EVAL REGION"
+    endif
+
+    echo
+    return [l:first_line, l:last_line]
 endfunction
-nmap <Leader>e :call My_eval_replace()<CR>
+
+function! My_get_text(first_line, last_line)
+    let l:lines_list = getbufline('%', a:first_line, a:last_line)
+    return join(l:lines_list, "\n")
+endfunction
+
+function! My_eval_vim()
+    try
+        let l:lines_range = My_get_eval_first_last_lines()
+        let l:text = My_get_text(l:lines_range[0], l:lines_range[1])
+        " echo l:text
+    catch
+        echo v:exception
+        return
+    endtry
+    execute l:text
+endfunction
+nmap <Leader>mel :call My_eval_vim()<CR>
 
 " To insert echo (for Makefile) use the following macro:
-let @e = 'i	@echo "|$()|"hhi'
+let @E = 'i	@echo "|$()|"hhi'
+let @e = 'oEVAL REGION BEGINS HERE:EVAL REGION ENDS HERE.gcko'
 
 " Macros:
 " You can use <C-o>q to finish recording while in insert mode.

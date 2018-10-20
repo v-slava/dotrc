@@ -5,7 +5,7 @@ all: download_git install_packages
 
 PHONY += install_packages
 install_packages:
-	su -c "apt-get install cmake libtool-bin automake"
+	su -c "apt-get install cmake libtool-bin automake gettext"
 
 PHONY += download_git
 download_git:
