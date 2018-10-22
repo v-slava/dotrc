@@ -160,6 +160,8 @@ udevadm info -q path --path /sys/devices/soc/...
 udevadm control -R
 # debug udev rules (note: prefix "/sys" is missing):
 udevadm test /devices/pci0000:00/0000:00:14.0/usb1/1-3
+# debug /dev/ nodes creation (mknode, udev):
+udevadm monitor --property
 # test udev rule:
 udevadm control --reload-rules
 udevadm trigger
@@ -865,6 +867,9 @@ loginctl show-session $XDG_SESSION_ID | grep '\(Remote=\|Active=\)'
 Remote=no
 Active=yes
 
+# linux cat /proc/cmdline and replace zeros (0) with spaces:
+cat /proc/cmdline | xargs -0 echo
+
 # Usefull linux kernel command line (cmdline) args:
 # Set log buffer (dmesg) size:
 log_buf_len=n # Here "n" is a power of 2 number
@@ -1231,6 +1236,9 @@ where addresses look like: 0x12345678
 
 # mount debugfs (ftrace):
 mount -t debugfs none /sys/kernel/debug
+
+# mount devtmpfs (/dev):
+mount -t devtmpfs none /dev
 
 # Linux kernel debug configuration options (see "kernel hacking" menu):
 CONFIG_DEBUG_KERNEL=y
@@ -2095,7 +2103,7 @@ edit image_root/boot/grub/grub.cfg
 apt-get install xorriso
 grub-mkrescue -o grub.iso image_root
 
-# Create hard drive image in regular file (possibly with grub):
+# Create hard drive (disc) image in regular file (possibly with grub):
 fdisk FILE
 kpartx -a FILE # add partition mappings
 losetup -l # print info about loop devices

@@ -45,11 +45,18 @@ EOF
     cd $FAKE_ROOTFS && find | cpio -o -H newc | gzip -9 > $CUR_DIR/initramfs.igz
     cd -
 
+    # Use kpartx to create hard drive image (sda.img). To create rootfs use:
+    # debootstrap stretch mounted_folder
+
+    # Run initramfs only:
+    # CMD="rdinit=/sbin/init"
+    # Run debootstrapped rootfs:
+    # CMD="root=/dev/sda1"
+
     # qemu-system-x86_64 -kernel linux/arch/x86/boot/bzImage \
-    #                    -initrd initramfs.igz -nographic \
-    #                    -append 'console=ttyS0 rdinit=/sbin/init' -m 512M \
-    #                    -usb -device usb-host,vendorid=4292,productid=35062
+    #                    -initrd initramfs.igz -serial mon:stdio -display none \
+    #                    -append "console=ttyS0 $CMD" -m 1024M \
+    #                    -usb -device usb-host,vendorid=4292,productid=35062 \
+    #                    -drive format=raw,file=sda.img -monitor pty \
 
 fi
-
-
