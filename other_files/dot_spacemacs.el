@@ -2052,8 +2052,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (setq my--tags-dir (concat my--emacs-projects-dir "/tags"))
   (my--load-emacs-projects my--emacs-projects-dir)
 
-  ;; Use build shell script in current folder:
+  ;; Use build.sh script in current folder:
   ;; (my--set-frame-command-for-project "build" (concat (file-name-directory (buffer-file-name)) "build.sh"))
+  ;; Use current file as script:
+  ;; (my--set-frame-command-for-project "build" (concat "cd " (file-name-directory (buffer-file-name)) " && ./" (file-name-nondirectory (buffer-file-name))))
 
   ;; (progn (let* ((project-name "mbr_printer")
   ;;               (build-cmd-name "clean")

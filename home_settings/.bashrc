@@ -32,7 +32,8 @@ export CXX=clang++
 export EDITOR=/usr/bin/vim
 export MINICOM='-c on'
 
-export QUILT_PATCHES=debian/patches
+# export QUILT_PATCHES=debian/patches
+
 # unset MAKEFLAGS
 # export MAKEFLAGS='-j 9'
 
