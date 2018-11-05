@@ -77,4 +77,6 @@ if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
     ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard
 fi
 
+xmms2 server config playlist.repeat_all 1
+
 echo -e "\nDone!"

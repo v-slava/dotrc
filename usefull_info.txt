@@ -312,6 +312,12 @@ icemon
 # Upgrade when "The following packages have been kept back:":
 apt-get dist-upgrade
 
+# Upgrade all packages:
+apt-get --with-new-pkgs upgrade
+
+# Reinstall package (create missing configs):
+apt-get install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" PACKAGE
+
 # Show which packages can be upgraded from backports:
 apt-get -s -t jessie-backports dist-upgrade
 

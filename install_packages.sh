@@ -51,7 +51,8 @@ apt-get install bluez pavucontrol
 # apt-get install bluez-tools
 
 # Install audio player:
-apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
+# apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
+apt-get install xmms2-client-nycli xmms2-plugin-mpg123 xmms2-plugin-pulse
 
 # Install qemu:
 apt-get install qemu-system-x86 qemu-kvm spice-client

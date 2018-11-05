@@ -162,7 +162,7 @@ filextype *.djvu
 
 " Audio
 filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
-	\ /media/files/workspace/dotrc/other_files/alsaplayer_play_files.sh %f,
+	\ /media/files/workspace/dotrc/other_files/audio_player_play_files.sh %f,
 	\ ffplay -nodisp %c,
 	\ mplayer %f,
 	\ ffplay %c,
