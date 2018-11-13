@@ -12,7 +12,9 @@ add -f $1
 play
 EOF
 shift
-xmms2 add -f "$@"
+if [ $# -ne 0 ]; then
+    xmms2 add -f "$@"
+fi
 # playlist clear
 exit
 

@@ -78,5 +78,6 @@ if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
 fi
 
 xmms2 server config playlist.repeat_all 1
+xmms2 server config output.plugin pulse
 
 echo -e "\nDone!"
