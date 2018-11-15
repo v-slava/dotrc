@@ -75,7 +75,8 @@ apt-get install smplayer
 apt-get install gliv
 
 # Install images editor:
-apt-get install gimp
+# apt-get install gimp
+apt-get install kolourpaint
 
 # Install vocabulary:
 apt-get install goldendict

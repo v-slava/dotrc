@@ -6,6 +6,7 @@ def get_output_string(arg):
         return arg
     arg = delete_before_dot_mp3(arg, " (mp3cut.net)")
     arg = delete_before_dot_mp3(arg, "-spaces.ru")
+    arg = delete_before_dot_mp3(arg, "_-_spcs.me")
     arg = delete_before_dot_mp3(arg, " [zippy.audio]")
     arg = arg.lower().replace(' ', '_').replace('(', '_').replace(')', '_').replace('-', "_-_").replace('&', '_')
     arg = arg.replace("acoustic_version", "acoustic").replace("i'm", "i_am").replace("you're", "you_are")
