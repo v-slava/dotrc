@@ -1290,6 +1290,7 @@ CONFIG_DYNAMIC_FTRACE
 CONFIG_FUNCTION_PROFILER
 
 # Using ftrace:
+# sudo perf ftrace -a # see also systemtap (for profiling)
 # trace_printk() can be called from any context (interrupts, scheduler, ...).
 # It prints to /sys/kernel/debug/tracing/trace
 trace_printk()
@@ -1886,6 +1887,8 @@ readelf --sections FILE | grep debug
 # always present: .debug_aranges, .debug_info, .debug_abbrev, .debug_line, .debug_ranges
 # -g  adds: .debug_frame, .debug_str
 # -g3 adds: .debug_macro
+# Sometimes sections .debug_frame, .debug_str and .debug_macro are present but
+# file doesn't contain debug information anyway. More precise: readelf --debug-dump=info
 
 # Dynamic dependencies (shared libraries):
 readelf -d FILE | grep NEEDED
@@ -2440,8 +2443,31 @@ del <breakpoint number>
 # lldb: delete breakpoint
 br de <breakpoint number>
 
+# gdb compile code (insert, inject instructions):
+cat << EOF > main.c
+#include <stdio.h>
+int main() {
+    int i = 0;
+    printf("%d\n", i);
+    return 0;
+}
+EOF
+cat << EOF > /tmp/gdb_script
+file a.out
+b main
+run
+n
+compile code int j = 1; i = j; asm("nop");
+c
+EOF
+gdb -x /tmp/gdb_script # "1" will be printed
+# See https://sourceware.org/gdb/onlinedocs/gdb/Compiling-and-Injecting-Code.html#Compiler-search-for-the-compile-command
+# see also "set compile-args"
+
 # gdb: list registers
 info registers
+info registers all
+# See also: maint print reggroups
 # lldb: list registers (general-purpose)
 re r
 # lldb: list registers (all)
@@ -2570,26 +2596,7 @@ our "core_dump" folder:
 $ cd /home/build/Perforce/dir3/dir4
 $ find -type f -name EXECUTABLE_NAME
 $ cp ./BIN/SymbolFiles/bin/EXECUTABLE_NAME ~/core_dump/
-
-Make sure EXECUTABLE_NAME contain debugging info:
-
-$ readelf --sections ~/core_dump/EXECUTABLE_NAME | grep debug
-  [31] .debug_aranges    PROGBITS        00000000 804b590 103188 00      0   0  8
-  [32] .debug_info       PROGBITS        00000000 814e718 36190510 00      0   0  1
-  [33] .debug_abbrev     PROGBITS        00000000 3e2dec28 11ab22e 00      0   0  1
-  [34] .debug_line       PROGBITS        00000000 3f489e56 270d2c1 00      0   0  1
-  [35] .debug_frame      PROGBITS        00000000 41b97118 995ad0 00      0   0  4
-  [36] .debug_str        PROGBITS        00000000 4252cbe8 21fded2 01  MS  0   0  1
-  [37] .debug_loc        PROGBITS        00000000 4472aaba 7b4de56 00      0   0  1
-  [38] .debug_macinfo    PROGBITS        00000000 4c278910 02110e 00      0   0  1
-  [39] .debug_ranges     PROGBITS        00000000 4c299a20 1537ce0 00      0   0  8
-$
-
-If you see output like this, then ELF file contains debugging info. Else (if it
-was stripped or compiled without "-g") the output is empty.
-Now reload gdb, and determine where do we need to put libc by executing gdb
-command "info sharedlibrary" (gdb should use it to reconstruct correct backtrace):
-
+Make sure EXECUTABLE_NAME contain debugging info.
 $ cd ~/core_dump
 $ gdb-multiarch
 GNU gdb (Debian 7.7.1+dfsg-5) 7.7.1
