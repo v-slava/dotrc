@@ -41,5 +41,5 @@ else
 	xxd -r -p "$IN_FILE" "$OUT_FILE"
 fi
 
-${CROSS_COMPILE}objdump -D -b binary -marm $ENDIANESS $THUMB "$OUT_FILE" | tail -n +8
+${MY_CROSS_COMPILE}objdump -D -b binary -marm $ENDIANESS $THUMB "$OUT_FILE" | tail -n +8
 

@@ -16,5 +16,5 @@ fi
 
 ELF_FILE="$1"
 
-${CROSS_COMPILE}nm --defined-only "$ELF_FILE" | sed -e '/ \$[dt]$/d' | cut -d' ' -f3 | ${CROSS_COMPILE}c++filt | sort
+${MY_CROSS_COMPILE}nm --defined-only "$ELF_FILE" | sed -e '/ \$[dt]$/d' | cut -d' ' -f3 | ${MY_CROSS_COMPILE}c++filt | sort
 
