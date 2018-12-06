@@ -1,3 +1,9 @@
+# find out which process modified / created / deleted file:
+sudo apt-get install auditd
+# Start auditing:
+sudo auditctl -w /some/path/to/file
+# Afterwards see file: /var/log/audit/audit.log
+
 # simple http server to transfer files over local network:
 woof FILE
 
@@ -557,6 +563,9 @@ rustc -O -Z print-link-args main.rs
 
 # get line with specified number from file:
 sed -n '<line number>p' < file
+
+# Delete lines matching regex from file:
+sed -i OLD_FILE -e '/REGEX/d'
 
 # Delete specified lines interval from file:
 sed -i OLD_FILE -e '<start line>,<end line>d'

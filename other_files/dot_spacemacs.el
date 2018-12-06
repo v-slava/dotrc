@@ -1438,8 +1438,6 @@ Add Man mode support to (previous-buffer)."
   (setq revert-without-query '("vifm.rename_*"))
 
   ;; magit:
-  ;; SPC g b (spacemacs/git-blame-micro-state).
-  ;; SPC g s (magit-status).
   ;; In status buffer:
   ;; RET - (magit-diff-visit-file)
   ;; C-return - (magit-diff-visit-file-worktree)
@@ -1820,6 +1818,7 @@ See the variable `Man-notify-method' for the different notification behaviors."
   (define-key evil-normal-state-map "G" 'my-goto-last-line)
 
   (add-hook 'compilation-mode-hook '(lambda () (local-set-key "\C-d" 'my-close-window-or-frame)))
+  (spacemacs/set-leader-keys "gs" '(lambda () (interactive) (my-save-all-buffers) (call-interactively 'magit-status)))
   (spacemacs/set-leader-keys "qm" 'my-open-new-man-page)
   (spacemacs/set-leader-keys "ds" 'bookmark-set)
   (spacemacs/set-leader-keys "dd" 'bookmark-delete)
