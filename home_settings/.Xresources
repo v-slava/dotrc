@@ -11,7 +11,7 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 ! Reduce distance between letters:
 ! URxvt.letterSpace: -1
 
-URxvt.perl-ext-common: default,matcher,font-size,clipboard
+URxvt.perl-ext-common: default,matcher,font-size,clipboard,vtwheel
 
 ! Clickable URLs (ctrl + left button):
 URxvt.urlLauncher: /usr/bin/x-www-browser
