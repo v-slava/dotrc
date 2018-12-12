@@ -1,3 +1,5 @@
+[core]
+	pager = less -+FX # fix mouse scrolling
 [color]
 	ui = true
 	diff = true
