@@ -8,7 +8,7 @@ fi
 cat << EOF | xmms2 > /dev/null
 stop
 remove *
-add -f $1
+add -f "$1"
 play
 EOF
 shift
