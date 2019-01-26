@@ -1,5 +1,14 @@
 #!/bin/bash
 
+set -e
+if [ -d $DOTRC_S/home_settings ]; then
+    cd $DOTRC_S/home_settings
+    FILES_LIST=$(find -type f | grep -v '\.bashrc')
+    for FILE in $FILES_LIST ; do
+        cat "$FILE" >> ~/$FILE
+    done
+fi
+
 IN_FILES=(
 .Xmodmap
 )
@@ -8,6 +17,7 @@ IN_S_FILES=("${IN_FILES[@]/#/${DOTRC_S}/home_settings/}")
 IN_FILES=("${IN_FILES[@]/#/${DOTRC}/home_settings/}")
 # echo ${IN_FILES[@]}
 
+set +e
 $DOTRC/other_files/virtual_box.sh
 VIRTUAL=$?
 

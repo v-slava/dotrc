@@ -56,15 +56,6 @@ for dir in $MY_DIRS ; do
     fi
 done
 
-set +e
-if [ -d $DOTRC_S/home_settings ]; then
-    set -e
-    cd $DOTRC_S/home_settings
-    FILES_LIST=$(find -type f)
-    for FILE in $FILES_LIST ; do
-        cat "$FILE" >> ~/$FILE
-    done
-fi
 set -e
 
 $DOTRC/other_files/generate_configs.sh
