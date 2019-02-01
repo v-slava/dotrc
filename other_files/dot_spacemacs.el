@@ -2065,6 +2065,10 @@ See the variable `Man-notify-method' for the different notification behaviors."
   ;;         (my--set-frame-command-for-project "build" (cdr (assoc build-cmd-name (my--get-project-frame-commands-alist "build"))))
   ;;         ))
 
+  ;; When emacs freezes (tag: debug, repeat several times if necessary):
+  ;; kill -SIGUSR2 $(pidof emacs)
+  ;; Send input to eshell:
+  ;; (process-send-string "*eshell*" "ls -l\r\n")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
