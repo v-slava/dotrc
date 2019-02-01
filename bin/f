@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -e
+
+usage()
+{
+    cat << EOF >&2
+Usage: $(basename $0) [nc|--no-clipboard] [MODE]
+
+Here MODE can be one of:
+s|--standard (default one)
+g|--git-files
+a|--all-files
+d|--directories
+
+Note: if MODE is not specified, it will be queried interactively.
+EOF
+    exit 1
+}
+
+unset NO_CLIPBOARD
+while [[ $# -gt 0 ]] ; do
+    key="$1"
+    case $key in
+        "nc" | "--no-clipboard")
+            NO_CLIPBOARD=true
+            shift
+            ;;
+        "s" | "--standard"    | \
+        "g" | "--git-files"   | \
+        "a" | "--all-files"   | \
+        "d" | "--directories" )
+            MODE="$1"
+            shift
+            ;;
+        *)    # unknown option
+            usage
+            ;;
+    esac
+done
+
+if [ -z "$MODE" ]; then
+    MODE=$(cat << EOF | fzf
+standard
+git files
+all files
+directories
+EOF
+)
+    MODE=$(echo "--$MODE" | tr ' ' '-')
+fi
+
+SELECTED=$(
+case "$MODE" in
+    "s" | "--standard") fzf ;;
+    "g" | "--git-files")
+        set -e
+        git rev-parse --show-toplevel # fail here if this is not git repo.
+        git ls-tree -r --full-tree --name-only HEAD | fzf | \
+            xargs -I MY_FOUND_FILE_NAME \
+                  echo "$(git rev-parse --show-toplevel)/MY_FOUND_FILE_NAME"
+        ;;
+    "a" | "--all-files") find -L ! -type d | fzf ;;
+    "d" | "--directories") find -L -type d | fzf ;;
+
+    # We don't have proper line breaks here:
+    # find -type f | fzy
+esac
+)
+
+if [ -z "$NO_CLIPBOARD" ]; then
+    echo "$SELECTED" | clipboard.sh -n
+fi
+
+echo "$SELECTED"

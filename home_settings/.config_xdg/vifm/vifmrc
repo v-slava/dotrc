@@ -411,9 +411,7 @@ nmap dt :only<CR>
 nmap w= :vsplit<CR>
 
 " nmap <c-f> :find *.
-nmap <c-f> :execute '!fzf 2>&0 %IU || echo %c' | normal! gf<CR>
-" here we don't have proper line breaks:
-" nmap <c-f> :execute '!find -type f %IU | fzy || echo %c' | normal! gf<CR>
+nmap <c-f> :execute '!f --no-clipboard 2>&0 %IU || echo %c' | normal! gf<CR>
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/ .. trash_vifm
