@@ -411,11 +411,12 @@ nmap dt :only<CR>
 nmap w= :vsplit<CR>
 
 " nmap <c-f> :find *.
-" nmap <c-f> :execute '!find -type f | fzy 2>&0 %IU' | normal! gf<CR>
-nmap <c-f> :execute '!fzf 2>&0 %IU' | normal! gf<CR>
+nmap <c-f> :execute '!fzf 2>&0 %IU || echo %c' | normal! gf<CR>
+" here we don't have proper line breaks:
+" nmap <c-f> :execute '!find -type f %IU | fzy || echo %c' | normal! gf<CR>
 
 " :bmark! path tag1 [tag2 [tag3...]]
-bmark! /media/files/trash_vifm/.. trash_vifm
+bmark! /media/files/trash_vifm/ .. trash_vifm
 bmark! /media/files/other/my_samples/multiple_sources/ my_samples multiple_sources
 bmark! /media/files/other/my_samples/single_sources/ my_samples single_sources
 bmark! /media/files/other/books/ books
