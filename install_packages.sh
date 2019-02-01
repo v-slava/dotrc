@@ -104,6 +104,13 @@ make -f $DOTRC/other_files/Makefile_dmenu.mk
 # ripgrep (rg):
 $DOTRC/other_files/install_ripgrep_rg.sh
 
+# fzf: https://github.com/junegunn/fzf-bin/releases
+wget https://github.com/junegunn/fzf-bin/releases/download/0.17.5/fzf-0.17.5-linux_amd64.tgz
+
+# fzy:
+# apt-get install fzy
+# wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
+
 # Install also: Viber, Skype, Telegram, Teamviewer
 
 # Coreutils viewer:
