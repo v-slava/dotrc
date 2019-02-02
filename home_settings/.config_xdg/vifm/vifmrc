@@ -497,8 +497,10 @@ nnoremap yd :!echo -n %d | clipboard.sh<CR>
 nnoremap yf :!echo -n %c:p | clipboard.sh<CR>
 " Yank current file (name only) into the clipboard
 nnoremap yn :!echo -n %c | clipboard.sh<CR>
+" Yank current git-relative path into the clipboard
+nnoremap yg :!realpath --relative-to="$(git rev-parse --show-toplevel)" ./%c | clipboard.sh -n<CR>
 " Yank current file's size (in bytes) into the clipboard
-nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
+" nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 
 " Mount / umount:
 nnoremap am :! mount /dev/sdb1<CR>
@@ -511,6 +513,8 @@ nnoremap cu :! fusermount -u /media/usb<CR>
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
 nmap isy :sync!<CR>
+nmap isg :execute system('exec echo :!$DOTRC/other_files/vifm_sync_git.sh %c %C %D')<CR>
+
 " swap panels:
 nmap isw <c-w>x
 nmap id :winrun ^ !diff.sh %d/%c %C<CR>
