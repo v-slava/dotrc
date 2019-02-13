@@ -564,7 +564,7 @@ rustc -O -Z print-link-args main.rs
 # get line with specified number from file:
 sed -n '<line number>p' < file
 
-# Delete lines matching regex from file:
+# Delete (remove) lines matching regex from file:
 sed -i OLD_FILE -e '/REGEX/d'
 
 # Delete specified lines interval from file:
