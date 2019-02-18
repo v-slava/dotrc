@@ -402,7 +402,7 @@ nmap <F9> :SrcIndexOn
 function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || l:dir_name == g:ide_dir || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
 		return 1
 	endif
 	let l:last_part_expected = '.fugitiveblame'
