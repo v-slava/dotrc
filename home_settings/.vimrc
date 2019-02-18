@@ -185,12 +185,11 @@ map q: <nop>
 
 " Clear last used search pattern (highlighting, search clear, no highlight search):
 nmap <Leader>sc :let @/ = ""<CR>
+" Set/unset search highlighting:
+" nmap <F3> :set hlsearch!<CR>
 
 " Search for text in clipboard:
 nmap <Leader>s/ :let @/ = @+<CR>
-
-" Set/unset search highlighting:
-nmap <F3> :set hlsearch!<CR>
 
 " Scroll horizontally:
 nmap <C-l> zl
@@ -201,8 +200,8 @@ nmap <C-d> :q<CR>
 nmap <Leader>qm :q<CR>
 
 " View next/previous buffer:
-nmap <Leader>vn :bnext<CR>
-nmap <Leader>vp :bprevious<CR>
+nmap <Leader>bn :bnext<CR>
+nmap <Leader>bp :bprevious<CR>
 
 " Split vim window:
 nmap <Leader>ws :split<CR>
@@ -362,41 +361,6 @@ nmap <Leader>di :call Add_include_guards(expand('%:t'))<CR>
 nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
-" Open tags file in $(dirname EDITED_FILE), if not present then in $(dirname EDITED_FILE)/.. and until /
-set tags=./tags;,tags;
-
-" Add (framework/standard C/C++ library) tags:
-nmap <F8> :set tags+=~/.vim/tags/std.ctags<CR>:cs add ~/.vim/tags/std.cscope<CR>
-
-" Update cscope connection while opening new file:
-autocmd FileType c,cpp,asm call Cscope_connect()
-
-" Index source files and update cscope connection. Command usage: :SrcIndexOn PRJ_ROOT_PATH
-nmap <F9> :SrcIndexOn 
-
-" ctags:
-" :help tag
-" :[count]ta[g][!] {ident}  == <C-]> jump to the definition of {ident}
-" :[count]ta[g][!]         Jump to [count] newer entry in tag stack (default 1).
-" :[count]po[p][!]          == <C-T> Jump to [count] older entry in tag stack (default 1).
-" :ts[elect][!] [ident]     == g]    list the tags that match [indent]
-" :sts[elect][!] [ident]    == <C-W>g] Like :ts, but splits the window for the selected tag.
-" :tags  Show the contents of the tag stack.  The active entry is marked with a '>'.
-
-" cscope:
-" Query types:
-"   's'   symbol: find all references to the token under cursor
-"   'g'   global: find global definition(s) of the token under cursor
-"   'c'   calls:  find all calls to the function name under cursor
-"   't'   text:   find all instances of the text under cursor
-"   'e'   egrep:  egrep search for the word under cursor
-"   'f'   file:   open the filename under cursor
-"   'i'   includes: find files that include the filename under cursor
-"   'd'   called: find functions that function under cursor calls
-" :cs  find {querytype} {name}  ==  <C-\>{querytype}
-" :scs find {querytype} {name}  ==  <C-space>{querytype} - split window horizontally
-" :vert scs find {querytype} {name}  ==  <C-space-space>{querytype} - split window vertically
-
 function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
@@ -463,10 +427,6 @@ endfunction
 command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
 " Usage example: :ViewInNewBuffer :map<CR> (show mappings in buffer).
 
-" let g:lvimrc_loaded = 0
-" Put this to your .lvimrc file to prevent further .lvimrc reload:
-let g:lvimrc_loaded = 1
-
 function! Copy_location(in_file, strip_part)
 	let l:line_number = line('.')
 	let l:full_location = a:in_file . ':' . l:line_number
@@ -513,30 +473,7 @@ vmap gb :TCommentBlock<CR>
 call tcomment#DefineType('c_block', g:tcommentBlockC2)
 call tcomment#DefineType('cpp_block', g:tcommentBlockC2)
 
-" Code to convert spaces to \n and backwards (mlines, merge lines, slines, split lines):
-function! SplitLines()
-	let l:current_line_number = line('.')
-	let l:text_below = getline(l:current_line_number + 1)
-	let l:orig_text = getline('.')
-	" Delete original text into register z:
-	execute 'normal 0"zD'
-	" Get list of words:
-	let l:words_array = split(l:orig_text)
-	if l:text_below != ''
-		call add(l:words_array, '')
-	endif
-	" Append list of words to current buffer:
-	let l:failed = append(l:current_line_number, l:words_array)
-	let l:text_above = getline(line('.') - 1)
-	echom l:text_above
-	if l:text_above == '' " We've inserted unnecessary empty line. Need to delete it.
-		execute 'normal "zdd'
-	else " Need to move cursor to first word.
-		execute 'normal j'
-	endif
-endfunction
-command! SplitLines call SplitLines()
-nmap <Leader>s0 :SplitLines<CR>
+" To split lines: :%s/ /<ctrl-v><ENTER>/g"
 
 " if has('nvim')
 " 	" First invoke terminal:
@@ -618,38 +555,14 @@ nmap <Leader>gd1 :Gdiff ~1<CR>
 nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR>
 " Diff against previous commit:
 nmap <Leader>gdp :Gdiff ~1<CR>
-nmap <Leader>gw :Gwrite<CR><C-w>k
-nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
+" nmap <Leader>gw :Gwrite<CR><C-w>k
+" nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
 nmap <Leader>gco :Gcommit<CR>
 nmap <Leader>gca :Gcommit --amend<CR>
-nmap <Leader>ga <C-w>k-
+" nmap <Leader>ga <C-w>k-
 nmap <Leader>ge :!git show --name-only --pretty="" HEAD<CR>
 " Need for "fugitive-:Gdiff":
 set diffopt+=vertical
-" Search for next unstaged file (TODO):
-" nmap <C-j>/Changes not staged for commit:<CR>
-
-" Search using ag (silverlight searcher):
-nmap <Leader>ags :Ags 
-" Kill running ag instance:
-nmap <Leader>agk :!$DOTRC/other_files/kill_process_by_unique_name.sh ag<CR><CR>
-" let g:ags_agmaxcount = 2000
-" In search results window press "u" for usage (mappings) information.
-let g:ags_agargs = {
-                \ '--break'             : [ '', '' ],
-                \ '--color'             : [ '', '' ],
-                \ '--color-line-number' : [ '"1;30"', '' ],
-                \ '--color-match'       : [ '"32;40"', '' ],
-                \ '--color-path'        : [ '"1;31"', '' ],
-                \ '--column'            : [ '', '' ],
-                \ '--context'           : [ 'g:ags_agcontext', '-C' ],
-                \ '--group'             : [ '', '' ],
-                \ '--heading'           : [ '', '-H' ],
-                \ '--max-count'         : [ 'g:ags_agmaxcount', '-m' ],
-                \ }
-" Deleted unsupported options:
-                " \ '--filename'          : [ '', '' ],
-                " \ '--numbers'           : [ '', '' ]
 
 function! My_get_eval_first_last_lines()
     let l:cursor = getpos('.')
