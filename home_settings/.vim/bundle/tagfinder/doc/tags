@@ -1,9 +1,0 @@
-:DefineLocalTagFinder	tagfinder.txt	/*:DefineLocalTagFinder*
-:DefineTagFinder	tagfinder.txt	/*:DefineTagFinder*
-tagfinder	tagfinder.txt	/*tagfinder*
-tagfinder-commands	tagfinder.txt	/*tagfinder-commands*
-tagfinder-contents	tagfinder.txt	/*tagfinder-contents*
-tagfinder-installation	tagfinder.txt	/*tagfinder-installation*
-tagfinder-issues	tagfinder.txt	/*tagfinder-issues*
-tagfinder-usage	tagfinder.txt	/*tagfinder-usage*
-tagfinder.txt	tagfinder.txt	/*tagfinder.txt*

@@ -81,8 +81,6 @@
 "
 " in visual mode '=' - fix identation
 "
-" <Leader>mt : Toggles ShowMarks on and off.
-"
 " reload file: :edit
 "
 " view vim filetypes:
@@ -487,33 +485,6 @@ nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
 
-" tagfinder plugin:
-runtime bundle/tagfinder/plugin/tagfinder.vim
-" DefineTagFinder USER_COMMAND type1[,type2]...
-DefineTagFinder Tclass c
-DefineTagFinder Tdefine d
-" Values inside an enumeration:
-DefineTagFinder Tenumerator e
-DefineTagFinder Tfunction f
-" Enumeration names:
-DefineTagFinder Tenumeration g
-" Class, struct and union members:
-DefineTagFinder Tmember m
-DefineTagFinder Tnamespace n
-DefineTagFinder Tprototype p
-DefineTagFinder Tstruct s
-DefineTagFinder Ttypedef t
-DefineTagFinder Tunion u
-DefineTagFinder Tvariable v
-"DefineTagFinder Tx x  " external and forward variable declarations
-
-" Marks:
-let g:showmarks_enable=0
-let g:showmarks_include="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-hi ShowMarksHLl   cterm=bold ctermfg=black ctermbg=white
-hi ShowMarksHLu   cterm=bold ctermfg=black ctermbg=white
-hi ShowMarksHLm   cterm=bold ctermfg=black ctermbg=white
-
 " Tcomment:
 call tcomment#DefineType('unknown', '# %s')
 call tcomment#DefineType('lisp', ';; %s')
@@ -542,15 +513,6 @@ vmap gb :TCommentBlock<CR>
 call tcomment#DefineType('c_block', g:tcommentBlockC2)
 call tcomment#DefineType('cpp_block', g:tcommentBlockC2)
 
-" localvimrc:
-let g:localvimrc_count = 1 " on the way from root, the last 1 file is sourced
-" accept .lvimrc files in /home/slava/* and /media/files/*:
-let g:localvimrc_whitelist='^\(/home/slava/*\|/media/files/*\)'
-" ignore .lvimrc files on mounted filesystems:
-let g:localvimrc_blacklist='^/media/*'
-let g:localvimrc_ask = 1 " ask before loading a vimrc file (0 = don't ask)
-let g:localvimrc_sandbox = 0 " don't use sandbox (1 = use)
-
 " Code to convert spaces to \n and backwards (mlines, merge lines, slines, split lines):
 function! SplitLines()
 	let l:current_line_number = line('.')
@@ -575,142 +537,6 @@ function! SplitLines()
 endfunction
 command! SplitLines call SplitLines()
 nmap <Leader>s0 :SplitLines<CR>
-
-function! MergeLines(...) range
-	execute a:firstline
-	let l:last_line_in_buffer = line('$')
-	let l:separator = (a:0 >= 1) ? a:1 : ' '
-	let l:lines_array = getline(a:firstline, a:lastline)
-	let l:orig_text = join(l:lines_array, l:separator)
-	" Delete original text into register z:
-	execute a:firstline ',' a:lastline 'delete z'
-	let l:failed = append(a:firstline - 1, l:orig_text)
-	if a:lastline == l:last_line_in_buffer
-		execute 'normal j'
-	else
-		execute 'normal k'
-	endif
-endfunction
-command! -nargs=? -range MergeLines <line1>,<line2> call MergeLines(<f-args>)
-function! MergeBlock()
-	execute 'normal {'
-	if getline('.') == ''
-		execute 'normal j'
-	endif
-	let l:first_line = line('.')
-	execute 'normal }'
-	if getline('.') == ''
-		execute 'normal k'
-	endif
-	let l:last_line = line('.')
-	execute l:first_line . ',' . l:last_line . 'call MergeLines()'
-endfunction
-nmap <Leader>m1 :call MergeBlock()<CR>
-
-" function! Backspace_handler()
-" 	let l:cursor = getpos('.')
-" 	let l:column = l:cursor[2]
-" 	if l:column < 4 " if string is not long enough
-" 		" then execute simple backspace
-" 		call feedkeys("", "insert")
-" 		return
-" 	endif
-" 	let l:line = getline('.')
-" 	let l:line_before_cursor = strpart(l:line, 0, l:column)
-" 	" Check if we have non-empty symbols in string before cursor:
-" 	let l:i = 0
-" 	while l:i < l:column
-" 		let l:symbol = strpart(l:line_before_cursor, l:i, 1)
-" 		if l:symbol != "	" && l:symbol != " "
-" 			" We have non-empty symbols: execute simple backspace.
-" 			call feedkeys("", "insert")
-" 			return
-" 		endif
-" 		let l:i += 1
-" 	endwhile
-" 	" Check if we have at least four contigious spaces in front of cursor:
-" 	let l:four_symbols = strpart(l:line_before_cursor, l:column - 4)
-" 	if l:four_symbols != "    "
-" 		call feedkeys("", "insert")
-" 		return
-" 	endif
-" 	" Delete 4 spaces at once:
-" 	call feedkeys("", "insert")
-" 	call feedkeys("", "insert")
-" 	call feedkeys("", "insert")
-" 	call feedkeys("", "insert")
-" endfunction
-" The above function fails to work with autoindent mode and 'o', 'O' normal
-" mode hotkeys:
-" First we use <Esc> to go to normal mode. In this case autoindent deletes
-" indentation (the problem). Solution: need to disable standard
-" autoindentation, and implement it by myself.
-" autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl imap <Backspace> <Esc>:call Backspace_handler()<CR>gi
-
-" " doxygen: function begin:
-" nmap <Leader>fb i/**<Esc>o * @fn 
-" " doxygen: function end:
-" nmap <Leader>fe :call End_function()<CR>
-" function! End_function()
-" 	let l:fn_line_number = line('.')
-" 	let l:fn_line = getline('.')
-"
-" 	let l:prototype = strpart(l:fn_line, 6) " extra space in the front present
-" 	let l:brace_index = stridx(l:prototype, '(') " starts from 0
-" 	let l:prototype_before_brace = strpart(l:prototype, 0, l:brace_index)
-" 	let l:prototype_after_brace = substitute(strpart(l:prototype, l:brace_index + 1), ')', ', ', "")
-"
-" 	" Insert function prototype:
-" 	call append(l:fn_line_number, '}')
-" 	call append(l:fn_line_number, '{')
-" 	call append(l:fn_line_number, strpart(l:prototype, 1))
-" 	call append(l:fn_line_number, ' */')
-"
-" 	" Insert @return if needed:
-" 	let l:void_index = stridx(l:prototype_before_brace, ' void ')
-" 	if l:void_index == -1
-" 		call append(l:fn_line_number, ' * @return ')
-" 	endif
-"
-" 	" Insert @param:
-" 	let l:param_words = split(l:prototype_after_brace, ' \zs')
-" 	let l:param_names = []
-" 	for word in l:param_words
-" 		let l:word_len = strlen(l:word)
-" 		let l:symbol = strpart(l:word, l:word_len - 2, 1)
-" 		if l:symbol == ','
-" 			let l:param_name = strpart(l:word, 0, l:word_len - 2)
-" 			call add(l:param_names, l:param_name)
-" 		endif
-" 	endfor
-" 	call reverse(l:param_names)
-" 	for param in l:param_names
-" 		call append(l:fn_line_number, ' * @param ' . l:param . ' ')
-" 	endfor
-"
-" 	" Insert @brief:
-" 	call append(l:fn_line_number, ' * @brief ')
-" 	" Set cursor to proper position and go to insert mode:
-" 	execute 'normal! j$'
-" 	startinsert!
-" endfunction
-
-" function! MyCIndent() range
-" 	let l:first_line = a:firstline
-" 	let l:last_line = a:lastline
-" 	let l:lines_array = getline(l:first_line, l:last_line)
-" 	silent execute l:first_line ',' l:last_line 'w! /tmp/asd'
-" 	silent execute '!cat /tmp/asd | ./c_indent.bin > /tmp/qwe'
-" 	" Delete original text into register z:
-" 	silent execute l:first_line ',' l:last_line 'delete z'
-" 	silent execute 'normal k'
-" 	silent execute 'r /tmp/qwe'
-" 	execute 'redraw!'
-" endfunction
-" command! -range MyIndent <line1>,<line2> call MyCIndent()
-
-" command! -nargs=1 CmdName call Func_name(<f-args>)
-" command! -nargs=0 CmdName call Func_name('arg1')
 
 " if has('nvim')
 " 	" First invoke terminal:
@@ -739,23 +565,8 @@ nmap <Leader>m1 :call MergeBlock()<CR>
 " 	" nmap <Leader>ga :GitCopy 
 " endif
 
-" function! My_insert_numbers(first_number)
-" 	let l:first_num = str2nr(a:first_number)
-" 	let l:num_digits = strlen(a:first_number)
-" 	let l:format = printf("%%0%dd_%%s", l:num_digits)
-" 	let l:num_lines = line('$')
-" 	let l:cur_line_num = 1
-" 	while l:cur_line_num <= l:num_lines
-" 		let l:cur_line_contents = getline(l:cur_line_num)
-" 		let l:cur_num = l:first_num + l:cur_line_num - 1
-" 		let l:modified_line_contents = printf(l:format, l:cur_num, l:cur_line_contents)
-" 		call setline(l:cur_line_num, l:modified_line_contents)
-" 		let l:cur_line_num = l:cur_line_num + 1
-" 	endwhile
-" endfunction
-" command! -nargs=1 InsertNumbers call My_insert_numbers(<f-args>)
-" " Prepend numbers like "1_, 2_, ..." to all lines in file:
-" nmap <Leader>dn :InsertNumbers 
+" autocmd TermClose * bd! " do not show 'Process exited ' message
+" sp | wincmd j | e term://f s | set norelativenumber | set nonumber | startinsert
 
 function! GetFileNameUnderCursor(line)
 	let l:last_file_char = stridx(a:line, " ", 1)
