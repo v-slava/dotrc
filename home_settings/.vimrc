@@ -92,7 +92,6 @@
 " set langmenu=ru_RU.UTF-8
 
 syntax on
-colorscheme molokai
 
 set nocompatible
 set path+=**
@@ -444,34 +443,35 @@ nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
 
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
+colorscheme molokai
 
 " Tcomment:
-call tcomment#DefineType('unknown', '# %s')
-call tcomment#DefineType('lisp', ';; %s')
-call tcomment#DefineType('make', '# %s')
-call tcomment#DefineType('gdb', '# %s')
-call tcomment#DefineType('kconfig', '# %s')
-call tcomment#DefineType('sudoers', '# %s')
-call tcomment#DefineType('inittab', '# %s')
-call tcomment#DefineType('mplayerconf', '# %s')
-call tcomment#DefineType('text', '# %s')
-call tcomment#DefineType('toml', '# %s')
-call tcomment#DefineType('ninja', '# %s')
-call tcomment#DefineType('aptconf', '// %s')
-call tcomment#DefineType('jtag_script', '; %s')
-call tcomment#DefineType('claws_mail_menurc', '; %s')
-call tcomment#DefineType('fusesmbconf', '; %s')
-call tcomment#DefineType('asm', '/* %s */')
-call tcomment#DefineType('texinfo', '@c %s')
-call tcomment#DefineType('xdefaults', '! %s')
-call tcomment#DefineType('xmodmap', '! %s')
-call tcomment#DefineType('vifm', '" %s')
-let g:tcommentMapLeader1 = ''
-let g:tcommentMapLeader2 = ''
+call tcomment#type#Define('unknown', '# %s')
+call tcomment#type#Define('lisp', ';; %s')
+call tcomment#type#Define('make', '# %s')
+call tcomment#type#Define('gdb', '# %s')
+call tcomment#type#Define('kconfig', '# %s')
+call tcomment#type#Define('sudoers', '# %s')
+call tcomment#type#Define('inittab', '# %s')
+call tcomment#type#Define('mplayerconf', '# %s')
+call tcomment#type#Define('text', '# %s')
+call tcomment#type#Define('toml', '# %s')
+call tcomment#type#Define('ninja', '# %s')
+call tcomment#type#Define('aptconf', '// %s')
+call tcomment#type#Define('jtag_script', '; %s')
+call tcomment#type#Define('claws_mail_menurc', '; %s')
+call tcomment#type#Define('fusesmbconf', '; %s')
+call tcomment#type#Define('asm', '/* %s */')
+call tcomment#type#Define('texinfo', '@c %s')
+call tcomment#type#Define('xdefaults', '! %s')
+call tcomment#type#Define('xmodmap', '! %s')
+call tcomment#type#Define('vifm', '" %s')
+let g:tcomment_mapleader1 = ''
+let g:tcomment_mapleader2 = ''
 " Block comment (use gcb<motion> in normal mode):
 vmap gb :TCommentBlock<CR>
-call tcomment#DefineType('c_block', g:tcommentBlockC2)
-call tcomment#DefineType('cpp_block', g:tcommentBlockC2)
+" call tcomment#type#Define('c_block', g:tcommentBlockC2)
+" call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
 
 " To split lines: :%s/ /<ctrl-v><ENTER>/g"
 

@@ -39,7 +39,7 @@ if [ $WINDOWS = false ]; then
             fi
         done
         ARGS=("${ARGS_TMP[@]}")
-        exec vim "${ARGS[@]}"
+        exec nvim "${ARGS[@]}"
     fi
 
     EMACS_PREFIX=""

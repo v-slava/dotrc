@@ -58,6 +58,7 @@ done
 
 set -e
 
+$DOTRC/other_files/vim_update_plugins.sh
 $DOTRC/other_files/generate_configs.sh
 i3-msg reload
 if [ "$(id -u)" != "0" ]; then
