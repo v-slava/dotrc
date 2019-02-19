@@ -57,7 +57,7 @@ git_checkout_bundle()
     fi
 }
 
-mkdir -p $PLUGINS_DIR $VIM_DIR/{autoload,bundle,spell,doc}
+mkdir -p $PLUGINS_DIR $VIM_DIR/{autoload,bundle,spell}
 if [ ! -e $VIM_DIR/init.vim ]; then
     ln -sr $HOME/.vimrc $VIM_DIR/init.vim
 fi
