@@ -6,6 +6,7 @@ def get_output_string(arg):
         return arg
     arg = delete_before_dot_mp3(arg, " (mp3cut.net)")
     arg = delete_before_dot_mp3(arg, "-spaces.ru")
+    arg = delete_before_dot_mp3(arg, "-spcs.me")
     arg = delete_before_dot_mp3(arg, "_-_spcs.me")
     arg = delete_before_dot_mp3(arg, " [zippy.audio]")
     arg = arg.lower().replace(' ', '_').replace('(', '_').replace(')', '_').replace('-', "_-_").replace('&', '_')
@@ -81,6 +82,10 @@ class MyUnitTests(unittest.TestCase):
 
     def test_delete_suffix_2(self):
         self.convert("artist_-_track_name-spaces.ru.mp3",
+                     "artist_-_track_name.mp3")
+
+    def test_delete_suffix_3(self):
+        self.convert("artist_-_track_name-spcs.me.mp3",
                      "artist_-_track_name.mp3")
 
     def test_to_lowercase(self):

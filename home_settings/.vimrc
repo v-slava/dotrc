@@ -1,44 +1,21 @@
-" Rtags:
-" Run rdm, select project by running "rc -J <project dir>".
-" Project dir should contain file "compile_commands.json".
-" +------------+------------------+--------------------------------------------+
-" | Mapping    | rc flag          | Description                                |
-" +------------+------------------+--------------------------------------------+
-" | <Leader>ri | -U               | Symbol info                                |
-" | <Leader>rj | -f               | Follow location (jump)                     |
-" | <Leader>rJ | -f --declarations-only | Follow location only declarations    |
-" | <Leader>rh | -f               | Follow location (open in horizontal split) |
-" | <Leader>rv | -f               | Follow location (open in vertical split)   |
-" | <Leader>rt | -f               | Follow location open in a new tab          |
-" | <Leader>rp | -U --symbol-info-include-parents      |        Jump to parent |
-" | <Leader>rf | -e -r            | Find references                            |
-" | <Leader>rn | -I -ae -R        | Find references by name                    |
-" | <Leader>rN | -ae -R           | Find references by name (case sensitive)   |
-" | <Leader>rs | -a -I -F         | Find symbols by name                       |
-" | <Leader>rS | -a -F            | Find symbols by name (case sensitive)      |
-" | <Leader>rx | -V               | Reindex current file                       |
-" | <Leader>rl | -w               | List all available projects                |
-" | <Leader>rr | -e -r --rename   | Rename symbol under cursor                 |
-" | <Leader>r= | -k -r            | Find virtuals                              |
-" | <Leader>re | -E               | preprocess and reformat                    |
-" | <Leader>rE | -E               | preprocess                                 |
-" +------------+------------------+--------------------------------------------+
-"
 " " View man page in vim:
 " :Man 2 read
-"
+
+" Macros:
+" You can use <C-o>q to finish recording while in insert mode.
+" <C-o> in insert mode allows you to execute one command in
+" normal mode, and then returns to insert mode (see :help i^O).
+
 " Resize vim window:
 " :[vertical] resize {+|-}<NUMBER><CR>
 "
 " List all sourced script names:
 " :scriptnames
 "
-" Generate helptags:
-" cd ~/.vim/bundle/SOME_PLUGIN
-" vim -c "helptags doc | q"
-"
 " :help string-functions
 "
+" To split lines: :%s/ /<ctrl-v><ENTER>/g"
+
 " Open quickfix window:
 " :copen
 "
@@ -53,6 +30,7 @@
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
 " In normal mode: 'gq' + motion
 "
+" Diff mode hotkeys:
 " ]c               - advance to the next block with differences
 " [c               - reverse search for the previous block with differences
 " do (diff obtain) - bring changes from the other file to the current file
@@ -83,37 +61,14 @@
 "
 " reload file: :edit
 "
-" view vim filetypes:
-" ls /usr/share/vim/vim74/ftplugin/
-" ls /usr/share/vim/vim74/syntax/
+" Use spelling:
+" See spell files in /usr/share/vim/vim81/spell.
+" http://ftp.vim.org/pub/vim/runtime/spell/{ru|en|de}.utf-8.spl
+" set spell spelllang=en,de,ru,en_us
 "
-" set lines=25
-" set columns=83
-" set langmenu=ru_RU.UTF-8
-
-syntax on
-
-set nocompatible
-set path+=**
-set wildmenu
-
-" Fix colorscheme:
-hi Search ctermfg=0 ctermbg=12
-hi DiffAdd ctermbg=234
-hi DiffDelete ctermbg=16
-hi StatusLine ctermfg=232 ctermbg=46
-hi StatusLineNC ctermfg=232 ctermbg=252
-
-" Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
-match Error /\s\+$/
-autocmd WinEnter * match Error /\s\+$/
-
-" Set maximum number of tab pages to be opened by the "-p" command line argument:
-set tabpagemax=100
-
-" Display symbol '»' as a first symbol for tab:
-set listchars=tab:»\ 
-set list
+" view vim filetypes:
+" ls /usr/share/vim/vim81/ftplugin/
+" ls /usr/share/vim/vim81/syntax/
 
 " Disable some unused standard plugins:
 let g:loaded_getscriptPlugin = 1
@@ -125,18 +80,34 @@ let g:loaded_tarPlugin = 1
 let g:loaded_zipPlugin = 1
 let g:loaded_vimballPlugin = 1
 
-" highlight current line:
-set cursorline
+" Initialize pathogen plugin (update runtimepath variable):
+execute pathogen#infect()
 
-" highlight column (right after last that can be used):
+let g:EasyMotion_do_mapping = 0 " disable default mappings
+
+colorscheme molokai
+" Fix colorscheme:
+hi Search ctermfg=0 ctermbg=12
+hi DiffAdd ctermbg=234
+hi DiffDelete ctermbg=16
+hi StatusLine ctermfg=232 ctermbg=46
+hi StatusLineNC ctermfg=232 ctermbg=252
+" Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
+match Error /\s\+$/
+autocmd WinEnter * match Error /\s\+$/
+" Highlight column (right after last that can be used):
 set colorcolumn=81
 hi ColorColumn ctermbg=234
 
+syntax on
+set nocompatible " do not try to be Vi-compatible
+" set path+=** " gf - edit the file whose name is under or after the cursor.
+set wildmenu " enhanced command line completion mode
+set cursorline " highlight current line
 set hlsearch
 set ignorecase
 set incsearch
 set mouse=a
-
 set autoindent
 " set cindent " C-style indents (after '{' and so on)
 " set smartindent
@@ -144,16 +115,25 @@ set number " display line numbers
 set relativenumber
 " set nowrap " do not wrap long lines
 set linebreak
+set backspace=2 " fix backspace befavior
+map Q <nop> " disable ex mode
+map q: <nop> " disable commands history mode
+" let mapleader = "\\"
+let mapleader = "\<Space>"
+set clipboard=unnamedplus " map clipboard to unnamedplus register '+'
+" Preserve copied text in clipboard on exit:
+autocmd VimLeave * call system("clipboard.sh", getreg('+'))
+set diffopt+=vertical " need for "fugitive-:Gdiff"
+" set lines=25
+" set columns=83
+" set langmenu=ru_RU.UTF-8
 
-" Fix backspace befavior:
-set backspace=2
+" Set maximum number of tab pages to be opened by the "-p" command line argument:
+set tabpagemax=100
 
-" Use spelling:
-" See spell files in /usr/share/vim/vim74/spell.
-" http://ftp.vim.org/pub/vim/runtime/spell/{ru|en|de}.utf-8.spl
-" set spell spelllang=en,de,ru,en_us
-nmap <F7> :setlocal spell spelllang=
-nmap <F6> :setlocal nospell<CR>
+" Display symbol '»' as a first symbol for tab:
+set listchars=tab:»\ 
+set list
 
 " Use fd instead of <esc> to exit from insert mode:
 " inoremap fd <esc>
@@ -161,14 +141,6 @@ nmap <F6> :setlocal nospell<CR>
 inoremap <nul> <esc>
 vnoremap <nul> <esc>
 " imap <esc> <nop>
-
-" let mapleader = "\\"
-let mapleader = "\<Space>"
-
-" Disable ex mode:
-map Q <nop>
-" Disable commands history mode:
-map q: <nop>
 
 " Use <C-j> as <Backspace> in insert mode:
 " inoremap <C-j> <Backspace>
@@ -182,81 +154,9 @@ map q: <nop>
 " nnoremap , <
 " nnoremap < ,
 
-" Clear last used search pattern (highlighting, search clear, no highlight search):
-nmap <Leader>sc :let @/ = ""<CR>
-" Set/unset search highlighting:
-" nmap <F3> :set hlsearch!<CR>
-
-" Search for text in clipboard:
-nmap <Leader>s/ :let @/ = @+<CR>
-
-" Scroll horizontally:
-nmap <C-l> zl
-nmap <C-h> zh
-
-" Exit from vim:
-nmap <C-d> :q<CR>
-nmap <Leader>qm :q<CR>
-
-" View next/previous buffer:
-nmap <Leader>bn :bnext<CR>
-nmap <Leader>bp :bprevious<CR>
-
-" Split vim window:
-nmap <Leader>ws :split<CR>
-nmap <Leader>wv :vsplit<CR>
-
-" Switch focus to vim window <Leader>w{h|l|j|k}:
-nmap <Leader>w <C-w>
-" <Leader>w=           - make split windows equal (diff)
-" Focus previous window:
-nmap <Leader>wp <C-w><C-p>
-
-nmap <Leader>ss /
-
-" Clear current line:
-nmap <Leader>oc $d0x
-
-" Use Y to copy until end of line:
-nmap Y y$
-
-" Diff this (view only this diff panel, hide another one):
-nmap <Leader>dt :resize +1000<CR>:vertical resize +1000<CR>
-" To restore diff use "<Leader>w="
-
-" Refresh diff screen (recalculate diff):
-nmap <Leader>du :diffupdate<CR>
-
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Jump to character within current line:
-" nmap <Leader>l <Plug>(easymotion-sl)
-" vmap <Leader>l <Plug>(easymotion-sl)
-" Jump to character within screen:
-nmap <Leader>jj <Plug>(easymotion-s)
-vmap <Leader>jj <Plug>(easymotion-s)
-
-nmap <Leader>jw <Plug>(easymotion-bd-W)
-vmap <Leader>jw <Plug>(easymotion-bd-W)
-
-" Apply macro to selected lines:
-vmap i :normal @
-
 " Do not capture stderr while using :read
 " set shellredir=>%s 2>&1 " - default value
 set shellredir=>%s
-
-" Reformat C/C++ source code:
-" nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
-" nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
-
-" Use vifm in vim as file selector:
-nmap <C-s> :VsplitVifm<CR>
-" :EditVifm :SplitVifm :DiffVifm :TabVifm
-
-" Map clipboard to unnamedplus register '+':
-set clipboard=unnamedplus
-" Preserve copied text in clipboard on exit:
-autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 
 filetype plugin on
 " Set correct filetypes:
@@ -283,6 +183,15 @@ autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua setlocal tabstop
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 
+function! RunShellCmd(cmd)
+    silent! exe 'noautocmd botright pedit ' . a:cmd
+    noautocmd wincmd P
+    set buftype=nofile
+    exe 'noautocmd r! ' . a:cmd
+    normal 0ggdd
+endfun
+command! -nargs=1 RunShellCmd :call RunShellCmd('<args>')
+
 function! IsLQList()
 	exec 'redir @x | silent ls | redir END'
 	if match(@x,'%a-  "\[Location List\]"') >= 0
@@ -307,10 +216,6 @@ function! OpenLocation()
 	endif
 	normal zz
 endfunction
-" Open location in QuickFix window:
-autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
-nmap <Leader>ln :lne<CR>
-nmap <Leader>lp :lp<CR>
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
@@ -345,20 +250,12 @@ function! Swap_keyboard_layout()
 	endif
 	call Update_status_line('', 'normal')
 endfunction
-nmap <C-;> :call Swap_keyboard_layout()<CR>
-vmap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gv
-imap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gi
 
 function! Add_include_guards(file_name)
 	let l:guard_name = tr(toupper(a:file_name), '.', '_')
 	call append(line('0'), ['#ifndef ' . l:guard_name, '#define ' . l:guard_name])
 	call append(line('$'), ['', '#endif // #ifndef ' . l:guard_name])
 endfunction
-nmap <Leader>di :call Add_include_guards(expand('%:t'))<CR>
-
-" Move current tab left and right (move tab):
-nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
 function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
@@ -386,7 +283,6 @@ function Close_window_if_temporary()
 	endif
 endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
-nmap <silent> <Leader>dq :windo CloseWindowIfTemporary<CR>
 
 let g:Modify_line___text_to_prepend = '        '
 let g:Modify_line___start_column = 78
@@ -413,7 +309,6 @@ function Modify_line(text_to_prepend, start_column, text_to_append)
 	" Update line:
 	call setline('.', l:cur_line . l:line_ending)
 endfunction
-nmap <silent> <Leader>dm :call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)<CR>0
 command! -range ModifyLine <line1>,<line2> call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)
 
 function! ViewInNewBuffer(cmd)
@@ -437,13 +332,6 @@ function! Copy_location(in_file, strip_part)
 	endif
 	echo 'copied: ' . @+
 endfunction
-" Copy full source location into clipboard:
-nmap <Leader>cl :call Copy_location( expand('%:p'), '' )<CR>
-" nmap <F11> :call Copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
-
-" Initialize pathogen plugin (update runtimepath variable):
-execute pathogen#infect()
-colorscheme molokai
 
 " Tcomment:
 call tcomment#type#Define('unknown', '# %s')
@@ -468,12 +356,8 @@ call tcomment#type#Define('xmodmap', '! %s')
 call tcomment#type#Define('vifm', '" %s')
 let g:tcomment_mapleader1 = ''
 let g:tcomment_mapleader2 = ''
-" Block comment (use gcb<motion> in normal mode):
-vmap gb :TCommentBlock<CR>
 " call tcomment#type#Define('c_block', g:tcommentBlockC2)
 " call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
-
-" To split lines: :%s/ /<ctrl-v><ENTER>/g"
 
 " if has('nvim')
 " 	" First invoke terminal:
@@ -527,42 +411,6 @@ function! OpenFile(win, cmd) " at least one colon expected
 	endif
 	execute a:cmd . ' ' . l:file
 endfunction
-nmap <Leader>ft :call OpenFile('cur_win', 'tabedit')<CR>
-nmap <Leader>fj :call OpenFile('cur_win', 'e')<CR>
-nmap <Leader>fv :call OpenFile('cur_win', 'vsp')<CR>
-nmap <Leader>fh :call OpenFile('cur_win', 'sp')<CR>
-nmap <Leader>fpj :call OpenFile('prev_win', 'e')<CR>
-nmap <Leader>fpv :call OpenFile('prev_win', 'vsp')<CR>
-nmap <Leader>fph :call OpenFile('prev_win', 'sp')<CR>
-
-" Fugitive (git):
-" :copen - open quickfix window
-nmap <Leader>gs :Gstatus<CR>
-" In status window use:
-" g?    show help
-" "-" to "git add" or "git reset" file (depending on where your cursor is).
-" <c-n> to go to next file, <c-p> to go to previous file.
-" <Enter> to open current file in window below.
-" ca    :Gcommit --amend
-nmap <Leader>gb :Gblame<CR>
-" Diff against index:
-nmap <Leader>gdi :Gdiff<CR>
-" Diff against HEAD:
-nmap <Leader>gdh :Gdiff HEAD<CR>
-" Diff against HEAD~1:
-nmap <Leader>gd1 :Gdiff ~1<CR>
-" Diff next file:
-nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR>
-" Diff against previous commit:
-nmap <Leader>gdp :Gdiff ~1<CR>
-" nmap <Leader>gw :Gwrite<CR><C-w>k
-" nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
-nmap <Leader>gco :Gcommit<CR>
-nmap <Leader>gca :Gcommit --amend<CR>
-" nmap <Leader>ga <C-w>k-
-nmap <Leader>ge :!git show --name-only --pretty="" HEAD<CR>
-" Need for "fugitive-:Gdiff":
-set diffopt+=vertical
 
 function! My_get_eval_first_last_lines()
     let l:cursor = getpos('.')
@@ -573,7 +421,6 @@ function! My_get_eval_first_last_lines()
         call setpos('.', l:cursor)
         throw "can't find 'EVAL REGION BEGINS HERE:'"
     endtry
-
     try
         normal /EVAL REGION ENDS HERE.k
         let l:last_line = getpos('.')[1]
@@ -581,14 +428,11 @@ function! My_get_eval_first_last_lines()
         call setpos('.', l:cursor)
         throw "can't find 'EVAL REGION ENDS HERE.'"
     endtry
-
     call setpos('.', l:cursor)
-
     let l:cur_line = l:cursor[1]
     if l:cur_line < l:first_line - 1 || l:cur_line > l:last_line + 1
         throw "cursor is not inside EVAL REGION"
     endif
-
     echo
     return [l:first_line, l:last_line]
 endfunction
@@ -609,14 +453,155 @@ function! My_eval_vim()
     endtry
     execute l:text
 endfunction
-nmap <Leader>mel :call My_eval_vim()<CR>
 
 " To insert echo (for Makefile) use the following macro:
 let @E = 'i	@echo "|$()|"hhi'
 let @e = 'oEVAL REGION BEGINS HERE:EVAL REGION ENDS HERE.gcko'
 
-" Macros:
-" You can use <C-o>q to finish recording while in insert mode.
-" <C-o> in insert mode allows you to execute one command in
-" normal mode, and then returns to insert mode (see :help i^O).
+" Fugitive (git):
+" :copen - open quickfix window
+" In status window use:
+" g?    show help
+" "-" to "git add" or "git reset" file (depending on where your cursor is).
+" <c-n> to go to next file, <c-p> to go to previous file.
+" <Enter> to open current file in window below.
+" ca    :Gcommit --amend
+" nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR> " diff next file
+" nmap <Leader>gw :Gwrite<CR><C-w>k
+" nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
+" nmap <Leader>ga <C-w>k-
 
+nmap <C-;> :call Swap_keyboard_layout()<CR>
+vmap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gv
+imap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gi
+" Apply macro to selected lines:
+vmap i :normal @
+" Block comment (use gcb<motion> in normal mode):
+vmap gb :TCommentBlock<CR>
+" Use Y to copy until end of line:
+nmap Y y$
+" Exit from vim:
+nmap <C-d> :q<CR>
+" Move current tab left and right (move tab):
+nmap <silent> <S-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
+" Scroll horizontally:
+nmap <C-l> zl
+nmap <C-h> zh
+" Open location in QuickFix window:
+autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
+" Reformat C/C++ source code:
+" nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
+" nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
+
+" which-key (hotkeys):
+set timeoutlen=200
+let g:which_key_map =  {}
+
+let g:which_key_map.b = { 'name' : '+buffers',
+\   'n' : [':bnext', 'next'],
+\   'p' : [':bprevious', 'previous'],
+\ }
+
+" nmap <F11> :call Copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
+let g:which_key_map.c = { 'name' : '+compile/clipboard',
+\   'l' : [':call Copy_location(expand("%:p"), "")', 'copy full location to clipboard'],
+\ }
+
+let g:which_key_map.d = {'name' : '+diff',
+\   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
+\   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
+\   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
+\   'i' : [':call Add_include_guards(expand("%:t"))', 'add include guards'],
+\   'q' : [':windo CloseWindowIfTemporary', 'close temporary windows'],
+\   'm' : [':call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append) | normal 0', 'modify line'],
+\ }
+
+" :EditVifm :SplitVifm :VsplitVifm :DiffVifm :TabVifm
+let g:which_key_map.f = {'name' : '+files',
+\   ',' : [':EditVifm', 'open file using vifm'],
+\   'j' : [':call OpenFile("cur_win", "e")', 'current window'],
+\   'h' : [':call OpenFile("cur_win", "sp")', 'horizontal split'],
+\   'v' : [':call OpenFile("cur_win", "vsp")', 'vertical split'],
+\   't' : [':call OpenFile("cur_win", "tabedit")', 'tabedit'],
+\   'p' : {'name' : '+previous window',
+\     'j' : [':call OpenFile("prev_win", "e")', 'current window'],
+\     'h' : [':call OpenFile("prev_win", "sp")', 'horizontal split'],
+\     'v' : [':call OpenFile("prev_win", "vsp")', 'vertical split'],
+\    },
+\ }
+
+let g:which_key_map.g = {'name' : '+git',
+\   's' : [':Gstatus', 'status'],
+\   'b' : [':Gblame', 'blame'],
+\   'c' : {'name' : '+commit',
+\     'o' : [':Gcommit', 'default'],
+\     'a' : [':Gcommit --amend', 'amend'],
+\   },
+\   'd' : {'name' : '+diff',
+\     'i' : [':Gdiff', 'index'],
+\     'h' : [':Gdiff HEAD', 'HEAD'],
+\     'p' : [':Gdiff ~1', 'HEAD~1 (previous)'],
+\   },
+\   'e' : [':RunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
+\ }
+
+" Jump to character within current line:
+" nmap <Leader>l <Plug>(easymotion-sl)
+" vmap <Leader>l <Plug>(easymotion-sl)
+" Jump to character within screen:
+nmap <Leader>jj <Plug>(easymotion-s)
+vmap <Leader>jj <Plug>(easymotion-s)
+nmap <Leader>jw <Plug>(easymotion-bd-W)
+vmap <Leader>jw <Plug>(easymotion-bd-W)
+let g:which_key_map.j = { 'name' : '+jump',
+\ }
+
+let g:which_key_map.l = { 'name' : '+location/layout',
+\   's' : [':SSave! __LAST__', 'layout save'],
+\   'l' : [':SLoad __LAST__', 'layout load'],
+\   'n' : [':lne', 'location list next'],
+\   'p' : [':lp', 'location list previous'],
+\ }
+
+let g:which_key_map.m = { 'name' : '+my',
+\   'e' : [':call My_eval_vim()', 'eval vim'],
+\ }
+
+let g:which_key_map.o = { 'name' : '+other',
+\   'c' : ['$d0x', 'clear current line'],
+\ }
+
+let g:which_key_map.r = { 'name' : '+rtags',
+\ }
+
+" Set/unset search highlighting:
+" nmap <F3> :set hlsearch!<CR>
+let g:which_key_map.s = {'name' : '+search/spell/symbol',
+\   '/' : [':let @/ = @+', 'search for text in clipboard'],
+\   'c' : [':let @/ = ""', 'clear search (no highlight)'],
+\   's' : ['/', 'search'],
+\   'l' : {'name' : '+spellang',
+\     'e' : [':setlocal spell spelllang=en', 'english'],
+\     'd' : [':setlocal spell spelllang=de', 'deutsch'],
+\     'r' : [':setlocal spell spelllang=ru', 'russian'],
+\     'n' : [':setlocal nospell', 'nospell (disable)'],
+\    },
+\ }
+
+let g:which_key_map.w = { 'name' : '+windows',
+\   's' : [':split', 'split horizontally'],
+\   'v' : [':vsplit', 'split vertically'],
+\   'h' : [':wincmd h', 'focus left'],
+\   'l' : [':wincmd l', 'focus right'],
+\   'k' : [':wincmd k', 'focus top'],
+\   'j' : [':wincmd j', 'focus bottom'],
+\   'p' : [':wincmd p', 'focus previous'],
+\ }
+
+" let g:which_key_map.q = { 'name' : '+quit',
+" \ }
+
+call which_key#register('<Space>', "g:which_key_map")
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>

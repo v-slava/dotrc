@@ -5,5 +5,5 @@ Most of this has been stolen from different places over the internet and
 customized to suit my needs.
 
 This is intended for my personal usage only. If you are looking for something
-usefull, you'd better look somewhere else.
+useful, you'd better look somewhere else.
 

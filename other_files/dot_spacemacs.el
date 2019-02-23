@@ -91,6 +91,7 @@ values."
                                     evil-escape
                                     cmake-ide
                                     google-c-style
+                                    smartparens
                                     ;; realgud
                                     ;; counsel-projectile
                                     ;; projectile
