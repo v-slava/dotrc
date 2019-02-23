@@ -1,3 +1,9 @@
+" TODO consider plugins:
+" ctrl-p vs command-t
+" unite
+" fireplace
+" rainbow parens
+"
 " " View man page in vim:
 " :Man 2 read
 
@@ -80,10 +86,12 @@ let g:loaded_tarPlugin = 1
 let g:loaded_zipPlugin = 1
 let g:loaded_vimballPlugin = 1
 
+ " disable default mappings:
+let g:EasyMotion_do_mapping = 0
+let g:swoopUseDefaultKeyMap = 0
+
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
-
-let g:EasyMotion_do_mapping = 0 " disable default mappings
 
 colorscheme molokai
 " Fix colorscheme:
@@ -260,7 +268,8 @@ endfunction
 function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'search-results.agsv'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'swoopBuf'
+		" || l:file_name == 'search-results.agsv'
 		return 1
 	endif
 	let l:last_part_expected = '.fugitiveblame'
@@ -279,7 +288,7 @@ function Window_is_temporary()
 endfunction
 function Close_window_if_temporary()
 	if Window_is_temporary() != 0
-		execute ':q'
+		execute ':q!'
 	endif
 endfunction
 command! CloseWindowIfTemporary call Close_window_if_temporary()
@@ -580,7 +589,7 @@ let g:which_key_map.r = { 'name' : '+rtags',
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
-\   's' : ['/', 'search'],
+\   's' : [':call Swoop()', 'swoop search'],
 \   'l' : {'name' : '+spellang',
 \     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'd' : [':setlocal spell spelllang=de', 'deutsch'],

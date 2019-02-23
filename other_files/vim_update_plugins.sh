@@ -3,6 +3,7 @@
 PATHOGEN=e9fb0914dba5bdfe2feaa364dda2e9495c5620a2
 # PATHOGEN=v2.4
 
+SWOOP=cbefdb7c17ea0eab8e1a8a1183c8f73cbb7c3611
 RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=3df05b678736e7c3f744a02f0fd2958aa8121697
@@ -24,6 +25,9 @@ TCOMMENT=ca44618f1cd7fdacadfb703954a11ac25296ac95
 
 STARTIFY=9c5680cd0b94bea9245f79463f52c7c9c6595ffd
 # STARTIFY=v1.1
+
+SURROUND=597068870b8f093a8b2d11536c62ff31222ee8d0
+# SURROUND=v2.1
 
 ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 # ARM_ASM_SYNTAX=1.2
@@ -71,6 +75,7 @@ if [ ! -e $VIM_DIR/autoload/pathogen.vim ]; then
     ln -sr $PLUGINS_DIR/vim-pathogen/autoload/pathogen.vim $VIM_DIR/autoload/pathogen.vim
 fi
 
+git_checkout_bundle https://github.com/pelodelfuego/vim-swoop $SWOOP
 git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 git_checkout_bundle https://github.com/vimscript/toml $TOML
 git_checkout_bundle https://github.com/liuchengxu/vim-which-key $WHICH_KEY
@@ -80,6 +85,7 @@ git_checkout_bundle https://github.com/vifm/vifm.vim $VIFM
 git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
 git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
 git_checkout_bundle https://github.com/mhinz/vim-startify $STARTIFY
+git_checkout_bundle https://github.com/tpope/vim-surround $SURROUND
 
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
 git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
