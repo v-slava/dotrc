@@ -3,6 +3,9 @@
 PATHOGEN=e9fb0914dba5bdfe2feaa364dda2e9495c5620a2
 # PATHOGEN=v2.4
 
+UNIMPAIRED=5694455d72229e73ff333bfe5196cc7193dca5e7
+# UNIMPAIRED=v2.0
+
 # SWOOP=cbefdb7c17ea0eab8e1a8a1183c8f73cbb7c3611
 RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
@@ -78,6 +81,7 @@ if [ ! -e $VIM_DIR/autoload/pathogen.vim ]; then
     ln -sr $PLUGINS_DIR/vim-pathogen/autoload/pathogen.vim $VIM_DIR/autoload/pathogen.vim
 fi
 
+git_checkout_bundle https://github.com/tpope/vim-unimpaired $UNIMPAIRED
 # git_checkout_bundle https://github.com/pelodelfuego/vim-swoop $SWOOP
 git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 git_checkout_bundle https://github.com/vimscript/toml $TOML

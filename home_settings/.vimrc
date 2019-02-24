@@ -1,7 +1,3 @@
-" TODO consider plugins:
-" ctrl-p vs command-t
-" unimpaired
-"
 " Writing python plugins:
 " https://neovim.io/doc/user/remote_plugin.html
 " https://pynvim.readthedocs.io/en/latest/usage/remote-plugins.html
