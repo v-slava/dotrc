@@ -1,8 +1,11 @@
 " TODO consider plugins:
 " ctrl-p vs command-t
-" unite
-" fireplace
-" rainbow parens
+" unimpaired
+"
+" Writing python plugins:
+" https://neovim.io/doc/user/remote_plugin.html
+" https://pynvim.readthedocs.io/en/latest/usage/remote-plugins.html
+" https://github.com/neovim/pynvim/blob/master/docs/usage/python-plugin-api.rst
 "
 " " View man page in vim:
 " :Man 2 read
@@ -88,10 +91,21 @@ let g:loaded_vimballPlugin = 1
 
  " disable default mappings:
 let g:EasyMotion_do_mapping = 0
-let g:swoopUseDefaultKeyMap = 0
+" let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
+
+" Use ripgrep:
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
+call denite#custom#var('grep', 'command', ['rg'])
+call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
 
 colorscheme molokai
 " Fix colorscheme:
@@ -190,6 +204,33 @@ autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua setlocal tabstop
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
+
+function! VifmChoose(action)
+    let l:chosen = tempname()
+    let l:callback = { 'chosen' : l:chosen, 'action' : a:action }
+    function! callback.on_exit(id, exit_code, event)
+        buffer #
+        " silent! bdelete! #
+        if a:exit_code != 0
+            call nvim_err_writeln('Got non-zero code from vifm: ' . a:exit_code)
+            return
+        endif
+        if self.action == 'ripgrep'
+            let l:dir = join(readfile(self.chosen))
+            execute 'Denite -path=' . l:dir . ' grep:::!'
+        " elseif self.action == 'something'
+        else
+            call nvim_err_writeln('Got unsupported action: ' . self.action)
+        endif
+    endfunction
+    enew
+    call termopen('vifm --choose-dir ' . l:chosen, l:callback)
+    " let oldbuf = bufname('%')
+    " execute 'keepalt file' escape('vifm: '.'edit', ' |')
+    " execute bufnr(oldbuf).'bwipeout'
+    set norelativenumber
+    startinsert
+endfunction
 
 function! RunShellCmd(cmd)
     silent! exe 'noautocmd botright pedit ' . a:cmd
@@ -508,6 +549,7 @@ set timeoutlen=200
 let g:which_key_map =  {}
 
 let g:which_key_map.b = { 'name' : '+buffers',
+\   'b' : ['::Denite buffer', 'select'],
 \   'n' : [':bnext', 'next'],
 \   'p' : [':bprevious', 'previous'],
 \ }
@@ -528,12 +570,13 @@ let g:which_key_map.d = {'name' : '+diff',
 
 " :EditVifm :SplitVifm :VsplitVifm :DiffVifm :TabVifm
 let g:which_key_map.f = {'name' : '+files',
-\   ',' : [':EditVifm', 'open file using vifm'],
-\   'j' : [':call OpenFile("cur_win", "e")', 'current window'],
-\   'h' : [':call OpenFile("cur_win", "sp")', 'horizontal split'],
-\   'v' : [':call OpenFile("cur_win", "vsp")', 'vertical split'],
-\   't' : [':call OpenFile("cur_win", "tabedit")', 'tabedit'],
-\   'p' : {'name' : '+previous window',
+\   ',' : [':EditVifm', 'vifm'],
+\   'f' : [':Denite file/rec', 'fuzzy'],
+\   'j' : [':call OpenFile("cur_win", "e")', 'under cursor current window'],
+\   'h' : [':call OpenFile("cur_win", "sp")', 'under cursor horizontal split'],
+\   'v' : [':call OpenFile("cur_win", "vsp")', 'under cursor vertical split'],
+\   't' : [':call OpenFile("cur_win", "tabedit")', 'under cursor tabedit'],
+\   'p' : {'name' : '+under cursor previous window',
 \     'j' : [':call OpenFile("prev_win", "e")', 'current window'],
 \     'h' : [':call OpenFile("prev_win", "sp")', 'horizontal split'],
 \     'v' : [':call OpenFile("prev_win", "vsp")', 'vertical split'],
@@ -584,12 +627,13 @@ let g:which_key_map.o = { 'name' : '+other',
 let g:which_key_map.r = { 'name' : '+rtags',
 \ }
 
-" Set/unset search highlighting:
-" nmap <F3> :set hlsearch!<CR>
+" nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
+" \   's' : [':call Swoop()', 'swoop search'],
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
-\   's' : [':call Swoop()', 'swoop search'],
+\   's' : [':Denite line', 'fuzzy search in this file'],
+\   'm' : [':call VifmChoose("ripgrep")', 'ripgrep'],
 \   'l' : {'name' : '+spellang',
 \     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'd' : [':setlocal spell spelllang=de', 'deutsch'],
