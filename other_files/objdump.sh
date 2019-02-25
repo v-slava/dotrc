@@ -1,14 +1,18 @@
 #!/bin/bash
 
 # This is an objdump wrapper script. It determines target file type and runs
-# proper objdump executable (either objdump or ${MY_CROSS_COMPILE}objdump)
+# proper objdump executable.
 
 # last command line argument:
 FILE="${@: -1}"
 
-if file "$FILE" | grep -q "ARM" ; then
-	OBJDUMP=${MY_CROSS_COMPILE}objdump
+FILE_INFO=$(file "$FILE")
+
+if echo $FILE_INFO | grep -q "ARM" ; then
+	CROSS_COMPILE=arm-linux-gnueabihf-
+elif echo $FILE_INFO | grep -q "PowerPC" ; then
+	CROSS_COMPILE=powerpc-linux-gnu-
 else
-	OBJDUMP=objdump
+	CROSS_COMPILE=
 fi
-$OBJDUMP $@
+${CROSS_COMPILE}objdump $@
