@@ -624,7 +624,8 @@ let g:which_key_map.r = { 'name' : '+rtags',
 \ }
 
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
-" \   's' : [':call Swoop()', 'swoop search'],
+" \   's' : [':call Swoop()', 'fuzzy search in this file'],
+" \   's' : ['/', 'fuzzy search in this file'],
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
@@ -639,7 +640,7 @@ let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \ }
 
 let g:which_key_map.w = { 'name' : '+windows',
-\   's' : [':split', 'split horizontally'],
+\   '-' : [':split', 'split horizontally'],
 \   'v' : [':vsplit', 'split vertically'],
 \   'h' : [':wincmd h', 'focus left'],
 \   'l' : [':wincmd l', 'focus right'],

@@ -63,6 +63,9 @@ apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprinti
 
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
+# apt-get install --install-recommends python-pip python3-pip
+# pip3 install --user --upgrade pynvim
+# pip install --user --upgrade pynvim
 
 # Install email client:
 apt-get install thunderbird

@@ -13,6 +13,10 @@ WHICH_KEY=3df05b678736e7c3f744a02f0fd2958aa8121697
 
 DENITE=7006b428e6b717793e9e323dbc51618f231e13ad
 # DENITE=1.2
+# For python 3.5 in file:
+# ~/.vim_all_plugins/denite.nvim/rplugin/python3/denite/filter/sorter_rank.py
+# use:
+# from denite.filter.sorter.rank import Filter as Base
 
 FUGITIVE=a489c6e1d3fc265242fabfd171021b0ea02dacf8
 # FUGITIVE=v2.5

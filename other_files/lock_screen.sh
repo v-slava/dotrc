@@ -31,6 +31,7 @@ set +e # since Caps_Lock may be undefined, the following command may fail
 xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = BackSpace'
 set -e
 
+xset dpms force off
 i3lock -c 101010 --nofork
 setxkbmap us,ru
 
