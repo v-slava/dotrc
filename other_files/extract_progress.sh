@@ -30,6 +30,22 @@ for FILE in "$@" ; do
     cd "$DIR"
     echo "Extracting \"$FILE\" to \"$DIR\"..."
 
+    if [ -x $DOTRC_S/other_files/extract_progress.sh ]; then
+        set +e
+        NOT_SUPPORTED_CODE=42
+        $DOTRC_S/other_files/extract_progress.sh $NOT_SUPPORTED_CODE "$FILE_FULL_PATH"
+        RET=$?
+        set -e
+        if [ $RET -eq 0 ]; then
+            continue # this file has been already successfully processed
+        fi
+        if [ $RET -ne $NOT_SUPPORTED_CODE ]; then
+            cd -
+            rm -rf "$DIR"
+            exit 1 # assume error message has been already printed
+        fi
+    fi
+
     case "$FILE_FULL_PATH" in
         *.a | *.deb) ar x "$FILE_FULL_PATH" ;;
         *.jar) pv "$FILE_FULL_PATH" | jar x ;;
@@ -53,6 +69,8 @@ for FILE in "$@" ; do
         *)
             echo "Error: \"$FILE\" - unknown archive format." 1>&2
             # see also: https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/extract
+            cd -
+            rm -rf "$DIR"
             exit 1
         ;;
     esac
