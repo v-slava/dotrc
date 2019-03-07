@@ -1162,6 +1162,10 @@ CFLAGS_kobject_uevent.o := -DDEBUG
 dev_dbg(struct device *dev, char *format, ...);
 # See also: BUG(), BUG_ON(), dump_stack()
 
+# Get linux kernel printk ring buffer address (in hex):
+readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
+# See also $DOTRC/bin/uboot_mem_dump_extract_strings.sh
+
 # Enable all (debug-level) messages:
 echo 7 > /proc/sys/kernel/printk
 # in linux command line:
@@ -1255,6 +1259,15 @@ mount -t debugfs none /sys/kernel/debug
 
 # mount devtmpfs (/dev):
 mount -t devtmpfs none /dev
+
+# mount procfs (/proc):
+mount -t proc proc /proc
+
+# Linux kernel find driver that controls /dev/* (devtmpfs) file:
+# determine major number by running:
+ls -l /dev/some_device
+# Now explore sysfs at:
+/sys/dev/{char,block}/{major_number}
 
 # Linux kernel debug configuration options (see "kernel hacking" menu):
 CONFIG_DEBUG_KERNEL=y
