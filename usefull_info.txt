@@ -1154,6 +1154,7 @@ zcat /proc/config.gz
 pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
 # printk "array" format specifier: %5ph - print 5 bytes in hex.
+# printk "function pointer" format specifier: Documentation/printk-formats.txt
 # For dynamic debugging:
 pr_debug(char *format, ...);
 # To enable output from pr_debug() for kobject_uevent.c:
@@ -1262,6 +1263,9 @@ mount -t devtmpfs none /dev
 
 # mount procfs (/proc):
 mount -t proc proc /proc
+
+# mount sysfs (/sys):
+mount -t sysfs sysfs /sys
 
 # Linux kernel find driver that controls /dev/* (devtmpfs) file:
 # determine major number by running:
