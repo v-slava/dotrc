@@ -39,6 +39,8 @@ STARTIFY=9c5680cd0b94bea9245f79463f52c7c9c6595ffd
 SURROUND=597068870b8f093a8b2d11536c62ff31222ee8d0
 # SURROUND=v2.1
 
+VIMAGIT=1.7.3
+
 ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 # ARM_ASM_SYNTAX=1.2
 
@@ -98,6 +100,7 @@ git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
 git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
 git_checkout_bundle https://github.com/mhinz/vim-startify $STARTIFY
 git_checkout_bundle https://github.com/tpope/vim-surround $SURROUND
+git_checkout_bundle https://github.com/jreybert/vimagit $VIMAGIT
 
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
 git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME

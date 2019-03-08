@@ -525,6 +525,11 @@ let @e = 'oEVAL REGION BEGINS HERE:EVAL REGION ENDS HERE.gcko'
 " nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
 " nmap <Leader>ga <C-w>k-
 
+" vimagit:
+let g:magit_default_fold_level=2
+let g:magit_discard_untracked_do_delete=1
+let g:magit_discard_hunk_mapping='X'
+
 nmap <C-;> :call Swap_keyboard_layout()<CR>
 vmap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gv
 imap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gi
@@ -587,8 +592,10 @@ let g:which_key_map.f = {'name' : '+files',
 \    },
 \ }
 
+" \   's' : [':Gstatus', 'status'],
 let g:which_key_map.g = {'name' : '+git',
-\   's' : [':Gstatus', 'status'],
+\   's' : [':wa | Magit', 'status'],
+\   'u' : [':e', 'update (reload) buffer'],
 \   'b' : [':Gblame', 'blame'],
 \   'c' : {'name' : '+commit',
 \     'o' : [':Gcommit', 'default'],

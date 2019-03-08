@@ -11,6 +11,8 @@ ARGS=()
 for arg in "$@" ; do
     case "$arg" in
         "--diff") DIFF=true ;;
+        "--emacs") EMACS=true ;;
+        "--get-editor") GET_EDITOR=true ;;
         *) ARGS+=("$arg") ;;
     esac
 done
@@ -23,10 +25,17 @@ if [ $WINDOWS = false ]; then
     if [ -z "$DISPLAY" ]; then
         USE_VIM=true
     fi
-    # USE_VIM=true
-    # USE_KAK=true
+    if [ "$EMACS" != "true" ]; then
+        USE_VIM=true
+        # USE_KAK=true
+        :
+    fi
     MAIN_KAK_SESSION=main_kak_session
     if [ "$USE_VIM" = "true" ]; then
+        if [ "$GET_EDITOR" = "true" ]; then
+            echo "vim"
+            exit
+        fi
         ARGS_TMP=()
         if [ "$DIFF" = "true" ]; then
             ARGS_TMP+=("-d")
@@ -51,6 +60,15 @@ fi
 
 if [ "$USE_KAK" != "true" ]; then
     USE_EMACS=true
+fi
+
+if [ "$GET_EDITOR" = "true" ]; then
+    if [ "$USE_KAK" = "true" ]; then
+        echo "kak"
+    else
+        echo "emacs"
+    fi
+    exit
 fi
 
 daemon_running()
