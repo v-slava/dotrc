@@ -4,6 +4,8 @@
 
 FAKE_ROOTFS=/tmp/fake_rootfs
 
+set -e
+
 # Create our fake root directory:
 rm -rf $FAKE_ROOTFS
 mkdir $FAKE_ROOTFS
@@ -14,7 +16,7 @@ mkdir -p $FAKE_ROOTFS/{bin,sbin,usr/{bin,sbin}}
 # Copy busybox binary:
 cp /bin/busybox $FAKE_ROOTFS/bin/
 
-if [ false ]; then
+if [ ! true ]; then
     # Create fake chroot environment for unit tests:
     # Note: the busybox should be dynamic
 
@@ -37,13 +39,19 @@ else
 
 mount -t proc none /proc
 mount -t sysfs none /sys
-/sbin/mdev -s
+# /sbin/mdev -s # populate /dev directory
+mount -t devtmpfs none /dev
 EOF
     chmod +x $FAKE_ROOTFS/etc/init.d/rcS
 
     CUR_DIR=$PWD
-    cd $FAKE_ROOTFS && find | cpio -o -H newc | gzip -9 > $CUR_DIR/initramfs.igz
-    cd -
+    cd $FAKE_ROOTFS
+    set -x
+    source /dev/stdin
+    set +x
+    find | cpio --quiet -o -H newc | gzip -9 > $CUR_DIR/initramfs.igz
+    echo "Waiting for user commands on stdin..."
+    cd - 1>/dev/null
 
     # Use kpartx to create hard drive image (sda.img). To create rootfs use:
     # debootstrap stretch mounted_folder

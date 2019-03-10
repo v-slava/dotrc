@@ -60,7 +60,8 @@ for FILE in "$@" ; do
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
             pv "$FILE_FULL_PATH" | bunzip2 "$UNCOMPRESSED_FILE" ;;
         *.igz)
-            pv "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
+            # pv "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
+            unmkinitramfs "$FILE_FULL_PATH" . ;;
         # *.7z) pv "$FILE_FULL_PATH" | 7z x -si > "$UNCOMPRESSED_FILE" ;; # Error: E_NOTIMPL
         *.7z) 7z x "$FILE_FULL_PATH" ;;
         *.rar) rar x "$FILE_FULL_PATH" ;; # impossible to read from stdin?
