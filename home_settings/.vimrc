@@ -194,7 +194,7 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
-autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua
+autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua,php
 \ setlocal shiftwidth=0 | setlocal tabstop=4 | setlocal expandtab
 autocmd FileType c setlocal shiftwidth=0
 \ | if expand('%:p') =~ 'linux-'
