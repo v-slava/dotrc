@@ -313,7 +313,7 @@ endfunction
 function Window_is_temporary()
 	let l:dir_name = expand('%:p:h')
 	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || l:file_name == 'swoopBuf'
+	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || &l:buftype == 'nofile' || l:file_name == 'swoopBuf'
 		" || l:file_name == 'search-results.agsv'
 		return 1
 	endif

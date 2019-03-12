@@ -1118,11 +1118,27 @@ echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00
 # Simulate root access via LD_PRELOAD:
 fakeroot id
 echo "id ; whoami" | fakeroot
+
 # Create tarball for variant=fakechroot (use variant=minbase without fakechroot):
 fakechroot debootstrap --arch=armhf --download-only --variant=minbase --make-tarball=debootstrap.tgz buster tmp_dir
 # If tmp_dir doesn't exist - it will be created. It will be deleted at the end.
+
 # Unpack tarball for foreign architecture:
-fakeroot debootstrap --arch=armhf --foreign --unpack-tarball=debootstrap.tgz buster mnt
+fakeroot debootstrap --arch=armhf --foreign --unpack-tarball=debootstrap.tgz buster rootfs_dir
+
+# Chroot to foreign architecture rootfs:
+cp /usr/bin/qemu-arm-static rootfs_dir/usr/bin
+mount -B /proc rootfs_dir/proc
+mount -B /sys rootfs_dir/sys
+mount -B /dev rootfs_dir/dev
+mount -B /dev/pts rootfs_dir/dev/pts
+# grep for "mount -t proc" and "mount -t sysfs" in rootfs_dir/debootstrap
+# and comment these mounts out.
+chroot rootfs_dir
+
+# Complete debootstrap in chroot (do second stage):
+/debootstrap/debootstrap --second-stage
+
 # Download and install (first stage only):
 fakeroot debootstrap --arch=armhf --foreign buster mnt
 # Chroot without root privileges:
@@ -1135,11 +1151,6 @@ sb2-init -d -n TARGET CROSS_COMPILER
 sb2 # -eR # Enter scratchbox environment
 fakeroot debootstrap --arch=armhf --foreign --variant=minbase buster DIR
 # Here DIR is a directory you've executed sb2-init in (be carefull with symlinks).
-# Chroot to foreign architecture rootfs:
-cp /usr/bin/qemu-arm-static root_dir/usr/bin
-sudo chroot root_dir
-# Note: there might be issues with fakechroot-ing to foreign architecture.
-# See also other_files/bootstrap.sh
 
 # Generate password for /etc/passwd:
 openssl passwd -1 -salt my_salt my_password
