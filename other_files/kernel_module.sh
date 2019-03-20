@@ -23,9 +23,10 @@ EOF
 fi
 
 source $DOTRC_S/other_files/kernel_env.sh
-export KDIR=$KDIR
 cd $OUT
-emacsclient --eval '(my-save-all-buffers)'
+if pidof emacs 1>/dev/null 2>&1 ; then
+    emacsclient --eval '(my-save-all-buffers)'
+fi
 make -j5
 # make -j5 clean
 scpto.sh $FILE.ko
