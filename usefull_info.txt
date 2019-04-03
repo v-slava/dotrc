@@ -921,6 +921,8 @@ wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 # Download video from youtube:
 cclive -f best URL
 youtube-dl --write-sub URL
+# Extract mp3:
+youtube-dl -x --audio-format mp3 --audio-quality=0 URL
 
 # Bluetooth headset alsa:
 # /etc/bluetooth/audio.conf:

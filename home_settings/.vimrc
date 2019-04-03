@@ -96,12 +96,23 @@ execute pathogen#infect()
 call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
 call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
+" <C-o> enter normal mode
+" call denite#custom#map('normal', 'E', '<denite:do_action:edit>', 'noremap')
 call denite#custom#var('grep', 'command', ['rg'])
 call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
 call denite#custom#var('grep', 'recursive_opts', [])
 call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 call denite#custom#var('grep', 'separator', ['--'])
 call denite#custom#var('grep', 'final_opts', [])
+
+" function! s:my_denite_split(context)
+"     let split_action = 'vsplit'
+"     if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
+"         let split_action = 'split'
+"     endif
+"     execute split_action . ' ' . a:context['targets'][0].action__path
+" endfunction
+" call denite#custom#action('file', 'my_split', function('s:my_denite_split'))
 
 colorscheme molokai
 " Fix colorscheme:
@@ -213,15 +224,15 @@ function! VifmChoose(action)
     let l:chosen = tempname()
     let l:callback = { 'chosen' : l:chosen, 'action' : a:action }
     function! callback.on_exit(id, exit_code, event)
-        buffer #
-        " silent! bdelete! #
+        silent! bdelete! #
         if a:exit_code != 0
             call nvim_err_writeln('Got non-zero code from vifm: ' . a:exit_code)
             return
         endif
         if self.action == 'ripgrep'
             let l:dir = join(readfile(self.chosen))
-            execute 'Denite -path=' . l:dir . ' grep:::!'
+            " -default-action=my_split
+            execute 'Denite -post-action=suspend -path=' . l:dir . ' grep:::!'
         " elseif self.action == 'something'
         else
             call nvim_err_writeln('Got unsupported action: ' . self.action)
