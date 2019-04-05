@@ -25,6 +25,11 @@ fi
 
 export PATH=$ORIG_PATH
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH:/sbin:/usr/sbin
+
+if [ -d "$DOTRC_S/bin" ]; then
+    export PATH=$PATH:$DOTRC_S/bin
+fi
+
 export CC=clang
 export CXX=clang++
 
@@ -95,7 +100,7 @@ __git_complete gb _git_branch
 alias gpl='git pull'
 # alias gpush_test_commit='$DOTRC/other_files/git_push_test_commit.sh REPO BRANCH'
 # alias gfetch_test_commit='$DOTRC/other_files/git_fetch_test_commit.sh REPO BRANCH'
-alias beautify='~/workspace/dotrc_s/constant_scripts/beautify.sh'
+alias beautify='$DOTRC_S/constant_scripts/beautify.sh'
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
