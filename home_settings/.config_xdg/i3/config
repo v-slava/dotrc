@@ -320,8 +320,7 @@ bindsym XF86TouchpadToggle exec --no-startup-id exec $DOTRC/other_files/toggle_t
 exec --no-startup-id exec $DOTRC/other_files/toggle_touchpad.sh
 
 # dmenu (a program launcher)
-bindsym $Alt_L+d exec --no-startup-id exec dmenu_run -fn 'Inconsolata LGC-16:monospace'
-# bindsym $Alt_L+d exec --no-startup-id exec i3-dmenu-desktop --dmenu='dmenu -i -fn Inconsolata LGC-16:monospace' --entry-type=command
+bindsym $Alt_L+d exec --no-startup-id exec $DOTRC/other_files/dmenu.sh
 
 # noob settings begin
 # noob settings end
