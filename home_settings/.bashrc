@@ -54,10 +54,9 @@ export MINICOM='-c on'
 
 BASHRC_S=$DOTRC_S/home_settings/.bashrc
 
-# We've already merged .bashrc
-# if [ -f $BASHRC_S ] ; then
-# 	source $BASHRC_S
-# fi
+if [ -f $BASHRC_S ] ; then
+	source $BASHRC_S
+fi
 
 # If not running interactively, exit now
 case $- in
