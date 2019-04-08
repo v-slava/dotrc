@@ -58,6 +58,11 @@ if [ -f $BASHRC_S ] ; then
 	source $BASHRC_S
 fi
 
+set_terminal_title()
+{
+    echo -en "\033]0;$1\a"
+}
+
 # If not running interactively, exit now
 case $- in
     *i*) ;;
