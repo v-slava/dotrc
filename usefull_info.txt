@@ -276,6 +276,9 @@ less -r|-R IN_OUT_LOG_FILE
 # bash assume that $SOME_VAR contains hex value (without 0x), convert it to decimal:
 echo $((16#$SOME_VAR))
 
+# Start (default clear) bash  with empty environment and do not source anything:
+env -i bash --noprofile --norc
+
 # Where to define environment variables:
 /etc/environment
 /etc/bash.bashrc
