@@ -162,7 +162,7 @@ filextype *.djvu
 
 " Audio
 filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
-	\ /media/files/workspace/dotrc/other_files/audio_player_play_files.sh %f,
+	\ $DOTRC/other_files/audio_player_play_files.sh %f,
 	\ ffplay -nodisp %c,
 	\ mplayer %f,
 	\ ffplay %c,
@@ -198,7 +198,7 @@ filextype *.html,*.htm
 
 " Image
 filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-	\ /media/files/workspace/dotrc/other_files/view_image.sh %c,
+	\ $DOTRC/other_files/view_image.sh %c,
 	\ gliv %f,
 	\ sxiv %f,
 	\ gpicview %c,
@@ -363,11 +363,12 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
-nnoremap cfs :!/media/files/workspace/dotrc/other_files/vifm_rename.py %c spaces_to_underscores<CR>
-nnoremap cfd :!/media/files/workspace/dotrc/other_files/vifm_rename.py %c dots_to_underscores<CR>
-nnoremap cfl :!/media/files/workspace/dotrc/other_files/vifm_rename.py %c to_lowercase<CR>
-nnoremap cfe :!/media/files/workspace/dotrc/other_files/vifm_rename.py %c extracted<CR>
-nnoremap cfm :!/media/files/workspace/dotrc/other_files/vifm_rename.py %c music<CR>
+execute system('exec echo "nnoremap cfs :!$DOTRC/other_files/vifm_rename.py %c spaces_to_underscores<CR>"')
+execute system('exec echo "nnoremap cfd :!$DOTRC/other_files/vifm_rename.py %c dots_to_underscores<CR>"')
+execute system('exec echo "nnoremap cfl :!$DOTRC/other_files/vifm_rename.py %c to_lowercase<CR>"')
+execute system('exec echo "nnoremap cfe :!$DOTRC/other_files/vifm_rename.py %c extracted<CR>"')
+execute system('exec echo "nnoremap cfm :!$DOTRC/other_files/vifm_rename.py %c music<CR>"')
+
 nnoremap ,d :clone?<CR>
 " nnoremap A cw<c-w>
 

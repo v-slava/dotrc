@@ -4,6 +4,9 @@ sudo apt-get install auditd
 sudo auditctl -w /some/path/to/file
 # Afterwards see file: /var/log/audit/audit.log
 
+# linux printer (cups) settings:
+http://localhost:631
+
 # simple http server to transfer files over local network:
 woof FILE
 
@@ -613,6 +616,24 @@ make kselftest
 # See also: LTP
 # See also: https://kernelci.org/
 
+# linux kernel boot sequence (tags: debugging, jtag, system):
+uboot:
+    boot_jump_linux()
+linux/arch/arm/boot/compressed/vmlinux (decompression stub), address offset 0x01000000:
+    start
+    __enter_kernel
+linux/vmlinux, address offset -0xC0000000:
+    stext
+    __turn_mmu_on
+        3 instructions
+linux/vmlinux, address offset 0:
+    __mmap_switched
+    start_kernel
+    smp_init
+
+# linux kernel disable optimizations (CFLAGS):
+CFLAGS_file_name.o := -O0
+
 # linux kernel loading:
 insmod executes syscall init_module -> sys_init_module() in kernel
 rmmod executes syscall delete_module -> sys_delete_module() in kernel
@@ -694,6 +715,9 @@ fc-list
 
 # update fonts cache:
 fc-cache -fv
+
+# Extract images from pdf file:
+mkdir /tmp/images_folder && pdfimages -all input.pdf /tmp/images_folder
 
 # cut pages range from pdf:
 pdftk A=in_1.pdf input_pw='PASSWORD' B=in_2.pdf cat A3-5 B3left A2right output out.pdf
@@ -1924,6 +1948,7 @@ readelf -V file.elf | grep CXXABI_
 
 # dwarf debug information (tags: gcc, gdb, elf):
 readelf --debug-dump=info FILE
+objdump -g FILE
 
 # All info elf:
 readelf -a FILE
