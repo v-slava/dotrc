@@ -616,7 +616,7 @@ make kselftest
 # See also: LTP
 # See also: https://kernelci.org/
 
-# linux kernel boot sequence (tags: debugging, jtag, system):
+# linux kernel boot sequence (tags: startup, debugging, jtag, system):
 uboot:
     boot_jump_linux()
 linux/arch/arm/boot/compressed/vmlinux (decompression stub), address offset 0x01000000:
