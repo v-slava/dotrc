@@ -53,6 +53,9 @@ for FILE in "$@" ; do
         *.tgz | *.tar.gz)    pv "$FILE_FULL_PATH" | tar xz ;;
         *.tar.bz2 | *.tbz2)    pv "$FILE_FULL_PATH" | tar xj ;;
         *.tar.xz | *.txz)    pv "$FILE_FULL_PATH" | tar xJ ;;
+        *.xz)
+            UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
+            pv "$FILE_FULL_PATH" | unxz > "$UNCOMPRESSED_FILE" ;;
         *.gz)
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
             pv "$FILE_FULL_PATH" | gunzip > "$UNCOMPRESSED_FILE" ;;

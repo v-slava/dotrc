@@ -1922,8 +1922,10 @@ realpath PATH
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
-# Cut first 16 seconds from mp3:
+# Cut mp3 [00:00; 00:16]:
 avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
+# Cut mp3 [00:16; 00:26]:
+avconv -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
 
 # extract audio (mp3) from video:
 avconv -i video.mp4 -q:a 0 -map a audio.mp3
