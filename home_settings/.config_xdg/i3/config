@@ -226,6 +226,7 @@ bindsym $Alt_L+b exec --no-startup-id exec google-chrome $DOTRC/other_files/star
 
 # bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $DOTRC/other_files/start_teamviewer.sh
 bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $DOTRC/other_files/start_in_path.sh telegram
+exec --no-startup-id exec $DOTRC/other_files/start_in_path.sh telegram
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
 bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec skypeforlinux
