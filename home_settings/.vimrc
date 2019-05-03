@@ -652,6 +652,10 @@ let g:which_key_map.r = { 'name' : '+rtags',
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
 " \   's' : [':call Swoop()', 'fuzzy search in this file'],
 " \   's' : ['/', 'fuzzy search in this file'],
+" For :Denite buffer:
+" - use <CR> to go to file under cursor
+" - use <CR> to switch back to insert mode and <CTRL-j> <CTRL-k> to navigate
+"   list
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],

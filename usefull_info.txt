@@ -1539,7 +1539,7 @@ git stash pop --index
 git stash show -p [stash@{1}]
 
 # Create patch file:
-git format-patch -1 [-o OUT_DIR]
+git format-patch -1 [-o OUT_DIR] [SHA]
 # Apply patch file:
 cd GIT_ROOT_DIR
 git apply PATCH_FILE
