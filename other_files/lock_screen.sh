@@ -28,7 +28,7 @@ if xset q | grep -q 'Caps Lock:   on' ; then
 fi
 xmodmap ~/.Xmodmap
 set +e # since Caps_Lock may be undefined, the following command may fail
-xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = BackSpace'
+xmodmap -e 'remove Lock = Caps_Lock' -e 'keysym Caps_Lock = BackSpace' 2>/dev/null
 set -e
 
 xset dpms force off
