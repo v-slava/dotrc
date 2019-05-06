@@ -13,6 +13,12 @@ woof FILE
 # install busybox (see also: other_files/create_rootfs.sh):
 busybox --install -s
 
+# Test CAN interface:
+# on server:
+candump CAN_INTERFACE
+# on client
+cansend CAN_INTERFACE 543#11.22.33.44.55
+
 # simple web site to access without DNS:
 http://www.columbia.edu/~fdc/sample.html
 http://128.59.105.24/~fdc/sample.html
