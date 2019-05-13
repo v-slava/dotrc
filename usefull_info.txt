@@ -1458,8 +1458,7 @@ git tag --contains SHA1
 # git add new checkout
 git worktree add /path/to/non/existent/directory
 
-# git show all not pushed commits:
-git show new commits on upstream for a given branch:
+# git show new commits on upstream for a given branch:
 git fetch REMOTE
 git log BRANCH..REMOTE/BRANCH
 

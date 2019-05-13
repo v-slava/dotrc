@@ -65,6 +65,7 @@ for FILE in "$@" ; do
         *.igz)
             # pv "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
             unmkinitramfs "$FILE_FULL_PATH" . ;;
+        *.cpio) pv "$FILE_FULL_PATH" | cpio -i ;;
         # *.7z) pv "$FILE_FULL_PATH" | 7z x -si > "$UNCOMPRESSED_FILE" ;; # Error: E_NOTIMPL
         *.7z) 7z x "$FILE_FULL_PATH" ;;
         *.rar) rar x "$FILE_FULL_PATH" ;; # impossible to read from stdin?
