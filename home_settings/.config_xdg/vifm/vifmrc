@@ -182,7 +182,7 @@ filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2
 
 " Web
 filextype *.html,*.htm
-	\ chromium %f &,
+	\ google-chrome %f &,
 	\ vimb %f %i &,
 	\ dwb %f %i &,
 	\ uzbl-browser %f %i &,
