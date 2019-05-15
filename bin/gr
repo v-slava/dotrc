@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# grep in all submodules
+
+usage()
+{
+    echo "Usage: $(basename $0) GIT_GREP_ARGS ..." 1>&2
+    exit 1
+}
+
+
+COLOR_FLAGS=
+if [ -t 1 ] ; then
+    # output to terminal
+    COLOR_FLAGS="--color=always"
+fi
+
+if [ -z "$1" ]; then
+    usage
+fi
+
+FLAGS="$COLOR_FLAGS"
+ROOT_DIR=$(git rev-parse --show-toplevel)
+
+(
+    git grep $FLAGS "$@"
+    git submodule --quiet foreach $DOTRC/other_files/git_grep_submodule.sh "$ROOT_DIR" $FLAGS "$@"
+) | cat
