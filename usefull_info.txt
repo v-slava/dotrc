@@ -1443,6 +1443,32 @@ cd destination_dir && patch -p1 < ../patch_file
 # Do not ask anything, do not create .orig and .rej files:
 patch -f -r - --no-backup-if-mismatch old_file patch_file
 
+# git clone all submodules:
+git clone --recurse-submodules URL
+
+# git checkout saved in main repo submodule commits (hashes):
+git submodule update
+
+# git diff in all submodules:
+git submodule foreach git diff --color=always | cless
+
+# git submodules clean:
+git clean -ffdx
+git submodule update --init --recursive
+
+# Make git command working with submodules by default:
+git config submodule.recurse true
+
+# Select branch to track for "git submodule update --remote":
+# git config -f .gitmodules submodule.SUBMODULE_NAME.branch BRANCH_NAME
+
+# pull main repo and all submodules:
+git pull --recurse-submodules
+
+# check that all submodules are pushed before pushing main repo:
+git push --recurse-submodules=check
+# Set it by default: git config push.recurseSubmodules check
+
 # git find common ancestor (parent) for two (2) branches:
 git merge-base branch1 branch2
 

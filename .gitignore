@@ -15,6 +15,7 @@
 /bin/fzf
 /bin/code
 /bin/repo
+/bin/youtube-dl
 *.pyc
 
 # second:
