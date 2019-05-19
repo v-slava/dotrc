@@ -32,6 +32,7 @@ FILE_LINE=559088afaf10124ea663ee0f4f73b1de48fb1632
 
 TCOMMENT=ca44618f1cd7fdacadfb703954a11ac25296ac95
 # TCOMMENT=3.08.1
+VIM_COMMENTARY=141d9d32a9fb58fe474fcc89cd7221eb2dd57b3a
 
 STARTIFY=9c5680cd0b94bea9245f79463f52c7c9c6595ffd
 # STARTIFY=v1.1
@@ -82,6 +83,7 @@ if [ ! -e $VIM_DIR/init.vim ]; then
     ln -sr $HOME/.vimrc $VIM_DIR/init.vim
 fi
 
+rm $VIM_DIR/bundle/*
 git_checkout https://github.com/tpope/vim-pathogen $PATHOGEN
 if [ ! -e $VIM_DIR/autoload/pathogen.vim ]; then
     ln -sr $PLUGINS_DIR/vim-pathogen/autoload/pathogen.vim $VIM_DIR/autoload/pathogen.vim
@@ -97,7 +99,10 @@ git_checkout_bundle https://github.com/tpope/vim-fugitive $FUGITIVE
 git_checkout_bundle https://github.com/easymotion/vim-easymotion $EASYMOTION
 git_checkout_bundle https://github.com/vifm/vifm.vim $VIFM
 git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
-git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
+
+# git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
+git_checkout_bundle https://github.com/tpope/vim-commentary $VIM_COMMENTARY
+
 git_checkout_bundle https://github.com/mhinz/vim-startify $STARTIFY
 git_checkout_bundle https://github.com/tpope/vim-surround $SURROUND
 git_checkout_bundle https://github.com/jreybert/vimagit $VIMAGIT
