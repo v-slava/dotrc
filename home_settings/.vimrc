@@ -398,6 +398,9 @@ function! Copy_location(in_file, strip_part)
 	echo 'copied: ' . @+
 endfunction
 
+" vim-commentary:
+autocmd FileType unknown setlocal commentstring=#\ %s
+
 " Tcomment:
 " call tcomment#type#Define('unknown', '# %s')
 " call tcomment#type#Define('lisp', ';; %s')

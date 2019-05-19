@@ -47,7 +47,7 @@ for FILE in "$@" ; do
     fi
 
     case "$FILE_FULL_PATH" in
-        *.a | *.deb) ar x "$FILE_FULL_PATH" ;;
+        *.a | *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
         *.jar) pv "$FILE_FULL_PATH" | jar x ;;
         *.tar)                pv "$FILE_FULL_PATH" | tar x ;;
         *.tgz | *.tar.gz)    pv "$FILE_FULL_PATH" | tar xz ;;
