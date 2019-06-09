@@ -722,6 +722,9 @@ fc-list
 # update fonts cache:
 fc-cache -fv
 
+# pdf viewer with edit support:
+evince
+
 # Extract images from pdf file:
 mkdir /tmp/images_folder && pdfimages -all input.pdf /tmp/images_folder
 

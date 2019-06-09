@@ -45,6 +45,8 @@ VIMAGIT=1.7.3
 ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 # ARM_ASM_SYNTAX=1.2
 
+VIM_BITBAKE=674031f0134317664d9f16ba004463b885f79cfd
+
 MOLOKAI_COLOR_SCHEME=c67bdfcdb31415aa0ade7f8c003261700a885476
 
 VIM_DIR=$HOME/.vim
@@ -108,6 +110,7 @@ git_checkout_bundle https://github.com/tpope/vim-surround $SURROUND
 git_checkout_bundle https://github.com/jreybert/vimagit $VIMAGIT
 
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
+git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
 git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
 
 if [ $TERM = "dumb" ]; then
