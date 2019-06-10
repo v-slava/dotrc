@@ -1,7 +1,7 @@
 #!/bin/bash
 
 INTERVAL=30
-LOG=/tmp/wait_build_log
+LOG=~/my/wait_build_log
 
 echo "$(date): wait_build.sh started..." | tee $LOG
 
