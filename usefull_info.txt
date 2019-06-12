@@ -1199,9 +1199,30 @@ fakeroot debootstrap --arch=armhf --foreign --variant=minbase buster DIR
 
 # Generate password for /etc/passwd:
 openssl passwd -1 -salt my_salt my_password
-echo 'my_password' | mkpasswd --salt=MyLongSalt --method=sha-512 -s
-# Exact line in /etc/passwd:
-root:OUTPUT_FROM_PREVIOUS_CMD:0:0:Root,,,:/:/bin/sh
+# -1  Use the MD5 based BSD password algorithm 1.
+#
+# Second field in /etc/passwd: "password":
+# <hash> - User can login with appropriate password.
+# <empty> - Empty password (just press enter to login).
+# x - Encrypted password is available in /etc/shadow.
+# * - From man passwd: the user will be unable to login using login(1), but may
+#     still login using rlogin(1), run existing processes and initiate new ones
+#     through rsh(1), cron(8), at(1), or mail filters, etc. Trying to lock an
+#     account by simply changing the shell field yields the same result and
+#     additionally allows the use of su(1).
+# ! - Password cannot be used (locking / disabling / suspending a user account).
+#     It is essentially an invalid hash - something that can't be reached with
+#     any password input.
+#     Remaining characters after '!' are a password before it was locked.
+#     Note: if you wish to lock the account (not only access with a password),
+#     you should also set the EXPIRE_DATE to 1.
+# !! - Same as ! (see above).
+#
+# Add 'root' user with password 'my_password':
+echo "root:$(echo 'my_password' | mkpasswd --salt=MyLongSalt --method=sha-512 -s):0:0:Root,,,:/:/bin/sh" >> /etc/passwd
+
+# man for openssl command (enc, passwd, ...):
+man 1ssl cmd
 
 # View current kernel config:
 zcat /proc/config.gz
@@ -1822,13 +1843,6 @@ man -k KEYWORD
 
 # Search man pages contents for keyword:
 man -K -w KEYWORD
-
-# generate password for linux:
-openssl passwd -1 -salt xyz yourpass
-# -1  Use the MD5 based BSD password algorithm 1.
-
-# man for openssl command (enc, passwd, ...):
-man 1ssl cmd
 
 # Get DPI (dots per inch):
 xdpyinfo | grep resolution
