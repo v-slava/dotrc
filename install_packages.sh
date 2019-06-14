@@ -66,6 +66,8 @@ apt-get install vim-gtk
 # apt-get install --install-recommends python-pip python3-pip
 # pip3 install --user --upgrade pynvim
 # pip install --user --upgrade pynvim
+# editor for big / text-binary files (self-extracting archives):
+# apt-get install joe
 
 # Install email client:
 apt-get install thunderbird
