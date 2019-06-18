@@ -68,8 +68,8 @@ if [ -d "$DOTRC_S/bin" ]; then
     PATH_append $DOTRC_S/bin
 fi
 
-export CC=clang
-export CXX=clang++
+# export CC=clang
+# export CXX=clang++
 
 # Other settings:
 export EDITOR=/usr/bin/vim
