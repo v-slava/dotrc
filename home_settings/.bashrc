@@ -18,16 +18,54 @@ export XDG_CACHE_HOME=$HOME/.cache_xdg
 # export XDG_RUNTIME_DIR=$HOME/.runtime_xdg
 # XDG_RUNTIME_DIR unix access mode must be 0700, must be created on login and removed on logout.
 
+PATH_contains()
+{
+    [[ ":$PATH:" = *":$1:"* ]]
+}
+
+join_by()
+{
+    local IFS="$1"
+    shift
+    echo "$*"
+}
+
+PATH_add()
+{
+    MY_TMP_PATH=()
+    for arg in "$@" ; do
+        if ! PATH_contains "$arg" ; then
+            MY_TMP_PATH+=("$arg")
+        fi
+    done
+    MY_TMP_PATH=$(join_by : "${MY_TMP_PATH[@]}")
+}
+
+PATH_append()
+{
+    PATH_add "$@"
+    export PATH="$PATH:$MY_TMP_PATH"
+    unset MY_TMP_PATH
+}
+
+PATH_prepend()
+{
+    PATH_add "$@"
+    export PATH="$MY_TMP_PATH:$PATH"
+    unset MY_TMP_PATH
+}
+
 if [ -z "$ORIG_PATH" ]; then
-	export ORIG_PATH=$PATH
-	export ORIG_PROMPT_COMMAND=$PROPMPT_COMMAND
+    export ORIG_PATH=$PATH
+    export ORIG_PROMPT_COMMAND=$PROPMPT_COMMAND
 fi
 
-export PATH=$ORIG_PATH
-export PATH=$HOME/bin:$HOME/.local/bin:$PATH:/sbin:/usr/sbin
+# export PATH=$ORIG_PATH
+PATH_prepend $HOME/bin $HOME/.local/bin
+PATH_append /sbin /usr/sbin
 
 if [ -d "$DOTRC_S/bin" ]; then
-    export PATH=$PATH:$DOTRC_S/bin
+    PATH_append $DOTRC_S/bin
 fi
 
 export CC=clang
