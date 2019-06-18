@@ -48,6 +48,20 @@ for FILE in "$@" ; do
 
     case "$FILE_FULL_PATH" in
         *.a | *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
+        *.sh)
+            split_script_binary_archive.sh -ob data.bin "$FILE_FULL_PATH"
+            MIME_TYPE=$(file -b --mime-type data.bin)
+            if [ "$MIME_TYPE" = "application/x-xz" ]; then
+                mv data.bin data.xz
+                $0 data.xz
+                cd extracted_data.xz
+                MIME_TYPE=$(file -b --mime-type data)
+                if [ "$MIME_TYPE" = "application/x-tar" ]; then
+                    mv data data.tar
+                    $0 data.tar
+                fi
+            fi
+            ;;
         *.jar) pv "$FILE_FULL_PATH" | jar x ;;
         *.tar)                pv "$FILE_FULL_PATH" | tar x ;;
         *.tgz | *.tar.gz)    pv "$FILE_FULL_PATH" | tar xz ;;

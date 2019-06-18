@@ -1,3 +1,7 @@
+# python print stacktrace (dump stack):
+import traceback
+traceback.print_stack()
+
 # find out which process modified / created / deleted file:
 sudo apt-get install auditd
 # Start auditing:
@@ -253,6 +257,9 @@ gcc -dM -E - < /dev/null
      set /p DUMMY=Hit ENTER to exit...
 4) Run "preprocess.bat"
 5) Compile your preprocessing project.
+
+# start bash with empty environment (no environment variables):
+env -i bash --noprofile --norc
 
 # bash "set -e" documentation: search for "Exit immediately if" in "man bash"
 
