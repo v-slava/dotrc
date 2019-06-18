@@ -2025,7 +2025,7 @@ readelf --sections FILE | grep debug
 # Sometimes sections .debug_frame, .debug_str and .debug_macro are present but
 # file doesn't contain debug information anyway. More precise: readelf --debug-dump=info
 
-# Dynamic (elf file) dependencies (shared libraries, elf file):
+# Dynamic (elf file ) dependencies (shared libraries, elf file):
 readelf -d FILE | grep NEEDED
 objdump -p FILE | grep NEEDED
 ldd FILE # doesn't work for other architecture (always returns not a dynamic executable)
