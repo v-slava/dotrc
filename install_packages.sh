@@ -94,6 +94,7 @@ apt-get install libreoffice
 
 # Install pdf viewer:
 apt-get install zathura
+# editable pdf support: evince
 
 # Install whatever is necessary for spacemacs:
 apt-get install emacs python-jedi python-setuptools clang-format
