@@ -1,3 +1,24 @@
+# some yocto commands (tags: bitbake):
+devtool status
+devtool modify busybox
+# now create git commits
+devtool finish busybox YOUR_LAYER_NAME
+bitbake -c configure busybox
+bitbake -c devshell busybox
+MAKEFLAGS="$EXTRA_OEMAKE"
+bitbake virtual/kernel -c clean && bitbake virtual/kernel -c do_configure
+bitbake -k # build as much as possible despite errors
+bitbake -e <target> # print environment
+bitbake -g -u taskexp bitbake_target
+bitbake -g -u depexp bitbake_target
+bitbake -g -n -v bitbake_target
+vim pn-buildlist
+xdot task-depends.dot
+xdot recipe-depends.dot
+bitbake -k -c fetchall  <target|world>
+bitbake -c fetchall --dry-run
+bitbake core-image-sato -c fetchall
+
 # python print stacktrace (dump stack):
 import traceback
 traceback.print_stack()
@@ -9,7 +30,8 @@ sudo auditctl -w /some/path/to/file
 # Afterwards see file: /var/log/audit/audit.log
 
 # linux printer (cups) settings:
-http://localhost:631
+# usermod -a -G lpadmin YOUR_USER_NAME
+http://localhost:631/admin
 
 # simple http server to transfer files over local network:
 woof FILE
@@ -2310,6 +2332,7 @@ ip route
 
 # Set static ip (iproute package in debian):
 ip addr add 192.168.1.29/24 dev wlan0
+# ifconfig wlan0 192.168.1.29/24
 ip route add default via 192.168.1.1
 # ip addr del 106.124.32.34/24 dev eth0
 
