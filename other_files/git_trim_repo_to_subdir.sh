@@ -1,23 +1,21 @@
 #!/bin/bash
 
 if [ $# -ne 3 ]; then
-    echo "Usage: $0 <git-source> <repo-name> <subdir>"
+    echo "Usage: $0 SUB_DIR"
     exit 1
 fi
 
-GIT_SOURCE=$1
-REPO_NAME=$2
-SUB_DIR=$3
+SUB_DIR=$1
 
 set -e
 
-git clone $GIT_SOURCE $REPO_NAME
-
-cd $REPO_NAME
 for branch in $(git ls-remote --heads origin | sed "s|.*/||"); do
+    if ! git ls-tree -d origin/${branch}:${SUB_DIR} 2>/dev/null ; then
+        continue # ${SUB_DIR} doesn't exist in this branch, so skip it
+    fi
     git checkout $branch
 done
-git remote rm origin
+git remote rm origin # just for safety reasons, we don't want to push to origin!
 git filter-branch --tag-name-filter cat --prune-empty --subdirectory-filter $SUB_DIR -- --all
 git reset --hard
 git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
