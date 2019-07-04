@@ -9,18 +9,18 @@ SUB_DIR=$1
 
 set -e
 
-# Delete all local branches:
-git checkout --detach
-for branch in $(git branch | grep -v '^\* '); do
-    git branch --delete $branch
-done
-
 # Delete all tags where ${SUB_DIR} doesn't exist:
 for tag in $(git tag); do
     if ! git ls-tree -d ${tag}:${SUB_DIR} 1>/dev/null 2>&1 ; then
         # ${SUB_DIR} doesn't exist in this tag, so delete the tag:
         git tag -d $tag
     fi
+done
+
+# Delete all local branches:
+git checkout --detach
+for branch in $(git branch | grep -v '^\* '); do
+    git branch --delete $branch
 done
 
 # Create local branches where ${SUB_DIR} exists:
