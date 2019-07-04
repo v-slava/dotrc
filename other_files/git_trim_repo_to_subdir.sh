@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 SUB_DIR"
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 SUB_DIR" 1>&2
     exit 1
 fi
 
