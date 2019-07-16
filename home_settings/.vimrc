@@ -584,6 +584,7 @@ let g:which_key_map.c = { 'name' : '+compile/clipboard',
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
+\   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
 \   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
 \   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
 \   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],

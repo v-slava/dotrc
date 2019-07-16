@@ -1426,7 +1426,6 @@ CONFIG_FUNCTION_PROFILER
 # sudo perf ftrace -a # see also systemtap (for profiling)
 # trace_printk() can be called from any context (interrupts, scheduler, ...).
 # It prints to /sys/kernel/debug/tracing/trace
-trace_printk()
 trace_dump_stack(0);
 cat /sys/kernel/debug/tracing/available_tracers
 echo function > /sys/kernel/debug/tracing/current_tracer
