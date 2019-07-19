@@ -60,6 +60,11 @@ fi
 
 if [ "$1" = "xinitrc" ]; then
     update_i3_config
+
+    # cvt 1920 1080 60
+    # xrandr --newmode $MAIN_MODE  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
+    # xrandr --addmode $MAIN_OUTPUT $MAIN_MODE
+
     xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI
     exit
 fi

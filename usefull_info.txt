@@ -362,6 +362,9 @@ apt-get dist-upgrade
 # Upgrade all packages:
 apt-get --with-new-pkgs upgrade
 
+# Show packages (tags: update / upgrade) history:
+less /var/log/apt/history.log
+
 # Reinstall package (create missing configs):
 apt-get install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" PACKAGE
 
@@ -1268,6 +1271,7 @@ pr_debug(char *format, ...);
 CFLAGS_kobject_uevent.o := -DDEBUG
 # If you are writing a driver, please use dev_dbg instead
 dev_dbg(struct device *dev, char *format, ...);
+# add '#define DEBUG' as a first line of file to be debugged
 # See also: BUG(), BUG_ON(), dump_stack()
 
 # Get linux kernel printk ring buffer address (in hex):
