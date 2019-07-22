@@ -184,6 +184,17 @@ Tools -> Options -> View -> Force OpenGL even if blacklisted (on restart)
 # Google test (gtest) test filter:
 ./test_executable --gtest_filter='PREFIX_1*:PREFIX_2*:PREFIX_3*'
 
+# Send file over tcp (netcat, nc) server -> client:
+# on server:
+cat FILE | nc -l -p 9999
+# on client:
+nc SERVER_IP 9999 < /dev/null > FILE
+# Send file over tcp (netcat, nc) client -> server:
+# on server:
+nc -l -p 9999 > FILE < /dev/null
+# on client:
+cat FILE | nc SERVER_IP 9999
+
 # View open ports on local host (a), PIDs (p), do not resolve hosts (n).
 netstat -apn # Try also as root.
 # View open ports on remote server (1-100 = port range):
@@ -1438,9 +1449,12 @@ echo mmiotrace > /sys/kernel/debug/tracing/current_tracer
 # Use case:
 echo 0 > /sys/kernel/debug/tracing/tracing_on
 echo function_graph > /sys/kernel/debug/tracing/current_tracer
+echo 1 > /sys/kernel/debug/tracing/free_buffer
+echo 100000 > /sys/kernel/debug/tracing/buffer_size_kb
 echo 1 > /sys/kernel/debug/tracing/tracing_on
+echo "my tracing start" > /sys/kernel/debug/tracing/trace_marker
 run_test
-echo "some message" > /sys/kernel/debug/tracing/trace_marker
+echo "my tracing end" > /sys/kernel/debug/tracing/trace_marker
 echo 0 > /sys/kernel/debug/tracing/tracing_on
 # Non-consuming read:
 cat /sys/kernel/debug/tracing/trace
@@ -2324,6 +2338,9 @@ brctl addif br0 eth0
 # Set mac address:
 ifconfig eth0 hw ether 12:34:56:78:9a:bc
 ip link set eth0 address 12:34:56:78:9a:bc
+
+# show network packets going through the device:
+ip x m
 
 # up/down interface:
 ifconfig eth0 up
