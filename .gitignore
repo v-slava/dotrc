@@ -8,6 +8,7 @@
 /bin/clang
 /bin/clang-format
 /bin/clang++
+/bin/clangd
 /bin/gcc
 /bin/cc
 /bin/c++

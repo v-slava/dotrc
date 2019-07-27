@@ -123,7 +123,8 @@ hi StatusLine ctermfg=232 ctermbg=46
 hi StatusLineNC ctermfg=232 ctermbg=252
 " Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
 match Error /\s\+$/
-autocmd WinEnter * match Error /\s\+$/
+" commented-out because it highlights spaces in "which-key" (leader) window:
+" autocmd WinEnter * match Error /\s\+$/
 " Highlight column (right after last that can be used):
 set colorcolumn=81
 hi ColorColumn ctermbg=234
@@ -220,6 +221,24 @@ autocmd FileType c,cpp setlocal shiftwidth=0
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 
+let g:My_eval_var = ''
+
+autocmd FileType vim if g:My_eval_var == '' | let g:My_eval_var =
+    \ 'execute "call " . My_vimscript_function_eval() . "()"' | endif
+
+autocmd FileType sh,python,perl if g:My_eval_var == ''
+    \ | let g:My_eval_var = 'silent wa | RunShellCmd ./' . expand("%:t") | endif
+
+autocmd FileType c if g:My_eval_var == '' | let g:My_eval_var =
+    \ 'silent wa | RunShellCmd clang -g3 -Weverything -pedantic '
+    \ . expand("%:t") . ' -o /tmp/' . expand("%:t") . '.out && /tmp/'
+    \ . expand("%:t") . '.out' | endif
+
+autocmd FileType cpp if g:My_eval_var == '' | let g:My_eval_var =
+    \ 'silent wa | RunShellCmd clang++ -g3 -Weverything -pedantic '
+    \ . expand("%:t") . ' -o /tmp/' . expand("%:t") . '.out && /tmp/'
+    \ . expand("%:t") . '.out' | endif
+
 function! VifmChoose(action)
     let l:chosen = tempname()
     let l:callback = { 'chosen' : l:chosen, 'action' : a:action }
@@ -248,12 +267,37 @@ function! VifmChoose(action)
 endfunction
 
 function! RunShellCmd(cmd)
-    silent! exe 'noautocmd botright pedit ' . a:cmd
+    silent! exe 'noautocmd silent botright pedit /tmp/vim_errors.err'
     noautocmd wincmd P
-    set buftype=nofile
-    exe 'noautocmd r! ' . a:cmd
+    " set buftype=nofile
+    setlocal filetype=my_shell_cmd_output
+    set noreadonly
+    normal ggdG
+    " exe 'noautocmd r! $DOTRC/other_files/vifm_run_command.sh ' . a:cmd . ' 2>&1'
+    " AnsiEsc
+    exe 'noautocmd silent r!
+\ echo "Command: ' . a:cmd . ' Command output:" &&
+\ exec 2>&1 ;
+\ ' . a:cmd . ' ;
+\ EXIT_CODE=$? ;
+\ if [ $EXIT_CODE -eq 0 ]; then
+\     echo "Command succeeded (exit code = 0)" ;
+\ else
+\     echo "Command failed (exit code = $EXIT_CODE)" ;
+\ fi ;
+\ exit $EXIT_CODE
+\ '
     normal 0ggdd
-endfun
+    silent w
+    set readonly
+    cgetfile /tmp/vim_errors.err
+    wincmd p
+    if v:shell_error == 0
+        echo "Command succeeded (exit code = 0)"
+    else
+        echo "Command failed (exit code = " . v:shell_error . ")"
+    endif
+endfunction
 command! -nargs=1 RunShellCmd :call RunShellCmd('<args>')
 
 function! IsLQList()
@@ -481,51 +525,174 @@ function! OpenFile(win, cmd) " at least one colon expected
 	execute a:cmd . ' ' . l:file
 endfunction
 
-function! My_get_eval_first_last_lines()
+function! My_get_region_lines(start, end)
     let l:cursor = getpos('.')
     try
-        normal ?EVAL REGION BEGINS HERE:j
+        execute 'normal $?' . a:start . ''
         let l:first_line = getpos('.')[1]
     catch
         call setpos('.', l:cursor)
-        throw "can't find 'EVAL REGION BEGINS HERE:'"
+        throw "can't find: " . a:start
     endtry
     try
-        normal /EVAL REGION ENDS HERE.k
+        execute 'normal 0/' . a:end . ''
         let l:last_line = getpos('.')[1]
     catch
         call setpos('.', l:cursor)
-        throw "can't find 'EVAL REGION ENDS HERE.'"
+        throw "can't find: " . a:end
     endtry
     call setpos('.', l:cursor)
     let l:cur_line = l:cursor[1]
     if l:cur_line < l:first_line - 1 || l:cur_line > l:last_line + 1
-        throw "cursor is not inside EVAL REGION"
+        throw "cursor is not inside region specified"
     endif
-    echo
+    echo ''
     return [l:first_line, l:last_line]
 endfunction
 
-function! My_get_text(first_line, last_line)
-    let l:lines_list = getbufline('%', a:first_line, a:last_line)
-    return join(l:lines_list, "\n")
+function! My_get_eval_first_last_lines()
+    let l:lines_range = My_get_region_lines('EVAL REGION BEGINS HERE: |', 'EVAL REGION ENDS HERE.')
+    return [l:lines_range[0] + 1, l:lines_range[1] - 1]
+endfunction
+
+function! My_get_prefix(first_line_num)
+    let l:first_line = join(getbufline('%', a:first_line_num - 1), "\n")
+    let l:start = stridx(l:first_line, '|')
+    let l:end = stridx(l:first_line, '|', l:start + 1)
+    return strpart(l:first_line, l:start + 1, l:end - l:start - 1)
 endfunction
 
 function! My_eval_vim()
     try
         let l:lines_range = My_get_eval_first_last_lines()
-        let l:text = My_get_text(l:lines_range[0], l:lines_range[1])
-        " echo l:text
+        let l:prefix = My_get_prefix(l:lines_range[0])
+        let l:pattern = '\s*' . escape(l:prefix, '*')
+        let l:full_lines_list = getbufline('%', l:lines_range[0], l:lines_range[1])
+        let l:lines_list = []
+        for l:line in l:full_lines_list
+            " strip filetype comments:
+            let l:prefix_len = strlen(matchstr(l:line, l:pattern))
+            if l:prefix_len != 0
+                let l:line = strpart(l:line, l:prefix_len)
+            endif
+            " ignore vim comments:
+            let l:idx = match(l:line, '\s*" ')
+            if l:idx != -1
+                continue
+            endif
+            let l:lines_list = add(l:lines_list, l:line)
+        endfor
+        let l:text = join(l:lines_list, "\n")
     catch
         echo v:exception
         return
     endtry
+    " echo l:text
     execute l:text
 endfunction
 
+function! My_insert_eval_region(text)
+    let l:formatoptions = &formatoptions
+    set formatoptions-=t
+    set formatoptions-=c
+    let l:text_prefix = ''
+    if &filetype == "c" || &filetype == "cpp"
+        normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
+        let l:text_prefix = ' '
+    elseif &filetype == "sh" || &filetype == "python"
+        normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
+    elseif &filetype == "vim"
+        normal O$d0xi" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.$d0x2k
+    else
+        normal OEVAL REGION BEGINS HERE: ||EVAL REGION ENDS HERE.2k
+    endif
+    " call append(line('.'), l:text_prefix . a:text)
+    execute ':normal! A' . l:text_prefix . a:text
+    execute 'set formatoptions=' . l:formatoptions
+    if a:text == ''
+        startinsert!
+    endif
+endfunction
+
+function! My_insert_eval_variable()
+    let l:text = "let g:My_eval_var = '" . g:My_eval_var . "'"
+    call My_insert_eval_region(l:text)
+endfunction
+
+function! My_vimscript_function_eval()
+    try
+        let l:lines_range = My_get_region_lines('^function', '^endfunction$')
+        let l:lines_list = getbufline('%', l:lines_range[0], l:lines_range[1])
+        let l:function_body = join(l:lines_list, "\n")
+        let l:function_name = matchstr(l:lines_list[0], ' [^ (]*')[1:]
+    catch
+        echo v:exception
+        return
+    endtry
+    execute l:function_body
+    return l:function_name
+endfunction
+
+function! My_goto_error(error)
+    if a:error == 'current'
+        let l:action = 'cc!'
+    elseif a:error == 'next'
+        let l:action = 'silent cc! | cnext!'
+    elseif a:error == 'previous'
+        let l:action = 'silent cc! | cprevious!'
+    else
+        let l:action = 'cc! ' . a:error
+    endif
+    let l:err_buf_name = '/tmp/vim_errors.err'
+    let l:in_err_win = 0
+    if bufname('%') == l:err_buf_name
+        let l:in_err_win = 1
+        execute 'wincmd p'
+    endif
+    try
+        execute l:action
+    catch
+        if l:in_err_win
+            execute 'wincmd p'
+        endif
+        return
+    endtry
+    " let l:err_buf_win = win_findbuf(bufnr(l:err_buf_name))[0]
+    let l:err_buf_win = bufwinid(l:err_buf_name)
+    if l:err_buf_win == -1
+        return
+    endif
+    " let l:cur_win = winnr()
+    " execute l:cur_win . 'wincmd w'
+    let l:cur_win = bufwinid('%')
+    let l:cur_pos = getpos('.')
+    let l:quickfix_open = 0
+    for winnr in range(1, winnr('$'))
+        if getwinvar(winnr, '&syntax') == 'qf'
+            let l:quickfix_open = 1
+            break
+        endif
+    endfor
+    execute 'copen'
+    let l:err = getpos('.')
+    if ! l:quickfix_open
+        execute 'cclose'
+    else
+        execute 'wincmd p'
+    endif
+    call win_gotoid(l:err_buf_win)
+    call setpos('.', [l:err_buf_name, l:err[1], l:err[2], l:err[3]])
+    execute 'normal zz'
+    call win_gotoid(l:cur_win)
+    call setpos('.', l:cur_pos)
+    execute 'normal zz'
+    if l:in_err_win
+        execute 'wincmd p'
+    endif
+endfunction
+
 " To insert echo (for Makefile) use the following macro:
-let @E = 'i	@echo "|$()|"hhi'
-let @e = 'oEVAL REGION BEGINS HERE:EVAL REGION ENDS HERE.gcko'
+" let @E = 'i	@echo "|$()|"hhi'
 
 " Fugitive (git):
 " :copen - open quickfix window
@@ -573,7 +740,7 @@ set timeoutlen=200
 let g:which_key_map =  {}
 
 let g:which_key_map.b = { 'name' : '+buffers',
-\   'b' : ['::Denite buffer', 'select'],
+\   'b' : [':Denite buffer', 'select'],
 \   'n' : [':bnext', 'next'],
 \   'p' : [':bprevious', 'previous'],
 \ }
@@ -591,6 +758,14 @@ let g:which_key_map.d = {'name' : '+diff',
 \   'i' : [':call Add_include_guards(expand("%:t"))', 'add include guards'],
 \   'q' : [':windo CloseWindowIfTemporary', 'close temporary windows'],
 \   'm' : [':call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append) | normal 0', 'modify line'],
+\ }
+
+let g:which_key_map.e = {'name' : '+errors',
+\   'c' : [':call My_goto_error("current")', 'current error'],
+\   'l' : [':botright pedit /tmp/vim_errors.err | set readonly', 'list errors'],
+\   'n' : [':call My_goto_error("next")', 'next error'],
+\   'p' : [':call My_goto_error("previous")', 'previous error'],
+\   'q' : [':copen', 'quickfix list errors'],
 \ }
 
 " :EditVifm :SplitVifm :VsplitVifm :DiffVifm :TabVifm
@@ -649,6 +824,9 @@ let g:which_key_map.m = { 'name' : '+my',
 
 let g:which_key_map.o = { 'name' : '+other',
 \   'c' : ['$d0x', 'clear current line'],
+\   'e' : [':call My_insert_eval_region("")', 'insert eval region'],
+\   'v' : [':call My_insert_eval_variable()', 'insert eval variable'],
+\   'f' : [':execute g:My_eval_var', 'evaluate variable'],
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
@@ -690,3 +868,7 @@ let g:which_key_map.w = { 'name' : '+windows',
 call which_key#register('<Space>', "g:which_key_map")
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+
+" let g:LanguageClient_serverCommands = { 'c': ['clangd', '-compile-commands-dir=/home/slava/my'], }
+" LanguageClientStart
+" :help CTRL-W_ge

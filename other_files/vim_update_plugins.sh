@@ -36,7 +36,8 @@ UNIMPAIRED=a49c4f2bf05f18a6e4f6572a19763ba7abba52b1
 RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 
 # YARP=8fcb1af27772174df5446d49de29052cac47e46f
-LSP=dd45e31449511152f2127fe862d955237caa130f
+LSP=0.1.147
+LSP_BRANCH=next
 
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=80a1e88f1df5b8b0a203dd9973dd164192bb67cf
@@ -79,6 +80,8 @@ ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 VIM_BITBAKE=674031f0134317664d9f16ba004463b885f79cfd
 
 MOLOKAI_COLOR_SCHEME=c67bdfcdb31415aa0ade7f8c003261700a885476
+# ANSI_ESC=12
+# ANSI_ESC_2=690f820d20b6e3a79ba20499874eb7333aa4ca5c
 
 set -e
 
@@ -124,7 +127,7 @@ git_checkout_bundle https://github.com/tpope/vim-unimpaired $UNIMPAIRED
 git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 
 # git_checkout_bundle https://github.com/roxma/nvim-yarp $YARP
-git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
+# git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
 
 git_checkout_bundle https://github.com/vimscript/toml $TOML
 git_checkout_bundle https://github.com/liuchengxu/vim-which-key $WHICH_KEY
@@ -145,6 +148,8 @@ git_checkout_bundle https://github.com/jreybert/vimagit $VIMAGIT
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
 git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
 git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
+# git_checkout_bundle https://github.com/vim-scripts/AnsiEsc.vim $ANSI_ESC
+# git_checkout_bundle https://github.com/powerman/vim-plugin-AnsiEsc $ANSI_ESC_2
 
 if [ $TERM = "dumb" ]; then
     x-terminal-emulator -e nvim '+UpdateRemotePlugins' '+q'

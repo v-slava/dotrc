@@ -22,7 +22,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     tree git make patch dos2unix file bsdutils android-tools-adb \
     lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
     gcc g++ cmake build-essential \
-    clang-6.0 clang-tidy-6.0 clang-tools-6.0 libclang-6.0-dev llvm-6.0 \
+    clang-7.0 clang-tidy-7.0 clang-tools-7.0 libclang-7.0-dev llvm-6.0 \
 
 apt-file update
 
