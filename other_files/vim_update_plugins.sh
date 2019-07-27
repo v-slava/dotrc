@@ -103,7 +103,7 @@ git_checkout_bundle()
         ln -sr $GIT_DIR $VIM_DIR/bundle/$DIR
     fi
     if [ -d $GIT_DIR/doc ]; then
-        cd $VIM_DIR/bundle/$DIR && nvim -u NONE -c "helptags doc | q" && cd -
+        cd $VIM_DIR/bundle/$DIR && $VIM_CMD -u NONE -c "helptags doc | q" && cd -
     fi
 }
 
@@ -145,7 +145,7 @@ git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
 git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
 
 if [ $TERM = "dumb" ]; then
-    x-terminal-emulator -e $VIM_CMD '+UpdateRemotePlugins' '+q'
+    x-terminal-emulator -e nvim '+UpdateRemotePlugins' '+q'
 else
     nvim '+UpdateRemotePlugins' '+q'
 fi
