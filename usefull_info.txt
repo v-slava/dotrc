@@ -1,3 +1,6 @@
+# debug vim plugins:
+vim -V9log_file.txt [your_vim_args]
+
 # some yocto commands (tags: bitbake):
 devtool status
 devtool modify busybox

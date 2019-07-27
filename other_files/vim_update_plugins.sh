@@ -57,8 +57,9 @@ EASYMOTION=85e90c9759e14633d878ed534ef313876ab96555
 VIFM=1714b319f459a6e705999902329c7ef1a30d108f
 # VIFM=v0.10
 
-FILE_LINE=559088afaf10124ea663ee0f4f73b1de48fb1632
+# FILE_LINE=559088afaf10124ea663ee0f4f73b1de48fb1632
 # FILE_LINE=1.0
+VIM_FETCH=76c08586e15e42055c9c21321d9fca0677442ecc
 
 TCOMMENT=9de9f7611297a1198b782d81eca84ec49e86008b
 # TCOMMENT=3.08.1
@@ -131,7 +132,8 @@ git_checkout_bundle https://github.com/Shougo/denite.nvim $DENITE
 git_checkout_bundle https://github.com/tpope/vim-fugitive $FUGITIVE
 git_checkout_bundle https://github.com/easymotion/vim-easymotion $EASYMOTION
 git_checkout_bundle https://github.com/vifm/vifm.vim $VIFM
-git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
+# git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
+git_checkout_bundle https://github.com/wsdjeg/vim-fetch $VIM_FETCH
 
 git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
 # git_checkout_bundle https://github.com/tpope/vim-commentary $VIM_COMMENTARY
