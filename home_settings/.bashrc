@@ -72,7 +72,8 @@ fi
 # export CXX=clang++
 
 # Other settings:
-export EDITOR=/usr/bin/vim
+# export EDITOR=/usr/bin/vim
+export EDITOR=nvim
 export MINICOM='-c on'
 
 # export QUILT_PATCHES=debian/patches

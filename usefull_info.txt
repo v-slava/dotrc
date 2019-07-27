@@ -767,14 +767,27 @@ fc-cache -fv
 
 # pdf viewer with edit support:
 evince
+# pdf viewer with editable XFA forms:
+masterpdfeditor5
+# Extract attachment from encrypted pdf:
+pdftk <input_file.pdf> input_pw <password> unpack_files
 
 # Extract images from pdf file:
 mkdir /tmp/images_folder && pdfimages -all input.pdf /tmp/images_folder
 
 # cut pages range from pdf:
 pdftk A=in_1.pdf input_pw='PASSWORD' B=in_2.pdf cat A3-5 B3left A2right output out.pdf
+# rotate pages in pdf:
+pdftk in.pdf cat 1-endright output out.pdf
 # Create pdf file from images (jpg/png), need to install imagemagick:
+# apt-get install imagemagick
 convert page*.png mydoc.pdf
+
+# compress (minimize) image size (jpg, png):
+mogrify -quality "80%" -resize 1048x768 file.jpg
+
+# rotate image clockwise:
+convert in.jpg -rotate 90 out.jpg
 
 # Set the pipeline's return status to the value of the  last  (right‐most)
 # command to exit with a non-zero status, or zero if all commands exit
