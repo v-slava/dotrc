@@ -66,6 +66,8 @@ http://128.59.105.24/~fdc/sample.html
 3) send message to you:
       https://api.telegram.org/bot<token>/sendMessage?chat_id=<telegram ID>&text=hello_world
 
+colordiff -uN "$@"
+
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
@@ -159,6 +161,8 @@ find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
+
+nm --defined-only ELF_FILE | sed -e '/ \$[dt]$/d' | cut -d' ' -f3 | c++filt | sort
 
 # Compare symbols in 2 elf files:
 nm YOUR_FILE.elf | grep -v ' $a$' | grep -v ' $d$' | grep -v ' $t$' | grep -v '         U ' | cut -d' ' -f3  | c++filt | sort > compare_this.txt
@@ -618,6 +622,9 @@ rustc -O -Z print-link-args main.rs
 # 1) add "-static", "-static-libgcc"
 # 2) change "gcc_s" => "gcc_eh"
 # 3) delete "-pie", "-Wl,-Bdynamic"
+
+# show lines in file (head, tail):
+tail -n +${START_LINE} | head -n $NUM_LINES
 
 # get line with specified number from file:
 sed -n '<line number>p' < file

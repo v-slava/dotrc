@@ -4,6 +4,7 @@
 # following conditions are met:
 # - there were no user input for NO_USER_INPUT_TIME
 # - the system was silent (no output sound) for SILENT_TIME
+# - TODO check build (see ~/bin/wait_build.sh)
 
 set -e
 

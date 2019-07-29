@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Writes HEX_DATA in FILE starting from HEX_OFFSET
+# Overwrites HEX_DATA in FILE starting from HEX_OFFSET
 
 if [ $# -ne 3 ]; then
 	echo -e "Usage: $(basename $0) FILE HEX_OFFSET HEX_DATA\n\
