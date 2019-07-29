@@ -42,7 +42,7 @@ LSP_BRANCH=next
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=80a1e88f1df5b8b0a203dd9973dd164192bb67cf
 
-DENITE=1b5b057fc5fdae0745b84d15954245ac23618dc2
+DENITE=2.1
 # DENITE=1.2
 # For python 3.5 in file:
 # ~/.vim_all_plugins/denite.nvim/rplugin/python3/denite/filter/sorter_rank.py
