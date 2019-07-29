@@ -94,7 +94,10 @@ git_checkout()
     if [ ! -d $GIT_DIR ]; then
         git -C $PLUGINS_DIR clone $URL
     fi
-    git -C $GIT_DIR checkout -q $COMMIT
+    if ! git -C $GIT_DIR checkout -q $COMMIT 2>/dev/null ; then
+        git -C $GIT_DIR fetch origin
+        git -C $GIT_DIR checkout -q $COMMIT
+    fi
 }
 
 git_checkout_bundle()
