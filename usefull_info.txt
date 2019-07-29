@@ -1463,6 +1463,9 @@ echo function > /sys/kernel/debug/tracing/current_tracer
 # For x86 only:
 echo mmiotrace > /sys/kernel/debug/tracing/current_tracer
 # Use case:
+if ! mount | grep /sys/kernel/debug/tracing 1>/dev/null ; then
+    mount -t debugfs none /sys/kernel/debug
+fi
 echo 0 > /sys/kernel/debug/tracing/tracing_on
 echo function_graph > /sys/kernel/debug/tracing/current_tracer
 echo 1 > /sys/kernel/debug/tracing/free_buffer
@@ -2113,6 +2116,7 @@ go.till register(r0)==0x12
 r.s r4 <value>
 
 # Core dump:
+# CONFIG_COREDUMP=y
 # grep core_pattern linux_src/Documentation/sysctl/kernel.txt
 # cat /proc/sys/kernel/core_pattern
 # man core
@@ -2179,6 +2183,17 @@ binutils-2.23.2/include/opcode/arm.h
 
 # Scan for network devices (port will be blocked):
 sudo arp-scan --interface=eth0 --localnet
+
+# Add route (tags: network, table):
+sudo ip r add 192.168.2.1 via 192.168.1.1 dev enx00249b20423d
+# Delete route:
+sudo ip r del 192.168.2.1
+
+# Measure network performance / throughput:
+# on server:
+iperf3 -s
+# on client:
+iperf3 -c SERVER_IP [-R] [-t10] [-u -b 100M]
 
 # Internet fixing commands:
 mtr --report-wide --show-ips --report-cycles 100 8.8.8.8
@@ -2355,7 +2370,7 @@ brctl addif br0 eth0
 ifconfig eth0 hw ether 12:34:56:78:9a:bc
 ip link set eth0 address 12:34:56:78:9a:bc
 
-# show network packets going through the device:
+# show ipsec network packets going through the device:
 ip x m
 
 # up/down interface:
