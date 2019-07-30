@@ -4,6 +4,8 @@ vim -V9log_file.txt [your_vim_args]
 # some yocto commands (tags: bitbake):
 devtool status
 devtool modify busybox
+# now do your changes
+devtool build busybox
 # now create git commits
 devtool finish busybox YOUR_LAYER_NAME
 bitbake -c configure busybox
