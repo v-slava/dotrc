@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Usage: $(basename $0) [--verbose] SED_ARGS ...
+# Usage: $(basename $0) [-v] SED_ARGS ...
 set -e
 
-if [ "$1" = "--verbose" ]; then
+if [ "$1" = "-v" ]; then
     VERBOSE=true
     shift
 fi

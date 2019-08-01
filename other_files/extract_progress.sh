@@ -91,7 +91,7 @@ for FILE in "$@" ; do
             cd -
             rm -rf "$DIR"
             exit 1
-        ;;
+            ;;
     esac
 done
 

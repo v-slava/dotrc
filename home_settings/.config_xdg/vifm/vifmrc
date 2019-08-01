@@ -491,6 +491,7 @@ nnoremap os :execute system('exec echo ":!$DOTRC/other_files/objdump.sh -S ./%c 
 nmap xx :execute system('exec echo :!$DOTRC/other_files/extract_progress.sh %f')<CR>
 vmap xx :execute system('exec echo :!$DOTRC/other_files/extract_progress.sh %f')<CR>
 nmap xc :execute system('exec echo :!$DOTRC/other_files/compress.sh %f')<CR>
+nmap xj :execute system('exec echo :!$DOTRC/other_files/compress.sh -e %f')<CR>
 
 " Yank current directory path into the clipboard
 nnoremap yd :!echo -n %d | clipboard.sh<CR>
