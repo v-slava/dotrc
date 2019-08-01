@@ -16,6 +16,8 @@
 #
 # . $DOTRC/other_files/no_optimize_gcc_wrapper.sh
 
+LOG=/tmp/gcc_wrapper_log
+
 if ! [[ "$(declare -p NO_OPTIMIZE_FILES)" =~ "declare -a" ]]; then
     echo "NO_OPTIMIZE_FILES env variable is not a valid bash array" 1>&2
     exit 1
@@ -35,6 +37,7 @@ for file in "${NO_OPTIMIZE_FILES[@]}" ; do
 done
 
 if [ "$PROCESS" != true ]; then
+    echo "$ORIG_GCC $@" >> $LOG
     exec $ORIG_GCC "$@"
 fi
 
@@ -50,4 +53,5 @@ for arg do
     esac
 done
 
-exec $ORIG_GCC "$@ -g3 -fno-omit-frame-pointer|"
+echo "$ORIG_GCC $@ -g3 -fno-omit-frame-pointer" >> $LOG
+exec $ORIG_GCC "$@" -g3 -fno-omit-frame-pointer
