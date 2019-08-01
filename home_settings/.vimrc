@@ -206,38 +206,62 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
-autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua,php
-\ setlocal shiftwidth=0 | setlocal tabstop=4 | setlocal expandtab
-autocmd FileType c,cpp setlocal shiftwidth=0
-\ | if expand('%:p') =~ 'linux-'
-\     | setlocal tabstop=8 | setlocal noexpandtab
-\ | else
-\     | setlocal tabstop=4 | setlocal expandtab
+let g:detectindent_preferred_expandtab = 1
+let g:detectindent_preferred_indent = 4
+let g:detectindent_preferred_when_mixed = 1
+let g:detectindent_max_lines_to_analyse = 1024
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php DetectIndent
+\ | if My_is_linux_kernel_source_file(expand("%:p"))
+\ |     setlocal tabstop=8
 \ | endif
-
+" autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua,php
+" \ setlocal shiftwidth=0 | setlocal tabstop=4 | setlocal expandtab
+" autocmd FileType c,cpp setlocal shiftwidth=0
+" \ | if My_is_linux_kernel_source_file(expand("%:p"))
+" \     | setlocal tabstop=8 | setlocal noexpandtab
+" \ | else
+" \     | setlocal tabstop=4 | setlocal expandtab
+" \ | endif
 " autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal expandtab
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 
-let g:My_eval_var = ''
+let g:My_eval_var = ""
 
-autocmd FileType vim if g:My_eval_var == '' | let g:My_eval_var =
-    \ 'execute "call " . My_vimscript_function_eval() . "()"' | endif
+autocmd FileType vim if g:My_eval_var == "" | let g:My_eval_var =
+    \ "execute 'call ' . My_vimscript_function_eval() . '()'" | endif
 
-autocmd FileType sh,python,perl if g:My_eval_var == ''
-    \ | let g:My_eval_var = 'silent wa | RunShellCmd ./' . expand("%:t") | endif
+autocmd FileType sh,python,perl if g:My_eval_var == ""
+    \ | let g:My_eval_var = "silent wa | RunShellCmd chmod +x ./"
+    \ . expand("%:t") . " && ./" . expand("%:t") | endif
 
-autocmd FileType c if g:My_eval_var == '' | let g:My_eval_var =
-    \ 'silent wa | RunShellCmd clang -g3 -Weverything -pedantic '
-    \ . expand("%:t") . ' -o /tmp/' . expand("%:t") . '.out && /tmp/'
-    \ . expand("%:t") . '.out' | endif
+autocmd FileType c if g:My_eval_var == "" | let g:My_eval_var =
+    \ "silent wa | RunShellCmd clang -g3 -Weverything -pedantic "
+    \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
+    \ . expand("%:t") . ".out" | endif
 
-autocmd FileType cpp if g:My_eval_var == '' | let g:My_eval_var =
-    \ 'silent wa | RunShellCmd clang++ -g3 -Weverything -pedantic '
-    \ . expand("%:t") . ' -o /tmp/' . expand("%:t") . '.out && /tmp/'
-    \ . expand("%:t") . '.out' | endif
+autocmd FileType cpp if g:My_eval_var == "" | let g:My_eval_var =
+    \ "silent wa | RunShellCmd clang++ -g3 -Weverything -pedantic "
+    \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
+    \ . expand("%:t") . ".out" | endif
+
+function! My_is_linux_kernel_source_file(full_path)
+    let l:idx_linux = stridx(a:full_path, "linux")
+    if l:idx_linux == -1
+        return 0
+    endif
+    let l:idx_slash = stridx(a:full_path, "/", l:idx_linux)
+    let l:linux_root_dir = strpart(a:full_path, 0, l:idx_slash) . "/"
+    let l:subdirs = ['arch', 'crypto', 'drivers', 'fs', 'init', 'ipc', 'kernel', 'mm', 'net', 'security', 'sound']
+    for l:subdir in l:subdirs
+        if ! isdirectory(l:linux_root_dir . l:subdir)
+            return 0
+        endif
+    endfor
+    return 1
+endfunction
 
 function! VifmChoose(action)
     let l:chosen = tempname()
@@ -615,7 +639,7 @@ function! My_insert_eval_region(text)
 endfunction
 
 function! My_insert_eval_variable()
-    let l:text = "let g:My_eval_var = '" . g:My_eval_var . "'"
+    let l:text = 'let g:My_eval_var = "' . g:My_eval_var . '"'
     call My_insert_eval_region(l:text)
 endfunction
 

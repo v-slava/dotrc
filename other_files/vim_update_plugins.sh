@@ -74,6 +74,8 @@ SURROUND=fab8621670f71637e9960003af28365129b1dfd0
 
 VIMAGIT=1.7.3
 
+DETECTINDENT=c09ab6effc29ef913c531816eb980460f8dc9ed2
+
 ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 # ARM_ASM_SYNTAX=1.2
 
@@ -138,6 +140,7 @@ git_checkout_bundle https://github.com/Shougo/denite.nvim $DENITE
 git_checkout_bundle https://github.com/tpope/vim-fugitive $FUGITIVE
 git_checkout_bundle https://github.com/easymotion/vim-easymotion $EASYMOTION
 git_checkout_bundle https://github.com/vifm/vifm.vim $VIFM
+
 # git_checkout_bundle https://github.com/bogado/file-line $FILE_LINE
 git_checkout_bundle https://github.com/wsdjeg/vim-fetch $VIM_FETCH
 
@@ -147,6 +150,7 @@ git_checkout_bundle https://github.com/tomtom/tcomment_vim $TCOMMENT
 git_checkout_bundle https://github.com/mhinz/vim-startify $STARTIFY
 git_checkout_bundle https://github.com/tpope/vim-surround $SURROUND
 git_checkout_bundle https://github.com/jreybert/vimagit $VIMAGIT
+git_checkout_bundle https://github.com/ciaranm/detectindent $DETECTINDENT
 
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
 git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
