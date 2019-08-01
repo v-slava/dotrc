@@ -9,7 +9,7 @@ devtool build busybox
 # now create git commits
 devtool finish busybox YOUR_LAYER_NAME
 bitbake -c configure busybox
-bitbake -c devshell busybox
+bitbake -c devshell [busybox|virtual/kernel] # run make afterwards
 MAKEFLAGS="$EXTRA_OEMAKE"
 bitbake virtual/kernel -c clean && bitbake virtual/kernel -c do_configure
 bitbake -k # build as much as possible despite errors
@@ -1114,6 +1114,20 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 # Copy files over ssh:
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# To remove a git submodule you need to (tags: rm, delete):
+1. Delete the relevant section from the .gitmodules file.
+2. Stage the .gitmodules changes:
+   git add .gitmodules
+3. Delete the relevant section from .git/config.
+4. Remove the submodule files from the working tree and index:
+   git rm --cached path_to_submodule (no trailing slash).
+5. Remove the submodule's .git directory:
+   rm -rf .git/modules/path_to_submodule
+6. Commit the changes:
+   git commit -m "Removed submodule <name>"
+7. Delete the now untracked submodule files:
+   rm -rf path_to_submodule
 
 # View submodule hashes:
 git ls-tree HEAD

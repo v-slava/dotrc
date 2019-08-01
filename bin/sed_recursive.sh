@@ -9,6 +9,9 @@ if [ "$1" = "--verbose" ]; then
 fi
 
 find -type f | while read file ; do
+    if echo $file | grep -q '.git' ; then
+        continue
+    fi
     if [ "$VERBOSE" = "true" ]; then
         echo "+ sed -i \"$file\" $@"
     fi
