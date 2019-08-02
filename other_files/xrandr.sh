@@ -29,19 +29,22 @@ update_i3_config()
     I3_CONF=.config_xdg/i3/config
     $DOTRC/other_files/update_config.sh $I3_CONF
     I3_CONF=~/$I3_CONF
-    if xrandr | grep -q "^$CENTRAL_OUTPUT connected" &&
-            xrandr | grep -q "^$LEFT_OUTPUT connected" &&
-            xrandr | grep -q "^$RIGHT_OUTPUT connected" ; then
-        sed -i $I3_CONF -e "s/OUTPUT_TRAY_TEMPLATE/$CENTRAL_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_1_TEMPLATE/$LEFT_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_2_TEMPLATE/$CENTRAL_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_3_TEMPLATE/$RIGHT_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_4_TEMPLATE/$LEFT_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_5_TEMPLATE/$CENTRAL_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_6_TEMPLATE/$RIGHT_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_7_TEMPLATE/$LEFT_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_8_TEMPLATE/$CENTRAL_OUTPUT/g"
-        sed -i $I3_CONF -e "s/OUTPUT_9_TEMPLATE/$RIGHT_OUTPUT/g"
+    XRANDR="$(xrandr)"
+    if echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&
+        echo -e "$XRANDR" | grep -q "^$LEFT_OUTPUT connected" &&
+        echo -e "$XRANDR" | grep -q "^$RIGHT_OUTPUT connected" ; then
+        sed -i $I3_CONF \
+            -e "s/OUTPUT_TRAY_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_1_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_2_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_3_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_4_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_5_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_6_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_7_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_8_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_9_TEMPLATE/$RIGHT_OUTPUT/g" \
+
     else
         # Need to use single monitor configuration.
         sed -i $I3_CONF -e "s/OUTPUT_TRAY_TEMPLATE/$MAIN_OUTPUT/g"
@@ -49,8 +52,10 @@ update_i3_config()
             sed -i $I3_CONF -e "s/OUTPUT_${i}_TEMPLATE/$MAIN_OUTPUT/g"
         done
     fi
-    sed -i $I3_CONF -e "s|DOTRC_TEMPLATE|$DOTRC|g"
-    sed -i $I3_CONF -e "s|DOTRC_S_TEMPLATE|$DOTRC_S|g"
+    sed -i $I3_CONF \
+        -e "s|DOTRC_TEMPLATE|$DOTRC|g" \
+        -e "s|DOTRC_S_TEMPLATE|$DOTRC_S|g" \
+
 }
 
 if [ "$1" = "update_configs" ]; then
