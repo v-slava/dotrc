@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# dmenu_path | dmenu "$@" | ${SHELL:-"/bin/sh"} &
-
-# See original implementation above.
-# The following implementation avoids excessive bash process:
-CMD=$(dmenu_path | dmenu "$@")
-exec "$CMD"
