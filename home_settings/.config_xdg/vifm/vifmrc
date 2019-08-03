@@ -363,11 +363,11 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
-execute system('exec echo "nnoremap cfs :!$DOTRC/other_files/vifm_rename.py %c spaces_to_underscores<CR>"')
-execute system('exec echo "nnoremap cfd :!$DOTRC/other_files/vifm_rename.py %c dots_to_underscores<CR>"')
-execute system('exec echo "nnoremap cfl :!$DOTRC/other_files/vifm_rename.py %c to_lowercase<CR>"')
-execute system('exec echo "nnoremap cfe :!$DOTRC/other_files/vifm_rename.py %c extracted<CR>"')
-execute system('exec echo "nnoremap cfm :!$DOTRC/other_files/vifm_rename.py %c music<CR>"')
+nnoremap cfs :!$DOTRC/other_files/vifm_rename.py %c spaces_to_underscores<CR>
+nnoremap cfd :!$DOTRC/other_files/vifm_rename.py %c dots_to_underscores<CR>
+nnoremap cfl :!$DOTRC/other_files/vifm_rename.py %c to_lowercase<CR>
+nnoremap cfe :!$DOTRC/other_files/vifm_rename.py %c extracted<CR>
+nnoremap cfm :!$DOTRC/other_files/vifm_rename.py %c music<CR>
 
 nnoremap ,d :clone?<CR>
 " nnoremap A cw<c-w>
@@ -393,10 +393,8 @@ mark t ~/temporary
 mark T /tmp
 mark m /media
 mark w $WORKSPACE
-" The following line doesn't work from time to time. Bug?
-" execute 'mark o ' system('exec echo $DOTRC')
-execute system('exec echo "mark o $DOTRC"')
-execute system('exec echo "mark O $DOTRC_S"')
+mark o $DOTRC
+mark O $DOTRC_S
 mark u /media/usb
 mark f /media/files
 mark r /media/files/music/radio
@@ -421,7 +419,7 @@ bmark! /media/files/other/my_samples/single_sources/ my_samples single_sources
 bmark! /media/files/other/books/ books
 bmark! /media/files/other/compiler_overloading/compiler_settings compiler_overloading
 bmark! /media/files/other/toolchains/ toolchains
-execute system('exec echo bmark! $DOTRC_S/emacs_projects/ emacs')
+bmark! $DOTRC_S/emacs_projects/ emacs
 
 nnoremap ,c :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/vifm/vifmrc') | restart<CR>
 nnoremap ,C :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc') | restart<CR>
@@ -468,7 +466,7 @@ vmap q :exit<CR>
 
 " Launch programs:
 nnoremap rg :!./%c %i &<CR>
-nnoremap rs :execute system('exec echo :!$DOTRC/other_files/vifm_run_command.sh --pause "./%c"')<CR>
+nnoremap rs :!$DOTRC/other_files/vifm_run_command.sh --pause "./%c"<CR>
 
 " Launch make:
 " nnoremap rm :execute system('exec echo :!$DOTRC/other_files/vifm_run_command.sh --pause \"make\"')<CR>
@@ -481,17 +479,17 @@ nmap cd :cd<SPACE>
 nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
 
-nmap cx :execute system('exec echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
-vmap cx :execute system('exec echo :!$DOTRC/other_files/toggle_executable.sh %\"f')<CR>
+nmap cx :!$DOTRC/other_files/toggle_executable.sh %"f<CR>
+vmap cx :!$DOTRC/other_files/toggle_executable.sh %"f<CR>
 
-nnoremap ot :execute system('exec echo ":!$DOTRC/other_files/objdump.sh -t ./%c | c++filt | less -i"')<CR>
-nnoremap od :execute system('exec echo ":!$DOTRC/other_files/objdump.sh -D ./%c | c++filt | less -i"')<CR>
-nnoremap os :execute system('exec echo ":!$DOTRC/other_files/objdump.sh -S ./%c | less -i"')<CR>
+nnoremap ot :!$DOTRC/other_files/objdump.sh -t ./%c | c++filt | less -i"<CR>
+nnoremap od :!$DOTRC/other_files/objdump.sh -D ./%c | c++filt | less -i"<CR>
+nnoremap os :!$DOTRC/other_files/objdump.sh -S ./%c | less -i"<CR>
 
-nmap xx :execute system('exec echo :!$DOTRC/other_files/extract_progress.sh %f')<CR>
-vmap xx :execute system('exec echo :!$DOTRC/other_files/extract_progress.sh %f')<CR>
-nmap xc :execute system('exec echo :!$DOTRC/other_files/compress.sh %f')<CR>
-nmap xj :execute system('exec echo :!$DOTRC/other_files/compress.sh -e %f')<CR>
+nmap xx :!$DOTRC/other_files/extract_progress.sh %f<CR>
+vmap xx :!$DOTRC/other_files/extract_progress.sh %f<CR>
+nmap xc :!$DOTRC/other_files/compress.sh %f<CR>
+nmap xj :!$DOTRC/other_files/compress.sh -e %f<CR>
 
 " Yank current directory path into the clipboard
 nnoremap yd :!echo -n %d | clipboard.sh<CR>
@@ -515,7 +513,7 @@ nnoremap cu :! fusermount -u /media/usb<CR>
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause
 command mkcd :mkdir %a | cd %a
 nmap isy :sync!<CR>
-nmap isg :execute system('exec echo :!$DOTRC/other_files/vifm_sync_git.sh %c %C %D')<CR>
+nmap isg :!$DOTRC/other_files/vifm_sync_git.sh %c %C %D<CR>
 
 " swap panels:
 nmap isw <c-w>x
@@ -526,7 +524,7 @@ nmap ig :winrun ^ !diffuse %d/%c %C<CR>
 nmap ix :winrun ^ !dhex %d/%c %C<CR>
 nmap im :winrun ^ !mc %d %D<CR>
 " open (duplicate, clone) vifm instance:
-nmap if :execute system('echo ":winrun ^ !$DOTRC/other_files/open_terminal.sh vifm %d %D &"')<CR>
+nmap if :winrun ^ !$DOTRC/other_files/open_terminal.sh vifm %d %D &<CR>
 nmap it :!touch %c<CR>
 nmap ib :!beautify_file.sh %d/%c<CR>
 command hexview xxd %c | less
