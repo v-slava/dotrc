@@ -27,7 +27,7 @@ source ~/.bashrc
 update_i3_config()
 {
     I3_CONF=.config_xdg/i3/config
-    $DOTRC/other_files/update_config.sh $I3_CONF
+    $DOTRC/other_files/concat_config.sh $I3_CONF
     I3_CONF=~/$I3_CONF
     XRANDR="$(xrandr)"
     if echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&
@@ -58,7 +58,7 @@ update_i3_config()
 
 }
 
-if [ "$1" = "update_configs" ]; then
+if [ "$1" = "update_i3_config" ]; then
     update_i3_config
     exit
 fi

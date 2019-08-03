@@ -210,10 +210,16 @@ let g:detectindent_preferred_expandtab = 1
 let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php DetectIndent
-\ | if My_is_linux_kernel_source_file(expand("%:p"))
-\ |     setlocal tabstop=8
-\ | endif
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php call My_apply_tab_settings()
+function! My_apply_tab_settings()
+    DetectIndent
+    if My_is_linux_kernel_source_file(expand("%:p"))
+        setlocal tabstop=8
+    endif
+    if &filetype == "vim"
+        setlocal shiftwidth=4
+    endif
+endfunction
 " autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua,php
 " \ setlocal shiftwidth=0 | setlocal tabstop=4 | setlocal expandtab
 " autocmd FileType c,cpp setlocal shiftwidth=0
@@ -228,22 +234,20 @@ autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php DetectIndent
 autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
 " autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
 
-let g:My_eval_var = ""
-
-autocmd FileType vim if g:My_eval_var == "" | let g:My_eval_var =
+autocmd FileType vim if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "execute 'call ' . My_vimscript_function_eval() . '()'" | endif
 
-autocmd FileType sh,python,perl if g:My_eval_var == ""
-    \ | let g:My_eval_var = "silent wa | RunShellCmd chmod +x ./"
+autocmd FileType sh,python,perl if ! exists('g:My_eval_var')
+    \ | let g:My_eval_var = "silent wa | MyRunShellCmd chmod +x ./"
     \ . expand("%:t") . " && ./" . expand("%:t") | endif
 
-autocmd FileType c if g:My_eval_var == "" | let g:My_eval_var =
-    \ "silent wa | RunShellCmd clang -g3 -Weverything -pedantic "
+autocmd FileType c if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | MyRunShellCmd clang -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
-autocmd FileType cpp if g:My_eval_var == "" | let g:My_eval_var =
-    \ "silent wa | RunShellCmd clang++ -g3 -Weverything -pedantic "
+autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | MyRunShellCmd clang++ -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
@@ -263,7 +267,7 @@ function! My_is_linux_kernel_source_file(full_path)
     return 1
 endfunction
 
-function! VifmChoose(action)
+function! My_vifm_choose(action)
     let l:chosen = tempname()
     let l:callback = { 'chosen' : l:chosen, 'action' : a:action }
     function! callback.on_exit(id, exit_code, event)
@@ -290,7 +294,7 @@ function! VifmChoose(action)
     startinsert
 endfunction
 
-function! RunShellCmd(cmd)
+function! My_run_shell_cmd(cmd)
     silent! exe 'noautocmd silent botright pedit /tmp/vim_errors.err'
     noautocmd wincmd P
     " set buftype=nofile
@@ -322,148 +326,196 @@ function! RunShellCmd(cmd)
         echo "Command failed (exit code = " . v:shell_error . ")"
     endif
 endfunction
-command! -nargs=1 RunShellCmd :call RunShellCmd('<args>')
+command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd('<args>')
 
-function! IsLQList()
-	exec 'redir @x | silent ls | redir END'
-	if match(@x,'%a-  "\[Location List\]"') >= 0
-		return 1
-	elseif match(@x,'%a-  "\[Quickfix List\]"') >= 0
-		return 0
-	else
-		return -1
-	endif
+function! My_is_lq_list()
+    exec 'redir @x | silent ls | redir END'
+    if match(@x,'%a-  "\[Location List\]"') >= 0
+        return 1
+    elseif match(@x,'%a-  "\[Quickfix List\]"') >= 0
+        return 0
+    else
+        return -1
+    endif
 endfunction
 
-function! OpenLocation()
-	let l:lqList = IsLQList()
-	if l:lqList == -1
-		exec 'echoerr "Neither Location nor Quickfix List focused."'
-		return
-	endif
-	if l:lqList == 1
-		execute "ll " . line('.')
-	else
-		execute "cc " . line('.')
-	endif
-	normal zz
+function! My_open_location()
+    let l:lqList = My_is_lq_list()
+    if l:lqList == -1
+        exec 'echoerr "Neither Location nor Quickfix List focused."'
+        return
+    endif
+    if l:lqList == 1
+        execute "ll " . line('.')
+    else
+        execute "cc " . line('.')
+    endif
+    normal zz
 endfunction
 
 " Russian keyboard layout:
 set keymap=russian-jcukenwin
 set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
-function! Update_status_line(message, status)
-	if &iminsert == 1
-		let l:lang='RU'
-	else
-		let l:lang='EN'
-	endif
-	let &statusline=l:lang . '   file: %f   ' . a:message
-	if a:status == 'error'
-		hi StatusLine ctermbg=160
-	endif
-	if a:status == 'normal'
-		hi StatusLine ctermbg=46
-	endif
-	set laststatus=2
-	redrawstatus!
+function! My_update_status_line(message, status)
+    if &iminsert == 1
+        let l:lang='RU'
+    else
+        let l:lang='EN'
+    endif
+    let &statusline=l:lang . '   file: %f   ' . a:message
+    if a:status == 'error'
+        hi StatusLine ctermbg=160
+    endif
+    if a:status == 'normal'
+        hi StatusLine ctermbg=46
+    endif
+    set laststatus=2
+    redrawstatus!
 endfunction
 
-function! Swap_keyboard_layout()
-	if &iminsert == 1 " If current layout is russian
-		" then switch to english
-		set iminsert=0
-		set imsearch=0
-	else " if current layout is english
-		" then switch to russian
-		set iminsert=1
-		set imsearch=1
-	endif
-	call Update_status_line('', 'normal')
+function! My_swap_keyboard_layout()
+    if &iminsert == 1 " If current layout is russian
+        " then switch to english
+        set iminsert=0
+        set imsearch=0
+    else " if current layout is english
+        " then switch to russian
+        set iminsert=1
+        set imsearch=1
+    endif
+    call My_update_status_line('', 'normal')
 endfunction
 
-function! Add_include_guards(file_name)
-	let l:guard_name = tr(toupper(a:file_name), '.', '_')
-	call append(line('0'), ['#ifndef ' . l:guard_name, '#define ' . l:guard_name])
-	call append(line('$'), ['', '#endif // #ifndef ' . l:guard_name])
+function! My_insert_snippet()
+    if &filetype == "c" || &filetype == "cpp"
+        let l:ext = expand('%:e')
+        if l:ext == 'h' || l:ext == 'hpp'
+            let l:file_name = expand('%:t')
+            let l:guard_name = tr(toupper(l:file_name), '.', '_')
+            call append(0, ['#ifndef ' . l:guard_name, '#define ' . l:guard_name])
+            call append(line('$'), ['', '#endif // #ifndef ' . l:guard_name])
+        else
+            call append(0, [
+\ "#include <stdio.h>",
+\ "#include <stdint.h>",
+\ "#include <stddef.h>",
+\ "",
+\ "int main(int argc, char *argv[])",
+\ "{",
+\ "    // (void)argc; (void)argv;",
+\ "    printf(\"argc = %d, argv = {|%s|\", argc, argv[0]);",
+\ "    for (int i = 1; i < argc; ++i)",
+\ "        printf(\", |%s|\", argv[i]);",
+\ "    puts(\"}\");",
+\ "    return 0;",
+\ "}",
+\ ])
+            normal dd2k
+        endif
+    elseif &filetype == "sh"
+        call append(0, [
+\ "#!/bin/bash",
+\ "",
+\ "echo \"\\$# = |$#|\"",
+\ "echo \"\\$0 = |$0|\"",
+\ "echo \"\\$@ = |$@|\"",
+\ ])
+        normal dd
+    elseif &filetype == "python"
+        call append(0, [
+\ "#!/usr/bin/python3",
+\ "",
+\ "import sys",
+\ "print(sys.argv)",
+\ ])
+        normal dd
+    endif
 endfunction
 
-function Window_is_temporary()
-	let l:dir_name = expand('%:p:h')
-	let l:file_name = expand('%:t')
-	if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || &l:buftype == 'nofile' || l:file_name == 'swoopBuf'
-		" || l:file_name == 'search-results.agsv'
-		return 1
-	endif
-	let l:last_part_expected = '.fugitiveblame'
-	let l:len_expected = strlen(l:last_part_expected)
-	let l:len_actual = strlen(l:file_name)
-	if l:len_actual > l:len_expected
-		let l:last_part_actual = strpart(l:file_name, l:len_actual - l:len_expected)
-		if l:last_part_actual == l:last_part_expected
-			return 1
-		endif
-	endif
-	if &pvw == 1 " If it is a preview window
-		return 1
-	endif
-	return 0
+function! My_window_is_temporary()
+    let l:dir_name = expand('%:p:h')
+    let l:file_name = expand('%:t')
+    if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || &l:buftype == 'nofile' || l:file_name == 'swoopBuf'
+        " || l:file_name == 'search-results.agsv'
+        return 1
+    endif
+    let l:last_part_expected = '.fugitiveblame'
+    let l:len_expected = strlen(l:last_part_expected)
+    let l:len_actual = strlen(l:file_name)
+    if l:len_actual > l:len_expected
+        let l:last_part_actual = strpart(l:file_name, l:len_actual - l:len_expected)
+        if l:last_part_actual == l:last_part_expected
+            return 1
+        endif
+    endif
+    if &pvw == 1 " If it is a preview window
+        return 1
+    endif
+    return 0
 endfunction
-function Close_window_if_temporary()
-	if Window_is_temporary() != 0
-		execute ':q!'
-	endif
+function! My_close_window_if_temporary()
+    if My_window_is_temporary() != 0
+        execute ':q!'
+    endif
 endfunction
-command! CloseWindowIfTemporary call Close_window_if_temporary()
+command! MyCloseWindowIfTemporary call My_close_window_if_temporary()
 
-let g:Modify_line___text_to_prepend = '        '
-let g:Modify_line___start_column = 78
-let g:Modify_line___text_to_append = ' \'
-function Modify_line(text_to_prepend, start_column, text_to_append)
-	let l:cur_line = getline('.')
-	" Prepend text:
-	let l:cur_line = substitute(l:cur_line, "^[ \t]*", a:text_to_prepend, "")
-	" Delete text ending if necessary:
-	let l:cur_line_len = strlen(l:cur_line)
-	let l:append_text_len = strlen(a:text_to_append)
-	let l:cur_line_ending = strpart(l:cur_line, l:cur_line_len - l:append_text_len)
-	if l:cur_line_ending == a:text_to_append
-		" Need to delete text ending
-		let l:cur_line = substitute(l:cur_line, " *" . a:text_to_append, "", "")
-		let l:cur_line_len = strlen(l:cur_line)
-	endif
-	let l:line_ending = a:text_to_append
-	let l:i = l:cur_line_len
-	while l:i < a:start_column
-		let l:line_ending = ' ' . l:line_ending
-		let l:i = l:i + 1
-	endwhile
-	" Update line:
-	call setline('.', l:cur_line . l:line_ending)
+if ! exists('g:My_modify_line___text_to_prepend')
+    let g:My_modify_line___text_to_prepend = '        '
+endif
+if ! exists('g:My_modify_line___start_column')
+    let g:My_modify_line___start_column = 78
+endif
+if ! exists('g:My_modify_line___text_to_append')
+    let g:My_modify_line___text_to_append = ' \'
+endif
+function! My_modify_line(text_to_prepend, start_column, text_to_append)
+    let l:cur_line = getline('.')
+    " Prepend text:
+    let l:cur_line = substitute(l:cur_line, "^[ \t]*", a:text_to_prepend, "")
+    " Delete text ending if necessary:
+    let l:cur_line_len = strlen(l:cur_line)
+    let l:append_text_len = strlen(a:text_to_append)
+    let l:cur_line_ending = strpart(l:cur_line, l:cur_line_len - l:append_text_len)
+    if l:cur_line_ending == a:text_to_append
+        " Need to delete text ending
+        let l:cur_line = substitute(l:cur_line, " *" . a:text_to_append, "", "")
+        let l:cur_line_len = strlen(l:cur_line)
+    endif
+    let l:line_ending = a:text_to_append
+    let l:i = l:cur_line_len
+    while l:i < a:start_column
+        let l:line_ending = ' ' . l:line_ending
+        let l:i = l:i + 1
+    endwhile
+    " Update line:
+    call setline('.', l:cur_line . l:line_ending)
 endfunction
-command! -range ModifyLine <line1>,<line2> call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append)
+command! -range MyModifyLine <line1>,<line2> call My_modify_line(
+\ g:My_modify_line___text_to_prepend, g:My_modify_line___start_column,
+\ g:My_modify_line___text_to_append)
 
-function! ViewInNewBuffer(cmd)
-	redir @z
-	execute 'silent ' . a:cmd
-	redir END
-	tabnew
-	put z
+function! My_view_in_new_buffer(cmd)
+    redir @z
+    execute 'silent ' . a:cmd
+    redir END
+    tabnew
+    put z
 endfunction
-command! -nargs=1 ViewInNewBuffer call ViewInNewBuffer(<f-args>)
-" Usage example: :ViewInNewBuffer :map<CR> (show mappings in buffer).
+command! -nargs=1 MyViewInNewBuffer call My_view_in_new_buffer(<f-args>)
+" Usage example: :MyViewInNewBuffer :map<CR> (show mappings in buffer).
 
-function! Copy_location(in_file, strip_part)
-	let l:line_number = line('.')
-	let l:full_location = a:in_file . ':' . l:line_number
-	let l:strip_width = strlen(a:strip_part)
-	if strip_width
-		let @+ = strpart(l:full_location, l:strip_width)
-	else
-		let @+ = l:full_location
-	endif
-	echo 'copied: ' . @+
+function! My_copy_location(in_file, strip_part)
+    let l:line_number = line('.')
+    let l:full_location = a:in_file . ':' . l:line_number
+    let l:strip_width = strlen(a:strip_part)
+    if strip_width
+        let @+ = strpart(l:full_location, l:strip_width)
+    else
+        let @+ = l:full_location
+    endif
+    echo 'copied: ' . @+
 endfunction
 
 " vim-commentary:
@@ -497,56 +549,56 @@ let g:tcomment_mapleader2 = ''
 " call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
 
 " if has('nvim')
-" 	" First invoke terminal:
-" 	nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
-" 	" Use <C-Space> in terminal to switch to normal mode:
-" 	tnoremap <C-@> <C-\><C-n>:set relativenumber<CR>
-" 	" In terminal switch back to insert mode:
-" 	nmap <C-@> :set norelativenumber<CR>:startinsert<CR>
-" 	" Window management with terminal:
-" 	tnoremap <C-w><C-w> <C-\><C-n><C-w><C-w>
-" 	autocmd TermOpen * startinsert
-" 	autocmd WinEnter term://* startinsert
-" 	" Copy modified file name from git status:
-" 	function! Git_copy_modified_file_name(file_number)
-" 		let l:line_1 = search('        modified:   ', 'b')
-" 		if l:line_1 == 0 " not found
-" 			echo 'Error: modified by git files not found'
-" 			return
-" 		endif
-" 		let @+ = strpart(getline(l:line_1 - a:file_number + 1), 20)
-" 		set norelativenumber
-" 		startinsert
-" 	endfunction
-" 	command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)
-" 	" nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
-" 	" nmap <Leader>ga :GitCopy 
+"     " First invoke terminal:
+"     nmap <Leader>tt :silent w<CR>:e term://bash<CR>:startinsert<CR>
+"     " Use <C-Space> in terminal to switch to normal mode:
+"     tnoremap <C-@> <C-\><C-n>:set relativenumber<CR>
+"     " In terminal switch back to insert mode:
+"     nmap <C-@> :set norelativenumber<CR>:startinsert<CR>
+"     " Window management with terminal:
+"     tnoremap <C-w><C-w> <C-\><C-n><C-w><C-w>
+"     autocmd TermOpen * startinsert
+"     autocmd WinEnter term://* startinsert
+"     " Copy modified file name from git status:
+"     function! Git_copy_modified_file_name(file_number)
+"         let l:line_1 = search('        modified:   ', 'b')
+"         if l:line_1 == 0 " not found
+"             echo 'Error: modified by git files not found'
+"             return
+"         endif
+"         let @+ = strpart(getline(l:line_1 - a:file_number + 1), 20)
+"         set norelativenumber
+"         startinsert
+"     endfunction
+"     command! -nargs=1 GitCopy call Git_copy_modified_file_name(<f-args>)
+"     " nmap <Leader>gg :call Git_copy_modified_file_name(1)<CR>
+"     " nmap <Leader>ga :GitCopy 
 " endif
 
 " autocmd TermClose * bd! " do not show 'Process exited ' message
 " sp | wincmd j | e term://f s | set norelativenumber | set nonumber | startinsert
 
-function! GetFileNameUnderCursor(line)
-	let l:last_file_char = stridx(a:line, " ", 1)
-	if l:last_file_char == -1
-		let l:last_file_char = stridx(a:line, "\t", 1)
-		if l:last_file_char == -1
-			let l:last_file_char = stridx(a:line, ",", 1)
-		endif
-	endif
-	if l:last_file_char != -1
-		return strpart(a:line, 0, l:last_file_char)
-	endif
-	return a:line
+function! My_get_file_name_under_cursor(line)
+    let l:last_file_char = stridx(a:line, " ", 1)
+    if l:last_file_char == -1
+        let l:last_file_char = stridx(a:line, "\t", 1)
+        if l:last_file_char == -1
+            let l:last_file_char = stridx(a:line, ",", 1)
+        endif
+    endif
+    if l:last_file_char != -1
+        return strpart(a:line, 0, l:last_file_char)
+    endif
+    return a:line
 endfunction
 
-function! OpenFile(win, cmd) " at least one colon expected
-	let l:line = strpart(getline('.'), col(".") - 1)
-	let l:file = GetFileNameUnderCursor(l:line)
-	if a:win == 'prev_win'
-		execute "normal \<c-w>\<c-p>"
-	endif
-	execute a:cmd . ' ' . l:file
+function! My_open_file(win, cmd) " at least one colon expected
+    let l:line = strpart(getline('.'), col(".") - 1)
+    let l:file = My_get_file_name_under_cursor(l:line)
+    if a:win == 'prev_win'
+        execute "normal \<c-w>\<c-p>"
+    endif
+    execute a:cmd . ' ' . l:file
 endfunction
 
 function! My_get_region_lines(start, end)
@@ -715,6 +767,16 @@ function! My_goto_error(error)
     endif
 endfunction
 
+function! My_edit_vimrc()
+    let l:file = $DOTRC . "/home_settings/.vimrc"
+    execute 'tabedit ' . l:file
+    function! My_done_editing_vimrc(file)
+        silent execute "!" . $DOTRC . "/other_files/generate_configs.sh .vimrc"
+        source $MYVIMRC
+    endfunction
+    execute 'autocmd! BufLeave ' . l:file . ' call My_done_editing_vimrc("' . l:file . '")'
+endfunction
+
 " To insert echo (for Makefile) use the following macro:
 " let @E = 'i	@echo "|$()|"hhi'
 
@@ -736,9 +798,9 @@ let g:magit_default_fold_level=2
 let g:magit_discard_untracked_do_delete=1
 let g:magit_discard_hunk_mapping='X'
 
-nmap <C-;> :call Swap_keyboard_layout()<CR>
-vmap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gv
-imap <C-;> <Esc>:call Swap_keyboard_layout()<CR>gi
+nmap <C-;> :call My_swap_keyboard_layout()<CR>
+vmap <C-;> <Esc>:call My_swap_keyboard_layout()<CR>gv
+imap <C-;> <Esc>:call My_swap_keyboard_layout()<CR>gi
 " Apply macro to selected lines:
 vmap i :normal @
 " Block comment (use gcb<motion> in normal mode):
@@ -754,7 +816,7 @@ nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 nmap <C-l> zl
 nmap <C-h> zh
 " Open location in QuickFix window:
-autocmd FileType qf nmap <buffer> o :call OpenLocation()<CR>
+autocmd FileType qf nmap <buffer> o :call My_open_location()<CR>
 " Reformat C/C++ source code:
 " nmap <C-u> :%d<CR>:r !uncrustify -f %<CR>:1,1d<CR>
 " nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
@@ -769,9 +831,9 @@ let g:which_key_map.b = { 'name' : '+buffers',
 \   'p' : [':bprevious', 'previous'],
 \ }
 
-" nmap <F11> :call Copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
+" nmap <F11> :call My_copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
 let g:which_key_map.c = { 'name' : '+compile/clipboard',
-\   'l' : [':call Copy_location(expand("%:p"), "")', 'copy full location to clipboard'],
+\   'l' : [':call My_copy_location(expand("%:p"), "")', 'copy full location to clipboard'],
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
@@ -779,9 +841,8 @@ let g:which_key_map.d = {'name' : '+diff',
 \   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
 \   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
 \   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
-\   'i' : [':call Add_include_guards(expand("%:t"))', 'add include guards'],
-\   'q' : [':windo CloseWindowIfTemporary', 'close temporary windows'],
-\   'm' : [':call Modify_line(g:Modify_line___text_to_prepend, g:Modify_line___start_column, g:Modify_line___text_to_append) | normal 0', 'modify line'],
+\   'm' : [':MyModifyLine', 'modify line'],
+\   'q' : [':windo MyCloseWindowIfTemporary', 'close temporary windows'],
 \ }
 
 let g:which_key_map.e = {'name' : '+errors',
@@ -795,15 +856,18 @@ let g:which_key_map.e = {'name' : '+errors',
 " :EditVifm :SplitVifm :VsplitVifm :DiffVifm :TabVifm
 let g:which_key_map.f = {'name' : '+files',
 \   ',' : [':EditVifm', 'vifm'],
+\   'e' : {'name' : '+edit',
+\     'v' : [':call My_edit_vimrc()', 'vimrc'],
+\    },
 \   'f' : [':Denite file/rec', 'fuzzy'],
-\   'j' : [':call OpenFile("cur_win", "e")', 'under cursor current window'],
-\   'h' : [':call OpenFile("cur_win", "sp")', 'under cursor horizontal split'],
-\   'v' : [':call OpenFile("cur_win", "vsp")', 'under cursor vertical split'],
-\   't' : [':call OpenFile("cur_win", "tabedit")', 'under cursor tabedit'],
+\   'j' : [':call My_open_file("cur_win", "e")', 'under cursor current window'],
+\   'h' : [':call My_open_file("cur_win", "sp")', 'under cursor horizontal split'],
+\   'v' : [':call My_open_file("cur_win", "vsp")', 'under cursor vertical split'],
+\   't' : [':call My_open_file("cur_win", "tabedit")', 'under cursor tabedit'],
 \   'p' : {'name' : '+under cursor previous window',
-\     'j' : [':call OpenFile("prev_win", "e")', 'current window'],
-\     'h' : [':call OpenFile("prev_win", "sp")', 'horizontal split'],
-\     'v' : [':call OpenFile("prev_win", "vsp")', 'vertical split'],
+\     'j' : [':call My_open_file("prev_win", "e")', 'current window'],
+\     'h' : [':call My_open_file("prev_win", "sp")', 'horizontal split'],
+\     'v' : [':call My_open_file("prev_win", "vsp")', 'vertical split'],
 \    },
 \ }
 
@@ -821,7 +885,11 @@ let g:which_key_map.g = {'name' : '+git',
 \     'h' : [':Gdiff HEAD', 'HEAD'],
 \     'p' : [':Gdiff ~1', 'HEAD~1 (previous)'],
 \   },
-\   'e' : [':RunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
+\   'e' : [':MyRunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
+\ }
+
+let g:which_key_map.i = { 'name' : '+insert',
+\   's' : [':call My_insert_snippet()', 'snippet'],
 \ }
 
 " Jump to character within current line:
@@ -867,7 +935,7 @@ let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
 \   's' : [':Denite line', 'fuzzy search in this file'],
-\   'm' : [':call VifmChoose("ripgrep")', 'ripgrep'],
+\   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep'],
 \   'l' : {'name' : '+spellang',
 \     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'd' : [':setlocal spell spelllang=de', 'deutsch'],

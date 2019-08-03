@@ -424,13 +424,13 @@ bmark! $DOTRC_S/emacs_projects/ emacs
 nnoremap ,c :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/vifm/vifmrc') | restart<CR>
 nnoremap ,C :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc') | restart<CR>
 
-nnoremap ,v :execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .vimrc')<CR>
-nnoremap ,b :execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .bashrc')<CR>
-nnoremap ,B :execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .bashrc')<CR>
-nnoremap ,i :execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
-nnoremap ,I :execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/i3/config') | :!i3-msg reload 1>/dev/null<CR>
-nnoremap ,u :execute system('exec echo :!e $DOTRC/usefull_info.txt')<CR>
-nnoremap ,r :execute system('exec echo :!e $DOTRC_S/other_files/remarks')<CR>
+nnoremap ,v :!$DOTRC/other_files/edit_config.sh dotrc .vimrc<CR>
+nnoremap ,b :!$DOTRC/other_files/edit_config.sh dotrc .bashrc<CR>
+nnoremap ,B :!$DOTRC/other_files/edit_config.sh dotrc_s .bashrc<CR>
+nnoremap ,i :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config && i3-msg reload 1>/dev/null<CR>
+nnoremap ,I :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/i3/config && i3-msg reload 1>/dev/null<CR>
+nnoremap ,u :!e $DOTRC/usefull_info.txt<CR>
+nnoremap ,r :!e $DOTRC_S/other_files/remarks<CR>
 
 set syscalls
 set number

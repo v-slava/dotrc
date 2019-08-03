@@ -53,5 +53,4 @@ if [ "$SWITCH_WORKSPACE" = "true" ]; then
     i3-msg "workspace $ORIG_WORKSPACE" 1>/dev/null
 fi
 
-$DOTRC/other_files/update_config.sh "$FILE"
-$DOTRC/other_files/generate_configs.sh
+$DOTRC/other_files/generate_configs.sh "$FILE"
