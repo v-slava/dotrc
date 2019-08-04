@@ -210,7 +210,8 @@ let g:detectindent_preferred_expandtab = 1
 let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php call My_apply_tab_settings()
+autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php,json
+\ call My_apply_tab_settings()
 function! My_apply_tab_settings()
     DetectIndent
     if My_is_linux_kernel_source_file(expand("%:p"))
@@ -847,7 +848,8 @@ let g:which_key_map.d = {'name' : '+diff',
 
 let g:which_key_map.e = {'name' : '+errors',
 \   'c' : [':call My_goto_error("current")', 'current error'],
-\   'l' : [':botright pedit /tmp/vim_errors.err | set readonly', 'list errors'],
+\   'l' : [':lopen', 'location list errors'],
+\   'm' : [':botright pedit /tmp/vim_errors.err | set readonly', 'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
 \   'p' : [':call My_goto_error("previous")', 'previous error'],
 \   'q' : [':copen', 'quickfix list errors'],
@@ -903,12 +905,21 @@ vmap <Leader>jw <Plug>(easymotion-bd-W)
 let g:which_key_map.j = { 'name' : '+jump',
 \ }
 
-let g:which_key_map.l = { 'name' : '+location/layout',
-\   's' : [':SSave! __LAST__', 'layout save'],
+let g:which_key_map.l = { 'name' : '+location/layout/LSP',
+\   'd' : [':call LanguageClient_textDocument_definition()',
+\          'LSP jump to definition'],
+\   'h' : [':call LanguageClient_textDocument_hover()', 'LSP hower'],
+\   'i' : [':call LanguageClient_textDocument_documentSymbol()',
+\          'LSP symbol info'],
 \   'l' : [':SLoad __LAST__', 'layout load'],
 \   'n' : [':lne', 'location list next'],
 \   'p' : [':lp', 'location list previous'],
+\   's' : [':SSave! __LAST__', 'layout save'],
 \ }
+
+" let g:LanguageClient_serverCommands = { 'c': ['clangd', '-compile-commands-dir=your_dir'], }
+" silent UpdateRemotePlugins
+" LanguageClientStart
 
 let g:which_key_map.m = { 'name' : '+my',
 \   'e' : [':call My_eval_vim()', 'eval vim'],
@@ -961,6 +972,4 @@ call which_key#register('<Space>', "g:which_key_map")
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
 
-" let g:LanguageClient_serverCommands = { 'c': ['clangd', '-compile-commands-dir=/home/slava/my'], }
-" LanguageClientStart
 " :help CTRL-W_ge

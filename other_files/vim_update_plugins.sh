@@ -36,8 +36,9 @@ UNIMPAIRED=a49c4f2bf05f18a6e4f6572a19763ba7abba52b1
 RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 
 # YARP=8fcb1af27772174df5446d49de29052cac47e46f
-LSP=0.1.147
-LSP_BRANCH=next
+# LSP=master
+# LSP=0.1.147
+# LSP_BRANCH=next
 
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=80a1e88f1df5b8b0a203dd9973dd164192bb67cf
@@ -132,7 +133,7 @@ git_checkout_bundle https://github.com/tpope/vim-unimpaired $UNIMPAIRED
 git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 
 # git_checkout_bundle https://github.com/roxma/nvim-yarp $YARP
-# git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
+git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
 
 git_checkout_bundle https://github.com/vimscript/toml $TOML
 git_checkout_bundle https://github.com/liuchengxu/vim-which-key $WHICH_KEY
