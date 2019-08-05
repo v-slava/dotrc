@@ -1,3 +1,6 @@
+# markdown (.md) viewer:
+grip -b readme.md
+
 # debug vim plugins:
 vim -V9log_file.txt [your_vim_args]
 
