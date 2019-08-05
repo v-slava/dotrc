@@ -482,9 +482,9 @@ nmap T :!touch<SPACE>
 nmap cx :!$DOTRC/other_files/toggle_executable.sh %"f<CR>
 vmap cx :!$DOTRC/other_files/toggle_executable.sh %"f<CR>
 
-nnoremap ot :!$DOTRC/other_files/objdump.sh -t ./%c | c++filt | less -i"<CR>
-nnoremap od :!$DOTRC/other_files/objdump.sh -D ./%c | c++filt | less -i"<CR>
-nnoremap os :!$DOTRC/other_files/objdump.sh -S ./%c | less -i"<CR>
+nnoremap ot :!$DOTRC/other_files/objdump.sh -t ./%c | c++filt | less -i<CR>
+nnoremap od :!$DOTRC/other_files/objdump.sh -D ./%c | c++filt | less -i<CR>
+nnoremap os :!$DOTRC/other_files/objdump.sh -S ./%c | less -i<CR>
 
 nmap xx :!$DOTRC/other_files/extract_progress.sh %f<CR>
 vmap xx :!$DOTRC/other_files/extract_progress.sh %f<CR>

@@ -1,0 +1,38 @@
+{
+  "settingsVersion": "1.64.6",
+  "exclusionRules": [
+    {
+      "pattern": "https://accounts.google.com/*",
+      "passKeys": "gmail"
+    },
+    {
+      "pattern": "https://www.commerzbank.de/*",
+      "passKeys": "commerzbank"
+    },
+    {
+      "pattern": "https://kreditkarten-banking.lbb.de/*",
+      "passKeys": "lbb"
+    },
+    {
+      "pattern": "https://www.amazon.de/*",
+      "passKeys": "amazon"
+    }
+  ],
+  "filterLinkHints": false,
+  "waitForEnterForFilteredHints": true,
+  "hideHud": false,
+  "keyMappings": "unmap `\nmap ' Marks.activateGotoMode\n\nunmap x\nunmap X\nmap q removeTab\nmap Q restoreTab\n\nmap <c-i> goForward\nmap <c-o> goBack\nmap h previousTab\nmap l nextTab\n\nmap H moveTabLeft\nmap L moveTabRight\n\nunmap f\nunmap F\nunmap <a-f>\nmap ff LinkHints.activateMode\nmap fj LinkHints.activateModeToOpenInNewTab\nmap fm LinkHints.activateModeWithQueue",
+  "linkHintCharacters": "sadfjklewcmpgh",
+  "linkHintNumbers": "0123456789",
+  "newTabUrl": "about:newtab",
+  "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
+  "previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
+  "regexFindMode": false,
+  "ignoreKeyboardLayout": false,
+  "scrollStepSize": 60,
+  "smoothScroll": true,
+  "grabBackFocus": false,
+  "searchEngines": "s: https://www.google.com/search?q=%s Google\nwe: https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (en)\nwr: https://ru.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (ru)\ny: https://www.youtube.com/results?search_query=%s Youtube\nmap: https://www.google.com/maps?q=%s GoogleMaps\ntor_rus: http://rutracker.org/forum/tracker.php?nm=%s RuTracker\ntor_eng: https://katcrs.win/search/%s/ kickass torrents\n\nl https://elixir.bootlin.com/linux/latest/ident/%s Linux Cross Reference\n\n# Google translate: 'phrase_to_translate'\nter: https://translate.google.com/?hl=en#en/ru/%s GoogleTranslate en -> ru\ntre: https://translate.google.com/?hl=en#ru/en/%s GoogleTranslate ru -> en\ntrd: https://translate.google.com/?hl=en#ru/de/%s GoogleTranslate ru -> de\ntdr: https://translate.google.com/?hl=en#de/ru/%s GoogleTranslate de -> ru\n# Google translate (any->any language): 'en/ru/phrase_to_translate' (de, uk, ko)\nto: https://translate.google.com/?hl=en#%s GoogleTranslate specify languages\n\n\n# Search for music:\nmus: http://spaces.ru/files/?r=main/search&Gs=1&Slist=61&link_id=80753&word=%s Music\n# mus: http://pleer.com/search?q=%s Music\n# https://myzuka.org\n# www.audiopoisk.com\n# http://mp3brainz.net/\n# http://epicmusictime.com/ # online radio\n\n# Music recognition service:\n# http://audiotag.info/index.php\n\n# Search for films:\nfilm: https://gomovies.to/movie/search/%s Films\nmovie: https://gomovies.to/movie/search/%s Movie",
+  "searchUrl": "https://www.google.com/search?q=",
+  "userDefinedLinkHintCss": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF785),\n  color-stop(100%,#FFC542));\nborder: 1px solid #E3BE23;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: black;\nfont-weight: bold;\nfont-size: 12px;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n}"
+}
