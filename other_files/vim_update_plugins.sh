@@ -133,7 +133,7 @@ git_checkout_bundle https://github.com/tpope/vim-unimpaired $UNIMPAIRED
 git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 
 # git_checkout_bundle https://github.com/roxma/nvim-yarp $YARP
-git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
+# git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
 
 git_checkout_bundle https://github.com/vimscript/toml $TOML
 git_checkout_bundle https://github.com/liuchengxu/vim-which-key $WHICH_KEY
