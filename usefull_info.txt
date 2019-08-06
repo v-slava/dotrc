@@ -994,10 +994,6 @@ Active=yes
 # linux cat /proc/cmdline and replace zeros (0) with spaces:
 cat /proc/cmdline | xargs -0 echo
 
-# Usefull linux kernel command line (cmdline) args:
-# Set log buffer (dmesg) size:
-log_buf_len=n # Here "n" is a power of 2 number
-
 # Systemd commands:
 systemctl --failed
 systemctl list-unit-files
@@ -1121,13 +1117,11 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
-# To remove a git submodule you need to (tags: rm, delete):
+# git remove (delete) submodule:
 1. Delete the relevant section from the .gitmodules file.
-2. Stage the .gitmodules changes:
-   git add .gitmodules
+2. git add .gitmodules
 3. Delete the relevant section from .git/config.
-4. Remove the submodule files from the working tree and index:
-   git rm --cached path_to_submodule (no trailing slash).
+4. git rm --cached path_to_submodule (no trailing slash).
 5. Remove the submodule's .git directory:
    rm -rf .git/modules/path_to_submodule
 6. Commit the changes:
@@ -1329,6 +1323,10 @@ CFLAGS_kobject_uevent.o := -DDEBUG
 dev_dbg(struct device *dev, char *format, ...);
 # add '#define DEBUG' as a first line of file to be debugged
 # See also: BUG(), BUG_ON(), dump_stack()
+
+# Usefull linux kernel command line (cmdline) args:
+# Set log buffer (dmesg) size:
+log_buf_len=n # Here "n" is a power of 2 number
 
 # Get linux kernel printk ring buffer address (in hex):
 readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
