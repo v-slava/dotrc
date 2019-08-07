@@ -759,6 +759,7 @@ cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 bear make
 compiledb make
+./scripts/gen_compile_commands.py # for linux kernel >= v5.0
 # need additional processing:
 ninja -v
 ninja -t commands

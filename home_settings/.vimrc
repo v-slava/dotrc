@@ -405,10 +405,10 @@ function! My_insert_snippet()
 \ "int main(int argc, char *argv[])",
 \ "{",
 \ "    // (void)argc; (void)argv;",
-\ "    printf(\"argc = %d, argv = {|%s|\", argc, argv[0]);",
-\ "    for (int i = 1; i < argc; ++i)",
-\ "        printf(\", |%s|\", argv[i]);",
-\ "    puts(\"}\");",
+\ "    printf(\"argc = %d, argv = {|%s|\", argc, argv[0]);" .
+\    " for (int i = 1; i < argc; ++i)" .
+\        " printf(\", |%s|\", argv[i]);" .
+\    " puts(\"}\");",
 \ "    return 0;",
 \ "}",
 \ ])
@@ -418,17 +418,14 @@ function! My_insert_snippet()
         call append(0, [
 \ "#!/bin/bash",
 \ "",
-\ "echo \"\\$# = |$#|\"",
-\ "echo \"\\$0 = |$0|\"",
-\ "echo \"\\$@ = |$@|\"",
+\ "echo \"\\$# = |$#|\"; echo \"\\$0 = |$0|\"; echo \"\\$@ = |$@|\"",
 \ ])
         normal dd
     elseif &filetype == "python"
         call append(0, [
 \ "#!/usr/bin/python3",
 \ "",
-\ "import sys",
-\ "print(sys.argv)",
+\ "import sys; print(sys.argv)",
 \ ])
         normal dd
     endif
