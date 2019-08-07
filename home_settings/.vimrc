@@ -918,6 +918,7 @@ let g:which_key_map.l = { 'name' : '+location/layout/LSP',
 \ }
 
 " let g:LanguageClient_serverCommands = { 'c': ['clangd', '-compile-commands-dir=your_dir'], }
+" let g:LanguageClient_serverCommands = { 'c': ['/media/files/workspace/ccls/Release/ccls'], }
 " silent UpdateRemotePlugins
 " LanguageClientStart
 

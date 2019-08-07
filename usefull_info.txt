@@ -758,6 +758,7 @@ cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
 # create JSON file with build commands, used by clang tooling interface (rtags):
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 bear make
+compiledb make
 # need additional processing:
 ninja -v
 ninja -t commands

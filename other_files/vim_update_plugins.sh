@@ -39,6 +39,11 @@ RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 # LSP=master
 # LSP=0.1.147
 # LSP_BRANCH=next
+# COC_NVIM=6d4508c3660373331383848e15820a8c940d028f # requires node.js!
+# https://github.com/w0rp/ale
+# https://github.com/prabirshrestha/vim-lsp
+# https://github.com/natebosch/vim-lsc
+# https://github.com/m-pilia/vim-ccls
 
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=80a1e88f1df5b8b0a203dd9973dd164192bb67cf
@@ -134,6 +139,7 @@ git_checkout_bundle https://github.com/lyuts/vim-rtags $RTAGS
 
 # git_checkout_bundle https://github.com/roxma/nvim-yarp $YARP
 # git_checkout_bundle https://github.com/autozimu/LanguageClient-neovim $LSP
+# git_checkout_bundle https://github.com/neoclide/coc.nvim $COC_NVIM
 
 git_checkout_bundle https://github.com/vimscript/toml $TOML
 git_checkout_bundle https://github.com/liuchengxu/vim-which-key $WHICH_KEY
