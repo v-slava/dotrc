@@ -5,8 +5,8 @@
 # https://github.com/IsmaelMartinez/teams-for-linux/issues/171
 
 PROCESS_NAME=teams-for-linux
-if [ -z "$EXECUTABLE_NAME" ]; then
-    EXECUTABLE_NAME="$PROCESS_NAME"
+if [ -z "$EXECUTABLE" ]; then
+    EXECUTABLE="$PROCESS_NAME"
 fi
 if [ -z "$XDG_CONFIG_HOME" ]; then
     XDG_CONFIG_HOME=~/.config
@@ -20,7 +20,11 @@ if pidof "$PROCESS_NAME" 1>/dev/null ; then
     exit 1
 fi
 
-set -e
-
 rm -rf "$XDG_CONFIG_HOME/$APP_CACHE"
-nohup "$EXECUTABLE_NAME" 1>/dev/null 2>&1 &
+RET=$?
+if [ $RET -ne 0 ]; then
+    echo "Can't remove \"$XDG_CONFIG_HOME/$APP_CACHE\"" 1>&2
+    exit $RET
+fi
+nohup "$EXECUTABLE" 1>/dev/null 2>&1 &
+exit 0
