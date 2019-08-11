@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # This script is a simple wrapper which prefixes each i3status line with custom
@@ -32,13 +32,30 @@ def get_brightness():
     intel_backlight = '/sys/class/backlight/intel_backlight'
     if os.path.isdir(intel_backlight):
         with open(intel_backlight + '/brightness') as fp:
-                cur_brightness = float(fp.readlines()[0].strip())
+            cur_brightness = float(fp.readlines()[0].strip())
         with open(intel_backlight + '/max_brightness') as fp:
-                max_brightness = float(fp.readlines()[0].strip())
+            max_brightness = float(fp.readlines()[0].strip())
         brightness = str(int(cur_brightness * 100 / max_brightness)) + '%'
     else:
         brightness = 'unknown'
     return 'brightness: ' + brightness
+
+def get_network_traffic():
+    try:
+        import subprocess
+        import os
+        interface = 'wlp3s0'
+        if not os.path.exists('/etc/sudoers.d/vnstat'):
+            return None
+        dev_null = open(os.devnull, 'w')
+        subprocess.check_call(['sudo', 'vnstat', '-i', interface, '-u'],
+                stdout = dev_null)
+        ret = subprocess.run(['vnstat', '-i', interface, '--oneline'],
+                check = True, capture_output = True, encoding = 'ascii')
+        rx, tx = ret.stdout.split(';')[3:5]
+        return 'rx: %s | tx: %s' % (rx, tx)
+    except:
+        return None
 
 def print_line(message):
     """ Non-buffered printing to stdout. """
@@ -59,6 +76,10 @@ def read_line():
         sys.exit()
 
 if __name__ == '__main__':
+    # print(get_network_traffic())
+    # import sys
+    # sys.exit()
+
     # Skip the first line which contains the version header.
     print_line(read_line())
 
@@ -72,9 +93,15 @@ if __name__ == '__main__':
             line, prefix = line[1:], ','
 
         j = json.loads(line)
-        # insert information into the start of the json, but could be anywhere
-        # CHANGE THIS LINE TO INSERT SOMETHING ELSE
-        j.insert(0, {'full_text' : '%s' % get_brightness(), 'name' : 'gov'})
+
+        additional_data = [
+            get_brightness(),
+            get_network_traffic(),
+        ]
+        for data in additional_data:
+            if data:
+                j.insert(0, {'full_text' : data})
+
         # and echo back new encoded json
-        print_line(prefix+json.dumps(j))
+        print_line(prefix + json.dumps(j))
 

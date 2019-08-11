@@ -41,6 +41,17 @@ sudo auditctl -w /some/path/to/file
 # usermod -a -G lpadmin YOUR_USER_NAME
 http://localhost:631/admin
 
+# Network traffic monitoring:
+sudo apt-get install vnstat
+# Update statistics:
+sudo vnstat -i wlp3s0 -u
+# Print report
+vnstat -i wlp3s0 -d
+# rx today:
+vnstat -i wlp3s0 --oneline | cut -d';' -f4
+# tx today:
+vnstat -i wlp3s0 --oneline | cut -d';' -f5
+
 # simple http server to transfer files over local network:
 woof FILE
 
@@ -1046,6 +1057,7 @@ youtube-dl -F URL
 # Extract mp3:
 youtube-dl -f best -x --audio-format mp3 --audio-quality=0 URL
 youtube-dl -f best -x --audio-format mp3 --audio-quality=320K URL
+curl -L https://yt-dl.org/downloads/latest/youtube-dl -o ~/bin/youtube-dl
 
 # Bluetooth headset alsa:
 # /etc/bluetooth/audio.conf:

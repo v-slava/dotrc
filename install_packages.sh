@@ -9,7 +9,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    vim vifm less bash-completion python youtube-dl cclive dhex \
+    vim vifm less bash-completion python cclive dhex \
     apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
