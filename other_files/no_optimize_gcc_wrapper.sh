@@ -14,6 +14,7 @@
 #     "./file4.c"
 # )
 #
+# test -z "$DOTRC" && DOTRC=/media/files/workspace/dotrc
 # . $DOTRC/other_files/no_optimize_gcc_wrapper.sh
 
 LOG=/tmp/gcc_wrapper_log
@@ -45,6 +46,10 @@ for arg do
     shift
     case "$arg" in
         "-fomit-frame-pointer" | \
+        "-fno-omit-frame-pointer" | \
+        "-fno-var-tracking-assignments" | \
+        "-fmerge-constants" | \
+        "-fconserve-stack" | \
         "-O1" | "-O2" | "-O3" | "-Os" |"-Ofast" | "-Og" | "-g" | "-g3")
             ;;
         *)

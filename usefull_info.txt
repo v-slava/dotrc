@@ -505,7 +505,8 @@ objcopy -O binary IN_FILE.elf OUT_FILE.bin
 # List targets, acceptable by objcopy:
 objdump -i
 # Dump single section into binary from object file:
-arm-none-eabi-objcopy --only-section=.MySection -I elf32-littlearm -O binary IN_FILE.o OUT_FILE.bin
+arm-none-eabi-objcopy -O binary --only-section=.MySection -I elf32-littlearm IN_FILE.o OUT_FILE.bin
+arm-none-eabi-objcopy -O binary --only-section=.text ELF_FILE BIN_FILE
 
 # Some random objdump flags:
 objdump --prefix-address --show-raw-insn -D -S -z -b binary -m arm -Mforce-thumb
