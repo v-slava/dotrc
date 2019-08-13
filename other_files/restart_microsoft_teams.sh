@@ -13,6 +13,7 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
 fi
 APP_CACHE="teams-for-linux/Partitions/teams-4-linux/Application Cache"
 
+pkill -SIGKILL "$PROCESS_NAME"
 killall --wait -SIGKILL "$PROCESS_NAME"
 
 if pidof "$PROCESS_NAME" 1>/dev/null ; then

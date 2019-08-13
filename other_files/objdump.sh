@@ -6,13 +6,11 @@
 # last command line argument:
 FILE="${@: -1}"
 
-FILE_INFO=$(file "$FILE")
+FILE_INFO="$(file "$(realpath "$FILE")")"
 
-if echo $FILE_INFO | grep -q "ARM" ; then
-	CROSS_COMPILE=arm-linux-gnueabihf-
-elif echo $FILE_INFO | grep -q "PowerPC" ; then
-	CROSS_COMPILE=powerpc-linux-gnu-
-else
-	CROSS_COMPILE=
-fi
+case "$FILE_INFO" in
+    *ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
+    *PowerPC*) CROSS_COMPILE=powerpc-linux-gnu- ;;
+    *) CROSS_COMPILE= ;;
+esac
 ${CROSS_COMPILE}objdump $@
