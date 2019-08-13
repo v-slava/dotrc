@@ -9,6 +9,11 @@ FILE="${@: -1}"
 FILE_INFO="$(file "$(realpath "$FILE")")"
 
 case "$FILE_INFO" in
+    *ELF*) ;;
+    *) echo "Can't disassemble: not an ELF file!" 1>&2 ; exit 1 ;;
+esac
+
+case "$FILE_INFO" in
     *ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
     *PowerPC*) CROSS_COMPILE=powerpc-linux-gnu- ;;
     *) CROSS_COMPILE= ;;

@@ -683,7 +683,8 @@ make kselftest
 # linux kernel boot sequence (tags: startup, debugging, jtag, system):
 uboot:
     boot_jump_linux()
-linux/arch/arm/boot/compressed/vmlinux (decompression stub), address offset 0x01000000:
+linux/arch/arm/boot/compressed/vmlinux (decompression stub),
+address offset 0x01000000 or 0x02000000:
     start
     __enter_kernel
 linux/vmlinux, address offset -0xC0000000:
