@@ -295,8 +295,10 @@ function! My_vifm_choose(action)
     startinsert
 endfunction
 
+let g:vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_') . '.err'
+
 function! My_run_shell_cmd(cmd)
-    silent! exe 'noautocmd silent botright pedit /tmp/vim_errors.err'
+    silent! execute 'noautocmd silent botright pedit ' . g:vim_errors_file
     noautocmd wincmd P
     " set buftype=nofile
     setlocal filetype=my_shell_cmd_output
@@ -304,7 +306,7 @@ function! My_run_shell_cmd(cmd)
     normal ggdG
     " exe 'noautocmd r! $DOTRC/other_files/vifm_run_command.sh ' . a:cmd . ' 2>&1'
     " AnsiEsc
-    exe 'noautocmd silent r!
+    execute 'noautocmd silent r!
 \ echo "Command: ' . a:cmd . ' Command output:" &&
 \ exec 2>&1 ;
 \ ' . a:cmd . ' ;
@@ -319,7 +321,7 @@ function! My_run_shell_cmd(cmd)
     normal 0ggdd
     silent w
     set readonly
-    cgetfile /tmp/vim_errors.err
+    execute 'cgetfile ' . g:vim_errors_file
     wincmd p
     if v:shell_error == 0
         echo "Command succeeded (exit code = 0)"
@@ -717,7 +719,7 @@ function! My_goto_error(error)
     else
         let l:action = 'cc! ' . a:error
     endif
-    let l:err_buf_name = '/tmp/vim_errors.err'
+    let l:err_buf_name = g:vim_errors_file
     let l:in_err_win = 0
     if bufname('%') == l:err_buf_name
         let l:in_err_win = 1
@@ -846,7 +848,7 @@ let g:which_key_map.d = {'name' : '+diff',
 let g:which_key_map.e = {'name' : '+errors',
 \   'c' : [':call My_goto_error("current")', 'current error'],
 \   'l' : [':lopen', 'location list errors'],
-\   'm' : [':botright pedit /tmp/vim_errors.err | set readonly', 'my list errors'],
+\   'm' : [':botright pedit ' . g:vim_errors_file . ' | set readonly', 'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
 \   'p' : [':call My_goto_error("previous")', 'previous error'],
 \   'q' : [':copen', 'quickfix list errors'],
