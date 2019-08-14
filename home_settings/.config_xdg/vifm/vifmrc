@@ -411,6 +411,8 @@ nmap w= :vsplit<CR>
 
 " nmap <c-f> :find *.
 nmap <c-f> :execute '!f --no-clipboard 2>&0 %IU || echo %c' | normal! gf<CR>
+" Copy symlink destination to clipboard (tags: location):
+nnoremap gl :!readlink '%c' | clipboard.sh -n<CR>
 
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/ .. trash_vifm

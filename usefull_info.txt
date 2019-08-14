@@ -379,6 +379,11 @@ cd $HOME/other/toolchains/icecc
 icemon
 # for environment settings see .bashrc
 
+# List all pkg-config (tags: pkgconfig) packages:
+pkg-config --list-all
+# Get compile flags:
+pkg-config PKG_NAME --cflags-only-I
+
 # Upgrade when "The following packages have been kept back:":
 apt-get dist-upgrade
 
@@ -699,6 +704,7 @@ linux/vmlinux, address offset 0:
 
 # linux kernel disable optimizations (CFLAGS):
 CFLAGS_file_name.o := -O0
+# see also $DOTRC/other_files/no_optimize_gcc_wrapper.sh
 
 # linux kernel loading:
 insmod executes syscall init_module -> sys_init_module() in kernel
@@ -801,6 +807,8 @@ pdftk in.pdf cat 1-endright output out.pdf
 # Create pdf file from images (jpg/png), need to install imagemagick:
 # apt-get install imagemagick
 convert page*.png mydoc.pdf
+# extract images from pdf:
+pdfimages input.pdf output_folder
 
 # compress (minimize) image size (jpg, png):
 mogrify -quality "80%" -resize 1048x768 file.jpg
