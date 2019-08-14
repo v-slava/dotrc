@@ -97,6 +97,11 @@ crontab -e
 lsusb analog:
 usb-devices
 
+# gcc show detailed default optimization options:
+gcc --help=optimizers -Q -O0
+# disable all optimizations:
+gcc --help=optimizers -Q -O0 2>&1 | perl -ane 'if ($F[1] =~/enabled/) {$F[0] =~ s/^\s*-f/-fno-/g;push @o,$F[0];}} END {print join(" ", @o)'
+
 # To find out what gcc -pthread actually does:
 gcc -dumpspecs | grep pthread
 

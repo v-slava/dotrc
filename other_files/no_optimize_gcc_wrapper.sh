@@ -14,6 +14,7 @@
 #     "./file4.c"
 # )
 #
+# # USE_DEFAULT_O0_OPIMIZATIONS=true
 # test -z "$DOTRC" && DOTRC=/media/files/workspace/dotrc
 # . $DOTRC/other_files/no_optimize_gcc_wrapper.sh
 
@@ -39,7 +40,15 @@ done
 
 if [ "$PROCESS" != true ]; then
     echo "$ORIG_GCC $@" >> $LOG
-    exec $ORIG_GCC "$@"
+    exec "$ORIG_GCC" "$@"
+fi
+
+if [ "$USE_DEFAULT_O0_OPIMIZATIONS" != "true" ]; then
+    FLAGS="$("$ORIG_GCC" --help=optimizers -Q -O0 | grep '\[enabled\]' \
+        | cut -d' ' -f3 | grep -v '^\-fno-' | grep -v '^\-frtti$' \
+        | grep -v '^\-fomit-frame-pointer$' | cut -c 3-)"
+    FLAGS_REMOVE="-f${FLAGS//$'\n'/ -f}"
+    FLAGS_ADD="-fno-${FLAGS//$'\n'/ -fno-}"
 fi
 
 for arg do
@@ -47,16 +56,38 @@ for arg do
     case "$arg" in
         "-fomit-frame-pointer" | \
         "-fno-omit-frame-pointer" | \
-        "-fno-var-tracking-assignments" | \
-        "-fmerge-constants" | \
-        "-fconserve-stack" | \
-        "-O1" | "-O2" | "-O3" | "-Os" |"-Ofast" | "-Og" | "-g" | "-g3")
+        "-O0" | "-O" | "-O1" | "-O2" | "-O3" | "-Os" |"-Ofast" | "-Og" | \
+        "-g" | "-g1" | "-g2" | "-g3")
             ;;
         *)
+            if [ "$USE_DEFAULT_O0_OPIMIZATIONS" != "true" ]; then
+                SKIP=false
+                for flag in $FLAGS_REMOVE ; do
+                    if [ "$flag" = "$arg" ]; then
+                        SKIP=true
+                        break
+                    fi
+                done
+                if [ "$SKIP" = "true" ]; then
+                    continue
+                fi
+            fi
             set -- "$@" "$arg"
             ;;
     esac
 done
 
-echo "$ORIG_GCC $@ -g3 -fno-omit-frame-pointer" >> $LOG
-exec $ORIG_GCC "$@" -g3 -fno-omit-frame-pointer
+ARGS=(
+    -g3
+    -fno-omit-frame-pointer
+)
+
+if [ "$USE_DEFAULT_O0_OPIMIZATIONS" != "true" ]; then
+    ARGS+=($FLAGS_ADD)
+fi
+
+ARGS+=(
+)
+
+echo "$ORIG_GCC $@ ${ARGS[@]}" >> $LOG
+exec $ORIG_GCC "$@" "${ARGS[@]}"
