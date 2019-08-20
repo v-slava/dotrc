@@ -706,7 +706,7 @@ make kselftest
 uboot:
     boot_jump_linux()
 linux/arch/arm/boot/compressed/vmlinux (decompression stub),
-address offset 0x01000000 or 0x02000000:
+address offset is in uboot's "bootX" command arguments
     start
     __enter_kernel
 linux/vmlinux, address offset -0xC0000000:

@@ -55,7 +55,8 @@ case "$MODE" in
     "s" | "--standard") fzf ;;
     "g" | "--git-files")
         set -e
-        git rev-parse --show-toplevel # fail here if this is not git repo.
+        # fail here if this is not git repo:
+        git rev-parse --show-toplevel 1>/dev/null 2>&1
         git ls-tree -r --full-tree --name-only HEAD | fzf | \
             xargs -I MY_FOUND_FILE_NAME \
                   echo "$(git rev-parse --show-toplevel)/MY_FOUND_FILE_NAME"
