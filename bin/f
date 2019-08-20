@@ -55,11 +55,9 @@ case "$MODE" in
     "s" | "--standard") fzf ;;
     "g" | "--git-files")
         set -e
-        # fail here if this is not git repo:
-        git rev-parse --show-toplevel 1>/dev/null 2>&1
-        git ls-tree -r --full-tree --name-only HEAD | fzf | \
-            xargs -I MY_FOUND_FILE_NAME \
-                  echo "$(git rev-parse --show-toplevel)/MY_FOUND_FILE_NAME"
+        GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+        FILE="$(git ls-tree -r --full-tree --name-only HEAD | fzf)"
+        echo "$GIT_ROOT/$FILE"
         ;;
     "a" | "--all-files") find -L ! -type d | fzf ;;
     "d" | "--directories") find -L -type d | fzf ;;
