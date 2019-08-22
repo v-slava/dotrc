@@ -771,7 +771,7 @@ function! My_edit_vimrc()
     let l:file = $DOTRC . "/home_settings/.vimrc"
     execute 'tabedit ' . l:file
     function! My_done_editing_vimrc(file)
-        silent execute "!" . $DOTRC . "/other_files/generate_configs.sh .vimrc"
+        silent execute "!source " . $DOTRC . "/other_files/config_file.sh && config_generate .vimrc"
         source $MYVIMRC
     endfunction
     execute 'autocmd! BufLeave ' . l:file . ' call My_done_editing_vimrc("' . l:file . '")'

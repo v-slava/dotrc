@@ -6,19 +6,24 @@ if [ -n "$WINDIR" ]; then
     exit 1
 fi
 
-set -ex
+set -e
 
-# Signal bash to include filenames beginning with a `.'
-# in the results of pathname expansion:
-shopt -s dotglob
+if [ -z "$DOTRC" ]; then
+    echo "Error: \$DOTRC is not defined" 1>&2
+    exit 1
+fi
+cd $DOTRC/home_settings
+source $DOTRC/other_files/config_file.sh
+find -type f | cut -d'/' -f 2- | while read FILE ; do
+    config_generate "$FILE"
+done
+
+if [ "$(id -u)" = "0" ]; then
+    echo "Done for user: $(whoami)!"
+    exit 0
+fi
 
 MEDIA_FILES=/media/files
-
-cp -rafv $PWD/home_settings/* $HOME/
-
-if [ -n "$DISPLAY" ]; then
-    xrdb ~/.Xresources
-fi
 
 if [ ! -e ~/my ]; then
     ln -s $MEDIA_FILES/temporary/my ~/my
@@ -34,9 +39,6 @@ if [ ! -e ~/Downloads ]; then
 fi
 if [ ! -e ~/Desktop ]; then
     ln -s $MEDIA_FILES/downloads ~/Desktop
-fi
-if [ ! -e ~/.spacemacs ]; then
-    ln -s $PWD/other_files/dot_spacemacs.el ~/.spacemacs
 fi
 # if [ ! -d ~/terminal ]; then
 #     mkdir ~/terminal
@@ -56,14 +58,7 @@ for dir in $MY_DIRS ; do
     fi
 done
 
-set -e
-
 $DOTRC/other_files/vim_update_plugins.sh
-$DOTRC/other_files/generate_configs.sh
-i3-msg reload
-if [ "$(id -u)" != "0" ]; then
-    systemctl --user enable rdm.socket
-fi
 
 if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
     ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard
@@ -72,4 +67,4 @@ fi
 xmms2 server config playlist.repeat_all 1
 xmms2 server config output.plugin pulse
 
-echo -e "\nDone!"
+echo "Done for user: $(whoami)!"

@@ -32,9 +32,15 @@ else # if [ ! true ]
     source "$HOME/.bashrc"
 fi
 
-if [ -z $DISPLAY ] && [ $XDG_VTNR -eq 1 ]; then
-    OTHER_FILES=$DOTRC/other_files
-    $OTHER_FILES/generate_configs.sh
-    CONFIGDIR=`if $OTHER_FILES/virtual_box.sh ; then echo virtual ; else echo native ; fi`
+if [ -z "$DISPLAY" ] && [ $XDG_VTNR -eq 1 ]; then
+    CONFIGDIR=native
+    if [ -n "$DOTRC" ]; then
+        source $DOTRC/other_files/config_file.sh
+        config_generate .Xmodmap
+        config_generate .config_xdg/i3/config
+        if $DOTRC/other_files/virtual_box.sh ; then
+            CONFIGDIR=virtual
+        fi
+    fi
     exec startx -- -configdir $CONFIGDIR
 fi

@@ -23,11 +23,13 @@ LEFT_MODE=1920x1080
 
 set -e
 source ~/.bashrc
+source $DOTRC/other_files/config_file.sh
 
 update_i3_config()
 {
     I3_CONF=.config_xdg/i3/config
-    $DOTRC/other_files/concat_config.sh $I3_CONF
+    config_concat_dotrc_s $I3_CONF
+    config_fix_env_vars $I3_CONF DOTRC DOTRC_S
     I3_CONF=~/$I3_CONF
     XRANDR="$(xrandr)"
     if echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&

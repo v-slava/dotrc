@@ -2,10 +2,6 @@
 
 VIM_DIR=$HOME/.vim
 PLUGINS_DIR=$HOME/.vim_all_plugins
-VIM_CMD="$(which nvim)"
-if [ -z "$VIM_CMD" ]; then
-    VIM_CMD=vim
-fi
 
 set -e
 
@@ -109,18 +105,22 @@ git_checkout()
 }
 
 git_checkout_bundle()
-{
+(
     URL="$1"
     DIR=$(basename $URL)
     GIT_DIR=$PLUGINS_DIR/$DIR
+    set -e
     git_checkout "$@"
     if [ ! -e $VIM_DIR/bundle/$DIR ]; then
         ln -sr $GIT_DIR $VIM_DIR/bundle/$DIR
     fi
-    if [ -d $GIT_DIR/doc ]; then
-        cd $VIM_DIR/bundle/$DIR && $VIM_CMD -u NONE -c "helptags doc | q" && cd -
-    fi
-}
+    # This causes too much screen blinking:
+    # if [ -d $GIT_DIR/doc ]; then
+    #     cd $VIM_DIR/bundle/$DIR
+    #     $VIM_CMD -u NONE -c "helptags doc | q"
+    #     cd - 1>/dev/null
+    # fi
+)
 
 mkdir -p $PLUGINS_DIR $VIM_DIR/{autoload,bundle,spell}
 if [ ! -e $VIM_DIR/init.vim ]; then
@@ -165,8 +165,14 @@ git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
 # git_checkout_bundle https://github.com/vim-scripts/AnsiEsc.vim $ANSI_ESC
 # git_checkout_bundle https://github.com/powerman/vim-plugin-AnsiEsc $ANSI_ESC_2
 
+cd $HOME/.vim/bundle
+ARGS=('+UpdateRemotePlugins')
+ls | while read dir ; do
+    ARGS+=("+helptags $dir/doc")
+done
+ARGS+=('+q')
 if [ $TERM = "dumb" ]; then
-    x-terminal-emulator -e nvim '+UpdateRemotePlugins' '+q'
+    x-terminal-emulator -e nvim "${ARGS[@]}"
 else
-    nvim '+UpdateRemotePlugins' '+q'
+    nvim "${ARGS[@]}"
 fi

@@ -17,14 +17,12 @@ fi
 
 FILE="$2"
 
-source $DOTRC/other_files/config_file.sh
-
 case "$1" in
     "dotrc")
-        EDIT_FILE="$DOTRC_FILE"
+        EDIT_FILE="$DOTRC/home_settings/$FILE"
         ;;
     "dotrc_s")
-        EDIT_FILE="$DOTRC_S_FILE"
+        EDIT_FILE="$DOTRC_S/home_settings/$FILE"
         ;;
     *)
         usage
@@ -53,4 +51,5 @@ if [ "$SWITCH_WORKSPACE" = "true" ]; then
     i3-msg "workspace $ORIG_WORKSPACE" 1>/dev/null
 fi
 
-$DOTRC/other_files/generate_configs.sh "$FILE"
+source $DOTRC/other_files/config_file.sh
+config_generate "$FILE"
