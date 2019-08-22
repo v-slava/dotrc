@@ -1146,6 +1146,9 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
+# git extract subfolder to a dedicated repository:
+$DOTRC/other_files/git_trim_repo_to_subdir.sh
+
 # git remove (delete) submodule:
 1. Delete the relevant section from the .gitmodules file.
 2. git add .gitmodules
