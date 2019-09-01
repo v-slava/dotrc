@@ -14,9 +14,11 @@ if [ -z "$DOTRC" ]; then
 fi
 cd $DOTRC/home_settings
 source $DOTRC/other_files/config_file.sh
-find -type f | cut -d'/' -f 2- | while read FILE ; do
+find ! -type d | cut -d'/' -f 2- | while read FILE ; do
     config_generate "$FILE"
 done
+
+$DOTRC/other_files/vim_update_plugins.sh
 
 if [ "$(id -u)" = "0" ]; then
     echo "Done for user: $(whoami)!"
@@ -57,8 +59,6 @@ for dir in $MY_DIRS ; do
         ln -s $MEDIA_FILES/$dir ~/my/$dir
     fi
 done
-
-$DOTRC/other_files/vim_update_plugins.sh
 
 if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
     ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard

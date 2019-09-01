@@ -2328,7 +2328,9 @@ dd if=/dev/zero of=/dev/sdX bs=1k count=1
 fdisk /dev/sdX
 mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
 mount /dev/sdX1 /mnt
-grub-install --boot-directory=/mnt/boot /dev/sdX
+apt-get install grub2-common
+# grub-install --target=x86_64-efi --efi-directory=/boot/efi --boot-directory=/mnt/boot /dev/sdX
+apt-get install grub-pc-bin && grub-install --target=i386-pc --boot-directory=/mnt/boot /dev/sdX
 edit /mnt/boot/grub/grub.cfg
 # Add memdisk (to boot iso/floppy/hard disk images):
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
@@ -2340,6 +2342,7 @@ cp mhdd32ver4.6.iso /mnt/boot/mhdd.iso
 wget http://www.memtest86.com/downloads/memtest86-iso.gz
 cp memtest86-iso /mnt/boot/memtest.iso
 # See $DOTRC/other_files/grub.cfg
+umount /mnt
 
 # Create bootable usb (EFI):
 dd if=/dev/zero of=/dev/sdX bs=1k count=1
@@ -2348,9 +2351,11 @@ mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
 mount /dev/sdX1 /mnt
 mkdir -p /mnt/EFI/BOOT
 apt-get install grub-efi-amd64-bin
-grub-mkimage -o bootx64.efi -p /boot/grub -O x86_64-efi fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
-cp bootx64.efi /mnt/EFI/BOOT/
+grub-mkimage -o /tmp/bootx64.efi -p /boot/grub -O x86_64-efi fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
+cp /tmp/bootx64.efi /mnt/EFI/BOOT/
+mkdir /mnt/boot/grub
 edit /mnt/boot/grub/grub.cfg
+umount /mnt
 
 # Boot linux distro without GRUB (CONFIG_EFI_STUB=y in linux kernel configuration):
 1) Using fdisk create GPT partition table.

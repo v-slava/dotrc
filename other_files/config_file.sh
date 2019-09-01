@@ -6,6 +6,10 @@ config_concat_dotrc_s()
     set -e
     DIR="$(dirname "$HOME/$FILE")"
     mkdir -p "$DIR"
+    if [ -L "$DOTRC_FILE" ]; then
+        cp -r "$DOTRC_FILE" "$HOME/$FILE"
+        return
+    fi
     cp "$DOTRC_FILE" "$HOME/$FILE"
     if [ -f "$DOTRC_S_FILE" ]; then
         cat "$DOTRC_S_FILE" >> "$HOME/$FILE"

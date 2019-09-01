@@ -92,18 +92,20 @@ let g:EasyMotion_do_mapping = 0
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
 
-" Use ripgrep:
-call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
-" <C-o> enter normal mode
-" call denite#custom#map('normal', 'E', '<denite:do_action:edit>', 'noremap')
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
+if globpath(&runtimepath, "autoload/denite.vim") != ""
+    " Use ripgrep:
+    call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+    call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
+    call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
+    " <C-o> enter normal mode
+    " call denite#custom#map('normal', 'E', '<denite:do_action:edit>', 'noremap')
+    call denite#custom#var('grep', 'command', ['rg'])
+    call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+    call denite#custom#var('grep', 'recursive_opts', [])
+    call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+    call denite#custom#var('grep', 'separator', ['--'])
+    call denite#custom#var('grep', 'final_opts', [])
+endif
 
 " function! s:my_denite_split(context)
 "     let split_action = 'vsplit'
@@ -521,32 +523,33 @@ endfunction
 " vim-commentary:
 autocmd FileType unknown setlocal commentstring=#\ %s
 
-" Tcomment:
-call tcomment#type#Define('unknown', '# %s')
-call tcomment#type#Define('lisp', ';; %s')
-call tcomment#type#Define('make', '# %s')
-call tcomment#type#Define('gdb', '# %s')
-call tcomment#type#Define('kconfig', '# %s')
-call tcomment#type#Define('sudoers', '# %s')
-call tcomment#type#Define('inittab', '# %s')
-call tcomment#type#Define('mplayerconf', '# %s')
-call tcomment#type#Define('text', '# %s')
-call tcomment#type#Define('toml', '# %s')
-call tcomment#type#Define('ninja', '# %s')
-call tcomment#type#Define('aptconf', '// %s')
-call tcomment#type#Define('jtag_script', '; %s')
-call tcomment#type#Define('claws_mail_menurc', '; %s')
-call tcomment#type#Define('fusesmbconf', '; %s')
-call tcomment#type#Define('asm', '/* %s */')
-call tcomment#type#Define('texinfo', '@c %s')
-call tcomment#type#Define('xdefaults', '! %s')
-call tcomment#type#Define('xmodmap', '! %s')
-call tcomment#type#Define('vifm', '" %s')
-let g:tcomment_mapleader1 = ''
-let g:tcomment_mapleader2 = ''
-" Was not used:
-" call tcomment#type#Define('c_block', g:tcommentBlockC2)
-" call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
+if exists('loaded_tcomment')
+    call tcomment#type#Define('unknown', '# %s')
+    call tcomment#type#Define('lisp', ';; %s')
+    call tcomment#type#Define('make', '# %s')
+    call tcomment#type#Define('gdb', '# %s')
+    call tcomment#type#Define('kconfig', '# %s')
+    call tcomment#type#Define('sudoers', '# %s')
+    call tcomment#type#Define('inittab', '# %s')
+    call tcomment#type#Define('mplayerconf', '# %s')
+    call tcomment#type#Define('text', '# %s')
+    call tcomment#type#Define('toml', '# %s')
+    call tcomment#type#Define('ninja', '# %s')
+    call tcomment#type#Define('aptconf', '// %s')
+    call tcomment#type#Define('jtag_script', '; %s')
+    call tcomment#type#Define('claws_mail_menurc', '; %s')
+    call tcomment#type#Define('fusesmbconf', '; %s')
+    call tcomment#type#Define('asm', '/* %s */')
+    call tcomment#type#Define('texinfo', '@c %s')
+    call tcomment#type#Define('xdefaults', '! %s')
+    call tcomment#type#Define('xmodmap', '! %s')
+    call tcomment#type#Define('vifm', '" %s')
+    let g:tcomment_mapleader1 = ''
+    let g:tcomment_mapleader2 = ''
+    " Was not used:
+    " call tcomment#type#Define('c_block', g:tcommentBlockC2)
+    " call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
+endif
 
 " if has('nvim')
 "     " First invoke terminal:
@@ -968,8 +971,10 @@ let g:which_key_map.w = { 'name' : '+windows',
 " let g:which_key_map.q = { 'name' : '+quit',
 " \ }
 
-call which_key#register('<Space>', "g:which_key_map")
-nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
-vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+if globpath(&runtimepath, "autoload/which_key.vim") != ""
+    call which_key#register('<Space>', "g:which_key_map")
+    nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+    vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+endif
 
 " :help CTRL-W_ge

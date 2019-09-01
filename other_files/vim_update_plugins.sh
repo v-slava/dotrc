@@ -25,6 +25,8 @@ fi
 PATHOGEN=e9fb0914dba5bdfe2feaa364dda2e9495c5620a2
 # PATHOGEN=v2.4
 
+MOLOKAI_COLOR_SCHEME=c67bdfcdb31415aa0ade7f8c003261700a885476
+
 UNIMPAIRED=a49c4f2bf05f18a6e4f6572a19763ba7abba52b1
 # UNIMPAIRED=v2.0
 
@@ -83,7 +85,6 @@ ARM_ASM_SYNTAX=0dd8d761709b2c1deb02cd44067367cc3583b084
 
 VIM_BITBAKE=674031f0134317664d9f16ba004463b885f79cfd
 
-MOLOKAI_COLOR_SCHEME=c67bdfcdb31415aa0ade7f8c003261700a885476
 # ANSI_ESC=12
 # ANSI_ESC_2=690f820d20b6e3a79ba20499874eb7333aa4ca5c
 
@@ -123,14 +124,18 @@ git_checkout_bundle()
 )
 
 mkdir -p $PLUGINS_DIR $VIM_DIR/{autoload,bundle,spell}
-if [ ! -e $VIM_DIR/init.vim ]; then
-    ln -sr $HOME/.vimrc $VIM_DIR/init.vim
-fi
 
 rm -f $VIM_DIR/bundle/*
 git_checkout https://github.com/tpope/vim-pathogen $PATHOGEN
 if [ ! -e $VIM_DIR/autoload/pathogen.vim ]; then
     ln -sr $PLUGINS_DIR/vim-pathogen/autoload/pathogen.vim $VIM_DIR/autoload/pathogen.vim
+fi
+
+git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
+
+if [ "$(id -u)" = "0" ]; then
+    echo "Skipping some vim plugins for user: $(whoami)"
+    exit 0
 fi
 
 git_checkout_bundle https://github.com/tpope/vim-unimpaired $UNIMPAIRED
@@ -161,7 +166,6 @@ git_checkout_bundle https://github.com/ciaranm/detectindent $DETECTINDENT
 
 git_checkout_bundle https://github.com/dpc/vim-armasm $ARM_ASM_SYNTAX
 git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
-git_checkout_bundle https://github.com/tomasr/molokai $MOLOKAI_COLOR_SCHEME
 # git_checkout_bundle https://github.com/vim-scripts/AnsiEsc.vim $ANSI_ESC
 # git_checkout_bundle https://github.com/powerman/vim-plugin-AnsiEsc $ANSI_ESC_2
 
