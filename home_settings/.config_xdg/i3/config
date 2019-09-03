@@ -312,7 +312,7 @@ bindsym XF86MonBrightnessDown exec --no-startup-id exec $START xbacklight -dec 1
 bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/other/programs/keyboard_layout --set_layout next
 
 # toggle touchpad:
-bindsym $Alt_L+F4 exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
+bindsym $Alt_L+F2 exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
 bindsym XF86TouchpadToggle exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
 
 # turn off touchpad by default:
