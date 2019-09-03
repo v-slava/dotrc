@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# already installed packages: linux-image-amd64 systemd systemd-sysv efibootmgr
+# already installed packages: linux-image-amd64 systemd systemd-sysv
+# efibootmgr
 # grub-pc os-prober
 
 set -ex
