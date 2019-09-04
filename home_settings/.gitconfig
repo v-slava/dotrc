@@ -6,7 +6,8 @@
 	status = true
 [user]
 	name = Viacheslav Volkov
-	email = viacheslav.volkov.1@gmail.com
+	# in dotrc_s:
+	# email = viacheslav.volkov.1@gmail.com
 [merge]
 	tool = vimdiff
 [mergetool]

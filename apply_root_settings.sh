@@ -14,6 +14,10 @@ fi
 set -e
 cp -rfv --preserve=mode $PWD/root_settings/* /
 
+if $DOTRC/other_files/virtual_box.sh ; then
+    rm -f /etc/systemd/system/wpa_supplicant.service
+fi
+
 ROOT_SETTINGS_S="$DOTRC_S/root_settings"
 set +ex
 if [ -d "$ROOT_SETTINGS_S" ]; then
@@ -81,7 +85,7 @@ EOF
 
 locale-gen
 if systemctl is-enabled systemd-networkd.service ; then
-	systemctl disable systemd-networkd.service
+    systemctl disable systemd-networkd.service
 fi
 # systemctl status wpa_supplicant
 # systemctl set-default default_system_gui.target

@@ -73,6 +73,11 @@ if [ "$1" = "xinitrc" ]; then
     # xrandr --addmode $MAIN_OUTPUT $MAIN_MODE
 
     xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI
+
+#     xrandr --output $CENTRAL_OUTPUT --mode $CENTRAL_MODE $CENTRAL_DPI \
+# --output $RIGHT_OUTPUT --mode $RIGHT_MODE $RIGHT_DPI --right-of $CENTRAL_OUTPUT \
+# --output $LEFT_OUTPUT --mode $LEFT_MODE $LEFT_DPI --left-of $CENTRAL_OUTPUT
+
     exit
 fi
 

@@ -16,7 +16,7 @@ install_dependencies:
 PHONY += download_git
 download_git:
 	git clone https://github.com/vifm/vifm
-	cd vifm && git tag && git checkout v0.9 # need master (> v0.8.2)
+	cd vifm && git tag && git checkout v0.10 # need master (> v0.8.2)
 
 PHONY += clean
 clean:
