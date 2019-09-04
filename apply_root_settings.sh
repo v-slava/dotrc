@@ -11,7 +11,7 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-set -ex
+set -e
 cp -rfv --preserve=mode $PWD/root_settings/* /
 
 ROOT_SETTINGS_S="$DOTRC_S/root_settings"
@@ -21,18 +21,38 @@ if [ -d "$ROOT_SETTINGS_S" ]; then
     cd "$ROOT_SETTINGS_S"
     find -type f | while read file ; do
         orig_file="$(echo $file | cut -c 2-)"
-        repo_file="$ROOT_SETTINGS_S$orig_file"
+        repo_file="${ROOT_SETTINGS_S}${orig_file}"
         cmd="cat $repo_file >> $orig_file"
         echo "+ $cmd"
         eval $cmd
     done
     cd - 1>/dev/null
 fi
-set -ex
 
-# update-grub
-efibootmgr -b 0000 -B
-efibootmgr -c -L "Debian (EFI stub)" -l '/EFI/debian/vmlinuz' -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img acpi_backlight=vendor pci=noaer'
+set -e
+
+LINUX_ARGS=()
+if ! which dmidecode 1>/dev/null 2>&1 ; then
+    echo "Missing: apt-get install dmidecode" 1>&2
+    exit 1
+fi
+LAPTOP="$(dmidecode -s system-manufacturer) $(dmidecode -s system-product-name)"
+case "${LAPTOP,,}" in
+    asus*x541ua*) LINUX_ARGS+=(acpi_backlight=vendor pci=noaer) ;;
+esac
+
+if [ -d /sys/firmware/efi ]; then
+    LINUX_ARGS+=(root=/dev/sda2 initrd=/EFI/debian/initrd.img)
+    LINUX_ARGS+=(add_efi_memmap)
+    LINUX_ARGS="${LINUX_ARGS[@]}"
+    set +e -x
+    efibootmgr -b 0000 -B
+    set -e
+    efibootmgr -c -L 'Debian (EFI stub)' -l '/EFI/debian/vmlinuz' -u "$LINUX_ARGS"
+else
+    set -x
+    update-grub
+fi
 
 locale-gen
 if systemctl is-enabled systemd-networkd.service ; then
