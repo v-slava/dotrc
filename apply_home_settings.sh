@@ -47,7 +47,7 @@ fi
 # fi
 
 if [ "$(id -u)" != "0" ]; then
-    mkdir -p $MEDIA_FILES/{downloads,temporary}
+    mkdir -p $MEDIA_FILES/{downloads,temporary,workspace,other}
 fi
 
 DIRS="downloads temporary workspace"
