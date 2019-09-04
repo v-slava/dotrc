@@ -3,6 +3,8 @@ X -configure
 
 # virtualbox toggle scale mode:
 right_ctrl+c
+apt-get install linux-headers-amd64
+use Settings -> Display -> Graphics Controller: VBoxSVGA
 
 # markdown (.md) viewer:
 grip -b readme.md
