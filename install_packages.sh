@@ -10,7 +10,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    vim vifm less bash-completion python cclive dhex \
+    vim vifm fzf less bash-completion python cclive dhex \
     apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
@@ -35,7 +35,7 @@ apt-get install go-mtpfs
 # For Asus F541U:
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
-# Install xorg:
+# Install xorg (use xserver-xorg-video-vesa for virtualbox):
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
     xserver-xorg-input-synaptics xinit rxvt-unicode-256color rxvt-unicode
 
@@ -47,7 +47,7 @@ apt-get install i3-wm libanyevent-i3-perl i3status i3lock fbxkb
 apt-get install network-manager-gnome gnome-keyring notification-daemon
 
 # Install PulseAudio:
-apt-get install -t jessie-backports pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
+apt-get install pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
 apt-get install bluez pavucontrol
 # apt-get install bluez-tools
 
@@ -110,9 +110,6 @@ make -f $DOTRC/other_files/Makefile_dmenu.mk
 
 # ripgrep (rg):
 $DOTRC/other_files/install_ripgrep_rg.sh
-
-# fzf: https://github.com/junegunn/fzf-bin/releases
-wget https://github.com/junegunn/fzf-bin/releases/download/0.17.5/fzf-0.17.5-linux_amd64.tgz
 
 # fzy:
 # apt-get install fzy
