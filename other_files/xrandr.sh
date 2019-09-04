@@ -2,7 +2,7 @@
 
 MAIN_OUTPUT=eDP1
 MAIN_MODE="--mode 1920x1080"
-MAIN_DPI="--dpi 96"
+MAIN_DPI="--dpi 144"
 # MAIN_DPI="--dpi 96"
 
 EXTERNAL_MODE="--mode 1920x1080"
