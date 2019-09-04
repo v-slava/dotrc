@@ -1,13 +1,11 @@
 #!/bin/bash
 
 set -e
-source ~/.bashrc
 
-if $DOTRC/other_files/virtual_box.sh ; then
-    sudo poweroff
-else
+if ! $DOTRC/other_files/virtual_box.sh ; then
     $DOTRC/other_files/lock_screen.sh &
-    x-terminal-emulator -title "hibernate script" -e bash -c \
-'source ~/.bashrc && $DOTRC/other_files/update_system.sh && exec sudo poweroff'
-    # sudo systemctl hibernate
 fi
+
+x-terminal-emulator -title "hibernate script" -e bash -c \
+    '$DOTRC/other_files/update_system.sh && exec sudo poweroff'
+# sudo systemctl hibernate
