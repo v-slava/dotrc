@@ -19,7 +19,7 @@ RIGHT_DPI=$MAIN_DPI
 
 LEFT_OUTPUT=DP-2-2
 LEFT_MODE="--mode 1920x1080"
-# LEFT_DPI=144
+# LEFT_DPI="--dpi 144"
 
 set -e
 source ~/.bashrc
