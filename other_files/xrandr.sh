@@ -1,16 +1,16 @@
 #!/bin/bash
 
 MAIN_OUTPUT=eDP1
-MAIN_MODE=1920x1080
-MAIN_DPI="--dpi 144"
+MAIN_MODE="--mode 1920x1080"
+MAIN_DPI="--dpi 96"
 # MAIN_DPI="--dpi 96"
 
-EXTERNAL_MODE=1920x1080
+EXTERNAL_MODE="--mode 1920x1080"
 # EXTERNAL_DPI="--dpi 144"
 
 # multimonitor configuration:
 CENTRAL_OUTPUT=DP-2-1
-CENTRAL_MODE=1920x1080
+CENTRAL_MODE="--mode 1920x1080"
 # CENTRAL_DPI=
 
 RIGHT_OUTPUT=$MAIN_OUTPUT
@@ -18,7 +18,7 @@ RIGHT_MODE=$MAIN_MODE
 RIGHT_DPI=$MAIN_DPI
 
 LEFT_OUTPUT=DP-2-2
-LEFT_MODE=1920x1080
+LEFT_MODE="--mode 1920x1080"
 # LEFT_DPI=144
 
 set -e
@@ -72,11 +72,11 @@ if [ "$1" = "xinitrc" ]; then
     # xrandr --newmode $MAIN_MODE  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
     # xrandr --addmode $MAIN_OUTPUT $MAIN_MODE
 
-    xrandr --output $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI
+    xrandr --output $MAIN_OUTPUT $MAIN_MODE $MAIN_DPI
 
-#     xrandr --output $CENTRAL_OUTPUT --mode $CENTRAL_MODE $CENTRAL_DPI \
-# --output $RIGHT_OUTPUT --mode $RIGHT_MODE $RIGHT_DPI --right-of $CENTRAL_OUTPUT \
-# --output $LEFT_OUTPUT --mode $LEFT_MODE $LEFT_DPI --left-of $CENTRAL_OUTPUT
+#     xrandr --output $CENTRAL_OUTPUT $CENTRAL_MODE $CENTRAL_DPI \
+# --output $RIGHT_OUTPUT $RIGHT_MODE $RIGHT_DPI --right-of $CENTRAL_OUTPUT \
+# --output $LEFT_OUTPUT $LEFT_MODE $LEFT_DPI --left-of $CENTRAL_OUTPUT
 
     exit
 fi
@@ -92,12 +92,12 @@ case "$POSITION" in
 esac
 
 if [ "$POSITION" = "--same-as" ]; then
-    ARGS="$POSITION $MAIN_OUTPUT --mode $MAIN_MODE $MAIN_DPI"
+    ARGS="$POSITION $MAIN_OUTPUT $MAIN_MODE $MAIN_DPI"
 else
-    ARGS="$POSITION $MAIN_OUTPUT --mode $EXTERNAL_MODE $EXTERNAL_DPI"
+    ARGS="$POSITION $MAIN_OUTPUT $EXTERNAL_MODE $EXTERNAL_DPI"
 fi
 
-OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1"
+OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1 VGA-2"
 
 for OUTPUT in $OTHER_OUTPUTS ; do
     if xrandr | grep -q "^$OUTPUT connected" ; then
