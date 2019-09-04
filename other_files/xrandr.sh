@@ -47,6 +47,34 @@ update_i3_config()
             -e "s/OUTPUT_8_TEMPLATE/$CENTRAL_OUTPUT/g" \
             -e "s/OUTPUT_9_TEMPLATE/$RIGHT_OUTPUT/g" \
 
+    elif echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&
+        echo -e "$XRANDR" | grep -q "^$LEFT_OUTPUT connected" ; then
+        sed -i $I3_CONF \
+            -e "s/OUTPUT_TRAY_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_1_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_2_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_3_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_4_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_5_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_6_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_7_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_8_TEMPLATE/$LEFT_OUTPUT/g" \
+            -e "s/OUTPUT_9_TEMPLATE/$CENTRAL_OUTPUT/g" \
+
+    elif echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&
+        echo -e "$XRANDR" | grep -q "^$RIGHT_OUTPUT connected" ; then
+        sed -i $I3_CONF \
+            -e "s/OUTPUT_TRAY_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_1_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_2_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_3_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_4_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_5_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_6_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_7_TEMPLATE/$CENTRAL_OUTPUT/g" \
+            -e "s/OUTPUT_8_TEMPLATE/$RIGHT_OUTPUT/g" \
+            -e "s/OUTPUT_9_TEMPLATE/$CENTRAL_OUTPUT/g" \
+
     else
         # Need to use single monitor configuration.
         sed -i $I3_CONF -e "s/OUTPUT_TRAY_TEMPLATE/$MAIN_OUTPUT/g"
@@ -107,3 +135,5 @@ for OUTPUT in $OTHER_OUTPUTS ; do
         xrandr --output $OUTPUT --off
     fi
 done
+update_i3_config
+i3-msg reload 1>/dev/null
