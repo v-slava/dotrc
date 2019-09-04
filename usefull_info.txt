@@ -1,3 +1,9 @@
+# (generate) configure xorg:
+X -configure
+
+# virtualbox toggle scale mode:
+right_ctrl+c
+
 # markdown (.md) viewer:
 grip -b readme.md
 

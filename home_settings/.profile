@@ -32,7 +32,7 @@ else # if [ ! true ]
     source "$HOME/.bashrc"
 fi
 
-if [ -z "$DISPLAY" ] && [ $XDG_VTNR -eq 1 ]; then
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
     CONFIGDIR=native
     if [ -n "$DOTRC" ]; then
         source $DOTRC/other_files/config_file.sh

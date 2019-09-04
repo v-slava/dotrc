@@ -10,7 +10,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    vim vifm fzf less bash-completion python cclive dhex \
+    vim vifm fzf less bash-completion python dhex \
     apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
@@ -18,7 +18,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
     gdb gdb-doc gdbserver gdb-multiarch \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
-    sox libsox-fmt-mp3 libav-tools \
+    sox libsox-fmt-mp3 ffmpeg \
     exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
     tree git make patch dos2unix file bsdutils android-tools-adb \
     lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
@@ -35,9 +35,10 @@ apt-get install go-mtpfs
 # For Asus F541U:
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
-# Install xorg (use xserver-xorg-video-vesa for virtualbox):
+# Install xorg (use xserver-xorg-video-vmware for virtualbox):
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
-    xserver-xorg-input-synaptics xinit rxvt-unicode-256color rxvt-unicode
+    xserver-xorg-input-synaptics xinit rxvt-unicode-256color rxvt-unicode \
+    libpam-systemd
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:
