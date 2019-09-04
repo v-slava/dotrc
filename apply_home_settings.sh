@@ -64,8 +64,10 @@ for dir in $MY_DIRS ; do
     fi
 done
 
-if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
-    ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard
+if [ ! -z "$XDG_CONFIG_HOME" ]; then
+    if [ ! -L $XDG_CONFIG_HOME/kak/autoload/standard ]; then
+        ln -s /usr/local/share/kak/autoload $XDG_CONFIG_HOME/kak/autoload/standard
+    fi
 fi
 
 xmms2 server config playlist.repeat_all 1
