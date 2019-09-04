@@ -89,6 +89,8 @@ let g:loaded_vimballPlugin = 1
 let g:EasyMotion_do_mapping = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
+let g:my_user_id = system('id -u')
+
 " Initialize pathogen plugin (update runtimepath variable):
 execute pathogen#infect()
 
@@ -215,7 +217,9 @@ let g:detectindent_max_lines_to_analyse = 1024
 autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php,json
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
-    DetectIndent
+    if g:my_user_id != 0
+        DetectIndent
+    endif
     if My_is_linux_kernel_source_file(expand("%:p"))
         setlocal tabstop=8
     endif
