@@ -31,7 +31,7 @@ if [ ! -L ~/my ]; then
     ln -s $MEDIA_FILES/temporary/my ~/my
 fi
 if [ ! -L ~/bin ]; then
-    ln -s $PWD/bin ~/bin
+    ln -s $DOTRC/bin ~/bin
 fi
 if [ ! -L ~/downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/downloads
@@ -47,7 +47,7 @@ fi
 # fi
 
 if [ "$(id -u)" != "0" ]; then
-    mkdir -p $MEDIA_FILES/{downloads,temporary,workspace,other}
+    mkdir -p $MEDIA_FILES/{downloads,temporary/my,workspace,other}
 fi
 
 DIRS="downloads temporary workspace"
