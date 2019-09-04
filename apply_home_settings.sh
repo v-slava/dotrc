@@ -27,24 +27,28 @@ fi
 
 MEDIA_FILES=/media/files
 
-if [ ! -e ~/my ]; then
+if [ ! -L ~/my ]; then
     ln -s $MEDIA_FILES/temporary/my ~/my
 fi
-if [ ! -e ~/bin ]; then
+if [ ! -L ~/bin ]; then
     ln -s $PWD/bin ~/bin
 fi
-if [ ! -e ~/downloads ]; then
+if [ ! -L ~/downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/downloads
 fi
-if [ ! -e ~/Downloads ]; then
+if [ ! -L ~/Downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/Downloads
 fi
-if [ ! -e ~/Desktop ]; then
+if [ ! -L ~/Desktop ]; then
     ln -s $MEDIA_FILES/downloads ~/Desktop
 fi
 # if [ ! -d ~/terminal ]; then
 #     mkdir ~/terminal
 # fi
+
+if [ "$(id -u)" != "0" ]; then
+    mkdir -p $MEDIA_FILES/{downloads,temporary}
+fi
 
 DIRS="downloads temporary workspace"
 for dir in $DIRS ; do
