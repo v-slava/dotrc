@@ -7,7 +7,7 @@ all: download_git install_dependencies
 # If your autotools version is too old downgrade it in vifm sources
 # (for example recursively replace "1.15" to "1.14"). For example:
 # $ cd vifm
-# $ find -type f -print0 | xargs -0 sed -i '' -e 's/1\.15/1\.14/g'
+# $ find -type f -print0 | xargs -0 sed -e 's/1\.15/1\.14/g' -i
 
 PHONY += install_dependencies
 install_dependencies:

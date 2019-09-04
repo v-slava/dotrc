@@ -86,6 +86,13 @@ config_generate()
             config_concat_dotrc_s "$FILE"
             config_virtualbox "$FILE"
             ;;
+        ".config_xdg/vifm/vifmrc")
+            config_concat_dotrc_s "$FILE"
+            sed -i "$HOME/$FILE" \
+                -e "s|\$DOTRC_S|$DOTRC_S|g" \
+                -e "s|\$DOTRC|$DOTRC|g" \
+                -e "s|\$WORKSPACE|$WORKSPACE|g"
+            ;;
         *) config_concat_dotrc_s "$FILE"
     esac
 )
