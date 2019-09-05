@@ -13,4 +13,4 @@ sudo apt-get clean
 sudo apt-get update
 sudo apt-get upgrade --yes
 sync
-rm -rf "$LOCK_DIR"
+# rm -rf "$LOCK_DIR"
