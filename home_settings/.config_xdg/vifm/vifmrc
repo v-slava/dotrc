@@ -363,6 +363,9 @@ nnoremap cn cW<c-u>
 " rename using vim:
 nnoremap cv :rename<CR>
 vmap cv :rename<CR>
+nnoremap cfi1 :!$DOTRC/other_files/vifm_rotate_image.sh %c 90<CR>
+nnoremap cfi2 :!$DOTRC/other_files/vifm_rotate_image.sh %c 180<CR>
+nnoremap cfi3 :!$DOTRC/other_files/vifm_rotate_image.sh %c 270<CR>
 nnoremap cfs :!$DOTRC/other_files/vifm_rename.py %c spaces_to_underscores<CR>
 nnoremap cfd :!$DOTRC/other_files/vifm_rename.py %c dots_to_underscores<CR>
 nnoremap cfl :!$DOTRC/other_files/vifm_rename.py %c to_lowercase<CR>

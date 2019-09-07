@@ -222,6 +222,8 @@ function! My_apply_tab_settings()
     endif
     if My_is_linux_kernel_source_file(expand("%:p"))
         setlocal tabstop=8
+    else
+        setlocal tabstop=4
     endif
     if &filetype == "vim"
         setlocal shiftwidth=4
@@ -898,6 +900,8 @@ let g:which_key_map.g = {'name' : '+git',
 
 let g:which_key_map.i = { 'name' : '+insert',
 \   's' : [':call My_insert_snippet()', 'snippet'],
+\   'e' : [':call My_insert_eval_region("")', 'insert eval region'],
+\   'v' : [':call My_insert_eval_variable()', 'insert eval variable'],
 \ }
 
 " Jump to character within current line:
@@ -934,8 +938,6 @@ let g:which_key_map.m = { 'name' : '+my',
 
 let g:which_key_map.o = { 'name' : '+other',
 \   'c' : ['$d0x', 'clear current line'],
-\   'e' : [':call My_insert_eval_region("")', 'insert eval region'],
-\   'v' : [':call My_insert_eval_variable()', 'insert eval variable'],
 \   'f' : [':execute g:My_eval_var', 'evaluate variable'],
 \ }
 

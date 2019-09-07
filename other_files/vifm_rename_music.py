@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-# Main method:
+def main(arg, replace):
+    return arg, get_output_string(arg), replace
+
 def get_output_string(arg):
     if not is_valid_mp3_file_name(arg):
         return arg
