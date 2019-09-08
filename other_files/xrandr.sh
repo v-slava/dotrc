@@ -106,6 +106,10 @@ if [ "$1" = "xinitrc" ]; then
 # --output $RIGHT_OUTPUT $RIGHT_MODE $RIGHT_DPI --right-of $CENTRAL_OUTPUT \
 # --output $LEFT_OUTPUT $LEFT_MODE $LEFT_DPI --left-of $CENTRAL_OUTPUT
 
+    # xrandr --output --set underscan on
+    # xrandr --output --set "underscan hborder" 38
+    # xrandr --output --set "underscan vborder" 23
+
     exit
 fi
 
@@ -130,10 +134,17 @@ OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1 VGA-2"
 for OUTPUT in $OTHER_OUTPUTS ; do
     if xrandr | grep -q "^$OUTPUT connected" ; then
         xrandr --output $OUTPUT $ARGS
+        case "$POSITION" in
+            "--left-of") LEFT_OUTPUT="$OUTPUT" ;;
+            "--right-of") RIGHT_OUTPUT="$OUTPUT" ;;
+        esac
     fi
     if xrandr | grep -q "^$OUTPUT disconnected" ; then
         xrandr --output $OUTPUT --off
     fi
 done
+CENTRAL_OUTPUT="$MAIN_OUTPUT"
+CENTRAL_MODE="$MAIN_MODE"
+CENTRAL_DPI="$MAIN_DPI"
 update_i3_config
 i3-msg reload 1>/dev/null
