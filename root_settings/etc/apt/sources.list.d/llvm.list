@@ -1,14 +1,13 @@
+# See: https://apt.llvm.org
+
+deb http://apt.llvm.org/buster/ llvm-toolchain-buster main
+deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster main
+
+deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main
+deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main
+
+deb http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
+deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
+
 deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch main
 deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch main
-
-# deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-5.0 main
-# deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-5.0 main
-
-# deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main
-# deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main
-
-deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7.0 main
-deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7.0 main
-
-deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-8.0 main
-deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-8.0 main

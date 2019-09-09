@@ -102,8 +102,10 @@ apt-get install zathura
 apt-get install emacs python-jedi python-setuptools clang-format
 
 # Install alternative browsers:
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+dpkg -i google-chrome-stable_current_amd64.deb
 # apt-get install iceweasel iceweasel-l10n-ru
-apt-get install chromium
+# apt-get install chromium
 # chromium-l10n pepperflashplugin-nonfree uzbl
 
 # dmenu:
