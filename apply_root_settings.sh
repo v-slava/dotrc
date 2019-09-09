@@ -25,8 +25,13 @@ if [ -d "$ROOT_SETTINGS_S" ]; then
     cd "$ROOT_SETTINGS_S"
     find -type f | while read file ; do
         orig_file="$(echo $file | cut -c 2-)"
-        repo_file="${ROOT_SETTINGS_S}${orig_file}"
-        cmd="cat $repo_file >> $orig_file"
+        repo_file="${ROOT_SETTINGS}${orig_file}"
+        repo_s_file="${ROOT_SETTINGS_S}${orig_file}"
+        if [ -f "$repo_file" ]; then
+            cmd="cat $repo_s_file >> $orig_file"
+        else
+            cmd="cp $repo_s_file $orig_file"
+        fi
         echo "+ $cmd"
         eval $cmd
     done
