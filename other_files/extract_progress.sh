@@ -49,6 +49,7 @@ for FILE in "$@" ; do
 
     case "$FILE_FULL_PATH" in
         *.a | *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
+        *.rpm) rpm2cpio "$FILE_FULL_PATH" | pv | cpio -idm ;;
         *.sh)
             split_script_binary_archive.sh -ob data.bin "$FILE_FULL_PATH"
             MIME_TYPE=$(file -b --mime-type data.bin)

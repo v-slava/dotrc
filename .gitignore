@@ -10,6 +10,7 @@
 /bin/clang-format
 /bin/clang++
 /bin/clangd
+/bin/llvm-config
 /bin/gcc
 /bin/cc
 /bin/c++

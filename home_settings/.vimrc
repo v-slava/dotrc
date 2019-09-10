@@ -250,6 +250,10 @@ autocmd FileType sh,python,perl if ! exists('g:My_eval_var')
     \ | let g:My_eval_var = "silent wa | MyRunShellCmd chmod +x ./"
     \ . expand("%:t") . " && ./" . expand("%:t") | endif
 
+autocmd FileType make if ! exists('g:My_eval_var')
+    \ | let g:My_eval_var = "silent wa | MyRunShellCmd make -f ./"
+    \ . expand("%:t") | endif
+
 autocmd FileType c if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | MyRunShellCmd clang -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"

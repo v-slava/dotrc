@@ -241,6 +241,8 @@ nmap -sn 192.168.1.0/24
 # Install GPG key for third-party apt repository:
 wget http://apt.llvm.org/llvm-snapshot.gpg.key
 apt-key add llvm-snapshot.gpg.key
+wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+apt-key add linux_signing_key.pub
 
 # udev commands:
 udevadm info -q path --path /sys/devices/soc/...
@@ -685,6 +687,10 @@ cat file_before | sed -e '/REGEX/d' > file_after
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables --no-print-directory
 export MAKEFLAGS
 # .SUFFIXES:
+
+# Makefile failing command return code:
+all:
+	@false ; RET=$$? && echo "returned: $$RET" && exit $$RET
 
 # get Makefile directory in Makefile:
 MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -1153,6 +1159,9 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 # Copy files over ssh:
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# get git root (base) folder (directory):
+git rev-parse --show-toplevel
 
 # git extract subfolder to a dedicated repository:
 $DOTRC/other_files/git_trim_repo_to_subdir.sh
@@ -1977,7 +1986,7 @@ man -k KEYWORD
 man -K -w KEYWORD
 
 # Get DPI (dots per inch):
-xdpyinfo | grep resolution
+xdpyinfo | grep -B 2 resolution
 
 # to exit telnet:
 ctrl+] and afterwards ctrl+d
