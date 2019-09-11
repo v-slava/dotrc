@@ -34,7 +34,7 @@ english = "0"
 russian = "0"
 def set_keyboard_layout(layout):
     # Switch keyboard layout to english:
-    check_call(["/media/files/other/programs/keyboard_layout", "--set_layout", layout])
+    check_call(["/media/files/programs/keyboard_layout", "--set_layout", layout])
 
 def refresh_all_fields(self, data, cursor_position):
     self.web.eval("setFields(%s, %d);" % (json.dumps(data), cursor_position))

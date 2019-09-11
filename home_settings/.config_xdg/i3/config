@@ -310,7 +310,7 @@ bindsym XF86MonBrightnessUp exec --no-startup-id exec $START xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec --no-startup-id exec $START xbacklight -dec 10
 
 # toggle keyboard layout (see also $DOTRC/root_settings/etc/default/keyboard):
-bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/other/programs/keyboard_layout --set_layout next
+bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/programs/keyboard_layout --set_layout next
 
 # toggle touchpad:
 bindsym $Alt_L+F2 exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
