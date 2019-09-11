@@ -1,4 +1,4 @@
-# master:
+*.pyc
 /bin/viber
 /bin/telegram
 /bin/teamviewer
@@ -20,11 +20,9 @@
 /bin/code
 /bin/repo
 /bin/youtube-dl
-*.pyc
-
-# second:
 /bin/xterm
 /bin/vs
 /bin/edbg
 /bin/beautify_file.sh
-
+/bin/Foundation_Platform
+/bin/eclipse

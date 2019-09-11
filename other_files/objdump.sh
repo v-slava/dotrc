@@ -14,7 +14,8 @@ case "$FILE_INFO" in
 esac
 
 case "$FILE_INFO" in
-    *ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
+    *32-bit*ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
+    *64-bit*ARM*) CROSS_COMPILE=aarch64-linux-gnu- ;;
     *PowerPC*) CROSS_COMPILE=powerpc-linux-gnu- ;;
     *) CROSS_COMPILE= ;;
 esac
