@@ -52,4 +52,4 @@ if [ "$SWITCH_WORKSPACE" = "true" ]; then
 fi
 
 source $DOTRC/other_files/config_file.sh
-config_generate "$FILE"
+config_generate -h "$FILE"

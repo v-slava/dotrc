@@ -393,6 +393,9 @@ export LANGUAGE=ru
 # in the results of pathname expansion:
 shopt -s dotglob
 
+# Crosscompile for ARM 64 using clang:
+clang --target=aarch64-linux-gnu --sysroot=/path/to/sysroot
+
 # Icecream:
 sudo apt-get install icecc icecc-monitor
 # kill icecc-scheduler, if present

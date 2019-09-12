@@ -36,8 +36,8 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
     CONFIGDIR=native
     if [ -n "$DOTRC" ]; then
         source $DOTRC/other_files/config_file.sh
-        config_generate .Xmodmap
-        config_generate .config_xdg/i3/config
+        config_generate -h .Xmodmap
+        config_generate -h .config_xdg/i3/config
         if $DOTRC/other_files/virtual_box.sh ; then
             CONFIGDIR=virtual
         fi

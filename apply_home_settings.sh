@@ -12,10 +12,13 @@ if [ -z "$DOTRC" ]; then
     echo "Error: \$DOTRC is not defined" 1>&2
     exit 1
 fi
-cd $DOTRC/home_settings
+if [ -z "$DOTRC_S" ]; then
+    source $DOTRC/home_settings/.bashrc
+fi
 source $DOTRC/other_files/config_file.sh
-find ! -type d | cut -d'/' -f 2- | while read FILE ; do
-    config_generate "$FILE"
+DIR=$DOTRC/home_settings/
+find $DIR ! -type d | cut -c $((${#DIR} + 1))- | while read FILE ; do
+    config_generate -h "$FILE"
 done
 
 $DOTRC/other_files/vim_update_plugins.sh
@@ -72,5 +75,9 @@ fi
 
 xmms2 server config playlist.repeat_all 1
 xmms2 server config output.plugin pulse
+
+if [ -x $DOTRC_S/apply_home_settings.sh ]; then
+    $DOTRC_S/apply_home_settings.sh
+fi
 
 echo "Done for user: $(whoami)!"

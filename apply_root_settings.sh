@@ -11,34 +11,27 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
+if [ -z "$DOTRC" ]; then
+    echo "Error: \$DOTRC is not defined" 1>&2
+    exit 1
+fi
+
+if [ -z "$DOTRC_S" ]; then
+    echo "Error: \$DOTRC_S is not defined" 1>&2
+    exit 1
+fi
+
 set -e
-cp -rfv --preserve=mode $PWD/root_settings/* /
+
+source $DOTRC/other_files/config_file.sh
+DIR=$DOTRC/root_settings/
+find $DIR ! -type d | cut -c $((${#DIR} + 1))- | while read FILE ; do
+    config_generate -r "$FILE"
+done
 
 if $DOTRC/other_files/virtual_box.sh ; then
     rm -f /etc/systemd/system/wpa_supplicant.service
 fi
-
-ROOT_SETTINGS_S="$DOTRC_S/root_settings"
-set +ex
-if [ -d "$ROOT_SETTINGS_S" ]; then
-    set -e
-    cd "$ROOT_SETTINGS_S"
-    find -type f | while read file ; do
-        orig_file="$(echo $file | cut -c 2-)"
-        repo_file="$DOTRC/root_settings${orig_file}"
-        repo_s_file="${ROOT_SETTINGS_S}${orig_file}"
-        if [ -f "$repo_file" ]; then
-            cmd="cat $repo_s_file >> $orig_file"
-        else
-            cmd="cp $repo_s_file $orig_file"
-        fi
-        echo "+ $cmd"
-        eval $cmd
-    done
-    cd - 1>/dev/null
-fi
-
-set -e
 
 LINUX_ARGS=()
 if ! which dmidecode 1>/dev/null 2>&1 ; then
@@ -73,11 +66,11 @@ else
 /dev/sda1              /             ext4      defaults,noatime      0      1
 /dev/sda2              /media/files  ext4      defaults,noatime      0      2
 EOF
-    set -x
     rm -f /etc/initramfs/post-update.d/zz-update-efistab
     rm -f /etc/kernel/postinst.d/zz-update-efistab
     sed -i /etc/default/grub -e \
 's|^GRUB_CMDLINE_LINUX_DEFAULT="quiet"$|GRUB_CMDLINE_LINUX_DEFAULT="rw"|g'
+    echo "Updating GRUB ..."
     update-grub
 fi
 
@@ -88,9 +81,10 @@ fi
 /dev/sdc1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0
 EOF
 
-locale-gen
+echo "Generating locales ..."
+locale-gen 1>/dev/null
 if systemctl is-enabled systemd-networkd.service ; then
-    systemctl disable systemd-networkd.service
+    systemctl disable systemd-networkd.service 1>/dev/null
 fi
 # systemctl status wpa_supplicant
 # systemctl set-default default_system_gui.target
@@ -99,9 +93,13 @@ fi
 # cp /usr/share/vim/addons/syntax/vifm.vim /usr/share/vim/vim74/syntax/
 # cp /usr/share/vim/addons/plugin/vifm.vim /usr/share/vim/vim74/plugin/
 
-# update fonts cache:
-fc-cache -fv
+echo "Updating font cache ..."
+fc-cache -f
 # restart udev:
 service udev restart
+
+if [ -x $DOTRC_S/apply_root_settings.sh ]; then
+    $DOTRC_S/apply_root_settings.sh
+fi
 
 echo -e "\nDone!"

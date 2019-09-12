@@ -27,10 +27,15 @@ source $DOTRC/other_files/config_file.sh
 
 update_i3_config()
 {
-    I3_CONF=.config_xdg/i3/config
-    config_concat_dotrc_s $I3_CONF
-    config_fix_env_vars $I3_CONF DOTRC DOTRC_S
-    I3_CONF=~/$I3_CONF
+    FILE=".config_xdg/i3/config"
+    DOTRC_FILE="$DOTRC/home_settings/$FILE"
+    DOTRC_S_FILE="$DOTRC_S/home_settings/$FILE"
+    DEST_DIR="$HOME/"
+    DEST="${DEST_DIR}$FILE"
+    config_concat_dotrc_s
+    config_fix_env_vars DOTRC DOTRC_S
+
+    I3_CONF=~/$FILE
     XRANDR="$(xrandr)"
     if echo -e "$XRANDR" | grep -q "^$CENTRAL_OUTPUT connected" &&
         echo -e "$XRANDR" | grep -q "^$LEFT_OUTPUT connected" &&
