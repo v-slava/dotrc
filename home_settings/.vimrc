@@ -97,10 +97,6 @@ execute pathogen#infect()
 if globpath(&runtimepath, "autoload/denite.vim") != ""
     " Use ripgrep:
     call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-    call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
-    call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
-    " <C-o> enter normal mode
-    " call denite#custom#map('normal', 'E', '<denite:do_action:edit>', 'noremap')
     call denite#custom#var('grep', 'command', ['rg'])
     call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
     call denite#custom#var('grep', 'recursive_opts', [])
@@ -108,6 +104,17 @@ if globpath(&runtimepath, "autoload/denite.vim") != ""
     call denite#custom#var('grep', 'separator', ['--'])
     call denite#custom#var('grep', 'final_opts', [])
 endif
+
+autocmd FileType denite call My_denite_settings()
+function! My_denite_settings() abort
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+    nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+    " nnoremap <silent><buffer><expr> t denite#do_map('toggle_select')
+    " nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
+endfunction
 
 " function! s:my_denite_split(context)
 "     let split_action = 'vsplit'
@@ -291,8 +298,9 @@ function! My_vifm_choose(action)
         endif
         if self.action == 'ripgrep'
             let l:dir = join(readfile(self.chosen))
-            " -default-action=my_split
-            execute 'Denite -post-action=suspend -path=' . l:dir . ' grep:::!'
+            " -default-action=my_split -post-action=suspend
+            let g:My_use_denite_errors = 1
+            execute 'Denite -start-filter -path=' . l:dir . ' grep:::!'
         " elseif self.action == 'something'
         else
             call nvim_err_writeln('Got unsupported action: ' . self.action)
@@ -303,14 +311,15 @@ function! My_vifm_choose(action)
     " let oldbuf = bufname('%')
     " execute 'keepalt file' escape('vifm: '.'edit', ' |')
     " execute bufnr(oldbuf).'bwipeout'
-    set norelativenumber
+    setlocal norelativenumber
+    setlocal nonumber
     startinsert
 endfunction
 
-let g:vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_') . '.err'
+let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_') . '.err'
 
 function! My_run_shell_cmd(cmd)
-    silent! execute 'noautocmd silent botright pedit ' . g:vim_errors_file
+    silent! execute 'noautocmd silent botright pedit ' . g:My_vim_errors_file
     noautocmd wincmd P
     " set buftype=nofile
     setlocal filetype=my_shell_cmd_output
@@ -333,7 +342,8 @@ function! My_run_shell_cmd(cmd)
     normal 0ggdd
     silent w
     set readonly
-    execute 'cgetfile ' . g:vim_errors_file
+    execute 'cgetfile ' . g:My_vim_errors_file
+    let g:My_use_denite_errors = 0
     wincmd p
     if v:shell_error == 0
         echo "Command succeeded (exit code = 0)"
@@ -360,6 +370,7 @@ function! My_open_location()
         exec 'echoerr "Neither Location nor Quickfix List focused."'
         return
     endif
+    let g:My_use_denite_errors = 0
     if l:lqList == 1
         execute "ll " . line('.')
     else
@@ -722,7 +733,22 @@ function! My_vimscript_function_eval()
     return l:function_name
 endfunction
 
+let g:My_use_denite_errors = 0
 function! My_goto_error(error)
+    " if bufexists('[denite]-default') " 'denite-filter'
+    if g:My_use_denite_errors
+        if a:error == 'current'
+            let l:cmd = ''
+        elseif a:error == 'next'
+            let l:cmd = '-cursor-pos=+1'
+        elseif a:error == 'previous'
+            let l:cmd = '-cursor-pos=-1'
+        else
+            let l:cmd = '-cursor-pos=' . a:error
+        endif
+        execute 'Denite -resume -immediately ' . l:cmd
+        return
+    endif
     if a:error == 'current'
         let l:action = 'cc!'
     elseif a:error == 'next'
@@ -732,7 +758,7 @@ function! My_goto_error(error)
     else
         let l:action = 'cc! ' . a:error
     endif
-    let l:err_buf_name = g:vim_errors_file
+    let l:err_buf_name = g:My_vim_errors_file
     let l:in_err_win = 0
     if bufname('%') == l:err_buf_name
         let l:in_err_win = 1
@@ -850,18 +876,20 @@ let g:which_key_map.c = { 'name' : '+compile/clipboard',
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
-\   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
-\   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
-\   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
-\   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
+\   'j' : [':Denite -resume', 'resume denite'],
+\   'k' : [':bdelete [denite]-default', 'kill denite'],
 \   'm' : [':MyModifyLine', 'modify line'],
 \   'q' : [':windo MyCloseWindowIfTemporary', 'close temporary windows'],
+\   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
+\   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
+\   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
+\   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
 \ }
 
 let g:which_key_map.e = {'name' : '+errors',
 \   'c' : [':call My_goto_error("current")', 'current error'],
 \   'l' : [':lopen', 'location list errors'],
-\   'm' : [':botright pedit ' . g:vim_errors_file . ' | set readonly', 'my list errors'],
+\   'm' : [':botright pedit ' . g:My_vim_errors_file . ' | set readonly', 'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
 \   'p' : [':call My_goto_error("previous")', 'previous error'],
 \   'q' : [':copen', 'quickfix list errors'],
@@ -873,7 +901,7 @@ let g:which_key_map.f = {'name' : '+files',
 \   'e' : {'name' : '+edit',
 \     'v' : [':call My_edit_vimrc()', 'vimrc'],
 \    },
-\   'f' : [':Denite file/rec', 'fuzzy'],
+\   'f' : [':Denite -start-filter file/rec', 'fuzzy'],
 \   'j' : [':call My_open_file("cur_win", "e")', 'under cursor current window'],
 \   'h' : [':call My_open_file("cur_win", "sp")', 'under cursor horizontal split'],
 \   'v' : [':call My_open_file("cur_win", "vsp")', 'under cursor vertical split'],
@@ -951,14 +979,10 @@ let g:which_key_map.r = { 'name' : '+rtags',
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
 " \   's' : [':call Swoop()', 'fuzzy search in this file'],
 " \   's' : ['/', 'fuzzy search in this file'],
-" For :Denite buffer:
-" - use <CR> to go to file under cursor
-" - use <CR> to switch back to insert mode and <CTRL-j> <CTRL-k> to navigate
-"   list
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
-\   's' : [':Denite line', 'fuzzy search in this file'],
+\   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
 \   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep'],
 \   'l' : {'name' : '+spellang',
 \     'e' : [':setlocal spell spelllang=en', 'english'],

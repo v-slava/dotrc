@@ -46,12 +46,7 @@ RTAGS=3ef48de532c2e875f0fc3c33b34befed2bf37016
 TOML=f6f79f3cc6740dfacca73a195857cbc45e778912
 WHICH_KEY=80a1e88f1df5b8b0a203dd9973dd164192bb67cf
 
-DENITE=2.1
-# DENITE=1.2
-# For python 3.5 in file:
-# ~/.vim_all_plugins/denite.nvim/rplugin/python3/denite/filter/sorter_rank.py
-# use:
-# from denite.filter.sorter.rank import Filter as Base
+DENITE=dedeed5cb3fab46465a1f30efa4875c4937ed2f7
 
 FUGITIVE=881ad1ed0bd88acc7568c07e35daa4b81c4aa1c9
 # FUGITIVE=v2.5

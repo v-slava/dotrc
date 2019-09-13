@@ -11,7 +11,6 @@ dotrc_s_overwrite()
 config_concat_dotrc_s()
 (
     set -e
-    mkdir -p "$DEST_DIR"
     if [ -L "$DOTRC_FILE" ]; then
         cp -r "$DOTRC_FILE" "$DEST"
         return
@@ -108,15 +107,17 @@ config_generate_root()
 )
 
 config_generate()
-{
+(
     MODE="$1"
     FILE="$2"
+    set -e
     case "$MODE" in
         -h)
             DOTRC_FILE="$DOTRC/home_settings/$FILE"
             DOTRC_S_FILE="$DOTRC_S/home_settings/$FILE"
             DEST_DIR="$HOME/"
             DEST="${DEST_DIR}$FILE"
+            mkdir -p "$(dirname "$DEST")"
             config_generate_home
             ;;
         -r)
@@ -124,8 +125,9 @@ config_generate()
             DOTRC_S_FILE="$DOTRC_S/root_settings/$FILE"
             DEST_DIR="/"
             DEST="${DEST_DIR}$FILE"
+            mkdir -p "$(dirname "$DEST")"
             config_generate_root
             ;;
-        *) return 1
+        *) exit 1
     esac
-}
+)
