@@ -617,12 +617,28 @@ function! My_get_file_name_under_cursor(line)
 endfunction
 
 function! My_open_file(win, cmd) " at least one colon expected
+    " ('cur_win', 'e') "under cursor current window
+    " ('prev_win', 'sp') " under cursor horizontal split
+    " ('cur_win', 'vsp') " under cursor vertical split
+    " ('cur_win', 'tabedit') " under cursor tabedit
     let l:line = strpart(getline('.'), col(".") - 1)
     let l:file = My_get_file_name_under_cursor(l:line)
     if a:win == 'prev_win'
-        execute "normal \<c-w>\<c-p>"
+        " execute "normal \<c-w>\<c-p>"
+        execute 'wincmd p'
     endif
     execute a:cmd . ' ' . l:file
+endfunction
+
+function! My_fuzzy_open_file()
+    let l:dir = expand('%:p:h') " current file's directory
+    let l:cmd = 'git -C ' . l:dir . ' rev-parse --show-toplevel 2>/dev/null'
+    let l:git_root = system(l:cmd)
+    if l:git_root != ''
+        let l:dir = l:git_root[:-2]
+    endif
+    let g:My_use_denite_errors = 1
+    execute 'Denite -start-filter -path=' . l:dir . ' file/rec'
 endfunction
 
 function! My_get_region_lines(start, end)
@@ -901,16 +917,8 @@ let g:which_key_map.f = {'name' : '+files',
 \   'e' : {'name' : '+edit',
 \     'v' : [':call My_edit_vimrc()', 'vimrc'],
 \    },
-\   'f' : [':Denite -start-filter file/rec', 'fuzzy'],
-\   'j' : [':call My_open_file("cur_win", "e")', 'under cursor current window'],
-\   'h' : [':call My_open_file("cur_win", "sp")', 'under cursor horizontal split'],
-\   'v' : [':call My_open_file("cur_win", "vsp")', 'under cursor vertical split'],
+\   'f' : [':call My_fuzzy_open_file()', 'fuzzy'],
 \   't' : [':call My_open_file("cur_win", "tabedit")', 'under cursor tabedit'],
-\   'p' : {'name' : '+under cursor previous window',
-\     'j' : [':call My_open_file("prev_win", "e")', 'current window'],
-\     'h' : [':call My_open_file("prev_win", "sp")', 'horizontal split'],
-\     'v' : [':call My_open_file("prev_win", "vsp")', 'vertical split'],
-\    },
 \ }
 
 " \   's' : [':Gstatus', 'status'],
@@ -925,7 +933,6 @@ let g:which_key_map.g = {'name' : '+git',
 \   'd' : {'name' : '+diff',
 \     'i' : [':Gdiff', 'index'],
 \     'h' : [':Gdiff HEAD', 'HEAD'],
-\     'p' : [':Gdiff ~1', 'HEAD~1 (previous)'],
 \   },
 \   'e' : [':MyRunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
 \ }
