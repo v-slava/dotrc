@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
         additional_data = [
             get_brightness(),
-            get_network_traffic(),
+            # get_network_traffic(),
         ]
         for data in additional_data:
             if data:
