@@ -24,8 +24,19 @@ fi
 set -e
 
 source $DOTRC/other_files/config_file.sh
-DIR=$DOTRC/root_settings/
-find $DIR ! -type d | cut -c $((${#DIR} + 1))- | while read FILE ; do
+list_files()
+(
+    DIR="$1"
+    set -e -o pipefail
+    find "$DIR" ! -type d | cut -c $((${#DIR} + 1))-
+)
+(
+    set -e
+    list_files $DOTRC/root_settings/
+    if [ -d $DOTRC_S/root_settings ]; then
+        list_files $DOTRC_S/root_settings/
+    fi
+) | sort -u | while read FILE ; do
     config_generate -r "$FILE"
 done
 

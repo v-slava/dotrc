@@ -15,9 +15,13 @@ config_concat_dotrc_s()
         cp -r "$DOTRC_FILE" "$DEST"
         return
     fi
-    cp --preserve=mode "$DOTRC_FILE" "$DEST"
-    if [ -f "$DOTRC_S_FILE" ]; then
-        cat "$DOTRC_S_FILE" >> "$DEST"
+    if [ -f "$DOTRC_FILE" ]; then
+        cp --preserve=mode "$DOTRC_FILE" "$DEST"
+        if [ -f "$DOTRC_S_FILE" ]; then
+            cat "$DOTRC_S_FILE" >> "$DEST"
+        fi
+    else
+        cp --preserve=mode "$DOTRC_S_FILE" "$DEST"
     fi
 )
 

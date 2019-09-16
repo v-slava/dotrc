@@ -2479,6 +2479,9 @@ ip addr add 192.168.1.29/24 dev wlan0
 ip route add default via 192.168.1.1
 # ip addr del 106.124.32.34/24 dev eth0
 
+# Start DHCP server and forward packets from one interface to another (router):
+$DOTRC/other_files/start_router.sh
+
 # Release current lease and stop running DHCP client:
 dhclient -r
 
