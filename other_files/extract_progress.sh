@@ -48,7 +48,38 @@ for FILE in "$@" ; do
     fi
 
     case "$FILE_FULL_PATH" in
-        *.a | *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
+        *.a)
+            FILE_TYPE="$(file "$FILE_FULL_PATH")"
+            THIN_ARCHIVE_REGEX=': thin archive with [0-9]\+ symbol entries'
+            if echo "$FILE_TYPE" | grep -q "$THIN_ARCHIVE_REGEX" ; then
+                ROOT_DIR="$(dirname "$FILE_FULL_PATH")"
+                FILE_NAME="$(basename "$FILE_FULL_PATH")"
+                set +e
+                MEMBERS="$(cd "$ROOT_DIR" && ar t "$FILE_NAME")"
+                RET=$?
+                set -e
+                if [ $RET -eq 1 ]; then
+                    cat << EOF 1>&2
+If you've moved this file from its original folder to some other folder then
+this could be the reason of extraction failure (thin archive contains only
+references to the member files of the archive). Try to extract this archive in
+its original folder instead.
+EOF
+                fi
+                if [ $RET -ne 0 ]; then
+                    exit $RET
+                fi
+                readarray -t members <<< "$MEMBERS"
+                for f in "${members[@]}" ; do
+                    d="$(dirname "$f")"
+                    mkdir -p "$d"
+                    ln -s "$ROOT_DIR/$f" "$f"
+                done
+            else
+                ar x "$FILE_FULL_PATH"
+            fi
+            ;;
+        *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
         *.rpm) rpm2cpio "$FILE_FULL_PATH" | pv | cpio -idm ;;
         *.sh)
             split_script_binary_archive.sh -ob data.bin "$FILE_FULL_PATH"
