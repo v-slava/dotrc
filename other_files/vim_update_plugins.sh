@@ -165,13 +165,15 @@ git_checkout_bundle https://github.com/kergoth/vim-bitbake $VIM_BITBAKE
 # git_checkout_bundle https://github.com/powerman/vim-plugin-AnsiEsc $ANSI_ESC_2
 
 cd $HOME/.vim/bundle
-ARGS=('+UpdateRemotePlugins')
-ls | while read dir ; do
-    ARGS+=("+helptags $dir/doc")
+ARGS="+UpdateRemotePlugins"
+for dir in $(ls) ; do
+    if [ -d "$dir/doc" ]; then
+        ARGS="$ARGS | helptags $dir/doc"
+    fi
 done
-ARGS+=('+q')
-if [ $TERM = "dumb" ]; then
-    x-terminal-emulator -e nvim "${ARGS[@]}"
+ARGS="$ARGS | q"
+if [ "$TERM" = "dumb" ]; then
+    x-terminal-emulator -e nvim "$ARGS"
 else
-    nvim "${ARGS[@]}"
+    nvim "$ARGS"
 fi
