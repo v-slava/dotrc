@@ -147,6 +147,7 @@ set wildmenu " enhanced command line completion mode
 set cursorline " highlight current line
 set hlsearch
 set ignorecase
+set smartcase
 set incsearch
 set mouse=a
 set autoindent
