@@ -413,7 +413,7 @@ nmap dt :only<CR>
 nmap w= :vsplit<CR>
 
 " nmap <c-f> :find *.
-nmap <c-f> :execute '!f --no-clipboard 2>&0 %IU || echo %c' | normal! gf<CR>
+nmap <c-f> :!$DOTRC/other_files/vifm_find_fuzzy.sh<CR>
 " Copy symlink destination to clipboard (tags: location):
 nnoremap gl :!readlink '%c' | clipboard.sh -n<CR>
 

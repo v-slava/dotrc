@@ -5,7 +5,8 @@ Requires=rdm.socket
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/rdm -R -v --inactivity-timeout 300 --log-flush
+ExecStart=/usr/local/bin/rdm -R --no-libclang-include-path
+
 ExecStartPost=/bin/sh -c "echo +19 > /proc/$MAINPID/autogroup"
 Nice=19
 CPUSchedulingPolicy=idle

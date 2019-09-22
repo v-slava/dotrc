@@ -621,6 +621,10 @@ ag SEARCH_REGEX -G '(\.h$|\.cpp)'
 # Search only in *.cpp files, which path contains "tools":
 ag SEARCH_REGEX -G '(?=.*tools)(?=.*\.cpp$)'
 
+# thread safety:
+clang static analysis, linux kernel lockdep (+ userspace library), helgrind,
+https://github.com/cmccabe/lksmith
+
 # smplayer hotkeys:
 j - loop subtitle (e.g. none, rus, eng, ...)
 v - switch subtitle visibility
