@@ -497,9 +497,6 @@ apt-file list <package_name_from_repository>
 dpkg -L <installed_package_name>
 dpkg -c <package>.deb
 
-# Extract files from package:
-ar xv <package>.deb
-
 # Search for a file from installed packages:
 dpkg -S FILE
 
@@ -2064,9 +2061,6 @@ sudo apt-get install gcc-4.7-arm-linux-gnueabi # arm cross compiler
 sudo apt-get install libc6-dev-armel-cross # arm C library development files
 arm-linux-gnueabi-gcc -static 1.c
 qemu-arm a.out
-
-# Extract .jar file (java library):
-jar xf FILE.jar
 
 # Disassemble .class file (java):
 javap -p FILE.class

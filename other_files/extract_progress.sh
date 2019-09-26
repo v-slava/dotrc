@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Extract archive to the current directory
-# See also: apt-cache show binwalk
+# See also (extract heuristics): apt-cache show binwalk
 
 set -e
 
