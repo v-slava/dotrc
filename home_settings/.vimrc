@@ -767,15 +767,23 @@ function! My_goto_error(error)
         execute 'Denite -resume -immediately ' . l:cmd
         return
     endif
-    if a:error == 'current'
-        let l:action = 'cc!'
-    elseif a:error == 'next'
-        let l:action = 'silent cc! | cnext!'
-    elseif a:error == 'previous'
-        let l:action = 'silent cc! | cprevious!'
+
+    if len(getloclist(0)) != 0
+        let l:prefix = 'l'
     else
-        let l:action = 'cc! ' . a:error
+        let l:prefix = 'p'
     endif
+    let l:action = l:prefix . l:prefix . '!'
+    if a:error == 'current'
+        let l:action = l:action
+    elseif a:error == 'next'
+        let l:action = 'silent ' . l:action . ' | ' . l:prefix . 'next!'
+    elseif a:error == 'previous'
+        let l:action = 'silent ' . l:action . ' | ' . l:prefix . 'previous!'
+    else
+        let l:action = l:action . ' ' . a:error
+    endif
+
     let l:err_buf_name = g:My_vim_errors_file
     let l:in_err_win = 0
     if bufname('%') == l:err_buf_name
