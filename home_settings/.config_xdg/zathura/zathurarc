@@ -1,8 +1,13 @@
 set font "Inconsolata LGC 14"
 set selection-clipboard clipboard
 
+" set scroll-step 100
+
 " unmap q
 " unmap <Space>
 " " map <Space>qm quit " doesn't work (bug?)
 " map qm quit
 
+" The following is not supported:
+" set smooth-scroll true
+" set smooth-scroll "true"

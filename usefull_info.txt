@@ -329,7 +329,7 @@ gcc -dM -E - < /dev/null
 4) Run "preprocess.bat"
 5) Compile your preprocessing project.
 
-# start bash with empty environment (no environment variables):
+# start bash with empty (clean) environment (no environment variables):
 env -i bash --noprofile --norc
 
 # bash "set -e" documentation: search for "Exit immediately if" in "man bash"
