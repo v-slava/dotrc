@@ -2,6 +2,7 @@ set font "Inconsolata LGC 14"
 set selection-clipboard clipboard
 
 " set scroll-step 100
+" set scroll-hstep 100
 
 " unmap q
 " unmap <Space>
