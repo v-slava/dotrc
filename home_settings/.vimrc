@@ -771,7 +771,7 @@ function! My_goto_error(error)
     if len(getloclist(0)) != 0
         let l:prefix = 'l'
     else
-        let l:prefix = 'p'
+        let l:prefix = 'c'
     endif
     let l:action = l:prefix . l:prefix . '!'
     if a:error == 'current'
