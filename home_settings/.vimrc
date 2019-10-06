@@ -435,7 +435,24 @@ function! My_insert_snippet()
 \ "    return 0;",
 \ "}",
 \ ])
+        if getline('.') == ''
             normal dd2k
+        else
+            normal 3k
+        endif
+        endif
+    elseif &filetype == "java"
+        call append(0, [
+\ "class " . expand("%:t:r") . " {",
+\ "    public static void main(String args[]) {",
+\ "        System.out.println(\"hello world!\");",
+\ "    }",
+\ "}",
+\ ])
+        if getline('.') == ''
+            normal dd2k
+        else
+            normal 3k
         endif
     elseif &filetype == "sh"
         call append(0, [
@@ -443,14 +460,22 @@ function! My_insert_snippet()
 \ "",
 \ "echo \"\\$# = |$#|\"; echo \"\\$0 = |$0|\"; echo \"\\$@ = |$@|\"",
 \ ])
-        normal dd
+        if getline('.') == ''
+            normal dd
+        else
+            normal k
+        endif
     elseif &filetype == "python"
         call append(0, [
 \ "#!/usr/bin/python3",
 \ "",
 \ "import sys; print(sys.argv)",
 \ ])
-        normal dd
+        if getline('.') == ''
+            normal dd
+        else
+            normal k
+        endif
     endif
 endfunction
 
@@ -711,14 +736,14 @@ function! My_insert_eval_region(text)
     set formatoptions-=c
     let l:text_prefix = ''
     if &filetype == "c" || &filetype == "cpp"
-        normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
+        normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
         let l:text_prefix = ' '
     elseif &filetype == "sh" || &filetype == "python"
-        normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
+        normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
     elseif &filetype == "vim"
-        normal O$d0xi" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.$d0x2k
+        normal O$d0xi" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.$d0x2k
     else
-        normal OEVAL REGION BEGINS HERE: ||EVAL REGION ENDS HERE.2k
+        normal OEVAL REGION BEGINS HERE: ||EVAL REGION ENDS HERE.2k
     endif
     " call append(line('.'), l:text_prefix . a:text)
     execute ':normal! A' . l:text_prefix . a:text
