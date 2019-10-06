@@ -10,6 +10,8 @@
 /bin/clang-format
 /bin/clang++
 /bin/clangd
+/bin/clang-tidy
+/bin/scan-build
 /bin/llvm-config
 /bin/gcc
 /bin/cc

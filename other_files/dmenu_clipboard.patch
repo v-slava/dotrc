@@ -1,6 +1,4 @@
-From b2d78588bb13a71457554448638ced3968241f92 Mon Sep 17 00:00:00 2001
 From: Viacheslav Volkov <viacheslav.volkov.1@gmail.com>
-Date: Tue, 20 Mar 2018 21:13:15 +0000
 Subject: [PATCH] Add "-selection" option and Alt+i hotkey.
 
 ---

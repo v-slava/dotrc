@@ -38,6 +38,12 @@ bitbake core-image-sato -c fetchall
 # python print stacktrace (dump stack):
 import traceback
 traceback.print_stack()
+# python enable (print) debug logging:
+logging.basicConfig(level=logging.DEBUG)
+logging.debug('hello world!')
+# read log level from environment ("INFO" is a default value if LOGLEVEL is not
+# set in environment):
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 # find out which process modified / created / deleted file:
 sudo apt-get install auditd
@@ -396,7 +402,7 @@ shopt -s dotglob
 # Crosscompile for ARM 64 using clang:
 clang --target=aarch64-linux-gnu --sysroot=/path/to/sysroot
 
-# Icecream:
+# Icecream (distributed compilation, see also distcc, ccache):
 sudo apt-get install icecc icecc-monitor
 # kill icecc-scheduler, if present
 sudo service iceccd restart
@@ -476,6 +482,7 @@ dpkg --configure -a
 sudo dpkg --add-architecture <arch>
 dpkg --print-foreign-architectures
 sudo apt-get update
+# apt-get --allow-releaseinfo-change update
 dpkg --remove-architecture <arch>
 
 # Build package from source and do not sign anything:

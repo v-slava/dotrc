@@ -223,7 +223,7 @@ let g:detectindent_preferred_expandtab = 1
 let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
-autocmd FileType rust,c,cpp,sh,expect,cmake,vim,python,perl,lua,php,json
+autocmd FileType rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
     if g:my_user_id != 0
@@ -238,19 +238,11 @@ function! My_apply_tab_settings()
         setlocal shiftwidth=4
     endif
 endfunction
-" autocmd FileType rust,cpp,sh,expect,cmake,vim,python,perl,lua,php
-" \ setlocal shiftwidth=0 | setlocal tabstop=4 | setlocal expandtab
-" autocmd FileType c,cpp setlocal shiftwidth=0
-" \ | if My_is_linux_kernel_source_file(expand("%:p"))
-" \     | setlocal tabstop=8 | setlocal noexpandtab
-" \ | else
-" \     | setlocal tabstop=4 | setlocal expandtab
-" \ | endif
-" autocmd BufNewFile,BufRead,BufEnter */dotrc/* setlocal expandtab
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
-autocmd FileType c,cpp setlocal textwidth=80 | setlocal formatoptions+=t
-" autocmd FileType c,cpp setlocal cindent | setlocal noautoindent
+autocmd FileType c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php
+            \ setlocal textwidth=80 | setlocal formatoptions+=t
+" setlocal cindent | setlocal noautoindent | setlocal expandtab
 
 autocmd FileType vim if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "execute 'call ' . My_vimscript_function_eval() . '()'" | endif
@@ -272,6 +264,10 @@ autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | MyRunShellCmd clang++ -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
+
+autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | MyRunShellCmd javac -d /tmp " . expand("%:t")
+    \ . " && java -cp /tmp " . expand("%:t:r") | endif
 
 function! My_is_linux_kernel_source_file(full_path)
     let l:idx_linux = stridx(a:full_path, "linux")
