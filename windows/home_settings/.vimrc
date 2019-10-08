@@ -90,11 +90,12 @@ let g:EasyMotion_do_mapping = 0
 let g:rtagsUseDefaultMappings = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
-let g:My_user_id = system('id -u')
 if $WINDIR != ""
     let g:My_is_windows = 1
+    let g:My_user_id = 0
 else
     let g:My_is_windows = 0
+    let g:My_user_id = system('id -u')
 endif
 
 if !g:My_is_windows
@@ -133,11 +134,10 @@ endfunction
 " endfunction
 " call denite#custom#action('file', 'my_split', function('s:my_denite_split'))
 
-if !g:My_is_windows
-    colorscheme molokai
-endif
-
 if g:My_is_windows
+    set noswapfile
+else
+    colorscheme molokai
     " Fix colorscheme:
     hi Search ctermfg=0 ctermbg=12
     hi DiffAdd ctermbg=234
@@ -148,8 +148,10 @@ if g:My_is_windows
     " autocmd WinEnter * match Error /\s\+$/
     " Highlight column (right after last that can be used):
     hi ColorColumn ctermbg=234
-else
-    set noswapfile
+
+    set clipboard=unnamedplus " map clipboard to unnamedplus register '+'
+    " Preserve copied text in clipboard on exit:
+    autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 endif
 
 set colorcolumn=81
@@ -178,9 +180,6 @@ map Q <nop> " disable ex mode
 map q: <nop> " disable commands history mode
 " let mapleader = "\\"
 let mapleader = "\<Space>"
-set clipboard=unnamedplus " map clipboard to unnamedplus register '+'
-" Preserve copied text in clipboard on exit:
-autocmd VimLeave * call system("clipboard.sh", getreg('+'))
 set diffopt+=vertical " need for "fugitive-:Gdiff"
 " set lines=25
 " set columns=83
