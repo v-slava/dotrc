@@ -90,10 +90,17 @@ let g:EasyMotion_do_mapping = 0
 let g:rtagsUseDefaultMappings = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
-let g:my_user_id = system('id -u')
+let g:My_user_id = system('id -u')
+if $WINDIR != ""
+    let g:My_is_windows = 1
+else
+    let g:My_is_windows = 0
+endif
 
-" Initialize pathogen plugin (update runtimepath variable):
-execute pathogen#infect()
+if !g:My_is_windows
+    " Initialize pathogen plugin (update runtimepath variable):
+    execute pathogen#infect()
+endif
 
 if globpath(&runtimepath, "autoload/denite.vim") != ""
     " Use ripgrep:
@@ -126,7 +133,10 @@ endfunction
 " endfunction
 " call denite#custom#action('file', 'my_split', function('s:my_denite_split'))
 
-colorscheme molokai
+if !g:My_is_windows
+    colorscheme molokai
+endif
+
 " Fix colorscheme:
 hi Search ctermfg=0 ctermbg=12
 hi DiffAdd ctermbg=234
@@ -227,7 +237,7 @@ let g:detectindent_max_lines_to_analyse = 1024
 autocmd FileType rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
-    if g:my_user_id != 0
+    if g:My_user_id != 0 && !g:My_is_windows
         DetectIndent
     endif
     if My_is_linux_kernel_source_file(expand("%:p"))
