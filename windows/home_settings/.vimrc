@@ -137,19 +137,24 @@ if !g:My_is_windows
     colorscheme molokai
 endif
 
-" Fix colorscheme:
-hi Search ctermfg=0 ctermbg=12
-hi DiffAdd ctermbg=234
-hi DiffDelete ctermbg=16
-hi StatusLine ctermfg=232 ctermbg=46
-hi StatusLineNC ctermfg=232 ctermbg=252
+if g:My_is_windows
+    " Fix colorscheme:
+    hi Search ctermfg=0 ctermbg=12
+    hi DiffAdd ctermbg=234
+    hi DiffDelete ctermbg=16
+    hi StatusLine ctermfg=232 ctermbg=46
+    hi StatusLineNC ctermfg=232 ctermbg=252
+    " commented-out because it highlights spaces in "which-key" (leader) window:
+    " autocmd WinEnter * match Error /\s\+$/
+    " Highlight column (right after last that can be used):
+    hi ColorColumn ctermbg=234
+else
+    set noswapfile
+endif
+
+set colorcolumn=81
 " Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
 match Error /\s\+$/
-" commented-out because it highlights spaces in "which-key" (leader) window:
-" autocmd WinEnter * match Error /\s\+$/
-" Highlight column (right after last that can be used):
-set colorcolumn=81
-hi ColorColumn ctermbg=234
 
 syntax on
 set nocompatible " do not try to be Vi-compatible
