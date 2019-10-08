@@ -1,5 +1,6 @@
 BoldAsFont=-1
-Font=Source Code Pro
+# Font=Source Code Pro
+Font=Consolas
 FontHeight=12
 Columns=100
-Rows=70
+Rows=50

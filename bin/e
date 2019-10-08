@@ -1,106 +1,116 @@
 #!/bin/bash
 
+# exec "C:/Program Files/SlickEdit Pro 20.0.0/win/vs.exe" $@
+
 WINDOWS=false
 if [ -n "$WINDIR" ]; then
     WINDOWS=true
 fi
 
-# exec "C:/Program Files/SlickEdit Pro 20.0.0/win/vs.exe" $@
+if [ -z "$EDITOR" ]; then
+    if [ "$WINDOWS" = "true" ]; then
+        EDITOR=vim
+    else
+        EDITOR=nvim
+    fi
+fi
+
+if [ "$WINDOWS" = "true" ]; then
+    # PREFIX="C:/files/other_files/emacs-25.3_1-x86_64/bin/"
+    PREFIX="C:/Program Files/Git/usr/bin/"
+    SUFFIX=".exe"
+else
+    PREFIX=
+    SUFFIX=
+fi
 
 ARGS=()
 for arg in "$@" ; do
     case "$arg" in
-        "--diff") DIFF=true ;;
-        "--emacs") EMACS=true ;;
+
+# "--wait" is my own argument.
+# "--nofork" is an argument, accepted by vim
+# (it is called with it from vifm when renaming a file/folder).
+# "-f" is an argument, accepted by vim ("foreground": do not fork).
+
+        "--wait" | "--nofork" | "-f") WAIT=true ;;
+
         "--get-editor") GET_EDITOR=true ;;
+        "--diff") DIFF=true ;;
+
+        # "--emacs") EDITOR=emacs ;;
+        # "--kak") EDITOR=kak ; MAIN_KAK_SESSION=main_kak_session ;;
+
         *) ARGS+=("$arg") ;;
     esac
 done
 
-if [ $WINDOWS = false ]; then
-    ID=$(id -u)
-    if [ $ID -eq 0 ]; then
-        USE_VIM=true
-    fi
-    if [ -z "$DISPLAY" ]; then
-        USE_VIM=true
-    fi
-    if [ "$EMACS" != "true" ]; then
-        USE_VIM=true
-        # USE_KAK=true
-        :
-    fi
-    MAIN_KAK_SESSION=main_kak_session
-    if [ "$USE_VIM" = "true" ]; then
-        if [ "$GET_EDITOR" = "true" ]; then
-            echo "vim"
-            exit
-        fi
-        ARGS_TMP=()
-        if [ "$DIFF" = "true" ]; then
-            ARGS_TMP+=("-d")
+# if [ $WINDOWS = false ]; then
+#     ID=$(id -u)
+#     if [ $ID -eq 0 ]; then
+#         EDITOR=vim
+#     fi
+#     if [ -z "$DISPLAY" ]; then
+#         EDITOR=vim
+#     fi
+# fi
+
+CLIENT=${EDITOR}
+SERVER=${EDITOR}
+case "$EDITOR" in
+    vim | nvim | kak)
+        ;;
+    emacs)
+        CLIENT=emacsclient # see also emacsclientw
+        if [ $WINDOWS = true ]; then
+            SERVER=runemacs
         else
-            ARGS_TMP+=("-p")
+            SERVER=emacs
         fi
-        for arg in "${ARGS[@]}" ; do
-            if [ "$arg" != "--wait" ] && [ "$arg" != "--diff" ]; then
-                ARGS_TMP+=("$arg")
-            fi
-        done
-        ARGS=("${ARGS_TMP[@]}")
-        exec nvim "${ARGS[@]}"
-    fi
+        ;;
 
-    EMACS_PREFIX=""
-    EMACS_SUFFIX=""
-else
-    EMACS_PREFIX="C:/files/other_files/emacs-25.3_1-x86_64/bin/"
-    EMACS_SUFFIX=".exe"
-fi
-
-if [ "$USE_KAK" != "true" ]; then
-    USE_EMACS=true
-fi
+esac
+CLIENT_EXE="${PREFIX}${CLIENT}${SUFFIX}"
+SERVER_EXE="${PREFIX}${SERVER}${SUFFIX}"
 
 if [ "$GET_EDITOR" = "true" ]; then
-    if [ "$USE_KAK" = "true" ]; then
-        echo "kak"
-    else
-        echo "emacs"
-    fi
-    exit
+    exec echo "$CLIENT_EXE"
 fi
 
-daemon_running()
+if [ "$EDITOR" = "vim" ] || [ "$EDITOR" = "nvim" ]; then
+    ARGS_TMP=()
+    if [ "$DIFF" = "true" ]; then
+        ARGS_TMP+=("-d")
+    else
+        ARGS_TMP+=("-p")
+    fi
+    # --nofork vim and nvim handle themselves...
+    # There is no need to handle "$WAIT" here...
+    ARGS=("${ARGS_TMP[@]}" "${ARGS[@]}")
+    exec "$CLIENT_EXE" "${ARGS[@]}"
+fi
+
+server_running()
 {
     if [ $WINDOWS = true ]; then
-        tasklist | grep -q emacs 1>/dev/null
+        tasklist | grep -q "$SERVER" 1>/dev/null
     else
-        if [ "$USE_EMACS" = "true" ]; then
-            pgrep emacs 1>/dev/null
-        else
-            pgrep kak 1>/dev/null
-        fi
+        pgrep "$SERVER" 1>/dev/null
     fi
 }
 
-daemon_run()
+server_run()
 {
-    if [ "$USE_EMACS" = "true" ]; then
-        if [ $WINDOWS = true ]; then
-            DAEMON_EXE="${EMACS_PREFIX}runemacs.exe"
-        else
-            DAEMON_EXE=emacs
-        fi
-        $DAEMON_EXE --daemon
+    if [ "$EDITOR" = "emacs" ]; then
+        "$SERVER_EXE" --daemon
     else
-        nohup kak -d -s $MAIN_KAK_SESSION 1>/dev/null 2>&1
+        nohup "$SERVER_EXE" -d -s $MAIN_KAK_SESSION 1>/dev/null 2>&1
     fi
 }
 
 call_editor()
 {
-    if [ "$USE_EMACS" = "true" ]; then
+    if [ "$EDITOR" = "emacs" ]; then
         set +e
         "$@"
         while [ $? -ne 0 ]; do
@@ -115,32 +125,19 @@ call_editor()
 
 CMD=()
 
-if ! daemon_running ; then
-    daemon_run
+if ! server_running ; then
+    server_run
 fi
-if [ "$USE_EMACS" = "true" ]; then
-    CMD+=("${EMACS_PREFIX}emacsclient${EMACS_SUFFIX}") # see also emacsclientw
+
+CMD+=("$CLIENT_EXE")
+if [ "$EDITOR" = "emacs" ]; then
     CMD+=("-c") # --create-frame
 else
-    CMD+=("kak")
-    CMD+=("-c")
+    CMD+=("-c") # session ID
     CMD+=("$MAIN_KAK_SESSION")
 fi
 
-# "--wait" is my own argument.
-# "--nofork" is an argument, accepted by vim
-# (it is called with it from vifm when renaming a file/folder).
-# "-f" is an argument, accepted by vim ("foreground": do not fork).
-ARGS_TMP=()
-for arg in "${ARGS[@]}" ; do
-    if [ "$arg" = "--wait" ] || [ "$arg" = "--nofork" ] || [ "$arg" = "-f" ]; then
-        WAIT=true
-    else
-        ARGS_TMP+=("$arg")
-    fi
-done
-ARGS=("${ARGS_TMP[@]}")
-if [ "$USE_EMACS" = "true" ]; then
+if [ "$EDITOR" = "emacs" ]; then
     if [ "$WAIT" != "true" ]; then
         CMD+=("--no-wait")
     fi
@@ -156,7 +153,7 @@ if [ "$USE_EMACS" = "true" ]; then
         exit
     fi
 else
-    # assume "$USE_KAK" = "true"
+    # assume "$EDITOR" = "kak"
     if [ "$DIFF" = "true" ]; then
         echo "error: diff not supported by kak" 1>&2
         exit 1
@@ -172,10 +169,10 @@ is_a_number()
 
 open_file()
 {
-    if [ "$USE_EMACS" = "true" ]; then
+    if [ "$EDITOR" = "emacs" ]; then
         call_editor "${CMD[@]}" --eval "(find-file \"$arg\")"
     else
-        # assume $USE_KAK = "true"
+        # assume $EDITOR = "kak"
         call_editor "${CMD[@]}" "$arg"
     fi
 }
@@ -206,7 +203,7 @@ for arg in "${ARGS[@]}" ; do
     fi
     file="$(echo "$arg" | cut -d':' -f1)"
 
-    if [ "$USE_EMACS" = "true" ]; then
+    if [ "$EDITOR" = "emacs" ]; then
         call_editor "${CMD[@]}" --eval "(progn (find-file \"$file\") (evil-goto-line $line) (compilation-move-to-column $column nil))"
     else
         call_editor "${CMD[@]}" +$line:$column "$file"

@@ -28,7 +28,7 @@ cls
 echo %errorlevel%
 
 # Print home directory:
-echo %homepath%
+echo %homedrive%%homepath%
 
 # Bat file command line arguments:
 %0, %1, %2, ...
