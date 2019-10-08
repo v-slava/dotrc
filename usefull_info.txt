@@ -1171,6 +1171,13 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
+# Rebase a range of commits (start; end] on top of new_base:
+git checkout end # end is a branch to be rebased
+git rebase --onto new_base start
+# approach #2:
+git checkout -b new_branch new_base
+git cherry-pick start..end
+
 # get git root (base) folder (directory):
 git rev-parse --show-toplevel
 

@@ -482,7 +482,9 @@ endfunction
 function! My_window_is_temporary()
     let l:dir_name = expand('%:p:h')
     let l:file_name = expand('%:t')
-    if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help' || &l:buftype == 'quickfix' || &l:buftype == 'nofile' || l:file_name == 'swoopBuf'
+    if l:dir_name == '/usr/share/vim/vim74/doc' || &l:buftype == 'help'
+\ || &l:buftype == 'quickfix' || &l:buftype == 'nofile'
+\ || &l:buftype == 'nowrite' || l:file_name == 'swoopBuf'
         " || l:file_name == 'search-results.agsv'
         return 1
     endif
@@ -1012,6 +1014,13 @@ let g:which_key_map.o = { 'name' : '+other',
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
+\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
+\   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
+\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
+\   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
+\   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindRefsByName'],
+\   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindSymbols'],
+\   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()', 'FindVirtuals'],
 \ }
 
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
