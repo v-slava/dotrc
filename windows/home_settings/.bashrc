@@ -1,5 +1,44 @@
-export DOTRC=/d/root_folder/dotrc
-export DOTRC_S=/d/root_folder/dotrc_s
+if [ -n "$WINDIR" ]; then
+    # settings for windows:
+    export DOTRC=/d/root_folder/dotrc
+    export DOTRC_S=/d/root_folder/dotrc_s
+    export EDITOR=vim
+    __git_complete()
+    {
+        # for now we can't complete on windows...
+        true
+    }
+else
+    # settings for linux:
+    export WORKSPACE=/media/files/workspace
+    export DOTRC=$WORKSPACE/dotrc
+    export DOTRC_S=$WORKSPACE/dotrc_s
+    # export EDITOR=/usr/bin/vim
+    export EDITOR=nvim
+    source /usr/share/bash-completion/completions/git
+
+    # default colorless prompt:
+    # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    if echo $TERM | grep -q '256color\|screen' ; then
+        if [ `id -un` == root ]; then
+            USER_COLOR=196
+        else
+            USER_COLOR=99
+        fi
+        PS1='\[\e[0;38;5;${USER_COLOR}m\]\u\[\e[38;5;178m\]@\[\e[38;5;80m\]\h \[\e[38;5;46m\]\w \[\e[38;5;27m\]\$ \[\e[0;38m\]'
+    else
+        if [ `id -un` == root ]; then
+            USER_COLOR='0;31'
+        else
+            USER_COLOR='0;35'
+        fi
+        PS1='\[\e[0;${USER_COLOR}m\]\u\[\e[0;33m\]@\[\e[0;36m\]\h \[\e[0;32m\]\w \[\e[0;34m\]\$ \[\e[0;37m\]'
+    fi
+
+    # check the window size after each command and, if necessary,
+    # update the values of LINES and COLUMNS.
+    shopt -s checkwinsize
+fi
 
 export PI_PORT=53535
 export PI_USR=pi
@@ -64,19 +103,17 @@ if [ -z "$ORIG_PATH" ]; then
 fi
 
 # export PATH=$ORIG_PATH
-PATH_prepend $HOME/bin $HOME/.local/bin $DOTRC/bin
+PATH_prepend $DOTRC/bin $HOME/.local/bin
 PATH_append /sbin /usr/sbin
 
 if [ -d "$DOTRC_S/bin" ]; then
-    PATH_append $DOTRC_S/bin
+    PATH_prepend $DOTRC_S/bin
 fi
 
 # export CC=clang
 # export CXX=clang++
 
 # Other settings:
-# export EDITOR=/usr/bin/vim
-export EDITOR=vim
 export MINICOM='-c on'
 
 # export QUILT_PATCHES=debian/patches
@@ -126,24 +163,23 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 # Git aliases:
-# source /usr/share/bash-completion/completions/git
 alias glog='git log --graph --decorate --color=always | cless -i'
 alias gloga='git log --graph --decorate --color=always --all | cless -i'
 alias ga='git add'
-# __git_complete ga _git_add
+__git_complete ga _git_add
 alias gs='git status'
 alias gd='git diff'
-# __git_complete gd _git_diff
+__git_complete gd _git_diff
 alias gco='git commit'
 alias gcoa='git commit --amend'
 # Git commit second:
 alias gcs='$DOTRC/other_files/git_commit_dotrc_second.sh'
 # Git commit update:
 alias gcu='git commit --amend --no-edit -a'
-# __git_complete gch _git_checkout
+__git_complete gch _git_checkout
 alias gchd='git checkout --detach'
 alias gb='git branch'
-# __git_complete gb _git_branch
+__git_complete gb _git_branch
 alias gpl='git pull'
 alias cgr='gr --color=always'
 # alias gpush_test_commit='$DOTRC/other_files/git_push_test_commit.sh REPO BRANCH'

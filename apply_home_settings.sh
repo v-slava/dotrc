@@ -44,9 +44,6 @@ MEDIA_FILES=/media/files
 if [ ! -L ~/my ]; then
     ln -s $MEDIA_FILES/temporary/my ~/my
 fi
-if [ ! -L ~/bin ]; then
-    ln -s $DOTRC/bin ~/bin
-fi
 if [ ! -L ~/downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/downloads
 fi

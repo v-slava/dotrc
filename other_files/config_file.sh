@@ -12,6 +12,12 @@ config_concat_dotrc_s()
 (
     set -e
     if [ -L "$DOTRC_FILE" ]; then
+        REAL_DOTRC_FILE="$(realpath "$DOTRC_FILE")"
+        if [[ $REAL_DOTRC_FILE == $DOTRC/windows/* ]]; then
+            DOTRC_FILE="$REAL_DOTRC_FILE"
+        fi
+    fi
+    if [ -L "$DOTRC_FILE" ]; then
         cp -r "$DOTRC_FILE" "$DEST"
         return
     fi
