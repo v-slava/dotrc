@@ -1764,6 +1764,8 @@ git format-patch -1 [-o OUT_DIR] [SHA]
 # Apply patch file:
 cd GIT_ROOT_DIR
 git apply PATCH_FILE
+# Apply patch file at least partially (as much as possible):
+git apply --reject PATCH_FILE
 # Apply patch file and create commit based on it:
 git am < PATCH_FILE
 
@@ -2672,7 +2674,10 @@ backtrace full
 # in gdb:
 (gdb) core-file /home/user/my_core_file
 
-# gdb: stop on writing to stderr (x86_64 only):
+# gdb: stop (breakpoint) on file open (or read/write, x86_64 only):
+b open if strstr($rdi, "file_name") != 0
+
+# gdb: stop (breakpoint) on writing to stderr (x86_64 only):
 b write if 2 == $rdi
 # lldb: stop on writing to stderr (x86_64 only):
 br s -n write -c '2 == $rdi' # TODO this is wrong

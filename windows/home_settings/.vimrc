@@ -753,13 +753,13 @@ function! My_insert_eval_region(text)
     set formatoptions-=t
     set formatoptions-=c
     let l:text_prefix = ''
-    if &filetype == "c" || &filetype == "cpp"
+    if &filetype == "c" || &filetype == "cpp" || &filetype == "java"
         normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
         let l:text_prefix = ' '
     elseif &filetype == "sh" || &filetype == "python"
         normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
     elseif &filetype == "vim"
-        normal O$d0xi" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.$d0x2k
+        normal O0C" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.0D2kA 
     else
         normal OEVAL REGION BEGINS HERE: ||EVAL REGION ENDS HERE.2k
     endif
@@ -926,7 +926,7 @@ autocmd FileType qf nmap <buffer> o :call My_open_location()<CR>
 " nmap <C-u> :%d<CR>:r !astyle.sh %<CR>
 
 " which-key (hotkeys):
-set timeoutlen=200
+set timeoutlen=1000
 let g:which_key_map =  {}
 
 let g:which_key_map.b = { 'name' : '+buffers',
@@ -1025,7 +1025,7 @@ let g:which_key_map.m = { 'name' : '+my',
 \ }
 
 let g:which_key_map.o = { 'name' : '+other',
-\   'c' : ['$d0x', 'clear current line'],
+\   'c' : ['0D', 'clear current line'],
 \   'f' : [':execute g:My_eval_var', 'evaluate variable'],
 \ }
 
@@ -1081,10 +1081,30 @@ let g:which_key_map.w = { 'name' : '+windows',
 " let g:which_key_map.q = { 'name' : '+quit',
 " \ }
 
+function! My_register_which_key(var, keypresses)
+    try
+        for [l:key, l:value] in items(a:var)
+            if l:key == 'name'
+                continue
+            endif
+            call My_register_which_key(l:value, a:keypresses . l:key)
+        endfor
+    catch
+        let l:cmd = ':nnoremap <leader>' . a:keypresses . ' '
+        let l:cmd = l:cmd . substitute(a:var[0], ' | ', '<CR>:', 'g')
+        if a:var[0][0] == ':'
+            let l:cmd = l:cmd . '<CR>'
+        endif
+        execute l:cmd
+    endtry
+endfunction
+
 if globpath(&runtimepath, "autoload/which_key.vim") != ""
     call which_key#register('<Space>', "g:which_key_map")
     nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
     vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+else
+    call My_register_which_key(g:which_key_map, '')
 endif
 
 " :help CTRL-W_ge
