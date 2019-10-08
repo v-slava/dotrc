@@ -87,6 +87,7 @@ let g:loaded_vimballPlugin = 1
 
  " disable default mappings:
 let g:EasyMotion_do_mapping = 0
+let g:rtagsUseDefaultMappings = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
 let g:my_user_id = system('id -u')
@@ -925,7 +926,7 @@ let g:which_key_map.c = { 'name' : '+compile/clipboard',
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
-\   'j' : [':Denite -resume', 'resume denite'],
+\   'j' : [':let g:My_use_denite_errors = 1 | Denite -resume', 'resume denite'],
 \   'k' : [':bdelete [denite]-default', 'kill denite'],
 \   'm' : [':MyModifyLine', 'modify line'],
 \   'q' : [':windo MyCloseWindowIfTemporary', 'close temporary windows'],
@@ -1014,13 +1015,26 @@ let g:which_key_map.o = { 'name' : '+other',
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
-\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
-\   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
-\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
+\   'i' : [':call rtags#SymbolInfo()', 'SymbolInfo'],
+\   'j' : [':call rtags#JumpTo(g:SAME_WINDOW)', 'JumpTo SAME_WINDOW'],
+\   'J' : [':call rtags#JumpTo(g:SAME_WINDOW, { "--declaration-only" : "" })', 'JumpTo SAME_WINDOW --declaration-only'],
+\   'S' : [':call rtags#JumpTo(g:H_SPLIT)', 'JumpTo H_SPLIT'],
+\   'V' : [':call rtags#JumpTo(g:V_SPLIT)', 'JumpTo V_SPLIT'],
+\   'T' : [':call rtags#JumpTo(g:NEW_TAB)', 'JumpTo NEW_TAB'],
+\   'p' : [':call rtags#JumpToParent()', 'JumpToParent'],
 \   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
+\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
 \   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindRefsByName'],
 \   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindSymbols'],
+\   'r' : [':call rtags#ReindexFile()', 'ReindexFile'],
+\   'l' : [':let g:My_use_denite_errors = 0 | call rtags#ProjectList()', 'ProjectList'],
+\   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],
 \   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()', 'FindVirtuals'],
+\   'b' : [':call rtags#JumpBack()', 'JumpBack'],
+\   'h' : [':call rtags#ShowHierarchy()', 'ShowHierarchy'],
+\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
+\   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
+\   'd' : [':call rtags#Diagnostics()', 'Diagnostics'],
 \ }
 
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting

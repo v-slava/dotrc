@@ -412,6 +412,7 @@ nmap dt :only<CR>
 " Switch back to normal two window vertical view:
 nmap w= :vsplit<CR>
 
+nmap <c-j> <ESC>
 " nmap <c-f> :find *.
 nmap <c-f> :!$DOTRC/other_files/vifm_find_fuzzy.sh<CR>
 " Copy symlink destination to clipboard (tags: location):
