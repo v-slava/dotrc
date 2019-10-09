@@ -300,6 +300,12 @@ function! My_is_linux_kernel_source_file(full_path)
     return 1
 endfunction
 
+function! My_grep_in_dir(dir)
+    " -default-action=my_split -post-action=suspend
+    let g:My_use_denite_errors = 1
+    execute 'Denite -start-filter -path=' . a:dir . ' grep:::!'
+endfunction
+
 function! My_vifm_choose(action)
     let l:chosen = tempname()
     let l:callback = { 'chosen' : l:chosen, 'action' : a:action }
@@ -310,10 +316,8 @@ function! My_vifm_choose(action)
             return
         endif
         if self.action == 'ripgrep'
-            let l:dir = join(readfile(self.chosen))
-            " -default-action=my_split -post-action=suspend
-            let g:My_use_denite_errors = 1
-            execute 'Denite -start-filter -path=' . l:dir . ' grep:::!'
+            let g:My_grep_dir = join(readfile(self.chosen))
+            call My_grep_in_dir(g:My_grep_dir)
         " elseif self.action == 'something'
         else
             call nvim_err_writeln('Got unsupported action: ' . self.action)
@@ -327,6 +331,15 @@ function! My_vifm_choose(action)
     setlocal norelativenumber
     setlocal nonumber
     startinsert
+endfunction
+
+let g:My_grep_dir = ''
+function! My_grep_recursive()
+    if g:My_grep_dir == ''
+        call My_vifm_choose("ripgrep")
+    else
+        call My_grep_in_dir(g:My_grep_dir)
+    endif
 endfunction
 
 let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_') . '.err'
@@ -940,6 +953,7 @@ let g:which_key_map.c = { 'name' : '+compile/clipboard',
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
+\   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
 \   'j' : [':let g:My_use_denite_errors = 1 | Denite -resume', 'resume denite'],
 \   'k' : [':bdelete [denite]-default', 'kill denite'],
 \   'm' : [':MyModifyLine', 'modify line'],
@@ -947,7 +961,6 @@ let g:which_key_map.d = {'name' : '+diff',
 \   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
 \   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
 \   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
-\   '=' : ['<c-w>=', 'restore diff panels (after "t")'],
 \ }
 
 let g:which_key_map.e = {'name' : '+errors',
@@ -971,23 +984,23 @@ let g:which_key_map.f = {'name' : '+files',
 
 " \   's' : [':Gstatus', 'status'],
 let g:which_key_map.g = {'name' : '+git',
-\   's' : [':wa | Magit', 'status'],
-\   'u' : [':e', 'update (reload) buffer'],
 \   'b' : [':Gblame', 'blame'],
 \   'c' : {'name' : '+commit',
-\     'o' : [':Gcommit', 'default'],
 \     'a' : [':Gcommit --amend', 'amend'],
+\     'o' : [':Gcommit', 'default'],
 \   },
 \   'd' : {'name' : '+diff',
-\     'i' : [':Gdiff', 'index'],
 \     'h' : [':Gdiff HEAD', 'HEAD'],
+\     'i' : [':Gdiff', 'index'],
 \   },
 \   'e' : [':MyRunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
+\   's' : [':wa | Magit', 'status'],
+\   'u' : [':e', 'update (reload) buffer'],
 \ }
 
 let g:which_key_map.i = { 'name' : '+insert',
-\   's' : [':call My_insert_snippet()', 'snippet'],
 \   'e' : [':call My_insert_eval_region("")', 'insert eval region'],
+\   's' : [':call My_insert_snippet()', 'snippet'],
 \   'v' : [':call My_insert_eval_variable()', 'insert eval variable'],
 \ }
 
@@ -1029,26 +1042,26 @@ let g:which_key_map.o = { 'name' : '+other',
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
-\   'i' : [':call rtags#SymbolInfo()', 'SymbolInfo'],
-\   'j' : [':call rtags#JumpTo(g:SAME_WINDOW)', 'JumpTo SAME_WINDOW'],
+\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
+\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
 \   'J' : [':call rtags#JumpTo(g:SAME_WINDOW, { "--declaration-only" : "" })', 'JumpTo SAME_WINDOW --declaration-only'],
 \   'S' : [':call rtags#JumpTo(g:H_SPLIT)', 'JumpTo H_SPLIT'],
-\   'V' : [':call rtags#JumpTo(g:V_SPLIT)', 'JumpTo V_SPLIT'],
 \   'T' : [':call rtags#JumpTo(g:NEW_TAB)', 'JumpTo NEW_TAB'],
-\   'p' : [':call rtags#JumpToParent()', 'JumpToParent'],
-\   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
-\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
-\   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindRefsByName'],
-\   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindSymbols'],
-\   'r' : [':call rtags#ReindexFile()', 'ReindexFile'],
-\   'l' : [':let g:My_use_denite_errors = 0 | call rtags#ProjectList()', 'ProjectList'],
-\   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],
-\   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()', 'FindVirtuals'],
+\   'V' : [':call rtags#JumpTo(g:V_SPLIT)', 'JumpTo V_SPLIT'],
 \   'b' : [':call rtags#JumpBack()', 'JumpBack'],
-\   'h' : [':call rtags#ShowHierarchy()', 'ShowHierarchy'],
-\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
 \   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
 \   'd' : [':call rtags#Diagnostics()', 'Diagnostics'],
+\   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
+\   'h' : [':call rtags#ShowHierarchy()', 'ShowHierarchy'],
+\   'i' : [':call rtags#SymbolInfo()', 'SymbolInfo'],
+\   'j' : [':call rtags#JumpTo(g:SAME_WINDOW)', 'JumpTo SAME_WINDOW'],
+\   'l' : [':let g:My_use_denite_errors = 0 | call rtags#ProjectList()', 'ProjectList'],
+\   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindRefsByName'],
+\   'p' : [':call rtags#JumpToParent()', 'JumpToParent'],
+\   'r' : [':call rtags#ReindexFile()', 'ReindexFile'],
+\   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindSymbols'],
+\   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()', 'FindVirtuals'],
+\   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],
 \ }
 
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
@@ -1057,24 +1070,25 @@ let g:which_key_map.r = { 'name' : '+rtags',
 let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
-\   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
-\   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep'],
+\   'j' : [':call My_grep_recursive()', 'ripgrep in last used dir'],
+\   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep in dir to be selected'],
 \   'l' : {'name' : '+spellang',
-\     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'd' : [':setlocal spell spelllang=de', 'deutsch'],
-\     'r' : [':setlocal spell spelllang=ru', 'russian'],
+\     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'n' : [':setlocal nospell', 'nospell (disable)'],
+\     'r' : [':setlocal spell spelllang=ru', 'russian'],
 \    },
+\   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
 \ }
 
 let g:which_key_map.w = { 'name' : '+windows',
 \   '-' : [':split', 'split horizontally'],
-\   'v' : [':vsplit', 'split vertically'],
 \   'h' : [':wincmd h', 'focus left'],
-\   'l' : [':wincmd l', 'focus right'],
-\   'k' : [':wincmd k', 'focus top'],
 \   'j' : [':wincmd j', 'focus bottom'],
+\   'k' : [':wincmd k', 'focus top'],
+\   'l' : [':wincmd l', 'focus right'],
 \   'p' : [':wincmd p', 'focus previous'],
+\   'v' : [':vsplit', 'split vertically'],
 \ }
 
 " let g:which_key_map.q = { 'name' : '+quit',
