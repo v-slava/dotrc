@@ -136,6 +136,8 @@ endfunction
 
 if g:My_is_windows
     set noswapfile
+    set expandtab
+    set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
 else
     colorscheme molokai
     " Fix colorscheme:
@@ -884,13 +886,19 @@ function! My_goto_error(error)
 endfunction
 
 function! My_edit_vimrc()
-    let l:file = $DOTRC . "/home_settings/.vimrc"
+    let l:file = $DOTRC . "/windows/home_settings/.vimrc"
     execute 'tabedit ' . l:file
     function! My_done_editing_vimrc(file)
-        silent execute "!source " . $DOTRC . "/other_files/config_file.sh && config_generate -h .vimrc"
+        if g:My_is_windows
+            silent execute '!cp "' . a:file . '" "' . $MYVIMRC . '"'
+        else
+            silent execute '!source ' . $DOTRC .
+            \ '/other_files/config_file.sh && config_generate -h .vimrc'
+        endif
         source $MYVIMRC
     endfunction
-    execute 'autocmd! BufLeave ' . l:file . ' call My_done_editing_vimrc("' . l:file . '")'
+    execute 'autocmd! BufLeave ' . l:file . ' call My_done_editing_vimrc("'
+    \ . l:file . '")'
 endfunction
 
 " To insert echo (for Makefile) use the following macro:
