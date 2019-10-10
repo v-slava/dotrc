@@ -895,7 +895,8 @@ function! My_edit_vimrc()
             silent execute '!source ' . $DOTRC .
             \ '/other_files/config_file.sh && config_generate -h .vimrc'
         endif
-        source $MYVIMRC
+        " the following doesn't work for some reason:
+        " source $MYVIMRC
     endfunction
     execute 'autocmd! BufLeave ' . l:file . ' call My_done_editing_vimrc("'
     \ . l:file . '")'
