@@ -29,11 +29,16 @@ bitbake -g -u taskexp bitbake_target
 bitbake -g -u depexp bitbake_target
 bitbake -g -n -v bitbake_target
 vim pn-buildlist
+# Render (view, visualize, generate) dot (graph) files:
 xdot task-depends.dot
 xdot recipe-depends.dot
 bitbake -k -c fetchall  <target|world>
 bitbake -c fetchall --dry-run
 bitbake core-image-sato -c fetchall
+
+# Convert dot graph to different formats:
+dot -Tpdf input.dot > output.pdf
+dot -Tsvg input.dot > output.svg
 
 # python print stacktrace (dump stack):
 import traceback
@@ -2195,9 +2200,6 @@ p7zip -d FILE.7z
 
 # Determine sectors occupied by a given file:
 sudo hdparm --fibmap FILE
-
-# View dot files:
-xdot file.dot (or better file.gv)
 
 # Trace32 commands:
 break.set 0x12345678

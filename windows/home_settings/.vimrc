@@ -240,7 +240,8 @@ let g:detectindent_preferred_expandtab = 1
 let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
-autocmd FileType rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json
+autocmd FileType
+\ rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
     if g:My_user_id != 0 && !g:My_is_windows
@@ -285,6 +286,10 @@ autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | MyRunShellCmd javac -d /tmp " . expand("%:t")
     \ . " && java -cp /tmp " . expand("%:t:r") | endif
+
+autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | silent !if pgrep -x xdot > /dev/null ; then true ; else"
+    \ ." xdot " . expand("%:p") . " & fi" | endif
 
 function! My_is_linux_kernel_source_file(full_path)
     let l:idx_linux = stridx(a:full_path, "linux")
@@ -770,6 +775,9 @@ function! My_insert_eval_region(text)
     if &filetype == "c" || &filetype == "cpp" || &filetype == "java"
         normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
         let l:text_prefix = ' '
+    elseif &filetype == "dot"
+        normal O/* EVAL REGION BEGINS HERE: |* |** EVAL REGION ENDS HERE. */2k
+        let l:text_prefix = ' '
     elseif &filetype == "sh" || &filetype == "python"
         normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
     elseif &filetype == "vim"
@@ -817,7 +825,7 @@ function! My_goto_error(error)
         else
             let l:cmd = '-cursor-pos=' . a:error
         endif
-        execute 'Denite -resume -immediately ' . l:cmd
+        execute 'silent Denite -resume -immediately ' . l:cmd
         return
     endif
 
