@@ -228,6 +228,7 @@ autocmd BufEnter *.lds,*.lds.S,*.lds.h setlocal filetype=ld
 autocmd BufEnter .spacemacs setlocal filetype=lisp
 autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
+autocmd BufEnter *.gv setlocal filetype=dot
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 " autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
