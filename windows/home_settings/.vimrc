@@ -911,6 +911,31 @@ function! My_edit_vimrc()
     \ . l:file . '")'
 endfunction
 
+function! My_rtags_preprocess()
+    function! s:My_rtags_preprocess_file_handler(result)
+        let l:preprocessed_file = '/tmp/vim_rtags_preprocessed.i'
+        let l:formatted_file = '/tmp/vim_rtags_preprocessed_formatted.i'
+        execute 'vnew ' . l:preprocessed_file
+        normal ggdG
+        call append(0, a:result)
+        silent execute 'wq'
+        silent execute '!beautify_file.sh < ' . l:preprocessed_file . ' > ' .
+                \ l:formatted_file
+        execute 'vsplit ' . l:formatted_file
+    endfunction
+    call rtags#ExecuteThen({'-E' : expand("%:p")},
+                \ [function('s:My_rtags_preprocess_file_handler')])
+    " Original code:
+    "
+    " function! rtags#PreprocessFileHandler(result)
+    "     vnew
+    "     call append(0, a:result)
+    " endfunction
+    " function! rtags#PreprocessFile()
+    "     call rtags#ExecuteThen({ '-E' : expand("%:p") }, [function('rtags#PreprocessFileHandler')])
+    " endfunction
+endfunction
+
 " To insert echo (for Makefile) use the following macro:
 " let @E = 'i	@echo "|$()|"hhi'
 
@@ -1069,6 +1094,7 @@ let g:which_key_map.r = { 'name' : '+rtags',
 \   'b' : [':call rtags#JumpBack()', 'JumpBack'],
 \   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
 \   'd' : [':call rtags#Diagnostics()', 'Diagnostics'],
+\   'e' : [':call My_rtags_preprocess()', 'Preprocess'],
 \   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
 \   'h' : [':call rtags#ShowHierarchy()', 'ShowHierarchy'],
 \   'i' : [':call rtags#SymbolInfo()', 'SymbolInfo'],
