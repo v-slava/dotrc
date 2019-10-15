@@ -390,7 +390,8 @@ nnoremap ,d :clone?<CR>
 
 " :mark mark /full/directory/path [filename]
 mark h ~/my
-mark b ~/bin
+mark b $DOTRC/bin
+mark B $DOTRC_S/bin
 mark d ~/downloads
 mark t ~/temporary
 mark T /tmp

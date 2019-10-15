@@ -1,0 +1,20 @@
+digraph YOUR_GRAPH_NAME {
+    label = "Legend:
+green: functions which do thing #1
+black: functions which do thing #2
+"
+
+    // this is single-line comment
+    /* this is multiline comment */
+    vertex_1 [color = green, style = dotted, label = "green vertex 1"]
+    vertex_1 -> vertex_2; vertex_2 -> vertex_1
+    a -> vertex_1 [label = "this is edge's name / text"]
+
+    subgraph cluster_YOUR_SUBGRAPH_NAME {
+        label = "some_function()"
+        some_unknown_code_1 [label = "..."]
+        some_unknown_code_2 [label = "..."]
+        func_1 [label = "func1()"]
+        some_unknown_code_1 -> func_1 -> some_unknown_code_2
+    }
+}
