@@ -197,7 +197,7 @@ grep -r $'\r'
 nm --print-size --size-sort file.elf
 
 # Find symbol in directory with libraries / object files:
-find DIR -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
+find -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
 
 # Display symbols, exported by a shared library (even stripped one):
 nm -D /path/to/libSOMETHING.so
@@ -305,6 +305,9 @@ xprop
 gcc -dumpmachine
 gcc -v | grep arch
 gcc -Q --help=target | grep arch
+
+# Preprocess random (not C file):
+gcc -C -E -P -x c-header -o OUT IN
 
 # Preprocess source file for further compilation:
 gcc FILE.c -o FILE.i -E -P -dN
@@ -2597,9 +2600,6 @@ down
 # frame $(CURRENT_FRAME_NUMBER+1)
 up
 
-# gdb: set environment variable:
-set env VAR_NAME = VALUE
-
 # gdb: print the full value of a C-string:
 set print element 0
 
@@ -2609,13 +2609,6 @@ p *argv@argc
 # gdb print (echo) string:
 echo "some text\n"
 printf "my int value = %d\n", my_value
-
-# gdb: automatically execute some commands when breakpoint is hit:
-b some_location.cpp:23
-commands
-p some_value
-c
-end
 
 # gdb: disable "Type <return> to continue, or q <return to quit---":
 set pagination off
@@ -2703,8 +2696,10 @@ set breakpoint pending on
 
 # gdb: save value in gdb variable:
 set $var_name = expression
-# gdb: overwrite variable in program:
-set var_name = expression
+# gdb: overwrite (set) variable in program:
+set variable var_name = expression
+# gdb: set environment variable:
+set env VAR_NAME = VALUE
 
 # gdb: step out of a function:
 finish

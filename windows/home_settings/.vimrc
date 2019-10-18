@@ -289,8 +289,9 @@ autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . " && java -cp /tmp " . expand("%:t:r") | endif
 
 autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | silent !if pgrep -x xdot > /dev/null ; then true ; else"
-    \ ." xdot " . expand("%:p") . " & fi" | endif
+    \ "silent wa | silent !gcc -C -E -P -x c-header -o /tmp/" . expand("%:t")
+    \ . " " . expand("%:p") . " && if pgrep -x xdot > /dev/null ; then true ; "
+    \ . "else xdot /tmp/" . expand("%:t") . " & fi" | endif
 
 function! My_is_linux_kernel_source_file(full_path)
     let l:idx_linux = stridx(a:full_path, "linux")
