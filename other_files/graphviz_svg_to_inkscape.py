@@ -1,45 +1,49 @@
 #!/usr/bin/python3
 
+# EVAL REGION BEGINS HERE: |# |
+# let g:My_eval_var = "silent wa | MyRunShellCmd graphviz_svg_to_inkscape.py < /home/slava/my/src.dot.svg 1>/home/slava/my/out.svg"
+# EVAL REGION ENDS HERE.
+
 from xml.dom import minidom
 import sys
 
 # read input svg file from stdin (this is output from Graphviz):
-graphvizSVGFile = minidom.parse(sys.stdin)
+xml_root = minidom.parse(sys.stdin)
 
-# 2. For each node, get id and title.
-nodeTitles = {}
-for s in graphvizSVGFile.getElementsByTagName('g'):
-    if s.attributes['id'].value[:4] == "node":
-        nodeTitles[s.getElementsByTagName('title')[0].firstChild.data] = s.attributes['id'].nodeValue
-
-# 3. For each arc, parse the title, and match the corresponding ids of the nodes, add the ids to the arc,
-edgeTitles = {}
-for s in graphvizSVGFile.getElementsByTagName('g'):
-    if s.attributes['id'].value[:4] == "edge":
-        edgeTitle = s.getElementsByTagName('title')[0].firstChild.data
-        edgeTitles [s.attributes['id'].nodeValue] = edgeTitle.split("->")
-
-# 4. Add connector elements to Graphviz.svg.
-# For each arc, delete the GraphViz arrow marker,
-for s in graphvizSVGFile.getElementsByTagName('g'):
-    if s.attributes['id'].value[:4] == "edge":
+nodes = {}
+edges = {}
+for s in xml_root.getElementsByTagName('g'):
+    # val4 = s.attributes['id'].value[:4]
+    class_val = s.attributes['class'].value
+    title = lambda el: el.getElementsByTagName('title')[0].firstChild.data
+    node_value = lambda el: el.attributes['id'].nodeValue
+    if class_val == "graph":
+        graph = s
+    elif class_val == "node":
+        nodes[title(s)] = node_value(s)
+    elif class_val == "edge":
+        edges[node_value(s)] = title(s).split("->")
         # Remove child "polygon", which is the GraphViz arrow marker.
         for thing in s.childNodes:
             if thing.nodeType == s.ELEMENT_NODE and thing.tagName == "polygon":
                 s.removeChild(thing)
                 break
 
-# 5. To each edge path, add an Inkscape arrow marker in the attributes.
-for s in graphvizSVGFile.getElementsByTagName('g'):
-    if s.attributes['id'].value[:4] == "edge":
+# To each edge path, add an Inkscape arrow marker in the attributes.
+# For each edge move edge path to graph level and delete the edge.
+for s in xml_root.getElementsByTagName('g'):
+    if s.attributes['class'].value == "edge":
         for thing in s.childNodes:
             if thing.nodeType == s.ELEMENT_NODE and thing.tagName == "path":
                 thing.setAttribute("inkscape:connector-type", "polyline")
                 thing.setAttribute("inkscape:connector-curvature", "3")
-                nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][0]]
-                thing.setAttribute("inkscape:connection-start", "#" + nodeID)
-                nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][1]]
-                thing.setAttribute("inkscape:connection-end", "#" + nodeID)
+                edge_id = edges[s.attributes['id'].value]
+                thing.setAttribute("inkscape:connection-start", "#" + nodes[edge_id[0]])
+                thing.setAttribute("inkscape:connection-end", "#" + nodes[edge_id[1]])
+                graph.appendChild(thing)
+        graph.removeChild(s)
 
-# 6. Output should have draggable nodes in Inkscape, after ungrouping as needed.
-graphvizSVGFile.writexml(sys.stdout)
+for s in xml_root.getElementsByTagName('svg'):
+    s.setAttribute("xmlns:inkscape", "http://www.inkscape.org/namespaces/inkscape")
+
+xml_root.writexml(sys.stdout)

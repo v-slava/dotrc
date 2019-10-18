@@ -1,14 +1,36 @@
-digraph YOUR_GRAPH_NAME {
-    label = "Legend:
-green: functions which do thing #1
-black: functions which do thing #2
+digraph YOUR_DIRECTED_GRAPH_NAME {
+    label = "Legend:\n\
+green: functions which do thing #1\n\
+black: functions which do thing #2\n\
 "
+    {w x} -> {y z} // w is connected to y and z, x is connected to y and z
 
     // this is single-line comment
     /* this is multiline comment */
     vertex_1 [color = green, style = dotted, label = "green vertex 1"]
-    vertex_1 -> vertex_2; vertex_2 -> vertex_1
-    a -> vertex_1 [label = "this is edge's name / text"]
+    vertex_1 -> vertex_2; vertex_2 -> vertex_1 [style = "bold, dashed"]
+
+    // web links are not supported in pdf, but supported in svg. Open svg file
+    // in google chrome, use shift + left mouse button to navigate (scrolling).
+    a [label = "web link: graphviz shapes", shape = diamond, fontcolor = blue
+        href = "https://www.graphviz.org/doc/info/shapes.html"]
+    /* a [shape = box] */
+    /* a [shape = plaintext] */
+    /* a [shape = circle] */
+
+    a -> vertex_1 [style = dashed, arrowhead = none, penwidth = 5, label =
+        "this is edge's name / text", fontcolor = brown]
+
+    some_invisible_vertex_name [label=<
+        <table border="1" height="450">
+            <tr>
+                <td align="right" balign="left" width="200" valign="bottom"
+                    color="red" height="200" tooltip="some tooltip"
+                    href="https://www.graphviz.org/doc/info/shapes.html"
+                    fixedsize="true">Node<br/>more  name</td>
+            </tr>
+        </table>
+    >]
 
     subgraph cluster_YOUR_SUBGRAPH_NAME {
         label = "some_function()"
@@ -18,3 +40,9 @@ black: functions which do thing #2
         some_unknown_code_1 -> func_1 -> some_unknown_code_2
     }
 }
+
+/*
+Graph YOUR_NOT_DIRECTED_GRAPH_NAME {
+    node1 -- node2
+}
+*/

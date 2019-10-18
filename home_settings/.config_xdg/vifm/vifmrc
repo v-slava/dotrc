@@ -181,8 +181,8 @@ filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2
 " 	\ avprobe -pretty %c 2>&1
 
 " Web
-filextype *.html,*.htm
-	\ google-chrome %f &,
+filextype *.html,*.htm,*.svg
+	\ google-chrome %f 2>/dev/null &,
 	\ vimb %f %i &,
 	\ dwb %f %i &,
 	\ uzbl-browser %f %i &,
@@ -197,7 +197,7 @@ filextype *.html,*.htm
 " fileviewer *.[1-8] gtbl %c | groff -Tascii -man | col -b
 
 " Image
-filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.tif,*.svg
+filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.tif
 	\ $DOTRC/other_files/view_image.sh %c,
 	\ gliv %f,
 	\ sxiv %f,
