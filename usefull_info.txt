@@ -12,6 +12,14 @@ grip -b readme.md
 # debug vim plugins:
 vim -V9log_file.txt [your_vim_args]
 
+# graphviz (xdot, dot):
+# See also python "blockdiag" module
+# See also python bindings for graphviz:
+# graphviz, pygraphviz, pydot
+# python bindings comparison: https://stackoverflow.com/a/37893606
+# gvpr: graphviz preprocessor
+# foliant: allows to embed graphviz into markdown
+
 # some yocto commands (tags: bitbake):
 devtool status
 devtool modify busybox
@@ -310,7 +318,8 @@ gcc -v | grep arch
 gcc -Q --help=target | grep arch
 
 # Preprocess random (not C file):
-gcc -C -E -P -x c-header -o OUT IN
+gcc -E -P -C -x c-header -o OUT IN
+# See also: m4, gpp, filepp, gema, dpp, pp
 
 # Preprocess source file for further compilation:
 gcc FILE.c -o FILE.i -E -P -dN
