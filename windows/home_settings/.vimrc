@@ -756,10 +756,11 @@ function! My_eval_vim()
     try
         let l:lines_range = My_get_eval_first_last_lines()
         let l:prefix = My_get_prefix(l:lines_range[0])
-        let l:pattern = '\s*' . escape(l:prefix, '*')
+        let l:pattern = '^\s*' . escape(l:prefix, '*')
         let l:full_lines_list = getbufline('%', l:lines_range[0],
                     \ l:lines_range[1])
         let l:lines_list = []
+        let l:cur_line = ''
         for l:line in l:full_lines_list
             " strip filetype comments:
             let l:prefix_len = strlen(matchstr(l:line, l:pattern))
@@ -767,12 +768,24 @@ function! My_eval_vim()
                 let l:line = strpart(l:line, l:prefix_len)
             endif
             " ignore vim comments:
-            let l:idx = match(l:line, '\s*" ')
+            let l:idx = match(l:line, '^\s*" ')
             if l:idx != -1
                 continue
             endif
-            let l:lines_list = add(l:lines_list, l:line)
+            " check if it is a continuation of previous line:
+            let l:prefix_len = strlen(matchstr(l:line, '^\s*\\'))
+            if l:prefix_len != 0
+                " yes, it is a continuation of previous line
+                let l:cur_line = l:cur_line . strpart(l:line, l:prefix_len)
+                continue
+            endif
+            " no, it is not a continuation of previous line
+            if strlen(l:cur_line) != 0
+                let l:lines_list = add(l:lines_list, l:cur_line)
+            endif
+            let l:cur_line = l:line
         endfor
+        let l:lines_list = add(l:lines_list, l:cur_line)
         let l:text = join(l:lines_list, "\n")
     catch
         echo v:exception
