@@ -10,6 +10,10 @@
 " You can use <C-o>q to finish recording while in insert mode.
 " <C-o> in insert mode allows you to execute one command in
 " normal mode, and then returns to insert mode (see :help i^O).
+" Insert (save, store, append) vimscript macro "a":
+" call append('.', @a)
+" To insert echo (for Makefile) use the following macro:
+" let @E = 'i	@echo "|$()|"hhi'
 
 " Resize vim window:
 " :[vertical] resize {+|-}<NUMBER><CR>
@@ -105,9 +109,11 @@ endif
 
 if globpath(&runtimepath, "autoload/denite.vim") != ""
     " Use ripgrep:
-    call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+    call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob',
+                \ '!.git'])
     call denite#custom#var('grep', 'command', ['rg'])
-    call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep', '--no-heading'])
+    call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep',
+                \ '--no-heading'])
     call denite#custom#var('grep', 'recursive_opts', [])
     call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
     call denite#custom#var('grep', 'separator', ['--'])
@@ -157,7 +163,7 @@ else
 endif
 
 set colorcolumn=81
-" Highlight spaces and tabs in the end of the line as errors (trailing whitespaces):
+" Highlight spaces and tabs in the end of the line (trailing whitespaces):
 match Error /\s\+$/
 
 syntax on
@@ -187,7 +193,7 @@ set diffopt+=vertical " need for "fugitive-:Gdiff"
 " set columns=83
 " set langmenu=ru_RU.UTF-8
 
-" Set maximum number of tab pages to be opened by the "-p" command line argument:
+" Set maximum number of tab pages to be opened with "-p" command line argument:
 set tabpagemax=100
 
 " Display symbol '»' as a first symbol for tab:
@@ -250,6 +256,7 @@ function! My_apply_tab_settings()
     endif
     if My_is_linux_kernel_source_file(expand("%:p"))
         setlocal tabstop=8
+        setlocal shiftwidth=8
     else
         setlocal tabstop=4
     endif
@@ -262,6 +269,9 @@ endfunction
 autocmd FileType c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php
             \ setlocal textwidth=80 | setlocal formatoptions+=t
 " setlocal cindent | setlocal noautoindent | setlocal expandtab
+
+autocmd FileType unknown if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "echo 'using dummy g:My_eval_var value'" | endif
 
 autocmd FileType vim if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "execute 'call ' . My_vimscript_function_eval() . '()'" | endif
@@ -300,7 +310,8 @@ function! My_is_linux_kernel_source_file(full_path)
     endif
     let l:idx_slash = stridx(a:full_path, "/", l:idx_linux)
     let l:linux_root_dir = strpart(a:full_path, 0, l:idx_slash) . "/"
-    let l:subdirs = ['arch', 'crypto', 'drivers', 'fs', 'init', 'ipc', 'kernel', 'mm', 'net', 'security', 'sound']
+    let l:subdirs = ['arch', 'crypto', 'drivers', 'fs', 'init', 'ipc', 'kernel',
+                \ 'mm', 'net', 'security', 'sound']
     for l:subdir in l:subdirs
         if ! isdirectory(l:linux_root_dir . l:subdir)
             return 0
@@ -351,7 +362,8 @@ function! My_grep_recursive()
     endif
 endfunction
 
-let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_') . '.err'
+let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_')
+            \ . '.err'
 
 function! My_run_shell_cmd(cmd)
     silent! execute 'noautocmd silent botright pedit ' . g:My_vim_errors_file
@@ -360,7 +372,8 @@ function! My_run_shell_cmd(cmd)
     setlocal filetype=my_shell_cmd_output
     set noreadonly
     normal ggdG
-    " exe 'noautocmd r! $DOTRC/other_files/vifm_run_command.sh ' . a:cmd . ' 2>&1'
+    " exe 'noautocmd r! $DOTRC/other_files/vifm_run_command.sh ' . a:cmd
+    " \ . ' 2>&1'
     " AnsiEsc
     execute 'noautocmd silent r!
 \ echo "Command: ' . a:cmd . ' Command output:" &&
@@ -454,7 +467,8 @@ function! My_insert_snippet()
         if l:ext == 'h' || l:ext == 'hpp'
             let l:file_name = expand('%:t')
             let l:guard_name = tr(toupper(l:file_name), '.', '_')
-            call append(0, ['#ifndef ' . l:guard_name, '#define ' . l:guard_name])
+            call append(0, ['#ifndef ' . l:guard_name, '#define '
+                        \ . l:guard_name])
             call append(line('$'), ['', '#endif // #ifndef ' . l:guard_name])
         else
             call append(0, [
@@ -529,7 +543,8 @@ function! My_window_is_temporary()
     let l:len_expected = strlen(l:last_part_expected)
     let l:len_actual = strlen(l:file_name)
     if l:len_actual > l:len_expected
-        let l:last_part_actual = strpart(l:file_name, l:len_actual - l:len_expected)
+        let l:diff = l:len_actual - l:len_expected
+        let l:last_part_actual = strpart(l:file_name, l:diff)
         if l:last_part_actual == l:last_part_expected
             return 1
         endif
@@ -562,7 +577,8 @@ function! My_modify_line(text_to_prepend, start_column, text_to_append)
     " Delete text ending if necessary:
     let l:cur_line_len = strlen(l:cur_line)
     let l:append_text_len = strlen(a:text_to_append)
-    let l:cur_line_ending = strpart(l:cur_line, l:cur_line_len - l:append_text_len)
+    let l:diff = l:cur_line_len - l:append_text_len
+    let l:cur_line_ending = strpart(l:cur_line, l:diff)
     if l:cur_line_ending == a:text_to_append
         " Need to delete text ending
         let l:cur_line = substitute(l:cur_line, " *" . a:text_to_append, "", "")
@@ -591,15 +607,8 @@ endfunction
 command! -nargs=1 MyViewInNewBuffer call My_view_in_new_buffer(<f-args>)
 " Usage example: :MyViewInNewBuffer :map<CR> (show mappings in buffer).
 
-function! My_copy_location(in_file, strip_part)
-    let l:line_number = line('.')
-    let l:full_location = a:in_file . ':' . l:line_number
-    let l:strip_width = strlen(a:strip_part)
-    if strip_width
-        let @+ = strpart(l:full_location, l:strip_width)
-    else
-        let @+ = l:full_location
-    endif
+function! My_copy_location()
+    let @+ = expand('%:p') . ':' . line('.')
     echo 'copied: ' . @+
 endfunction
 
@@ -662,7 +671,8 @@ endif
 " endif
 
 " autocmd TermClose * bd! " do not show 'Process exited ' message
-" sp | wincmd j | e term://f s | set norelativenumber | set nonumber | startinsert
+" sp | wincmd j | e term://f s | set norelativenumber | set nonumber
+" \ | startinsert
 
 function! My_get_file_name_under_cursor(line)
     let l:last_file_char = stridx(a:line, " ", 1)
@@ -729,7 +739,8 @@ function! My_get_region_lines(start, end)
 endfunction
 
 function! My_get_eval_first_last_lines()
-    let l:lines_range = My_get_region_lines('EVAL REGION BEGINS HERE: |', 'EVAL REGION ENDS HERE.')
+    let l:lines_range = My_get_region_lines('EVAL REGION BEGINS HERE: |',
+                \ 'EVAL REGION ENDS HERE.')
     return [l:lines_range[0] + 1, l:lines_range[1] - 1]
 endfunction
 
@@ -745,7 +756,8 @@ function! My_eval_vim()
         let l:lines_range = My_get_eval_first_last_lines()
         let l:prefix = My_get_prefix(l:lines_range[0])
         let l:pattern = '\s*' . escape(l:prefix, '*')
-        let l:full_lines_list = getbufline('%', l:lines_range[0], l:lines_range[1])
+        let l:full_lines_list = getbufline('%', l:lines_range[0],
+                    \ l:lines_range[1])
         let l:lines_list = []
         for l:line in l:full_lines_list
             " strip filetype comments:
@@ -770,26 +782,46 @@ function! My_eval_vim()
 endfunction
 
 function! My_insert_eval_region(text)
-    let l:formatoptions = &formatoptions
-    set formatoptions-=t
-    set formatoptions-=c
-    let l:text_prefix = ''
+    let l:has_shebang = 0
     if &filetype == "c" || &filetype == "cpp" || &filetype == "java"
-        normal O/* EVAL REGION BEGINS HERE: |* |EVAL REGION ENDS HERE. */2k
-        let l:text_prefix = ' '
+        let l:cmd = 'i/* EVAL REGION BEGINS HERE: |* |' . a:text
+                    \ . 'EVAL REGION ENDS HERE. */k0'
     elseif &filetype == "dot"
-        normal O/* EVAL REGION BEGINS HERE: |* |** EVAL REGION ENDS HERE. */2k
-        let l:text_prefix = ' '
+        let l:cmd = 'i/* EVAL REGION BEGINS HERE: |* | * ' . a:text
+                    \ . '* EVAL REGION ENDS HERE. */k0'
     elseif &filetype == "sh" || &filetype == "python"
-        normal O# EVAL REGION BEGINS HERE: |# |# # EVAL REGION ENDS HERE.2k
+        let l:has_shebang = 1
+        let l:cmd = 'i# EVAL REGION BEGINS HERE: |# |# ' . a:text
+                    \ . '# EVAL REGION ENDS HERE.k'
     elseif &filetype == "vim"
-        normal O0C" EVAL REGION BEGINS HERE: |" |EVAL REGION ENDS HERE.0D2kA 
+        let l:cmd = 'i" EVAL REGION BEGINS HERE: |" |' . a:text
+                    \ . 'EVAL REGION ENDS HERE.k0'
     else
-        normal OEVAL REGION BEGINS HERE: ||EVAL REGION ENDS HERE.2k
+        let l:cmd = 'iEVAL REGION BEGINS HERE: ||' . a:text
+                    \ . 'EVAL REGION ENDS HERE.k0'
     endif
-    " call append(line('.'), l:text_prefix . a:text)
-    execute ':normal! A' . l:text_prefix . a:text
-    execute 'set formatoptions=' . l:formatoptions
+
+    let l:formatoptions = &formatoptions
+    setlocal formatoptions-=t
+    setlocal formatoptions-=c
+    let l:line = line('.')
+    if l:line == 1
+        if l:has_shebang
+            call append(l:line, ['', '', ''])
+            normal 2j
+        else
+            call append(0, ['', ''])
+            normal 2k
+        endif
+    elseif l:line == line('$')
+        call append(l:line, ['', ''])
+        normal 2j
+    else
+        call append(l:line - 1, ['', '', ''])
+        normal 2k
+    endif
+    execute ':normal! ' . l:cmd
+    execute 'setlocal formatoptions=' . l:formatoptions
     if a:text == ''
         startinsert!
     endif
@@ -933,12 +965,10 @@ function! My_rtags_preprocess()
     "     call append(0, a:result)
     " endfunction
     " function! rtags#PreprocessFile()
-    "     call rtags#ExecuteThen({ '-E' : expand("%:p") }, [function('rtags#PreprocessFileHandler')])
+    "     call rtags#ExecuteThen({ '-E' : expand("%:p") },
+    "                 \ [function('rtags#PreprocessFileHandler')])
     " endfunction
 endfunction
-
-" To insert echo (for Makefile) use the following macro:
-" let @E = 'i	@echo "|$()|"hhi'
 
 " Fugitive (git):
 " :copen - open quickfix window
@@ -948,7 +978,8 @@ endfunction
 " <c-n> to go to next file, <c-p> to go to previous file.
 " <Enter> to open current file in window below.
 " ca    :Gcommit --amend
-" nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR> " diff next file
+" diff next file:
+" nmap <Leader>gdn :q<CR>:q<CR>:exec ':Gdiff ' . g:Gdiff_arg<CR>
 " nmap <Leader>gw :Gwrite<CR><C-w>k
 " nmap <Leader>gr :Gread<CR>:w<CR><C-w>k<C-n>
 " nmap <Leader>ga <C-w>k-
@@ -991,9 +1022,8 @@ let g:which_key_map.b = { 'name' : '+buffers',
 \   'p' : [':bprevious', 'previous'],
 \ }
 
-" nmap <F11> :call My_copy_location( expand('%:p'), '/home/slava/workspace/project_root_dir/' )<CR>
 let g:which_key_map.c = { 'name' : '+compile/clipboard',
-\   'l' : [':call My_copy_location(expand("%:p"), "")', 'copy full location to clipboard'],
+\   'l' : [':call My_copy_location()', 'copy full location to clipboard'],
 \ }
 
 let g:which_key_map.d = {'name' : '+diff',
@@ -1003,14 +1033,16 @@ let g:which_key_map.d = {'name' : '+diff',
 \   'm' : [':MyModifyLine', 'modify line'],
 \   'q' : [':windo MyCloseWindowIfTemporary', 'close temporary windows'],
 \   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
-\   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide another one'],
+\   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide'
+\             . ' another one'],
 \   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
 \ }
 
 let g:which_key_map.e = {'name' : '+errors',
 \   'c' : [':call My_goto_error("current")', 'current error'],
 \   'l' : [':lopen', 'location list errors'],
-\   'm' : [':botright pedit ' . g:My_vim_errors_file . ' | set readonly', 'my list errors'],
+\   'm' : [':botright pedit ' . g:My_vim_errors_file . ' | set readonly',
+\             'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
 \   'p' : [':call My_goto_error("previous")', 'previous error'],
 \   'q' : [':copen', 'quickfix list errors'],
@@ -1037,7 +1069,8 @@ let g:which_key_map.g = {'name' : '+git',
 \     'h' : [':Gdiff HEAD', 'HEAD'],
 \     'i' : [':Gdiff', 'index'],
 \   },
-\   'e' : [':MyRunShellCmd git show --name-only --pretty= HEAD', 'show files in HEAD'],
+\   'e' : [':MyRunShellCmd git show --name-only --pretty= HEAD',
+\             'show files in HEAD'],
 \   's' : [':wa | Magit', 'status'],
 \   'u' : [':e', 'update (reload) buffer'],
 \ }
@@ -1071,8 +1104,10 @@ let g:which_key_map.l = { 'name' : '+location/layout/LSP',
 \   's' : [':SSave! __LAST__', 'layout save'],
 \ }
 
-" let g:LanguageClient_serverCommands = { 'c': ['clangd', '-compile-commands-dir=your_dir'], }
-" let g:LanguageClient_serverCommands = { 'c': ['/media/files/workspace/ccls/Release/ccls'], }
+" let g:LanguageClient_serverCommands = { 'c': ['clangd',
+"             \ '-compile-commands-dir=your_dir'], }
+" let g:LanguageClient_serverCommands = { 'c':
+"             \ ['/media/files/workspace/ccls/Release/ccls'], }
 " silent UpdateRemotePlugins
 " LanguageClientStart
 
@@ -1086,26 +1121,37 @@ let g:which_key_map.o = { 'name' : '+other',
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
-\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()', 'FindSuperClasses'],
-\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()', 'FindRefsCallTree'],
-\   'J' : [':call rtags#JumpTo(g:SAME_WINDOW, { "--declaration-only" : "" })', 'JumpTo SAME_WINDOW --declaration-only'],
+\   'C' : [':let g:My_use_denite_errors = 0 | call rtags#FindSuperClasses()',
+\             'FindSuperClasses'],
+\   'F' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsCallTree()',
+\             'FindRefsCallTree'],
+\   'J' : [':call rtags#JumpTo(g:SAME_WINDOW, { "--declaration-only" : "" })',
+\             'JumpTo SAME_WINDOW --declaration-only'],
 \   'S' : [':call rtags#JumpTo(g:H_SPLIT)', 'JumpTo H_SPLIT'],
 \   'T' : [':call rtags#JumpTo(g:NEW_TAB)', 'JumpTo NEW_TAB'],
 \   'V' : [':call rtags#JumpTo(g:V_SPLIT)', 'JumpTo V_SPLIT'],
 \   'b' : [':call rtags#JumpBack()', 'JumpBack'],
-\   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()', 'FindSubClasses'],
+\   'c' : [':let g:My_use_denite_errors = 0 | call rtags#FindSubClasses()',
+\             'FindSubClasses'],
 \   'd' : [':call rtags#Diagnostics()', 'Diagnostics'],
 \   'e' : [':call My_rtags_preprocess()', 'Preprocess'],
-\   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()', 'FindRefs'],
+\   'f' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefs()',
+\             'FindRefs'],
 \   'h' : [':call rtags#ShowHierarchy()', 'ShowHierarchy'],
 \   'i' : [':call rtags#SymbolInfo()', 'SymbolInfo'],
 \   'j' : [':call rtags#JumpTo(g:SAME_WINDOW)', 'JumpTo SAME_WINDOW'],
-\   'l' : [':let g:My_use_denite_errors = 0 | call rtags#ProjectList()', 'ProjectList'],
-\   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindRefsByName'],
+\   'l' : [':let g:My_use_denite_errors = 0 | call rtags#ProjectList()',
+\             'ProjectList'],
+\   'n' : [':let g:My_use_denite_errors = 0 | call rtags#FindRefsByName'
+\          . '(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))',
+\             'FindRefsByName'],
 \   'p' : [':call rtags#JumpToParent()', 'JumpToParent'],
 \   'r' : [':call rtags#ReindexFile()', 'ReindexFile'],
-\   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))', 'FindSymbols'],
-\   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()', 'FindVirtuals'],
+\   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols'
+\          . '(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))',
+\             'FindSymbols'],
+\   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()',
+\             'FindVirtuals'],
 \   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],
 \ }
 

@@ -106,6 +106,9 @@ colordiff -uN "$@"
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
+# remote desktop / RDP client:
+remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
+
 # transmission disable password:
 in /etc/transmission-daemon/settings.json set:
 "rpc-authentication-required": false,
