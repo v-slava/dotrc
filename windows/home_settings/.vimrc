@@ -989,6 +989,22 @@ function! My_rtags_preprocess()
     " endfunction
 endfunction
 
+function! My_call_graph_paste_location()
+    let l:clipboard = @+
+    let l:colon_idx = stridx(l:clipboard, ':')
+    let l:line_num = strpart(l:clipboard, l:colon_idx + 1)
+    let l:file_path = strpart(l:clipboard, 0, l:colon_idx)
+    let l:file_path = system("realpath '" . l:file_path . "'")[:-2]
+    let l:file_dir = system("dirname '" . l:file_path . "'")[:-2]
+    let l:cmd = "git -C '" . l:file_dir . "' rev-parse --show-toplevel"
+    let l:git_root_dir = system(l:cmd)[:-2]
+    let l:prefix_len = strlen(l:git_root_dir)
+    let l:file = strpart(l:file_path, l:prefix_len + 1)
+    let l:str = '"' . l:file . '", ' . l:line_num . ')'
+    call append(line('.'), l:str)
+    normal 0f,2lDJ0
+endfunction
+
 " Fugitive (git):
 " :copen - open quickfix window
 " In status window use:
@@ -1112,6 +1128,7 @@ let g:which_key_map.j = { 'name' : '+jump',
 \ }
 
 let g:which_key_map.l = { 'name' : '+location/layout/LSP',
+\   'c' : [':call My_call_graph_paste_location()', 'call graph paste location'],
 \   'd' : [':call LanguageClient_textDocument_definition()',
 \          'LSP jump to definition'],
 \   'h' : [':call LanguageClient_textDocument_hover()', 'LSP hower'],

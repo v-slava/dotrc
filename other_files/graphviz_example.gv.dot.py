@@ -82,9 +82,9 @@ def construct_graph():
     g.call('__main__', 'import_module', label = 'some call')
     g.calls([('a', 'b'), ('b', 'c'), ('a', 'c')])
     # g.subgraph(g)
-    with g.subgraph(name='cluster_0') as sg:
-        sg.attr(label='process #1')
-        sg.attr(style='filled', color='grey')
+    with g.subgraph(name = 'cluster_0') as sg:
+        sg.attr(label = 'process #1')
+        sg.attr(style = 'filled', color = 'grey')
         sg.node_attr.update(style = 'filled', color = 'lightgrey')
         sg.edges([('a0', 'a1'), ('a1', 'a2'), ('a2', 'a3')])
     return g
