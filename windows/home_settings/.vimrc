@@ -366,8 +366,9 @@ endfunction
 let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_')
             \ . '.err'
 
-function! My_run_shell_cmd(cmd)
+function! My_run_shell_cmd(no_open_window_on_success, cmd)
     silent! execute 'noautocmd silent botright pedit ' . g:My_vim_errors_file
+    " jump to previous window:
     noautocmd wincmd P
     " set buftype=nofile
     setlocal filetype=my_shell_cmd_output
@@ -395,12 +396,16 @@ function! My_run_shell_cmd(cmd)
     let g:My_use_denite_errors = 0
     wincmd p
     if v:shell_error == 0
+        if a:no_open_window_on_success
+            pclose
+        endif
         echo "Command succeeded (exit code = 0)"
     else
         echo "Command failed (exit code = " . v:shell_error . ")"
     endif
 endfunction
-command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd('<args>')
+command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd(0, '<args>')
+command! -nargs=1 MyRunShellCmdNoOpen :call My_run_shell_cmd(1, '<args>')
 
 function! My_is_lq_list()
     exec 'redir @x | silent ls | redir END'
