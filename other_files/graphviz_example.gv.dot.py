@@ -66,6 +66,15 @@ class CallGraph(graphviz.Digraph):
         self.__func(name, name + '()', file, line, **attrs)
     def noret_func(self, name, file, line, **attrs):
         self.__func(name, '__noreturn ' + name + '()', file, line, **attrs)
+    def __unique(self, label, **attrs):
+        if not hasattr(self, 'index'):
+            self.index = 0
+        self.index += 1
+        name = '___CG_unique_name___' + str(self.index)
+        self.node(name, label, **attrs)
+        return name
+    def unknown(self, **attrs):
+        return self.__unique('...', *attrs)
     def call(self, caller, callee, **attrs):
         self.edge(caller, callee, **attrs)
     def calls(self, calls):
@@ -80,6 +89,8 @@ def construct_graph():
             color = 'red')
     g.noret_func('__main__', 'other_files/interp_python/client.py', 18)
     g.call('__main__', 'import_module', label = 'some call')
+    unknown = g.unknown()
+    g.call(unknown, 'import_module')
     g.calls([('a', 'b'), ('b', 'c'), ('a', 'c')])
     # g.subgraph(g)
     with g.subgraph(name = 'cluster_0') as sg:
