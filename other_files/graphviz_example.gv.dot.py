@@ -79,6 +79,9 @@ class CallGraph(graphviz.Digraph):
         self.edge(caller, callee, **attrs)
     def calls(self, calls):
         self.edges(calls)
+    def seq_calls(self, calls, **attrs):
+        for caller, callee in zip(calls[:-1], calls[1:]):
+            self.edge(caller, callee, **attrs)
 
 def construct_graph():
     g = CallGraph(repo = 'https://github.com/v-slava/dotrc/blob/master',
@@ -97,7 +100,7 @@ def construct_graph():
         sg.attr(label = 'process #1')
         sg.attr(style = 'filled', color = 'grey')
         sg.node_attr.update(style = 'filled', color = 'lightgrey')
-        sg.edges([('a0', 'a1'), ('a1', 'a2'), ('a2', 'a3')])
+        sg.seq_calls(['a0', 'a1', 'a2', 'a3'])
     return g
 
 def main():
