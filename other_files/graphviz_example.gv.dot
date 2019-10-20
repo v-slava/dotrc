@@ -15,14 +15,6 @@
 // Rest can be preprocessed by CPP:
 // gcc -C -E -P -x c-header
 
-// python3-graphviz example:
-/* import graphviz as gv */
-/* g1 = gv.Graph() */
-/* g1.node('A') */
-/* g1.node('B') */
-/* g1.edge('A', 'B') */
-/* print(g1.source) */
-
 digraph YOUR_DIRECTED_GRAPH_NAME {
     label = "Legend:\n\
 green: functions which do thing #1\n\
