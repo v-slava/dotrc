@@ -1,3 +1,11 @@
+/* EVAL REGION BEGINS HERE: |* |
+ * let g:My_eval_var = "silent wa | silent !gpp.sh -o /tmp/graphviz_example.gv.dot /media/files/workspace/dotrc/other_files/graphviz_example.gv.dot && if pgrep -x xdot > /dev/null ; then true ; else xdot /tmp/graphviz_example.gv.dot & fi"
+ * EVAL REGION ENDS HERE. */
+
+/* EVAL REGION BEGINS HERE: |* |
+ * let g:My_eval_var = "silent wa | MyRunShellCmd gpp.sh " . expand("%:p")
+ * EVAL REGION ENDS HERE. */
+
 #define FEATURE_1
 
 // SRC() macro requires preprocessing by gpp:
