@@ -7,21 +7,22 @@
 
 # EVAL REGION BEGINS HERE: |# |
 # let g:My_eval_var = "silent wa | MyRunShellCmdNoOpen ./" . expand("%:t")
-# \ . " -f pdf -o /media/sf_virtualbox_shared/" . expand("%:t") . '.pdf'
+# \ . " -d all -f pdf -o /media/sf_virtualbox_shared/" . expand("%:t") . '.pdf'
 # EVAL REGION ENDS HERE.
 
 # EVAL REGION BEGINS HERE: |# |
 # let g:My_eval_var = "silent wa | MyRunShellCmdNoOpen ./" . expand("%:t")
-# \ . " -v xdot"
+# \ . " -d all -v xdot"
 # EVAL REGION ENDS HERE.
 
 # EVAL REGION BEGINS HERE: |# |
 # let g:My_eval_var = "silent wa | MyRunShellCmdNoOpen ./" . expand("%:t")
-# \ . " -v"
+# \ . "-d all -v"
 # EVAL REGION ENDS HERE.
 
 # EVAL REGION BEGINS HERE: |# |
-# let g:My_eval_var = "silent wa | MyRunShellCmd ./" . expand("%:t") . " -f gv"
+# let g:My_eval_var = "silent wa | MyRunShellCmd ./" . expand("%:t")
+# \ . " -d all -f gv"
 # EVAL REGION ENDS HERE.
 
 # EVAL REGION BEGINS HERE: |# |
@@ -41,7 +42,18 @@ def parse_cmd_line_args():
             help = 'output format')
     parser.add_argument('-o', '--output-file', metavar = 'FILE',
             help = 'output file (if not specified => use stdout)')
+    details = ['feature_1', 'feature_2']
+    all_details = details + ['all']
+    details_help_str = 'list of details to show, possible values:'
+    for detail in all_details:
+        details_help_str += ' ' + detail
+    parser.add_argument('-d', '--details', metavar = 'FEATURE', nargs = '*',
+            choices = all_details, help = details_help_str)
     args =  parser.parse_args()
+    if not args.details:
+        args.details = []
+    elif 'all' in args.details:
+        args.details = details
     # print(args)
     if args.output_file and (not args.format):
         message = 'error: output file is specified but format is missing'
@@ -74,27 +86,32 @@ class CallGraph(graphviz.Digraph):
         self.node(name, label, **attrs)
         return name
     def unknown(self, **attrs):
-        return self.__unique('...', *attrs)
+        return self.__unique('...', **attrs)
     def call(self, caller, callee, **attrs):
         self.edge(caller, callee, **attrs)
+    def call_l(self, caller, callee, file, line, **attrs):
+        self.edge(caller, callee, href = self.__get_url(file, line), **attrs)
     def calls(self, calls):
         self.edges(calls)
     def seq_calls(self, calls, **attrs):
         for caller, callee in zip(calls[:-1], calls[1:]):
             self.edge(caller, callee, **attrs)
 
-def construct_graph():
+def construct_graph(details):
     g = CallGraph(repo = 'https://github.com/v-slava/dotrc/blob/master',
             filename = 'hello.gv',
             name = 'call graph')
     g.attr(label = 'Legend: black - good, red - bad')
     g.func('import_module', 'other_files/interp_python/client.py', 8,
             color = 'red')
-    g.noret_func('__main__', 'other_files/interp_python/client.py', 18)
+    g.noret_func('__main__', 'other_files/interp_python/client.py', 29)
     g.call('__main__', 'import_module', label = 'some call')
     unknown = g.unknown()
-    g.call(unknown, 'import_module')
-    g.calls([('a', 'b'), ('b', 'c'), ('a', 'c')])
+    if 'feature_1' in details:
+        g.call_l(unknown, 'import_module',
+                'other_files/interp_python/client.py', 18)
+    if 'feature_2' in details:
+        g.calls([('a', 'b'), ('b', 'c'), ('a', 'c')])
     # g.subgraph(g)
     with g.subgraph(name = 'cluster_0') as sg:
         sg.attr(label = 'process #1')
@@ -105,7 +122,7 @@ def construct_graph():
 
 def main():
     args = parse_cmd_line_args()
-    g = construct_graph()
+    g = construct_graph(args.details)
     if args.format:
         if args.format == 'gv':
             binary_output = False
