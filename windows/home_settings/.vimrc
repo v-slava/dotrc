@@ -299,10 +299,10 @@ autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . " && java -cp /tmp " . expand("%:t:r") | endif
 
 autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | silent !gpp.sh -o /tmp/" . expand("%:t")
-    \ . " ". expand("%:p") . " && if pgrep -x xdot > /dev/null ; then true ; "
-    \ . "else xdot /tmp/" . expand("%:t") . " & fi" | endif
+    \ "silent wa | silent !if pgrep -x xdot > /dev/null ; then true ; "
+    \ . "else xdot " . expand("%:p") . " & fi" | endif
     " "silent wa | silent !gcc -E -P -C -x c-header -o /tmp/" . expand("%:t")
+    " "silent wa | silent !gpp.sh -o /tmp/" . expand("%:t")
 
 function! My_is_linux_kernel_source_file(full_path)
     let l:idx_linux = stridx(a:full_path, "linux")
@@ -1000,9 +1000,10 @@ function! My_call_graph_paste_location()
     let l:git_root_dir = system(l:cmd)[:-2]
     let l:prefix_len = strlen(l:git_root_dir)
     let l:file = strpart(l:file_path, l:prefix_len + 1)
-    let l:str = '"' . l:file . '", ' . l:line_num . ')'
+    let l:str = "'" . l:file . "', " . l:line_num . ')'
     call append(line('.'), l:str)
-    normal 0f,2lDJ0
+    " normal $F,;2lDJ0
+    normal J0
 endfunction
 
 " Fugitive (git):

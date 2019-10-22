@@ -6,12 +6,12 @@
  * let g:My_eval_var = "silent wa | MyRunShellCmd gpp.sh " . expand("%:p")
  * EVAL REGION ENDS HERE. */
 
-#define FEATURE_1
+// #define FEATURE_1
 
 // SRC() macro requires preprocessing by gpp:
 // gpp -U "" "" "(" "," ")" "(" ")" "#" "" \
 //     -M "#\w" "\n" " " " " "\n" "" ""
-#define SRC "http://host3/repo4/#1:#2"
+// #define SRC "http://host3/repo4/#1:#2"
 // Rest can be preprocessed by CPP:
 // gcc -C -E -P -x c-header
 
@@ -22,13 +22,13 @@ black: functions which do thing #2\n\
 "
     {w x} -> {y z} // w is connected to y and z, x is connected to y and z
 
-#ifdef FEATURE_1
+// #ifdef FEATURE_1
     // this is single-line comment
     /* this is multiline comment */
-    vertex_1 [color = green, style = dotted, label = "green vertex 1",
-        href = SRC(dir1/dir2/file5.c,45)]
+    vertex_1 [color = green, style = dotted, label = "green vertex 1"]
+        // href = SRC(dir1/dir2/file5.c,45)]
     vertex_1 -> vertex_2; vertex_2 -> vertex_1 [style = "bold, dashed"]
-#endif
+// #endif
 
     // web links are not supported in pdf, but supported in svg. Open svg file
     // in google chrome, use shift + left mouse button to navigate (scrolling).

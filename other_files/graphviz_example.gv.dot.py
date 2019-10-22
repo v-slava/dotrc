@@ -72,21 +72,47 @@ class CallGraph(graphviz.Digraph):
         super(CallGraph, self).__init__(**args)
     def __get_url(self, file, line):
         return self.repo + file + '#L' + str(line)
-    def __func(self, name, label, file, line, **attrs):
-        self.node(name, label, href = self.__get_url(file, line), **attrs)
-    def func(self, name, file, line, **attrs):
-        self.__func(name, name + '()', file, line, **attrs)
-    def noret_func(self, name, file, line, **attrs):
-        self.__func(name, '__noreturn ' + name + '()', file, line, **attrs)
+    def func(self, name, file, line, force_name = None, args = None,
+            where = None, props = None, **attrs):
+        label = (force_name if force_name else name) + '('
+        if args:
+            label += args
+        label += ')'
+        if where:
+            label = label + ' in ' + where
+        color = None
+        if props:
+            if 'lock' in props and 'unlock' in props:
+                raise Exception('error: function cannot have both "lock" and'
+                        + ' "unlock" properties')
+            if 'noret' in props:
+                label = '__noreturn ' + label
+            if 'lock' in props:
+                color = 'green'
+            elif 'unlock' in props:
+                color = 'red'
+        if not 'label' in attrs:
+            attrs['label'] = label
+        if not 'color' in attrs and color != None:
+            attrs['color'] = color
+        self.node(name, href = self.__get_url(file, line), **attrs)
     def __unique(self, label, **attrs):
         if not hasattr(self, 'index'):
             self.index = 0
         self.index += 1
-        name = '___CG_unique_name___' + str(self.index)
+        name = '___CG_unique_name___' + self.name + '_' + str(self.index)
         self.node(name, label, **attrs)
         return name
     def unknown(self, **attrs):
         return self.__unique('...', **attrs)
+    def lock(self, **attrs):
+        url = self.__get_url('some/path/file.c', 13)
+        return self.__unique('lock()', color = 'green', href = url,
+                **attrs)
+    def unlock(self, **attrs):
+        url = self.__get_url('some/path/file.c', 18)
+        return self.__unique('unlock()', color = 'red', href = url,
+                **attrs)
     def call(self, caller, callee, **attrs):
         self.edge(caller, callee, **attrs)
     def call_l(self, caller, callee, file, line, **attrs):
@@ -99,12 +125,15 @@ class CallGraph(graphviz.Digraph):
 
 def construct_graph(details):
     g = CallGraph(repo = 'https://github.com/v-slava/dotrc/blob/master',
-            filename = 'hello.gv',
             name = 'call graph')
     g.attr(label = 'Legend: black - good, red - bad')
     g.func('import_module', 'other_files/interp_python/client.py', 8,
+            force_name = 'pointer->import_module', props = ['noret'],
             color = 'red')
-    g.noret_func('__main__', 'other_files/interp_python/client.py', 29)
+    g.func('exception_table', 'other_files/interp_python/client.py', 1,
+            label = 'exception table', props = 'lock')
+    g.func('__main__', 'other_files/interp_python/client.py', 29,
+            props = ['noret'])
     g.call('__main__', 'import_module', label = 'some call')
     unknown = g.unknown()
     if 'feature_1' in details:
