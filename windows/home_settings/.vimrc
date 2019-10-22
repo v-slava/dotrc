@@ -243,6 +243,9 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 autocmd FileType asm setlocal syntax=armasm
 
 " Tab settings:
+function! My_apply_tab_settings_s()
+    " redefine this function in $DOTRC_S/home_settings/.vimrc
+endfunction
 let g:detectindent_preferred_expandtab = 1
 let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
@@ -263,6 +266,7 @@ function! My_apply_tab_settings()
     if &filetype == "vim"
         setlocal shiftwidth=4
     endif
+    call My_apply_tab_settings_s()
 endfunction
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
@@ -1247,5 +1251,13 @@ if globpath(&runtimepath, "autoload/which_key.vim") != ""
 else
     call My_register_which_key(g:which_key_map, '')
 endif
+
+function! My_source_vimrc_s()
+    let l:file = $DOTRC_S . "/home_settings/.vimrc"
+    if filereadable(l:file)
+        execute 'source ' . l:file
+    endif
+endfunction
+call My_source_vimrc_s()
 
 " :help CTRL-W_ge
