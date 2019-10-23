@@ -27,6 +27,9 @@
 import sys
 import os
 import json
+import copy
+import select
+import tempfile
 
 def get_brightness():
     intel_backlight = '/sys/class/backlight/intel_backlight'
@@ -75,7 +78,16 @@ def read_line():
     except KeyboardInterrupt:
         sys.exit()
 
-if __name__ == '__main__':
+def update(j_stdin, stdin_prefix, fifo_line):
+    if not j_stdin:
+        return
+    j_full = copy.deepcopy(j_stdin)
+    if fifo_line:
+        j_full.insert(0, {'full_text' : fifo_line})
+    # echo back new encoded json
+    print_line(stdin_prefix + json.dumps(j_full))
+
+def main():
     # print(get_network_traffic())
     # import sys
     # sys.exit()
@@ -86,22 +98,53 @@ if __name__ == '__main__':
     # The second line contains the start of the infinite array.
     print_line(read_line())
 
-    while True:
-        line, prefix = read_line(), ''
-        # ignore comma at start of lines
-        if line.startswith(','):
-            line, prefix = line[1:], ','
+    fifo_path = os.path.join(tempfile.gettempdir(), 'i3_status_fifo')
+    if os.path.exists(fifo_path):
+        os.remove(fifo_path)
+    os.mkfifo(fifo_path)
+    # We use os.O_RDWR instead of os.O_RDONLY because we want to keep pipe open
+    # when writer closes it.
+    # Otherwise we will constantly get select.POLLHUP events.
+    fifo_fd = os.open(fifo_path, os.O_RDWR | os.O_NONBLOCK)
+    fifo = os.fdopen(fifo_fd, 'r')
+    stdin_fd = sys.stdin.fileno()
+    poller = select.poll()
+    poller.register(fifo_fd, select.POLLIN)
+    poller.register(stdin_fd, select.POLLIN)
+    stdin_is_open = True
 
-        j = json.loads(line)
+    j_stdin = None
+    stdin_prefix = None
+    fifo_line = None
+    while (stdin_is_open):
+        events = poller.poll()
+        for descriptor, event in events:
+            if descriptor == stdin_fd:
+                if event & select.POLLIN != 0:
+                    event &= ~select.POLLIN
+                    stdin_line, stdin_prefix = read_line(), ''
+                    # ignore comma at start of lines:
+                    if stdin_line.startswith(','):
+                        stdin_line, stdin_prefix = stdin_line[1:], ','
+                    j_stdin = json.loads(stdin_line)
+                    additional_data = [
+                        get_brightness(),
+                        # get_network_traffic(),
+                    ]
+                    for data in additional_data:
+                        if data:
+                            j_stdin.insert(0, {'full_text' : data})
+                    update(j_stdin, stdin_prefix, fifo_line)
+                if event & select.POLLHUP != 0:
+                    event &= ~select.POLLHUP
+                    stdin_is_open = False
+                assert(event == 0)
+            elif descriptor == fifo_fd:
+                if event & select.POLLIN != 0:
+                    event &= ~select.POLLIN
+                    fifo_line = fifo.readline()[:-1]
+                    update(j_stdin, stdin_prefix, fifo_line)
+                assert(event == 0)
 
-        additional_data = [
-            get_brightness(),
-            # get_network_traffic(),
-        ]
-        for data in additional_data:
-            if data:
-                j.insert(0, {'full_text' : data})
-
-        # and echo back new encoded json
-        print_line(prefix + json.dumps(j))
-
+if __name__ == '__main__':
+    main()

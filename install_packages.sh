@@ -63,6 +63,10 @@ apt-get install qemu-system-x86 qemu-kvm spice-client
 apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
 # keynav
 
+# Destop notifications (use notify-send to send a message):
+# apt-get install libnotify-bin dunst
+# notify-osd
+
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
 # apt-get install --install-recommends python-pip python3-pip

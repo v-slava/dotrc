@@ -130,7 +130,7 @@ workspace 9 output $OUTPUT_9
 # Start i3bar:
 bar {
 	# status_command exec i3status
-	status_command i3status | $DOTRC/other_files/i3status_wrapper.py
+	status_command i3status | $DOTRC/other_files/i3_status_wrapper.py
 	tray_output $OUTPUT_TRAY
 }
 
@@ -175,6 +175,7 @@ bindsym $Alt_L+r mode "resize"
 for_window [workspace="0"] layout tabbed
 for_window [title="Choose.*by pressing"] move to workspace 0
 for_window [title="background_window"] move to workspace 0
+for_window [title="FVP terminal_*"] move to workspace 0
 for_window [window_role="browser"] mark --replace browser
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen
@@ -261,6 +262,9 @@ exec --no-startup-id exec $START nm-applet
 # Start keyboard layout indicator/switcher:
 exec --no-startup-id exec $START $DOTRC/other_files/init_keyboard_layout.sh
 
+# Start desktop notification daemon:
+# exec --no-startup-id exec $START dunst
+
 # Switch en <--> de keyboard layout:
 bindsym $WIN+s exec --no-startup-id exec $START $DOTRC/other_files/switch_us_de_keyboard_layout.sh
 
@@ -333,6 +337,7 @@ bindsym $WIN+$Shift_L+l exec --no-startup-id exec $START $DOTRC/other_files/xran
 
 bindcode $PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --focused --border
+bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screenshot.sh --my-sleep 3 --focused --border
 bindsym $WIN+q exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --my-edit-image --focused --border
 
 # CapsLock (caps lock):
