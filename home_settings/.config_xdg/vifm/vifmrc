@@ -432,6 +432,7 @@ nnoremap ,c :write | execute system('exec echo :!$DOTRC/other_files/edit_config.
 nnoremap ,C :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc') | restart<CR>
 
 nnoremap ,v :!$DOTRC/other_files/edit_config.sh dotrc .vimrc<CR>
+nnoremap ,V :!$DOTRC/other_files/edit_config.sh dotrc_s .vimrc<CR>
 nnoremap ,b :!$DOTRC/other_files/edit_config.sh dotrc .bashrc<CR>
 nnoremap ,B :!$DOTRC/other_files/edit_config.sh dotrc_s .bashrc<CR>
 nnoremap ,i :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config && i3-msg reload 1>/dev/null<CR>
@@ -479,7 +480,7 @@ nnoremap rs :!$DOTRC/other_files/vifm_run_command.sh --pause "./%c"<CR>
 " nnoremap rm :execute system('exec echo :!$DOTRC/other_files/vifm_run_command.sh --pause \"make\"')<CR>
 " nnoremap rc :execute system('exec echo :!$DOTRC/other_files/vifm_run_command.sh --pause \"make clean\"')<CR>
 
-nmap V :!vim<SPACE>
+" nmap V :!vim<SPACE>
 nmap E :!e<SPACE>
 nmap cj :mkcd<SPACE>
 nmap cd :cd<SPACE>
