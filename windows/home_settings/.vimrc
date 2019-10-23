@@ -235,6 +235,8 @@ autocmd BufEnter .spacemacs setlocal filetype=lisp
 autocmd BufEnter *.gdb setlocal filetype=gdb " my filetype extension
 autocmd BufEnter *.cmm setlocal filetype=jtag_script " my filetype
 autocmd BufEnter *.gv setlocal filetype=dot
+autocmd BufEnter *.ds setlocal filetype=arm_ds_5_script " my filetype
+" note: originally for *.ds filetype was "datascript".
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 " autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
@@ -242,6 +244,7 @@ autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
 
 " Set correct syntax:
 autocmd FileType asm setlocal syntax=armasm
+autocmd FileType arm_ds_5_script setlocal syntax=gdb
 
 " Tab settings:
 function! My_apply_tab_settings_s()
@@ -634,6 +637,7 @@ function! My_configure_tcomment()
         call tcomment#type#Define('lisp', ';; %s')
         call tcomment#type#Define('make', '# %s')
         call tcomment#type#Define('gdb', '# %s')
+        call tcomment#type#Define('arm_ds_5_script', '# %s')
         call tcomment#type#Define('kconfig', '# %s')
         call tcomment#type#Define('sudoers', '# %s')
         call tcomment#type#Define('inittab', '# %s')
@@ -650,8 +654,6 @@ function! My_configure_tcomment()
         call tcomment#type#Define('xdefaults', '! %s')
         call tcomment#type#Define('xmodmap', '! %s')
         call tcomment#type#Define('vifm', '" %s')
-        " ARM DS 5 debug script:
-        call tcomment#type#Define('datascript', '# %s')
         let g:tcomment_mapleader1 = ''
         let g:tcomment_mapleader2 = ''
         let g:My_tcomment_configured = 1
