@@ -262,9 +262,6 @@ exec --no-startup-id exec $START nm-applet
 # Start keyboard layout indicator/switcher:
 exec --no-startup-id exec $START $DOTRC/other_files/init_keyboard_layout.sh
 
-# Start desktop notification daemon:
-# exec --no-startup-id exec $START dunst
-
 # Switch en <--> de keyboard layout:
 bindsym $WIN+s exec --no-startup-id exec $START $DOTRC/other_files/switch_us_de_keyboard_layout.sh
 
