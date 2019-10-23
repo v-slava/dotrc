@@ -38,8 +38,10 @@ if [ "$PRINT_FILE_PATH" = "true" ]; then
     echo "$FILE"
 fi
 if [ -n "$SLEEP" ]; then
-    notify "screenshot done!"
-    sleep 1
+    if [ "$EDIT_IMAGE" != "true" ]; then
+        notify "screenshot done!"
+        sleep 1
+    fi
     notify ""
 fi
 if [ "$EDIT_IMAGE" = "true" ]; then

@@ -238,6 +238,7 @@ autocmd BufEnter *.gv setlocal filetype=dot
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 " autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
+            \ | call My_configure_tcomment()
 
 " Set correct syntax:
 autocmd FileType asm setlocal syntax=armasm
@@ -625,33 +626,40 @@ endfunction
 " vim-commentary:
 autocmd FileType unknown setlocal commentstring=#\ %s
 
-if exists('loaded_tcomment')
-    call tcomment#type#Define('unknown', '# %s')
-    call tcomment#type#Define('lisp', ';; %s')
-    call tcomment#type#Define('make', '# %s')
-    call tcomment#type#Define('gdb', '# %s')
-    call tcomment#type#Define('kconfig', '# %s')
-    call tcomment#type#Define('sudoers', '# %s')
-    call tcomment#type#Define('inittab', '# %s')
-    call tcomment#type#Define('mplayerconf', '# %s')
-    call tcomment#type#Define('text', '# %s')
-    call tcomment#type#Define('toml', '# %s')
-    call tcomment#type#Define('ninja', '# %s')
-    call tcomment#type#Define('aptconf', '// %s')
-    call tcomment#type#Define('jtag_script', '; %s')
-    call tcomment#type#Define('claws_mail_menurc', '; %s')
-    call tcomment#type#Define('fusesmbconf', '; %s')
-    call tcomment#type#Define('asm', '/* %s */')
-    call tcomment#type#Define('texinfo', '@c %s')
-    call tcomment#type#Define('xdefaults', '! %s')
-    call tcomment#type#Define('xmodmap', '! %s')
-    call tcomment#type#Define('vifm', '" %s')
-    let g:tcomment_mapleader1 = ''
-    let g:tcomment_mapleader2 = ''
-    " Was not used:
-    " call tcomment#type#Define('c_block', g:tcommentBlockC2)
-    " call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
-endif
+let g:My_tcomment_configured = 0
+function! My_configure_tcomment()
+    " if exists('loaded_tcomment')
+    if ! g:My_tcomment_configured && exists('g:tcomment_maps')
+        call tcomment#type#Define('unknown', '# %s')
+        call tcomment#type#Define('lisp', ';; %s')
+        call tcomment#type#Define('make', '# %s')
+        call tcomment#type#Define('gdb', '# %s')
+        call tcomment#type#Define('kconfig', '# %s')
+        call tcomment#type#Define('sudoers', '# %s')
+        call tcomment#type#Define('inittab', '# %s')
+        call tcomment#type#Define('mplayerconf', '# %s')
+        call tcomment#type#Define('text', '# %s')
+        call tcomment#type#Define('toml', '# %s')
+        call tcomment#type#Define('ninja', '# %s')
+        call tcomment#type#Define('aptconf', '// %s')
+        call tcomment#type#Define('jtag_script', '; %s')
+        call tcomment#type#Define('claws_mail_menurc', '; %s')
+        call tcomment#type#Define('fusesmbconf', '; %s')
+        call tcomment#type#Define('asm', '/* %s */')
+        call tcomment#type#Define('texinfo', '@c %s')
+        call tcomment#type#Define('xdefaults', '! %s')
+        call tcomment#type#Define('xmodmap', '! %s')
+        call tcomment#type#Define('vifm', '" %s')
+        " ARM DS 5 debug script:
+        call tcomment#type#Define('datascript', '# %s')
+        let g:tcomment_mapleader1 = ''
+        let g:tcomment_mapleader2 = ''
+        let g:My_tcomment_configured = 1
+        " Was not used:
+        " call tcomment#type#Define('c_block', g:tcommentBlockC2)
+        " call tcomment#type#Define('cpp_block', g:tcommentBlockC2)
+    endif
+endfunction
 
 " if has('nvim')
 "     " First invoke terminal:
