@@ -313,12 +313,13 @@ autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
     " "silent wa | silent !gpp.sh -o /tmp/" . expand("%:t")
 
 function! My_is_linux_kernel_source_file(full_path)
-    let l:idx_linux = stridx(a:full_path, "linux")
+    let l:full_path = system("realpath '" . a:full_path . "'")[:-2]
+    let l:idx_linux = stridx(l:full_path, "linux")
     if l:idx_linux == -1
         return 0
     endif
-    let l:idx_slash = stridx(a:full_path, "/", l:idx_linux)
-    let l:linux_root_dir = strpart(a:full_path, 0, l:idx_slash) . "/"
+    let l:idx_slash = stridx(l:full_path, "/", l:idx_linux)
+    let l:linux_root_dir = strpart(l:full_path, 0, l:idx_slash) . "/"
     let l:subdirs = ['arch', 'crypto', 'drivers', 'fs', 'init', 'ipc', 'kernel',
                 \ 'mm', 'net', 'security', 'sound']
     for l:subdir in l:subdirs
