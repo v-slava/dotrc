@@ -203,6 +203,7 @@ bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
 bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec $START $DOTRC/other_files/suspend_hotkey.sh
 # bindsym $Ctrl_L+$Alt_L+h exec sudo poweroff
 bindsym $Ctrl_l+$Alt_L+h exec --no-startup-id exec $START $DOTRC/other_files/hibernate_hotkey.sh
+bindsym $Ctrl_l+$WIN+h exec --no-startup-id exec $START $DOTRC/other_files/hibernate_hotkey.sh --sleep 180
 for_window [class="URxvt" title="hibernate script"] floating enable
 for_window [class="URxvt" title="suspend script"] floating enable
 

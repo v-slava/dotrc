@@ -140,6 +140,25 @@ endfunction
 " endfunction
 " call denite#custom#action('file', 'my_split', function('s:my_denite_split'))
 
+" let g:menus = {}
+" let g:menus.zsh = {
+"     \ 'description': 'Edit your import zsh configuration'
+"     \ }
+" let g:menus.zsh.file_candidates = [
+"     \ ['zshrc', '~/.config/zsh/.zshrc'],
+"     \ ['zshenv', '~/.zshenv'],
+"     \ ]
+" let g:menus.my_commands = {
+"     \ 'description': 'Example commands'
+"     \ }
+" let g:menus.my_commands.command_candidates = [
+"     \ ['Split the window', 'vnew'],
+"     \ ['Open zsh menu', 'Denite menu:zsh'],
+"     \ ['Format code', 'FormatCode', 'go,python'],
+"     \ ]
+" call denite#custom#var('menu', 'menus', g:menus)
+" Denite menu
+
 if g:My_is_windows
     set noswapfile
     set expandtab
@@ -759,60 +778,73 @@ function! My_get_region_lines(start, end)
     return [l:first_line, l:last_line]
 endfunction
 
-function! My_get_eval_first_last_lines()
-    let l:lines_range = My_get_region_lines('EVAL REGION BEGINS HERE: |',
-                \ 'EVAL REGION ENDS HERE.')
-    return [l:lines_range[0] + 1, l:lines_range[1] - 1]
-endfunction
-
-function! My_get_prefix(first_line_num)
-    let l:first_line = join(getbufline('%', a:first_line_num - 1), "\n")
+function! My_get_filetype_comments(first_line_num)
+    let l:first_line = getline(a:first_line_num)
     let l:start = stridx(l:first_line, '|')
-    let l:end = stridx(l:first_line, '|', l:start + 1)
-    return strpart(l:first_line, l:start + 1, l:end - l:start - 1)
+    return strpart(l:first_line, l:start + 1)[:-2]
 endfunction
 
-function! My_eval_vim()
-    try
-        let l:lines_range = My_get_eval_first_last_lines()
-        let l:prefix = My_get_prefix(l:lines_range[0])
-        let l:pattern = '^\s*' . escape(l:prefix, '*')
-        let l:full_lines_list = getbufline('%', l:lines_range[0],
-                    \ l:lines_range[1])
-        let l:lines_list = []
-        let l:cur_line = ''
-        for l:line in l:full_lines_list
+function! My_eval_vim_lines(lines_range, filetype_comments)
+    let l:full_lines_list = getbufline('%', a:lines_range[0], a:lines_range[1])
+    let l:lines_list = []
+    let l:cur_line = ''
+    if a:filetype_comments != ''
+        let l:pattern = '^\s*' . escape(a:filetype_comments, '*')
+    endif
+    for l:line in l:full_lines_list
+        if a:filetype_comments != ''
             " strip filetype comments:
             let l:prefix_len = strlen(matchstr(l:line, l:pattern))
             if l:prefix_len != 0
                 let l:line = strpart(l:line, l:prefix_len)
             endif
-            " ignore vim comments:
-            let l:idx = match(l:line, '^\s*" ')
-            if l:idx != -1
-                continue
-            endif
-            " check if it is a continuation of previous line:
-            let l:prefix_len = strlen(matchstr(l:line, '^\s*\\'))
-            if l:prefix_len != 0
-                " yes, it is a continuation of previous line
-                let l:cur_line = l:cur_line . strpart(l:line, l:prefix_len)
-                continue
-            endif
-            " no, it is not a continuation of previous line
-            if strlen(l:cur_line) != 0
-                let l:lines_list = add(l:lines_list, l:cur_line)
-            endif
-            let l:cur_line = l:line
-        endfor
-        let l:lines_list = add(l:lines_list, l:cur_line)
-        let l:text = join(l:lines_list, "\n")
-    catch
-        echo v:exception
-        return
-    endtry
+        endif
+        " ignore vim comments:
+        let l:idx = match(l:line, '^\s*"\s*')
+        if l:idx != -1
+            continue
+        endif
+        " check if it is a continuation of previous line:
+        let l:prefix_len = strlen(matchstr(l:line, '^\s*\\'))
+        if l:prefix_len != 0
+            " yes, it is a continuation of previous line
+            let l:cur_line = l:cur_line . strpart(l:line, l:prefix_len)
+            continue
+        endif
+        " no, it is not a continuation of previous line
+        if strlen(l:cur_line) != 0
+            let l:lines_list = add(l:lines_list, l:cur_line)
+        endif
+        let l:cur_line = l:line
+    endfor
+    let l:lines_list = add(l:lines_list, l:cur_line)
+    let l:text = join(l:lines_list, "\n")
     " echo l:text
     execute l:text
+endfunction
+
+function! My_eval_vim()
+    try
+        let l:lines_range = My_get_region_lines('EVAL REGION BEGINS HERE: |',
+                    \ 'EVAL REGION ENDS HERE.')
+        let l:filetype_comments = My_get_filetype_comments(l:lines_range[0])
+        let l:lines_range = [l:lines_range[0] + 1, l:lines_range[1] - 1]
+        call My_eval_vim_lines(l:lines_range, l:filetype_comments)
+    catch
+        echo v:exception
+    endtry
+endfunction
+
+function! My_vimscript_function_eval()
+    try
+        let l:lines_range = My_get_region_lines('^function', '^endfunction$')
+        let l:function_line = getline(l:lines_range[0])
+        let l:function_name = matchstr(l:function_line, ' [^ (]*')[1:]
+        call My_eval_vim_lines(l:lines_range, '')
+        return l:function_name
+    catch
+        echo v:exception
+    endtry
 endfunction
 
 function! My_insert_eval_region(text)
@@ -864,20 +896,6 @@ endfunction
 function! My_insert_eval_variable()
     let l:text = 'let g:My_eval_var = "' . g:My_eval_var . '"'
     call My_insert_eval_region(l:text)
-endfunction
-
-function! My_vimscript_function_eval()
-    try
-        let l:lines_range = My_get_region_lines('^function', '^endfunction$')
-        let l:lines_list = getbufline('%', l:lines_range[0], l:lines_range[1])
-        let l:function_body = join(l:lines_list, "\n")
-        let l:function_name = matchstr(l:lines_list[0], ' [^ (]*')[1:]
-    catch
-        echo v:exception
-        return
-    endtry
-    execute l:function_body
-    return l:function_name
 endfunction
 
 let g:My_use_denite_errors = 0
@@ -1223,6 +1241,10 @@ let g:which_key_map.s = {'name' : '+search/spell/symbol',
 \    },
 \   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
 \ }
+" Put in $DOTRC_S/home_settings/.vimrc:
+" let g:which_key_map.s.p = [
+"             \ ':let g:My_eval_var = "silent wa | MyRunShellCmd make -C /tmp"'
+"             \ , 'my single project']
 
 let g:which_key_map.w = { 'name' : '+windows',
 \   '-' : [':split', 'split horizontally'],
