@@ -5,11 +5,11 @@
 # information. It is a python reimplementation of:
 # http://code.stapelberg.de/git/i3status/tree/contrib/wrapper.pl
 #
-# To use it, ensure your ~/.i3status.conf contains this line:
+# To use it, ensure your $XDG_CONFIG_HOME/i3status/config contains this line:
 #     output_format = "i3bar"
 # in the 'general' section.
-# Then, in your ~/.i3/config, use:
-#     status_command i3status | ~/i3status/contrib/wrapper.py
+# Then, in your $XDG_CONFIG_HOME/.config_xdg/i3/config, use:
+#     status_command i3status | $DOTRC/other_files/i3_status_wrapper.py
 # In the 'bar' section.
 #
 # In its current version it will display the cpu frequency governor, but you
