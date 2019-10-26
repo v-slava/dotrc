@@ -118,27 +118,53 @@ if globpath(&runtimepath, "autoload/denite.vim") != ""
     call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
     call denite#custom#var('grep', 'separator', ['--'])
     call denite#custom#var('grep', 'final_opts', [])
+    function! My_source_vim_script(context)
+        let l:file = a:context['targets'][0].action__path
+        " echo 'to be sourced: |' . l:file . '|'
+        execute 'source ' . l:file
+    endfunction
+    call denite#custom#action('file', 'source_vim_script',
+                \ function('My_source_vim_script'))
 endif
 
 autocmd FileType denite call My_denite_settings()
 function! My_denite_settings() abort
-    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+    nnoremap <silent><buffer><expr> o denite#do_map('do_action', 'open')
     nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
     nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    nnoremap <silent><buffer><expr> s denite#do_map('do_action',
+                \ 'source_vim_script')
     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
     " nnoremap <silent><buffer><expr> t denite#do_map('toggle_select')
     " nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
+    " this is default action ('open' in most cases, see :help denite-kinds):
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    " only for "buffer" kind:
+    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
 endfunction
 
-" function! s:my_denite_split(context)
-"     let split_action = 'vsplit'
-"     if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
-"         let split_action = 'split'
-"     endif
-"     execute split_action . ' ' . a:context['targets'][0].action__path
-" endfunction
-" call denite#custom#action('file', 'my_split', function('s:my_denite_split'))
+function! My_select_project()
+    let l:prj_dir = '$DOTRC_S/other_files/vim_projects'
+    let l:prj_files_list = split(globpath(l:prj_dir, '*'), '\n')
+    let l:num_files = len(l:prj_files_list)
+    if l:num_files == 0
+        echo 'No projects found in ' . l:prj_dir
+        return
+    elseif l:num_files == 1
+        let l:prj_file_name = fnamemodify(l:prj_files_list[0], ":t")
+        execute 'source ' . l:prj_files_list[0]
+        echo 'Selected project: ' . l:prj_file_name
+    else
+        execute 'Denite -default-action=source_vim_script -start-filter -path='
+                    \ . l:prj_dir . ' file/rec'
+    endif
+endfunction
+" default action for "output" kind is to copy selected item to clipboard:
+" :Denite output:!echo:-e:'hello\\nWorld'
+" :Denite output:echo:\'hello:world\'
+" :Denite output:echo:\\"hello\\nworld\\"
+" Change default action:
+" call denite#custom#kind('file', 'default_action', 'source_vim_script')
 
 " let g:menus = {}
 " let g:menus.zsh = {
@@ -245,6 +271,7 @@ set shellredir=>%s
 filetype plugin on
 " Set correct filetypes:
 " autocmd BufRead,BufNewFile
+autocmd BufEnter $DOTRC_S/other_files/vim_projects/* setlocal filetype=vim
 autocmd BufEnter vifmrc setlocal filetype=vifm
 autocmd BufEnter *vifm/colors/* setlocal filetype=vifm
 autocmd BufEnter *.i setlocal filetype=c
@@ -1228,21 +1255,22 @@ let g:which_key_map.r = { 'name' : '+rtags',
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
 " \   's' : [':call Swoop()', 'fuzzy search in this file'],
 " \   's' : ['/', 'fuzzy search in this file'],
-let g:which_key_map.s = {'name' : '+search/spell/symbol',
+let g:which_key_map.s = {'name' : '+search/select/spell/symbol',
 \   '/' : [':let @/ = @+', 'search for text in clipboard'],
 \   'c' : [':let @/ = ""', 'clear search (no highlight)'],
 \   'j' : [':call My_grep_recursive()', 'ripgrep in last used dir'],
-\   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep in dir to be selected'],
 \   'l' : {'name' : '+spellang',
 \     'd' : [':setlocal spell spelllang=de', 'deutsch'],
 \     'e' : [':setlocal spell spelllang=en', 'english'],
 \     'n' : [':setlocal nospell', 'nospell (disable)'],
 \     'r' : [':setlocal spell spelllang=ru', 'russian'],
 \    },
+\   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep in dir to be selected'],
+\   'p' : [':call My_select_project()', 'select project'],
 \   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
 \ }
 " Put in $DOTRC_S/home_settings/.vimrc:
-" let g:which_key_map.s.p = [
+" let g:which_key_map.s.P = [
 "             \ ':let g:My_eval_var = "silent wa | MyRunShellCmd make -C /tmp"'
 "             \ , 'my single project']
 
