@@ -6,6 +6,7 @@ def main(arg, replace):
 def get_output_string(arg):
     if not is_valid_mp3_file_name(arg):
         return arg
+    arg = arg.replace("–", "-") # 0xE2 0x80 0x93 -> 0x2D
     arg = delete_before_dot_mp3(arg, " (mp3cut.net)")
     arg = delete_before_dot_mp3(arg, "-spaces.ru")
     arg = delete_before_dot_mp3(arg, "-spcs.me")

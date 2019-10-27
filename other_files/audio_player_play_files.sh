@@ -5,6 +5,13 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+# Check if previous instance of "xmms2 add -f ..." runs in background.
+# If so - kill it before we start here again.
+PID=$(pgrep '^xmms2$')
+if [ -n "$PID" ]; then
+    kill $PID
+fi
+
 cat << EOF | xmms2 > /dev/null
 stop
 remove *
@@ -13,7 +20,7 @@ play
 EOF
 shift
 if [ $# -ne 0 ]; then
-    xmms2 add -f "$@"
+    xmms2 add -f "$@" &
 fi
 # playlist clear
 exit

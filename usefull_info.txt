@@ -303,6 +303,8 @@ udevadm info /dev/cdrom | grep ID_CDROM_MEDIA_TRACK_COUNT
 # Extract all audio tracks in mp3 format from audio cd:
 apt-get install abcde eyed3
 abcde -o mp3
+# Remove id3v1 and id3v2 tags from mp3 file:
+id3v2 -D FILE.mp3
 
 # Print file capabilities:
 getcap FILE
