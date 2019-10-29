@@ -1,6 +1,22 @@
 # (generate) configure xorg:
 X -configure
 
+# Linux / ARM / AARCH64 interrupts (IRQs):
+ARMv6, ARMv7-A, ARMv7-R (except for ARMv7-M which uses NVIC):
+  Exceptions are handled in turn before returning to the original application.
+  When exceptions occur simultaneously, they are handled in a fixed order of
+  priority, depending on their type:
+  Reset, Data Abort, FIQ, IRQ, Prefetch Abort, SVC, Undefined Instruction (=SVC)
+  Use CPSR flags I (IRQ) and F (FIQ) for enabling / disabling interrupts.
+Linux:
+  During interrupt handler execution, interrupts of this IRQ type can't be
+  executed on any cpu (need not be reentrant, but what about nested
+  interrupts?), for example in linux/kernel/irq/chip.c:
+  void handle_simple_irq(struct irq_desc *desc)
+  { raw_spin_lock(&desc->lock); // ...
+  Linux uses CPSR.IRQ (not FIQ) for ARMv7-A.
+  On how to enable/disable/check IRQs see: linux/arch/arm/include/asm/irqflags.h
+
 # virtualbox toggle scale mode:
 right_ctrl+c
 apt-get install linux-headers-amd64
@@ -457,7 +473,7 @@ apt-get install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss
 apt-get -s -t jessie-backports dist-upgrade
 
 # install package from backports:
-apt-get -t jessie-backports install PACKAGE
+apt-get -t buster-backports install PACKAGE
 
 # install package of specified version:
 apt-get install PACKAGE=VERSION

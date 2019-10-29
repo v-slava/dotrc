@@ -20,7 +20,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
     sox libsox-fmt-mp3 ffmpeg \
     exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
-    tree git make patch dos2unix file bsdutils android-tools-adb \
+    tree git git-email make patch dos2unix file bsdutils android-tools-adb \
     lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
     gcc g++ cmake build-essential \
     clang-7.0 clang-tidy-7.0 clang-tools-7.0 libclang-7.0-dev llvm-6.0 \
@@ -79,6 +79,8 @@ apt-get install vim-gtk
 # Install email client:
 apt-get install thunderbird
 # icedove
+# For microsoft exchange server:
+# apt-get -t buster-backports install evolution evolution-ews
 
 # Install video player:
 apt-get install smplayer
