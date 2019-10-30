@@ -1267,7 +1267,7 @@ let g:which_key_map.s = {'name' : '+search/select/spell/symbol',
 \    },
 \   'm' : [':call My_vifm_choose("ripgrep")', 'ripgrep in dir to be selected'],
 \   'p' : [':call My_select_project()', 'select project'],
-\   's' : [':Denite -start-filter line', 'fuzzy search in this file'],
+\   's' : [':let g:My_use_denite_errors = 1 | Denite -start-filter line', 'fuzzy search in this file'],
 \ }
 " Put in $DOTRC_S/home_settings/.vimrc:
 " let g:which_key_map.s.P = [

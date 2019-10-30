@@ -8,12 +8,19 @@ ARMv6, ARMv7-A, ARMv7-R (except for ARMv7-M which uses NVIC):
   priority, depending on their type:
   Reset, Data Abort, FIQ, IRQ, Prefetch Abort, SVC, Undefined Instruction (=SVC)
   Use CPSR flags I (IRQ) and F (FIQ) for enabling / disabling interrupts.
+ARMv8-A
+  Exceptions are turned off by hardware on interrupt entry (see PSR and DAIF
+  registers) and stay off until software returns from interrupt using "eret"
+  instruction (probably the same is true for ARMv7-A).
 Linux:
   During interrupt handler execution, interrupts of this IRQ type can't be
   executed on any cpu (need not be reentrant, but what about nested
   interrupts?), for example in linux/kernel/irq/chip.c:
   void handle_simple_irq(struct irq_desc *desc)
   { raw_spin_lock(&desc->lock); // ...
+  During interrupt handler execution, all interrupts on local CPU are disabled
+  by ARM CPU. They are reenabled only after "eret" instruction after interrupt
+  handler is completed, see linux/arch/arm64/kernel/entry.S
   Linux uses CPSR.IRQ (not FIQ) for ARMv7-A.
   On how to enable/disable/check IRQs see: linux/arch/arm/include/asm/irqflags.h
 
