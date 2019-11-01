@@ -189,6 +189,16 @@ if g:My_is_windows
     set noswapfile
     set expandtab
     set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
+    if has("gui_running")
+        set clipboard=unnamed " map clipboard to unnamed register '*'
+        set encoding=utf-8
+        set guifont=Consolas:h14
+        " colorscheme evening
+        " colorscheme desert
+        colorscheme slate
+        " Fix colorscheme (guibg=#ffffff):
+        autocmd BufEnter * hi CursorLine guibg=grey10
+    endif
 else
     colorscheme molokai
     " Fix colorscheme:

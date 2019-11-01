@@ -9,7 +9,8 @@ fi
 
 if [ -z "$EDITOR" ]; then
     if [ "$WINDOWS" = "true" ]; then
-        EDITOR=vim
+        # EDITOR=vim
+        EDITOR=gvim
     else
         EDITOR=nvim
     fi
@@ -17,7 +18,8 @@ fi
 
 if [ "$WINDOWS" = "true" ]; then
     # PREFIX="C:/files/other_files/emacs-25.3_1-x86_64/bin/"
-    PREFIX="C:/Program Files/Git/usr/bin/"
+    # PREFIX="C:/Program Files/Git/usr/bin/"
+    PREFIX="C:/Program Files (x86)/Vim/vim81/"
     SUFFIX=".exe"
 else
     PREFIX=
@@ -58,7 +60,7 @@ done
 CLIENT=${EDITOR}
 SERVER=${EDITOR}
 case "$EDITOR" in
-    vim | nvim | kak)
+    vim | gvim | nvim | kak)
         ;;
     emacs)
         CLIENT=emacsclient # see also emacsclientw
@@ -77,18 +79,20 @@ if [ "$GET_EDITOR" = "true" ]; then
     exec echo "$CLIENT_EXE"
 fi
 
-if [ "$EDITOR" = "vim" ] || [ "$EDITOR" = "nvim" ]; then
-    ARGS_TMP=()
-    if [ "$DIFF" = "true" ]; then
-        ARGS_TMP+=("-d")
-    else
-        ARGS_TMP+=("-p")
-    fi
-    # --nofork vim and nvim handle themselves...
-    # There is no need to handle "$WAIT" here...
-    ARGS=("${ARGS_TMP[@]}" "${ARGS[@]}")
-    exec "$CLIENT_EXE" "${ARGS[@]}"
-fi
+case "$EDITOR" in
+    vim | gvim | nvim)
+        ARGS_TMP=()
+        if [ "$DIFF" = "true" ]; then
+            ARGS_TMP+=("-d")
+        else
+            ARGS_TMP+=("-p")
+        fi
+        # --nofork vim and nvim handle themselves...
+        # There is no need to handle "$WAIT" here...
+        ARGS=("${ARGS_TMP[@]}" "${ARGS[@]}")
+        exec "$CLIENT_EXE" "${ARGS[@]}"
+    ;;
+esac
 
 server_running()
 {

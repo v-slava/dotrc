@@ -1,61 +1,3 @@
-if [ -n "$WINDIR" ]; then
-    # settings for windows:
-    export DOTRC=/d/root_folder/dotrc
-    export DOTRC_S=/d/root_folder/dotrc_s
-    export EDITOR=vim
-    __git_complete()
-    {
-        # for now we can't complete on windows...
-        true
-    }
-else
-    # settings for linux:
-    export WORKSPACE=/media/files/workspace
-    export DOTRC=$WORKSPACE/dotrc
-    export DOTRC_S=$WORKSPACE/dotrc_s
-    # export EDITOR=/usr/bin/vim
-    export EDITOR=nvim
-    source /usr/share/bash-completion/completions/git
-
-    # default colorless prompt:
-    # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    if echo $TERM | grep -q '256color\|screen' ; then
-        if [ `id -un` == root ]; then
-            USER_COLOR=196
-        else
-            USER_COLOR=99
-        fi
-        PS1='\[\e[0;38;5;${USER_COLOR}m\]\u\[\e[38;5;178m\]@\[\e[38;5;80m\]\h \[\e[38;5;46m\]\w \[\e[38;5;27m\]\$ \[\e[0;38m\]'
-    else
-        if [ `id -un` == root ]; then
-            USER_COLOR='0;31'
-        else
-            USER_COLOR='0;35'
-        fi
-        PS1='\[\e[0;${USER_COLOR}m\]\u\[\e[0;33m\]@\[\e[0;36m\]\h \[\e[0;32m\]\w \[\e[0;34m\]\$ \[\e[0;37m\]'
-    fi
-
-    # check the window size after each command and, if necessary,
-    # update the values of LINES and COLUMNS.
-    shopt -s checkwinsize
-fi
-
-export PI_PORT=53535
-export PI_USR=pi
-export PI_HOST=94.154.220.9
-export PI_SSH="ssh -p $PI_PORT $PI_USR@$PI_HOST"
-
-# XDG Base Directory Specification (canonical settings):
-# export XDG_DATA_HOME=$HOME/.local/share
-# export XDG_CONFIG_HOME=$HOME/.config
-# export XDG_CACHE_HOME=$HOME/.cache
-# XDG Base Directory Specification (my settings):
-export XDG_DATA_HOME=$HOME/.data_xdg
-export XDG_CONFIG_HOME=$HOME/.config_xdg
-export XDG_CACHE_HOME=$HOME/.cache_xdg
-# export XDG_RUNTIME_DIR=$HOME/.runtime_xdg
-# XDG_RUNTIME_DIR unix access mode must be 0700, must be created on login and removed on logout.
-
 PATH_contains()
 {
     [[ ":$PATH:" = *":$1:"* ]]
@@ -102,6 +44,50 @@ if [ -z "$ORIG_PATH" ]; then
     export ORIG_PROMPT_COMMAND=$PROPMPT_COMMAND
 fi
 
+if [ -n "$WINDIR" ]; then
+    # settings for windows:
+    export DOTRC=/d/root_folder/dotrc
+    export DOTRC_S=/d/root_folder/dotrc_s
+    # export EDITOR=vim
+    export EDITOR=gvim
+    PATH_append "/c/Program Files (x86)/Vim/vim81"
+    __git_complete()
+    {
+        # for now we can't complete on windows...
+        true
+    }
+else
+    # settings for linux:
+    export WORKSPACE=/media/files/workspace
+    export DOTRC=$WORKSPACE/dotrc
+    export DOTRC_S=$WORKSPACE/dotrc_s
+    # export EDITOR=/usr/bin/vim
+    export EDITOR=nvim
+    source /usr/share/bash-completion/completions/git
+
+    # default colorless prompt:
+    # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    if echo $TERM | grep -q '256color\|screen' ; then
+        if [ `id -un` == root ]; then
+            USER_COLOR=196
+        else
+            USER_COLOR=99
+        fi
+        PS1='\[\e[0;38;5;${USER_COLOR}m\]\u\[\e[38;5;178m\]@\[\e[38;5;80m\]\h \[\e[38;5;46m\]\w \[\e[38;5;27m\]\$ \[\e[0;38m\]'
+    else
+        if [ `id -un` == root ]; then
+            USER_COLOR='0;31'
+        else
+            USER_COLOR='0;35'
+        fi
+        PS1='\[\e[0;${USER_COLOR}m\]\u\[\e[0;33m\]@\[\e[0;36m\]\h \[\e[0;32m\]\w \[\e[0;34m\]\$ \[\e[0;37m\]'
+    fi
+
+    # check the window size after each command and, if necessary,
+    # update the values of LINES and COLUMNS.
+    shopt -s checkwinsize
+fi
+
 # export PATH=$ORIG_PATH
 PATH_prepend $DOTRC/bin $HOME/.local/bin
 PATH_append /sbin /usr/sbin
@@ -109,6 +95,22 @@ PATH_append /sbin /usr/sbin
 if [ -d "$DOTRC_S/bin" ]; then
     PATH_prepend $DOTRC_S/bin
 fi
+
+export PI_PORT=53535
+export PI_USR=pi
+export PI_HOST=94.154.220.9
+export PI_SSH="ssh -p $PI_PORT $PI_USR@$PI_HOST"
+
+# XDG Base Directory Specification (canonical settings):
+# export XDG_DATA_HOME=$HOME/.local/share
+# export XDG_CONFIG_HOME=$HOME/.config
+# export XDG_CACHE_HOME=$HOME/.cache
+# XDG Base Directory Specification (my settings):
+export XDG_DATA_HOME=$HOME/.data_xdg
+export XDG_CONFIG_HOME=$HOME/.config_xdg
+export XDG_CACHE_HOME=$HOME/.cache_xdg
+# export XDG_RUNTIME_DIR=$HOME/.runtime_xdg
+# XDG_RUNTIME_DIR unix access mode must be 0700, must be created on login and removed on logout.
 
 # export CC=clang
 # export CXX=clang++
