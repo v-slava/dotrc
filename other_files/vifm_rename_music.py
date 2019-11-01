@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-def main(arg, replace):
-    return arg, get_output_string(arg), replace
+def main(arg, force):
+    return arg, get_output_string(arg), force
 
 def get_output_string(arg):
     if not is_valid_mp3_file_name(arg):
@@ -16,6 +16,7 @@ def get_output_string(arg):
     arg = arg.replace("acoustic_version", "acoustic").replace("i'm", "i_am").replace("you're", "you_are")
     arg = arg.replace("'ll", "_will").replace("n't", "_not")
     arg = arg.replace("'", "")
+    arg = arg.replace(",", "")
     arg = replace_multiple_underscores_with_single(arg)
     arg = delete_single_underscore_at_begin(arg)
     arg = delete_single_underscore_at_end(arg)
@@ -153,6 +154,10 @@ class MyUnitTests(unittest.TestCase):
     def test_rename_not(self):
         self.convert("artist_-_doesn't_know.mp3",
                      "artist_-_does_not_know.mp3")
+
+    def test_rename_comma(self):
+        self.convert("artist_-_word1_word2,_word3_word4.mp3",
+                     "artist_-_word1_word2_word3_word4.mp3")
 
 if __name__ == '__main__':
     unittest.main()
