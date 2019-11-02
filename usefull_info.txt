@@ -477,7 +477,7 @@ less /var/log/apt/history.log
 apt-get install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" PACKAGE
 
 # Show which packages can be upgraded from backports:
-apt-get -s -t jessie-backports dist-upgrade
+apt-get -s -t buster-backports dist-upgrade
 
 # install package from backports:
 apt-get -t buster-backports install PACKAGE

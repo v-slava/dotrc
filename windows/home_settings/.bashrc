@@ -186,7 +186,6 @@ alias gpl='git pull'
 alias cgr='gr --color=always'
 # alias gpush_test_commit='$DOTRC/other_files/git_push_test_commit.sh REPO BRANCH'
 # alias gfetch_test_commit='$DOTRC/other_files/git_fetch_test_commit.sh REPO BRANCH'
-alias beautify='$DOTRC_S/constant_scripts/beautify.sh'
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases

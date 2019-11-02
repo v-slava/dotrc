@@ -13,6 +13,7 @@ set $DOTRC DOTRC_TEMPLATE
 set $DOTRC_S DOTRC_S_TEMPLATE
 set $OUTPUT_TRAY OUTPUT_TRAY_TEMPLATE
 set $START DOTRC_TEMPLATE/other_files/start_from_gui.sh
+set $START_S DOTRC_TEMPLATE/other_files/start_singleton_gui_program.py
 
 set $OUTPUT_1 OUTPUT_1_TEMPLATE
 set $OUTPUT_2 OUTPUT_2_TEMPLATE
@@ -173,16 +174,17 @@ mode "resize" {
 bindsym $Alt_L+r mode "resize"
 
 for_window [workspace="0"] layout tabbed
-for_window [title="Choose.*by pressing"] move to workspace 0
-for_window [title="background_window"] move to workspace 0
-for_window [title="FVP terminal_*"] move to workspace 0
-for_window [class="kolourpaint"] move to workspace 0
-for_window [window_role="browser"] mark --replace browser
+for_window [title="Choose.*by pressing"] move container to workspace 0
+for_window [title="background_window"] move container to workspace 0
+for_window [title="FVP terminal_*"] move container to workspace 0
+for_window [class="kolourpaint"] move container to workspace 0
+for_window [window_role="browser"] mark --replace browser, move container to workspace m
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen
 for_window [title="My bluetooth headset"] floating enable
 # for_window [class="Skype"] floating enable
 for_window [class="Skype"] mark --replace skype
+for_window [class="TelegramDesktop"] mark --replace telegram
 for_window [class="Gimp"] floating enable
 for_window [class="Goldendict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
@@ -196,7 +198,6 @@ for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
 # Login to some stupid GUI program like team viewer:
 # bindsym $Alt_R+i exec --no-startup-id sleep 1 && exec xdotool type "your_password"
-for_window [class="kolourpaint"] move container to workspace 2
 
 bindsym $Alt_R+l exec --no-startup-id exec $START $DOTRC/other_files/lock_screen.sh i3_hotkey
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
@@ -222,17 +223,19 @@ bindsym $WIN+c exec exec $START qalculate
 bindsym $WIN+a exec --no-startup-id exec $START $DOTRC/other_files/start_anki.sh
 
 # browser
-bindsym XF86HomePage exec --no-startup-id exec $START google-chrome $DOTRC/other_files/start_page.html
-bindsym $Alt_L+b exec --no-startup-id exec $START google-chrome $DOTRC/other_files/start_page.html
+bindsym XF86HomePage exec --no-startup-id exec $START_S browser
+bindsym $Alt_L+b exec --no-startup-id exec $START_S browser
 
 # bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START $DOTRC/other_files/start_teamviewer.sh
-bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START telegram
+bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START_S telegram
 exec --no-startup-id exec $START telegram
 
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
-bindsym $Alt_R+$Shift_R+s exec --no-startup-id $START exec skypeforlinux
-exec --no-startup-id exec $START skypeforlinux
+bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec $START_S skype
+# sometimes in skype I don't hear sound (see pulseaudio). Restart of skype
+# helps in this case. Try starting skype with delay (hope it will help too):
+exec --no-startup-id sleep 5 && $START_S skype
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec $START $DOTRC/other_files/qemu_start.sh

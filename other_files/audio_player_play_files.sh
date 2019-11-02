@@ -23,7 +23,7 @@ if [[ $PWD == /media/files/music/new* ]]; then
 # and try playing it again
 # EOF
 #             exit 1
-            echo "Removing ID3 tags for $file ..."
+            # echo "Removing ID3 tags for $file ..."
             id3v2 -D "$file"
         fi
     done

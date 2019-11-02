@@ -41,7 +41,7 @@ if [ "$EDITOR" = "emacs" ]; then
 fi
 
 if [ "$SWITCH_WORKSPACE" = "true" ]; then
-    ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.sh)
+    ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.py)
     i3-msg "workspace 0" 1>/dev/null
 fi
 

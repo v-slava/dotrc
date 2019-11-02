@@ -187,5 +187,5 @@ def main():
         else:
             g.view()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
