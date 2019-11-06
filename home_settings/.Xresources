@@ -1,5 +1,5 @@
 ! Dump scrollback buffer with <Ctrl>+PrintScreen:
-URxvt.print-pipe: /bin/bash -c 'source ~/.bashrc && $DOTRC/other_files/handle_terminal_scrollback_buffer.sh'
+URxvt.print-pipe: /bin/bash -c '$DOTRC/other_files/handle_terminal_scrollback_buffer.sh'
 URxvt.scrollTtyOutput: false
 URxvt.scrollWithBuffer: true
 URxvt.scrollTtyKeypress: true

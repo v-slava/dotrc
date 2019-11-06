@@ -22,7 +22,6 @@ LEFT_MODE="--mode 1920x1080"
 # LEFT_DPI="--dpi 144"
 
 set -e
-source ~/.bashrc
 source $DOTRC/other_files/config_file.sh
 
 update_i3_config()

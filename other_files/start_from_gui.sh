@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source ~/.bashrc
 export START_FROM_GUI=true
 ZENITY=true
 if [ "$1" = "-s" ]; then # "-s" stands for "silent"

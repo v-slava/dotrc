@@ -79,6 +79,9 @@ def find_win_with_prop(prop_name, prop_value, obj):
 def start_program(cmd, find_window, process_name = None, sleep = 0):
     if not process_name:
         process_name = cmd[0]
+    dotrc = os.environ['DOTRC']
+    start_from_gui = os.path.join(dotrc, 'other_files', 'start_from_gui.sh')
+    cmd = [start_from_gui] + cmd
     i3_msg_process = None
     def my_sigterm_handler(signum, frame):
         assert(signum == signal.SIGTERM)
@@ -113,40 +116,46 @@ def start_program(cmd, find_window, process_name = None, sleep = 0):
     m = f'[id={win_id}] move container to workspace {focused_workspace}, focus'
     subprocess.run(['i3-msg', m], check = True, stdout = subprocess.DEVNULL)
 
-def start_browser():
-    dotrc = os.environ['DOTRC']
-    start_page_path = os.path.join(dotrc, 'other_files', 'start_page.html')
-    cmd = ['google-chrome', start_page_path]
+def start_browser(args):
     def find_browser(obj):
         return find_win_with_prop('window_role', 'browser', obj)
-    start_program(cmd, find_browser, process_name = 'chrome', sleep = 0.5)
+    start_program(['google-chrome'] + args, find_browser,
+            process_name = 'chrome', sleep = 0.5)
 
-def start_telegram():
+def start_telegram(args):
     def find_telegram(obj):
         return find_win_with_prop('class', 'TelegramDesktop', obj)
-    start_program(['telegram'], find_telegram)
+    start_program(['telegram'] + args, find_telegram)
 
-def start_skype():
+def start_skype(args):
     def find_skype(obj):
         return find_win_with_prop('class', 'Skype', obj)
-    start_program(['skypeforlinux'], find_skype)
+    start_program(['skypeforlinux'] + args, find_skype)
+
+def start_dictionary(args):
+    def find_dictionary(obj):
+        return find_win_with_prop('class', 'GoldenDict', obj)
+    start_program(['goldendict'] + args, find_dictionary)
 
 def parse_cmd_line_args():
     desc = 'Start singleton GUI program.'
     parser = argparse.ArgumentParser(description = desc)
-    programs_supported = ['browser', 'telegram', 'skype']
+    programs_supported = ['browser', 'telegram', 'skype', 'dictionary']
     parser.add_argument('program', choices = programs_supported,
             help = 'program to start')
+    parser.add_argument('args', nargs = '*',
+            help = 'command line arguments for a program to start')
     return parser.parse_args()
 
 def main():
     # start_skype()
     # start_browser()
     # start_telegram()
+    # start_dictionary_lookup()
     # import sys; sys.exit()
     args = parse_cmd_line_args()
     func = 'start_' + args.program
-    globals()[func]()
+    globals()[func](args.args)
 
 if __name__ == '__main__':
     main()

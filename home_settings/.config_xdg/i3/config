@@ -14,6 +14,7 @@ set $DOTRC_S DOTRC_S_TEMPLATE
 set $OUTPUT_TRAY OUTPUT_TRAY_TEMPLATE
 set $START DOTRC_TEMPLATE/other_files/start_from_gui.sh
 set $START_S DOTRC_TEMPLATE/other_files/start_singleton_gui_program.py
+set $WWW_START_PAGE $DOTRC/other_files/start_page.html
 
 set $OUTPUT_1 OUTPUT_1_TEMPLATE
 set $OUTPUT_2 OUTPUT_2_TEMPLATE
@@ -186,7 +187,7 @@ for_window [title="My bluetooth headset"] floating enable
 for_window [class="Skype"] mark --replace skype
 for_window [class="TelegramDesktop"] mark --replace telegram
 for_window [class="Gimp"] floating enable
-for_window [class="Goldendict"] floating disable
+for_window [class="GoldenDict"] floating disable
 for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
@@ -214,8 +215,8 @@ bindsym $WIN+k exec --no-startup-id exec keynav
 # bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm
 bindsym $Alt_L+Return exec exec $START $DOTRC/other_files/open_terminal.sh vifm ~/my ~/my
 
-bindsym $Alt_L+t exec --no-startup-id exec $START goldendict "$(clipboard.sh -o)"
-bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec goldendict "$(clipboard.sh -o)"
+bindsym $Alt_L+t exec --no-startup-id exec $START_S dictionary "$(clipboard.sh -o)"
+bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec $START_S dictionary "$(clipboard.sh -o)"
 # pronounce (say) word from clipboard:
 bindsym $Alt_L+s exec --no-startup-id exec $START $DOTRC/other_files/say_word.sh "$(clipboard.sh -o)"
 bindsym $WIN+c exec exec $START qalculate
@@ -223,8 +224,8 @@ bindsym $WIN+c exec exec $START qalculate
 bindsym $WIN+a exec --no-startup-id exec $START $DOTRC/other_files/start_anki.sh
 
 # browser
-bindsym XF86HomePage exec --no-startup-id exec $START_S browser
-bindsym $Alt_L+b exec --no-startup-id exec $START_S browser
+bindsym XF86HomePage exec --no-startup-id exec $START_S browser $WWW_START_PAGE
+bindsym $Alt_L+b exec --no-startup-id exec $START_S browser $WWW_START_PAGE
 
 # bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START $DOTRC/other_files/start_teamviewer.sh
 bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START_S telegram

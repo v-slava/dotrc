@@ -7,8 +7,6 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-source ~/.bashrc
-
 # exec x-terminal-emulator -e nvim -c ':set norelativenumber' -c ':set nonumber' -c ':startinsert' -c ":e term://$*"
 
 exec x-terminal-emulator -e $@
