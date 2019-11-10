@@ -313,8 +313,10 @@ bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec $START $DOTRC/other_files/bl
 bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_toggle_hotkey.sh
 
 # brightness hotkeys:
-bindsym XF86MonBrightnessUp exec --no-startup-id exec $START xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec --no-startup-id exec $START xbacklight -dec 10
+bindsym XF86MonBrightnessUp exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --up
+bindsym XF86MonBrightnessDown exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --down
+bindsym $Alt_r+u exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --up
+bindsym $Alt_r+d exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --down
 
 # toggle keyboard layout (see also $DOTRC/root_settings/etc/default/keyboard):
 bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/programs/keyboard_layout --set-layout next
