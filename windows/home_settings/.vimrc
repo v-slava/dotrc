@@ -368,6 +368,10 @@ autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
     " "silent wa | silent !gcc -E -P -C -x c-header -o /tmp/" . expand("%:t")
     " "silent wa | silent !gpp.sh -o /tmp/" . expand("%:t")
 
+autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | silent MyRunShellCmdNoOpen "
+    \ . "$DOTRC/other_files/update_page_in_web_browser.sh"
+
 function! My_is_linux_kernel_source_file(full_path)
     let l:full_path = system("realpath '" . a:full_path . "'")[:-2]
     let l:idx_linux = stridx(l:full_path, "linux")

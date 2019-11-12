@@ -74,6 +74,6 @@ sudo -u qemu_user qemu-system-x86_64 \
 # -drive file=fat:ro:"${SHARE_DIR}",if=virtio
 # -net nic,macaddr=${MAC} -net user,hostname=a-kozhemyach-l2
 
-i3-msg "workspace 8; exec exec x-terminal-emulator -title \"Qemu monitor\" -e sudo -u qemu_user nc -U /tmp/ctrl.sock"
-i3-msg "workspace 9; exec exec spicec -t 'Qemu: Windows 7' -h localhost -p 5930"
-
+source $DOTRC/other_files/i3_msg.sh
+i3_msg "workspace 8; exec exec x-terminal-emulator -title \"Qemu monitor\" -e sudo -u qemu_user nc -U /tmp/ctrl.sock"
+i3_msg "workspace 9; exec exec spicec -t 'Qemu: Windows 7' -h localhost -p 5930"

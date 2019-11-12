@@ -1,3 +1,5 @@
+source $DOTRC/other_files/i3_msg.sh
+
 dotrc_s_overwrite()
 (
     set -e
@@ -78,7 +80,7 @@ config_generate_home()
             ;;
         ".config_xdg/i3/config")
             $DOTRC/other_files/xrandr.sh update_i3_config
-            i3-msg reload 1>/dev/null
+            i3_msg reload
             ;;
         ".Xresources")
             config_concat_dotrc_s

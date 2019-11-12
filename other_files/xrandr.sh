@@ -150,5 +150,6 @@ done
 CENTRAL_OUTPUT="$MAIN_OUTPUT"
 CENTRAL_MODE="$MAIN_MODE"
 CENTRAL_DPI="$MAIN_DPI"
+source $DOTRC/other_files/i3_msg.sh
 update_i3_config
-i3-msg reload 1>/dev/null
+i3_msg reload

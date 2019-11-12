@@ -40,15 +40,17 @@ if [ "$EDITOR" = "emacs" ]; then
     SWITCH_WORKSPACE=true
 fi
 
+source $DOTRC/other_files/i3_msg.sh
+
 if [ "$SWITCH_WORKSPACE" = "true" ]; then
     ORIG_WORKSPACE=$($DOTRC/other_files/i3_get_focused_workspace.py)
-    i3-msg "workspace 0" 1>/dev/null
+    i3_msg "workspace 0"
 fi
 
 e --wait "$EDIT_FILE"
 
 if [ "$SWITCH_WORKSPACE" = "true" ]; then
-    i3-msg "workspace $ORIG_WORKSPACE" 1>/dev/null
+    i3_msg "workspace $ORIG_WORKSPACE"
 fi
 
 source $DOTRC/other_files/config_file.sh

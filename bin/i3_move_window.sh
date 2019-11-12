@@ -7,5 +7,5 @@ fi
 
 FROM="$1"
 TO="$2"
-i3-msg "workspace $FROM"
-i3-msg "move container to workspace $TO"
+source $DOTRC/other_files/i3_msg.sh
+i3_msg "workspace $FROM, move container to workspace $TO"
