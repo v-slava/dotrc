@@ -1,7 +1,12 @@
 call settings.bat || goto error
 
 cd "%DOTRC%\windows\home_settings" || goto error
-for /r %%f in (*) do copy %%f %homedrive%%homepath%\ || goto error
+:: for /r %%f in (*) do copy %%f %homedrive%%homepath%\ || goto error
+xcopy /e /f /h /i /r /y * %homedrive%%homepath%\ || goto error
+
+echo | set /p="let g:My_win_dotrc = '%DOTRC%'" > %TEMP%\.vimrc
+type %homedrive%%homepath%\.vimrc >> %TEMP%\.vimrc || goto error
+copy %TEMP%\.vimrc %homedrive%%homepath%\.vimrc || goto error
 
 cd "%DOTRC%\windows\desktop_bat_files" || goto error
 for %%f in (*) do call %DOTRC%\windows\bin\create_shortcut.bat %DOTRC%\windows\desktop_bat_files\%%f %homedrive%%homepath%\Desktop\%%f.lnk

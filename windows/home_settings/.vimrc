@@ -79,6 +79,9 @@
 " ls /usr/share/vim/vim81/ftplugin/
 " ls /usr/share/vim/vim81/syntax/
 
+" Will be written on windows by apply_homme_settings.bat:
+" let g:My_win_dotrc = 'D:\root_folder\dotrc'
+
 " Disable some unused standard plugins:
 let g:loaded_getscriptPlugin = 1
 let g:loaded_gzip = 1
@@ -94,9 +97,15 @@ let g:EasyMotion_do_mapping = 0
 let g:rtagsUseDefaultMappings = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
+let g:My_win_cmd_exe = 0
+let g:My_tmp_dir = "/tmp"
 if $WINDIR != ""
     let g:My_is_windows = 1
     let g:My_user_id = 0
+    if &shell == 'C:\windows\system32\cmd.exe'
+        let g:My_win_cmd_exe = 1
+        let g:My_tmp_dir = system("echo %TEMP%")[:-3]
+    endif
 else
     let g:My_is_windows = 0
     let g:My_user_id = system('id -u')
@@ -188,7 +197,9 @@ endfunction
 if g:My_is_windows
     set noswapfile
     set expandtab
-    set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
+    " set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
+    " set shell=\"C:/windows/system32/cmd.exe\"
+    " set shell="C:\\windows\\system32\\cmd.exe"
     if has("gui_running")
         set clipboard=unnamed " map clipboard to unnamed register '*'
         set encoding=utf-8
@@ -196,8 +207,26 @@ if g:My_is_windows
         " colorscheme evening
         " colorscheme desert
         colorscheme slate
-        " Fix colorscheme (guibg=#ffffff):
-        autocmd BufEnter * hi CursorLine guibg=grey10
+        " Fix colorscheme:
+        function! My_fix_colorscheme()
+            " gui=bold
+            hi CursorLine guibg=grey10
+            hi MySuccessMsg guifg=seagreen
+            hi MyErrorMsg guifg=#ff6060
+        endfunction
+        autocmd BufEnter * call My_fix_colorscheme()
+
+        set lines=35
+        set columns=90
+        " start in fullscreen mode:
+        " autocmd GUIEnter * simalt ~x
+    endif
+    if g:My_win_cmd_exe
+        " let &runtimepath.=','.system("echo %homedrive%%homepath%\\.vim")[:-3]
+        let &runtimepath.=',~\.vim'
+        autocmd FileType dosbatch if ! exists('g:My_eval_var') |
+            \ let g:My_eval_var = "silent wa | silent MyRunShellCmd call "
+            \ . expand("%:p") | endif
     endif
 else
     colorscheme molokai
@@ -377,6 +406,9 @@ autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . "$DOTRC/other_files/update_page_in_web_browser.sh"
 
 function! My_is_linux_kernel_source_file(full_path)
+    if g:My_is_windows
+        return 0
+    endif
     let l:full_path = system("realpath '" . a:full_path . "'")[:-2]
     let l:idx_linux = stridx(l:full_path, "linux")
     if l:idx_linux == -1
@@ -436,8 +468,8 @@ function! My_grep_recursive()
     endif
 endfunction
 
-let g:My_vim_errors_file = '/tmp/vim_errors' . tr(bufname('%'), '/', '_')
-            \ . '.err'
+let g:My_vim_errors_file = g:My_tmp_dir . '/vim_errors__'
+            \ . tr(expand('%:t'), '/', '_') . '.err'
 
 function! My_run_shell_cmd(no_open_window_on_success, cmd)
     silent! execute 'noautocmd silent botright pedit ' . g:My_vim_errors_file
@@ -450,7 +482,11 @@ function! My_run_shell_cmd(no_open_window_on_success, cmd)
     " exe 'noautocmd r! $DOTRC/other_files/vifm_run_command.sh ' . a:cmd
     " \ . ' 2>&1'
     " AnsiEsc
-    execute 'noautocmd silent r!
+    if g:My_win_cmd_exe
+        let l:cmd = 'noautocmd silent r! ' . g:My_win_dotrc
+            \ . '\windows\other_files\vim_cmd_exe_wrapper.bat ' . a:cmd
+    else
+        let l:cmd = 'noautocmd silent r!
 \ echo "Command: ' . a:cmd . ' Command output:" &&
 \ exec 2>&1 ;
 \ ' . a:cmd . ' ;
@@ -462,6 +498,8 @@ function! My_run_shell_cmd(no_open_window_on_success, cmd)
 \ fi ;
 \ exit $EXIT_CODE
 \ '
+    endif
+    execute l:cmd
     normal 0ggdd
     silent w
     set readonly

@@ -9,6 +9,12 @@ cmd /C "COMMAND"
 # Never print commands being executed:
 @echo off
 
+# Print empty line:
+echo.
+
+# Print without newline:
+echo | set /p="some text without newline in the end"
+
 # env analog:
 set
 
@@ -24,14 +30,20 @@ echo %VAR_NAME%
 # clear screen in cmd.exe:
 cls
 
-# Print exit code:
+# print exit code:
 echo %errorlevel%
+
+# check exit code:
+if %errorlevel% equ 0 (echo True) else (echo False)
 
 # Print home directory:
 echo %homedrive%%homepath%
 
 # Bat file command line arguments:
 %0, %1, %2, ...
+
+# All arguments ("%@" in linux):
+%*
 
 # Check if variable is empty:
 if [%VARIABLE%] == [] (
@@ -49,6 +61,12 @@ some_cmd_2 || goto error
 exit
 :error
 set /p DUMMY=Hit ENTER to exit...
+
+# execute cmd_2 only if cmd_1 succeeded:
+cmd_1 && cmd_2
+
+# execute both cmd_1 and cmd_2 (independent of exit code, similar to ';' in sh):
+cmd_1 & cmd_2
 
 # Open with default application (starts browser):
 start "" https://www.google.com
@@ -100,10 +118,10 @@ wmic /node:HOSTNAME process call create "cmd.exe /c COMMAND"
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" internalcommands createrawvmdk -filename "C:\Users\USER_NAME\VirtualBox VMs\VM_NAME\HDD_NAME.vmdk" -rawdisk \\.\PhysicalDrive#
 
 # Copy directory recursive:
-xcopy /e /i C:\src_dir C:\dst_dir
+xcopy /e /f /h /i /r /y C:\src_dir C:\dst_dir
 
 # Copy FILE over samba:
-cp FILE \\HOST\c$\dir_1\dir_2\
+copy FILE \\HOST\c$\dir_1\dir_2\
 
 # find -name '*.cpp':
 dir /s /b *.cpp
