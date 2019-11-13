@@ -28,6 +28,8 @@ config_concat_dotrc_s()
         if [ -f "$DOTRC_S_FILE" ]; then
             cat "$DOTRC_S_FILE" >> "$DEST"
         fi
+    elif [ -d "$DOTRC_FILE" ]; then
+        mkdir -p "$DEST"
     else
         cp --preserve=mode "$DOTRC_S_FILE" "$DEST"
     fi
