@@ -20,7 +20,7 @@ config_concat_dotrc_s()
         fi
     fi
     if [ -L "$DOTRC_FILE" ]; then
-        cp -r "$DOTRC_FILE" "$DEST"
+        cp -P "$DOTRC_FILE" "$DEST"
         return
     fi
     if [ -f "$DOTRC_FILE" ]; then
@@ -28,11 +28,16 @@ config_concat_dotrc_s()
         if [ -f "$DOTRC_S_FILE" ]; then
             cat "$DOTRC_S_FILE" >> "$DEST"
         fi
-    # elif [ -d "$DOTRC_FILE" ]; then
-    #     mkdir -p "$DEST"
     else
         cp --preserve=mode "$DOTRC_S_FILE" "$DEST"
     fi
+)
+
+config_copy_symlink()
+(
+    set -e
+    rm -rf "$DEST"
+    cp -P "$DOTRC_FILE" "$DEST"
 )
 
 config_symlink_dotrc()
@@ -106,6 +111,9 @@ config_generate_home()
                 -e "s|\$DOTRC_S|$DOTRC_S|g" \
                 -e "s|\$DOTRC|$DOTRC|g" \
                 -e "s|\$WORKSPACE|$WORKSPACE|g"
+            ;;
+        ".vim/init.vim")
+            config_copy_symlink
             ;;
         *) config_concat_dotrc_s
     esac

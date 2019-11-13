@@ -202,16 +202,20 @@ if g:My_is_windows
 else
     colorscheme molokai
     " Fix colorscheme:
-    hi Search ctermfg=0 ctermbg=12
-    hi DiffAdd ctermbg=234
-    hi DiffDelete ctermbg=16
-    hi StatusLine ctermfg=232 ctermbg=46
-    hi StatusLineNC ctermfg=232 ctermbg=252
-    " commented-out because it highlights spaces in "which-key" (leader) window:
-    " autocmd WinEnter * match Error /\s\+$/
-    " Highlight column (right after last that can be used):
-    hi ColorColumn ctermbg=234
-
+    function! My_fix_colorscheme()
+        hi Search ctermfg=0 ctermbg=12
+        hi IncSearch ctermfg=0 ctermbg=12
+        hi DiffAdd ctermbg=234
+        hi DiffDelete ctermbg=16
+        " hi StatusLine ctermfg=232 ctermbg=46
+        " hi StatusLineNC ctermfg=232 ctermbg=252
+        " commented-out because it highlights spaces in
+        " "which-key" (leader) window:
+        " autocmd WinEnter * match Error /\s\+$/
+        hi MySuccessMsg ctermfg=118
+        hi MyErrorMsg ctermfg=161 cterm=bold
+    endfunction
+    autocmd BufEnter * call My_fix_colorscheme()
     set clipboard=unnamedplus " map clipboard to unnamedplus register '+'
     " Preserve copied text in clipboard on exit:
     autocmd VimLeave * call system("clipboard.sh", getreg('+'))
