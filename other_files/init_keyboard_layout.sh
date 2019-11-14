@@ -5,4 +5,3 @@ xmodmap ~/.Xmodmap
 if ! pgrep fbxkb ; then
 	fbxkb & 1>/dev/null
 fi
-

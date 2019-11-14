@@ -11,4 +11,3 @@ alsaplayer --pause
 if ! alsaplayer --status | grep -q 'speed: 0%' ; then
 	alsaplayer --speed 1
 fi
-

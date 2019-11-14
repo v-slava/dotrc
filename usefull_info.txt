@@ -1,3 +1,14 @@
+# texi documentation format (obsolete? use markdown/latex/gnu info instead?):
+makeinfo file.texi
+texi2any --html file.texi
+google-chrome ./file/index.html
+
+# redmine code style (block):
+<pre>
+<code class="cpp">
+</code>
+</pre>
+
 # (generate) configure xorg:
 X -configure
 
@@ -228,7 +239,7 @@ grep -m 1 OTHER_OPTIONS
 grep -r $'\r'
 
 # Print symbols from ELF fils and sort them by their size:
-nm --print-size --size-sort file.elf
+nm [--demangle] --print-size --size-sort file.elf
 
 # Find symbol in directory with libraries / object files:
 find -type f -name '*.a' | xargs nm -o | grep ' SYMBOL'
@@ -793,7 +804,8 @@ linux/vmlinux, address offset 0:
 
 # linux kernel disable optimizations (CFLAGS):
 CFLAGS_file_name.o := -O0
-# see also $DOTRC/other_files/no_optimize_gcc_wrapper.sh
+# see also:
+$DOTRC/other_files/my_samples/single_sources/no_optimize_gcc_wrapper.sh
 
 # linux kernel loading:
 insmod executes syscall init_module -> sys_init_module() in kernel
@@ -1910,6 +1922,9 @@ aplay -v -c 2 -f S16_LE -r 44100 ./raw_samples_file
 # Play sound via specific sound device:
 aplay -D hw:#CARD,#DEVICE,#SUBDEVICE FILE.wav
 
+# Convert wav to mp3:
+avconv -i IN.wav -sample_fmt s16 -ar 48000 -ab 32k -loglevel warning OUT.mp3
+
 # Alsa commands:
 cat /proc/asound/cards (modules, devices)
 aplay -v file.wav
@@ -2619,6 +2634,17 @@ $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $
 show max-value-size
 set max-value-size 100000
 set breakpoint pending off
+
+# gdb commands logging:
+set logging redirect on
+set logging file /tmp/gdb_commands
+set logging on
+# Some commands start:
+x/1i $pc
+si
+echo \n
+# Some commands end.
+set logging off
 
 # gdb gui client:
 gdbgui -g gdb-multiarch --gdb-args "-x /tmp/gdb_commands"

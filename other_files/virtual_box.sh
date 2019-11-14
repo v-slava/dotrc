@@ -7,4 +7,3 @@ grep -q 'my_virtualbox' /proc/cmdline
 
 # xrandr | grep -q VGA0
 # systemctl status startx@virtual.service
-

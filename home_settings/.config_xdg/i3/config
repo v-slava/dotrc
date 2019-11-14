@@ -64,7 +64,6 @@ bindcode $Alt_L+48 exec --no-startup-id exec $START $DOTRC/other_files/i3_goto_m
 bindsym $Ctrl_L+$ALT_L+F2 exec --no-startup-id exec sudo chvt 2
 
 # change focus
-# bindsym $Alt_L+h exec --no-startup-id exec $DOTRC/other_files/i3_focus.py left
 bindsym $Alt_L+h focus left
 bindsym $Alt_L+j focus down
 bindsym $Alt_L+k focus up
@@ -227,7 +226,6 @@ bindsym $WIN+a exec --no-startup-id exec $START $DOTRC/other_files/start_anki.sh
 bindsym XF86HomePage exec --no-startup-id exec $START_S browser $WWW_START_PAGE
 bindsym $Alt_L+b exec --no-startup-id exec $START_S browser $WWW_START_PAGE
 
-# bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START $DOTRC/other_files/start_teamviewer.sh
 bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START_S telegram
 exec --no-startup-id exec $START telegram
 
@@ -240,9 +238,6 @@ exec --no-startup-id sleep 5 && $START_S skype
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec $START $DOTRC/other_files/qemu_start.sh
-
-# start downloading .torrent file from ~/downloads:
-bindsym $WIN+t exec --no-startup-id exec $START $DOTRC/other_files/torrent_download.sh
 
 # autostart mail client (claws-mail):
 # exec --no-startup-id exec i3-msg 'workspace 1; exec exec $START claws-mail'
@@ -273,9 +268,6 @@ bindsym $WIN+s exec --no-startup-id exec $START $DOTRC/other_files/switch_us_de_
 
 # Delete system update lock directory:
 exec --no-startup-id exec rm -rf /tmp/system_update_lock_dir
-
-# Autostart sleep_on_idle.sh:
-# exec --no-startup-id exec $DOTRC/other_files/suspend_on_idle.sh &
 
 # audio player hotkeys:
 bindsym $Alt_L+p      exec --no-startup-id exec $START $DOTRC/other_files/my_play_pause.sh

@@ -1,0 +1,7 @@
+target remote :5039
+file ./out/app.out
+
+disp/29i 0x8380
+disp/10i $pc - 16
+b main
+c

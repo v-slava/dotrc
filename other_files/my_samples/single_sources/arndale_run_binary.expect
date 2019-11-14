@@ -1,0 +1,21 @@
+#!/usr/bin/env expect
+
+spawn minicom
+expect "Hit any key to stop autoboot:"
+send "a"
+expect "Arndale # "
+send "loady\n"
+expect "Ready for binary (ymodem) download to 0xC3E00000 at 0 bps..."
+# \001 = <ctrl>+A
+send "\001sj\n"
+expect "Okay"
+send "\n"
+expect "No file selected - enter filename:"
+send "/home/user/bin/other/print_hw_features/print_hw_features.bin\n"
+#send "/home/user/bin/other/print_hw_features/works.bin\n"
+expect "READY: press any key to continue..."
+send "a"
+expect "Bytes"
+expect "Arndale # "
+send "go 0xC3E00000\n"
+interact

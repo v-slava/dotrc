@@ -37,4 +37,3 @@ x-terminal-emulator -title "$TERMINAL_TITLE" -e dtach \
 
 # CleanUp:
 rm -rf $FULL_TERMINAL_FOLDER_PATH
-

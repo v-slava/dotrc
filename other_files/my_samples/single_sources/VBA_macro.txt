@@ -1,0 +1,90 @@
+Sub Code_quality_comment_rate()
+'
+' Code_quality_comment_rate Macro
+' Fills "Development Comment" column ("Review Result" and "Note")
+'
+' Keyboard Shortcut: Ctrl+r
+'
+    Const repositoryRoot = "/home/user/repo_root"
+
+    Const firstRow = 3 ' first file name row
+    Const fileNameColumn = 3 ' C
+    Const commentRateColumn = 7 ' G
+    Const reviewResultColumn = 8 ' H
+    Const noteColumn = 9 ' I
+
+    Const fromBase = "From Base"
+    Const outOfScope = "Out of scope"
+    Const orcScope = "ORC scope"
+
+    Const lpC = "/usr/include/"
+    Const lpC1 = "/usr/include/x86_64-linux-gnu/"
+    Const lpCpp = "/usr/include/c++/"
+    Const lpGcc = "/usr/lib/gcc/"
+    Const lpLinux1 = "/usr/include/linux/"
+    Const lpLinux2 = "/usr/include/asm-generic/"
+    Const lpBoost = "/usr/include/boost/"
+    Const lpLua = "/usr/include/lua5.1/"
+
+    Dim row As Integer
+    row = firstRow
+    Do While Cells(row, fileNameColumn) <> ""
+        Dim fileName As String
+        fileName = Cells(row, fileNameColumn)
+
+        ' Check whether it is GNU C library header file (initialize 'isC')
+        Dim isC As Boolean
+        isC = Left(fileName, Len(lpC)) = lpC
+        If isC Then
+            ' File left part: '/usr/include/'. Check whether it is file like '/usr/include/math.h' or '/usr/include/limits.h'
+            Dim rightPart As String
+            rightPart = Right(fileName, Len(fileName) - Len(lpC))
+            If InStr(rightPart, "/") <> 0 Then ' It can be other library header. For example '/usr/include/boost/mpl/push_front_fwd.hpp'
+                isC = False ' It may be set to true later
+            End If
+        End If
+        If Left(fileName, Len(lpC1)) = lpC1 Then
+            isC = True
+        End If
+
+        ' Process C/C++/Linux headers:
+        If isC Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "Standard C Library header file"
+        ElseIf Left(fileName, Len(lpCpp)) = lpCpp Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "Standard C++ Library header file"
+        ElseIf Left(fileName, Len(lpGcc)) = lpGcc Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "GCC header file"
+        ElseIf Left(fileName, Len(lpLinux1)) = lpLinux1 Or Left(fileName, Len(lpLinux2)) = lpLinux2 Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "Linux API header file"
+
+        ' Process Boost/Lua headers:
+        ElseIf Left(fileName, Len(lpBoost)) = lpBoost Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "3-rd party Boost library header file"
+        ElseIf Left(fileName, Len(lpLua)) = lpLua Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "3-rd party Lua library header file"
+
+        ' Process parser files:
+        ElseIf Left(fileName, Len(repositoryRoot + "parser/")) = repositoryRoot + "parser/" Then
+            Cells(row, reviewResultColumn) = outOfScope
+            Cells(row, noteColumn) = "3-rd party parsing library file"
+
+        ' Process scope files:
+        Else
+            Cells(row, reviewResultColumn) = orcScope ' fromBase?
+            Dim commentRate As Double
+            commentRate = Cells(row, commentRateColumn)
+            If commentRate >= 0.25 Then
+                Cells(row, noteColumn) = ""
+            Else ' Assign developer to fix comment rate manually
+                Cells(row, noteColumn) = "Will be done. Assigned person is UNKNOWN_DEVELOPER"
+            End If ' comment rate is less then 0.25
+        End If ' Process scope files
+        row = row + 1
+    Loop
+End Sub

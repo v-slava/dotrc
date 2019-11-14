@@ -1303,6 +1303,7 @@ let g:which_key_map.r = { 'name' : '+rtags',
 \   's' : [':let g:My_use_denite_errors = 0 | call rtags#FindSymbols'
 \          . '(input("Pattern? ", "", "customlist,rtags#CompleteSymbols"))',
 \             'FindSymbols'],
+\   't' : [':%s/\t/    /g', 'replace tabs with spaces'],
 \   'v' : [':let g:My_use_denite_errors = 0 | call rtags#FindVirtuals()',
 \             'FindVirtuals'],
 \   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],

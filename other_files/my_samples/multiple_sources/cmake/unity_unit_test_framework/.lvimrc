@@ -1,0 +1,19 @@
+let prj_src_dir = '~/workspace/unity_example/tests'
+let prj_bin_dir = '/tmp/unity_example_out'
+let cd_part = 'cd ' . prj_bin_dir . ' && '
+
+let g:build_cmd = cd_part . 'ninja -j9'
+let g:rebuild_cmd = cd_part . 'ninja clean && ninja -j9'
+
+" let g:config_cmd = 'rm -rf ' . prj_bin_dir . ' && mkdir ' . prj_bin_dir . ' && ' . cd_part . 'cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ' . prj_src_dir
+
+let g:config_cmd = 'rm -rf ' . prj_bin_dir . ' && mkdir ' . prj_bin_dir . ' && ' . cd_part . 'cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ' . prj_src_dir
+
+" let g:run_cmd = 'echo "Success!"'
+let g:run_cmd = cd_part . 'ninja run_tests_customer_lib'
+
+" let g:warnings = 'nw' " 'w'
+
+let g:filter = 'nf'
+" let g:filter = g:prj_src_dir . '/.issues_filter.sh'
+
