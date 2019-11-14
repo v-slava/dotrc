@@ -224,9 +224,6 @@ if g:My_is_windows
     if g:My_win_cmd_exe
         " let &runtimepath.=','.system("echo %homedrive%%homepath%\\.vim")[:-3]
         let &runtimepath.=',~\.vim'
-        autocmd FileType dosbatch if ! exists('g:My_eval_var') |
-            \ let g:My_eval_var = "silent wa | silent MyRunShellCmd call "
-            \ . expand("%:p") | endif
     endif
 else
     colorscheme molokai
@@ -373,9 +370,19 @@ autocmd FileType unknown if ! exists('g:My_eval_var') | let g:My_eval_var =
 autocmd FileType vim if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "execute 'call ' . My_vimscript_function_eval() . '()'" | endif
 
-autocmd FileType sh,python,perl if ! exists('g:My_eval_var')
-    \ | let g:My_eval_var = "silent wa | MyRunShellCmd chmod +x ./"
-    \ . expand("%:t") . " && ./" . expand("%:t") | endif
+if g:My_win_cmd_exe
+    autocmd FileType dosbatch if ! exists('g:My_eval_var') |
+        \ let g:My_eval_var = "silent wa | silent MyRunShellCmd call "
+        \ . expand("%:p") | endif
+
+    autocmd FileType python if ! exists('g:My_eval_var')
+        \ | let g:My_eval_var = "silent wa | MyRunShellCmd python3 "
+        \ . expand("%:p") | endif
+else
+    autocmd FileType sh,python,perl if ! exists('g:My_eval_var')
+        \ | let g:My_eval_var = "silent wa | MyRunShellCmd chmod +x ./"
+        \ . expand("%:t") . " && ./" . expand("%:t") | endif
+endif
 
 autocmd FileType make if ! exists('g:My_eval_var')
     \ | let g:My_eval_var = "silent wa | MyRunShellCmd make -f ./"
