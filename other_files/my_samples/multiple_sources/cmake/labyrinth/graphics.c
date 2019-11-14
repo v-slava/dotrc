@@ -40,7 +40,7 @@ void initGraphics()
     g_signal_connect(windowWidget, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     gtk_window_set_position(GTK_WINDOW(windowWidget), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(windowWidget), windowWidth, windowHeight);
-    gtk_window_set_title(GTK_WINDOW(windowWidget), "Egor Volkov: labyrinth generation");
+    gtk_window_set_title(GTK_WINDOW(windowWidget), "labyrinth generation");
     gtk_widget_show_all(windowWidget);
     gtk_main();
 }
