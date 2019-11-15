@@ -2294,9 +2294,6 @@ fuseiso <image_file> <mount_point>
 fuseiso --help
 fusermount -u -z <mount_point> # unmount
 
-# Turn screen off (without blocking):
-xset dpms force off
-
 # Code formatting (eclipse):
 <Ctrl> + I
 
