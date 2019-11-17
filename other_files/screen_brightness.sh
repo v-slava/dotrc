@@ -13,7 +13,7 @@ fi
 case "$1" in
     "--up") OP="-inc" ;;
     "--down") OP="-dec" ;;
-    "--off") xset dpms force off ; exit 0 ;;
+    "--off") sleep 0.2 && xset dpms force off ; exit 0 ;;
     *) usage
 esac
 
