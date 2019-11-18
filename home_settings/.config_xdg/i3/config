@@ -191,8 +191,8 @@ for_window [class="Claws-mail" title="Search messages"] floating enable
 for_window [class="Claws-mail" title="Find in current message"] floating enable
 for_window [class="Icedove" title="Search Messages"] floating enable
 for_window [class="Icedove"] focus, mark --replace mail
-for_window [class="Thunderbird" title="Search Messages"] floating enable
-for_window [class="Thunderbird"] focus, mark --replace mail, move container to workspace m
+for_window [class="thunderbird" title="Search Messages"] floating enable
+for_window [class="thunderbird"] focus, mark --replace mail, move container to workspace m
 for_window [class="ViberPC"] mark --replace viber
 for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
@@ -201,12 +201,10 @@ for_window [class="TeamViewer" title="Computers & Contacts"] kill
 
 bindsym $Alt_R+l exec --no-startup-id exec $START $DOTRC/other_files/lock_screen.sh i3_hotkey
 bindsym $Ctrl_L+$Alt_L+r exec --no-startup-id exec sudo reboot
-bindsym $Ctrl_L+$Alt_L+s exec --no-startup-id exec $START $DOTRC/other_files/suspend_hotkey.sh
 # bindsym $Ctrl_L+$Alt_L+h exec sudo poweroff
 bindsym $Ctrl_l+$Alt_L+h exec --no-startup-id exec $START $DOTRC/other_files/hibernate_hotkey.sh
 bindsym $Ctrl_l+$WIN+h exec --no-startup-id exec $START $DOTRC/other_files/hibernate_hotkey.sh --sleep 180
 for_window [class="URxvt" title="hibernate script"] floating enable
-for_window [class="URxvt" title="suspend script"] floating enable
 
 bindsym $WIN+k exec --no-startup-id exec keynav
 
@@ -232,9 +230,8 @@ exec --no-startup-id exec $START telegram
 # bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec /opt/viber/Viber
 # exec --no-startup-id exec /opt/viber/Viber
 bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec $START_S skype
-# sometimes in skype I don't hear sound (see pulseaudio). Restart of skype
-# helps in this case. Try starting skype with delay (hope it will help too):
-exec --no-startup-id sleep 5 && $START_S skype
+bindsym $Alt_R+$Ctrl_L+s exec --no-startup-id exec $DOTRC/other_files/restart_skype.sh
+exec --no-startup-id $START_S skype
 
 # windows guest
 # bindsym $Ctrl_L+$Alt_L+q exec exec $START $DOTRC/other_files/qemu_start.sh
