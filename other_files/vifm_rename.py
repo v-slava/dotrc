@@ -67,7 +67,7 @@ def parse_cmd_line_args():
     parser.add_argument('action', help = 'rename action to do')
     parser.add_argument('files', nargs = '+', help = 'file(s) to be renamed',
                         metavar = 'FILE')
-    return  parser.parse_args()
+    return parser.parse_args()
 
 def main():
     args = parse_cmd_line_args()

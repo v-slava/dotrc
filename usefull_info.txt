@@ -40,8 +40,8 @@ right_ctrl+c
 apt-get install linux-headers-amd64
 use Settings -> Display -> Graphics Controller: VBoxSVGA
 
-# markdown (.md) viewer:
-grip -b readme.md
+# View markdown (.md):
+markdown readme.md > /tmp/readme.html && google-chrome /tmp/readme.html
 
 # debug vim plugins:
 vim -V9log_file.txt [your_vim_args]
@@ -917,9 +917,7 @@ mogrify -quality "80%" -resize 1048x768 file.jpg
 # rotate image clockwise:
 convert in.jpg -rotate 90 out.jpg
 
-# Set the pipeline's return status to the value of the  last  (right‐most)
-# command to exit with a non-zero status, or zero if all commands exit
-# successfully:
+# Fail if any command in pipe (error pipe) failed:
 set -o pipefail
 
 # icedove / thunderbird:
@@ -1081,6 +1079,8 @@ LANGUAGE=en pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
 # Set time 3 hours back:
 date -s "$(date -R -d '-3 hour')"
 hwclock -w
+# Date 3 days back:
+date -R -d '-3 day'
 
 # Set timezone (EET = Eastern European Time = UTC+2):
 ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
@@ -1230,6 +1230,15 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 # Copy files over ssh:
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
+
+# git show both dates (author date and commiter date):
+git log --format=fuller
+
+# git change author date to be 3 days ago:
+git commit --amend --no-edit --date "$(date -R -d '-3 day')"
+
+# git committer-date := author date:
+git rebase --committer-date-is-author-date HEAD~1
 
 # Rebase a range of commits (start; end] on top of new_base:
 git checkout end # end is a branch to be rebased

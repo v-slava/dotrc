@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# git grep binary
+
+usage()
+{
+    echo -e "Usage: $(basename $0) BYTE\n\
+For example: $(basename $0) 0d" 1>&2
+    exit 1
+}
+
+if [ $# -ne 1 ]; then
+    usage
+fi
+
+git ls-files | while read file ; do
+    if cat "$file" | hexdump -v -e '/1 "%08_ax:   "' -e '/1 "%02x\n"' \
+        | grep -q " $1" ; then
+        echo "Found in file: $file"
+    fi
+done

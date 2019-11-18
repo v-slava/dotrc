@@ -1,3 +1,6 @@
+# Copy "some_text\n" to clipboard:
+echo some_text | clip
+
 # Execute command and do not close cmd.exe window:
 cmd /K "cd C:\dir_1\dir_2 && git status"
 # Execute COMMAND and exit afterwards (close cmd.exe window):

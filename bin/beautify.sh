@@ -11,6 +11,7 @@ case $1 in
         cp /tmp/python_json_tool.json "$1"
         ;;
     *.html)
-        tidy -m "$1"
+        # Only check: tidy -e -q "$1"
+        tidy -m -i "$1"
         ;;
 esac
