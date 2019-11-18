@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# This script is needed only for "git mergetool":
+exec nvim "$@"
