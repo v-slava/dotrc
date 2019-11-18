@@ -9,7 +9,7 @@ cmd /C "COMMAND"
 # Do not print a command being executed just once:
 @ SOME_COMMAND
 
-# Never print commands being executed:
+:: Do not print commands being executed:
 @echo off
 
 # Print empty line:
