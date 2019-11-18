@@ -1,0 +1,78 @@
+table.report {
+  border: double windowtext 2.25pt;
+  border-collapse: collapse;
+  font-family: "Microsoft YaHei",sans-serif;
+  width: 14.25in;
+}
+
+td.h1 {
+  background: #2F5496;
+  border: double windowtext 2.25pt;
+  color: white;
+  font-size: 24.0pt;
+  padding: 5.4pt;
+}
+
+td.overall_goals {
+  background: #F8F8F8;
+  border: double windowtext 2.25pt;
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+td.h2 {
+  text-align: center;
+  background: #A8D08D;
+  border: solid windowtext 1.0pt;
+  /* height: 27.75pt; */
+  padding: 7pt 5.4pt 7pt 5.4pt;
+}
+
+td.number {
+  border: solid windowtext 1.0pt;
+  text-align: center;
+  width: .75in;
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+td.description {
+  border: solid windowtext 1.0pt;
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+td.overall_plan {
+  border: double windowtext 2.25pt;
+  border-top: none;
+  background: #F8F8F8;
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+td.current_progress {
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+td.risk {
+  border: double windowtext 2.25pt;
+  padding: 3pt 5.4pt 3pt 5.4pt;
+}
+
+ul {
+  padding-left: 10pt;
+  margin: 0;
+}
+
+li {
+  padding-top: 3.0pt;
+}
+
+ol {
+  padding-left: 15pt;
+  margin: 0;
+}
+
+li.progress {
+  padding-top: 20pt;
+}
+
+li li {
+  list-style-type: disc;
+}
