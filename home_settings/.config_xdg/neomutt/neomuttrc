@@ -1,0 +1,95 @@
+# EVAL REGION BEGINS HERE: |# |
+# let g:My_eval_var = "silent wa | silent !. $DOTRC/other_files/config_file.sh"
+# \ . " && config_generate -h .config_xdg/neomutt/neomuttrc"
+# EVAL REGION ENDS HERE.
+
+# set folder = "~/mail/slava65536"
+set folder = "~/mail"
+# set folder = "imaps://slava65536@gmail.com@imap.gmail.com:993"
+# set smtp_url = "smtps://slava65536@gmail.com@smtp.gmail.com:587"
+# smtp://
+# set smtp_pass = "your_password"
+# set imap_pass = "your_password"
+
+# set from = "slava65536@gmail.com"
+# set realname = "Viacheslav Volkov"
+set my_account = "slava65536@gmail.com"
+set spoolfile = "+${my_account}/inbox"
+# set record = "+Sent"
+# set trash = "+Trash"
+# set postponed = "+Drafts"
+
+# Account-specific settings:
+# Short symlink for sidebar: s -> slava65536@gmail.com:
+mailboxes =s/inbox =s/Drafts =s/Queue =s/Sent =s/Trash \
+"=s/[Gmail]/All Mail" =s/[Gmail]/Drafts =s/[Gmail]/Important \
+"=s/[Gmail]/Sent Mail" =s/[Gmail]/Spam =s/[Gmail]/Starred =s/[Gmail]/Trash
+# Short symlink for sidebar: v -> viacheslav.volkov.1@gmail.com:
+# TODO add here
+
+set mailcap_path = $DOTRC/other_files/mailcap
+set sort = 'reverse-date' # sort messages according to date starting from newest
+set delete = yes # don't ask for delete confirmation
+push <first-entry> # focus first (top) email on startup
+set date_format="%y-%m-%d %T"
+set index_format="%2C%Z [%d] %-20.20F %s"
+ignore x-mailer
+
+set sidebar_visible
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+set mail_check_stats
+
+# Vim-style key bindings.
+# To abort command use: ctrl-g (instead of ctrl-c).
+# To delete whole line (for example with file name) use: ctrl-u.
+# To select messages with numbers 3-12: ~m3-12
+# To delete messages (afterwards use selecting as described above): D
+
+bind index <Space> noop
+bind index,pager g noop
+bind index gg first-entry
+bind pager gg top
+bind index G last-entry
+bind pager G bottom
+bind index l display-message
+bind attach l view-attach
+macro attach d <exit><delete-message>
+bind index h noop
+bind pager,attach h exit
+bind pager j next-line
+bind pager k previous-line
+bind pager N search-opposite
+# bind pager ? search-reverse
+macro pager e "<view-attachments><search>text/plain<enter><view-mailcap><exit>" "open text/plain attachment in editor"
+
+bind index \Cj sidebar-next
+bind index \Ck sidebar-prev
+bind index \Cl sidebar-open
+macro index <Space>sv <sidebar-toggle-visible>
+
+macro index <Space>si <change-folder>=${my_account}/inbox<enter> "switch to inbox folder"
+macro index <Space>sd <change-folder>=${my_account}/Drafts<enter> "switch to Drafts folder"
+macro index <Space>sq <change-folder>=${my_account}/Queue<enter> "switch to Queue folder"
+macro index <Space>ss <change-folder>=${my_account}/Sent<enter> "switch to Sent folder"
+macro index <Space>st <change-folder>=${my_account}/Trash<enter> "switch to Trash folder"
+# Can't get space working in "All Mail":
+macro index <Space>sga <change-folder>=${my_account}/[Gmail]/All<complete><enter> \
+                       "switch to [Gmail]/All Mail folder"
+macro index <Space>sgd <change-folder>=${my_account}/[Gmail]/Drafts<enter> \
+                       "switch to [Gmail]/Drafts folder"
+macro index <Space>sgi <change-folder>=${my_account}/[Gmail]/Important<enter> \
+                       "switch to [Gmail]/Important folder"
+macro index <Space>sgse <change-folder>=${my_account}/[Gmail]/Sent<complete><enter> \
+                       "switch to [Gmail]/Sent Mail folder"
+macro index <Space>sgsp <change-folder>=${my_account}/[Gmail]/Spam<enter> \
+                       "switch to [Gmail]/Spam folder"
+macro index <Space>sgst <change-folder>=${my_account}/[Gmail]/Starred<enter> \
+                       "switch to [Gmail]/Starred folder"
+macro index <Space>sgt <change-folder>=${my_account}/[Gmail]/Trash<enter> \
+                       "switch to [Gmail]/Trash folder"
+
+# bind pager v view-attachments
+macro index,pager b "<view-attachments><search>text/html<enter><view-mailcap><exit>" "open text/html attachment in browser"
+macro index,pager s "$<shell-escape>mbsync -a<enter>" "sync mailbox"
+
+# source some_file.muttrc

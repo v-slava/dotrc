@@ -33,6 +33,19 @@ config_concat_dotrc_s()
     fi
 )
 
+config_preprocess()
+(
+    set -e
+    if [ ! -f "$DOTRC_FILE" ]; then
+        echo "Error: $DOTRC_FILE is not a regular file" 1>&2
+        return 1
+    fi
+    rm -rf "$DEST"
+    REGEX='.*#INCLUDE_FILE_FROM_DOTRC_S: (\S+)'
+    cat "$DOTRC_FILE" | $DOTRC/other_files/preprocess.py "$REGEX" \
+        "$DOTRC_S/other_files/$SETTINGS" > "$DEST"
+)
+
 config_copy_symlink()
 (
     set -e
@@ -81,13 +94,32 @@ config_generate_home()
 (
     set -e
     case "$FILE" in
+        ".mbsyncrc")
+            config_preprocess
+            chmod 600 "$DEST"
+            if [ "$(id -u)" != "0" ]; then
+                mkdir -p $HOME/mail/slava65536@gmail.com
+                mkdir -p $HOME/mail/viacheslav.volkov.1@gmail.com
+                # Add short symlinks for sidebar in neomutt:
+                if [ ! -L $HOME/mail/s ]; then
+                    ln -s $HOME/mail/slava65536@gmail.com $HOME/mail/s
+                fi
+                if [ ! -L $HOME/mail/v ]; then
+                    ln -s $HOME/mail/viacheslav.volkov.1@gmail.com $HOME/mail/v
+                fi
+            fi
+            ;;
+        ".msmtprc")
+            config_preprocess
+            chmod 600 "$DEST"
+            ;;
         ".spacemacs" | \
         ".bashrc")
             config_symlink_dotrc
             ;;
-        ".config_xdg/i3/config")
-            $DOTRC/other_files/xrandr.sh update_i3_config
-            i3_msg reload
+        ".Xmodmap")
+            config_concat_dotrc_s
+            config_virtualbox
             ;;
         ".Xresources")
             config_concat_dotrc_s
@@ -95,15 +127,9 @@ config_generate_home()
                 xrdb "$DEST"
             fi
             ;;
-        ".config/systemd/user/rdm.socket")
-            config_concat_dotrc_s
-            if [ "$(id -u)" != "0" ]; then
-                systemctl --user enable rdm.socket
-            fi
-            ;;
-        ".Xmodmap")
-            config_concat_dotrc_s
-            config_virtualbox
+        ".config_xdg/i3/config")
+            $DOTRC/other_files/xrandr.sh update_i3_config
+            i3_msg reload
             ;;
         ".config_xdg/vifm/vifmrc")
             config_concat_dotrc_s
@@ -111,6 +137,20 @@ config_generate_home()
                 -e "s|\$DOTRC_S|$DOTRC_S|g" \
                 -e "s|\$DOTRC|$DOTRC|g" \
                 -e "s|\$WORKSPACE|$WORKSPACE|g"
+            ;;
+        ".config/dunst/dunstrc")
+            config_concat_dotrc_s
+            if [ "$(id -u)" != "0" ]; then
+                systemctl --user restart dunst.service
+            fi
+            ;;
+        ".config/systemd/user/mbsync.timer" | \
+        ".config/systemd/user/rdm.socket")
+            config_concat_dotrc_s
+            if [ "$(id -u)" != "0" ]; then
+                BASE_NAME=$(basename $FILE)
+                systemctl --user enable $BASE_NAME
+            fi
             ;;
         ".vim/init.vim")
             config_copy_symlink
@@ -135,21 +175,20 @@ config_generate()
     set -e
     case "$MODE" in
         -h)
-            DOTRC_FILE="$DOTRC/home_settings/$FILE"
-            DOTRC_S_FILE="$DOTRC_S/home_settings/$FILE"
+            SETTINGS="home_settings"
             DEST_DIR="$HOME/"
-            DEST="${DEST_DIR}$FILE"
-            mkdir -p "$(dirname "$DEST")"
-            config_generate_home
+            FUNC=config_generate_home
             ;;
         -r)
-            DOTRC_FILE="$DOTRC/root_settings/$FILE"
-            DOTRC_S_FILE="$DOTRC_S/root_settings/$FILE"
+            SETTINGS="root_settings"
             DEST_DIR="/"
-            DEST="${DEST_DIR}$FILE"
-            mkdir -p "$(dirname "$DEST")"
-            config_generate_root
+            FUNC=config_generate_root
             ;;
         *) exit 1
     esac
+    DOTRC_FILE="$DOTRC/$SETTINGS/$FILE"
+    DOTRC_S_FILE="$DOTRC_S/$SETTINGS/$FILE"
+    DEST="${DEST_DIR}$FILE"
+    mkdir -p "$(dirname "$DEST")"
+    $FUNC
 )

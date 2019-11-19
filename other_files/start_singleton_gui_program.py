@@ -76,9 +76,22 @@ def find_win_with_prop(prop_name, prop_value, obj):
 #         return is_workspace(name, obj)
 #     return json_find_single(json_root, is_our_workspace)
 
-def start_program(cmd, find_window, process_name = None, sleep = 0):
+def start_program(cmd, find_window, process_name = None, single_run = False):
+    def get_win_id(win):
+        return win[0]['window']
+    def move_win_to_cur_workspace(win_id):
+        focused_workspace = get_focused_workspace()
+        m = f'[id={win_id}] move container to workspace {focused_workspace}, focus'
+        subprocess.run(['i3-msg', m], check = True, stdout = subprocess.DEVNULL)
     if not process_name:
         process_name = cmd[0]
+    is_running = process_name in (p.name() for p in psutil.process_iter())
+    if is_running and single_run:
+        ret = subprocess.run(['i3-msg', '-t', 'get_tree'], check = True,
+                capture_output = True, encoding = 'utf8')
+        win = find_win_with_prop('title', 'neomutt', json.loads(ret.stdout))
+        move_win_to_cur_workspace(get_win_id(win))
+        return
     dotrc = os.environ['DOTRC']
     start_from_gui = os.path.join(dotrc, 'other_files', 'start_from_gui.sh')
     cmd = [start_from_gui] + cmd
@@ -93,34 +106,36 @@ def start_program(cmd, find_window, process_name = None, sleep = 0):
     # All possible subscribe / monitor options:
     # workspace output mode window barconfig_update binding
     i3_msg_process = subprocess.Popen(i3_msg_cmd, stdout = subprocess.PIPE)
-    is_running = process_name in (p.name() for p in psutil.process_iter())
     if is_running:
-        sleep = 0
         subprocess.run(cmd, check = True, stdout = subprocess.DEVNULL,
-                stderr = subprocess.DEVNULL)
+                       stderr = subprocess.DEVNULL)
     else:
         subprocess.Popen(cmd, stdout = subprocess.DEVNULL,
-                stderr = subprocess.DEVNULL)
+                         stderr = subprocess.DEVNULL)
     while True:
         line = i3_msg_process.stdout.readline().decode('utf8')
         event = json.loads(line)
         win = find_window(event)
         if win:
-            win_id = win[0]['window']
+            win_id = get_win_id(win)
             break
     i3_msg_process.terminate()
     i3_msg_process = None
-    if sleep:
-        time.sleep(sleep) # skip white blinking
-    focused_workspace = get_focused_workspace()
-    m = f'[id={win_id}] move container to workspace {focused_workspace}, focus'
-    subprocess.run(['i3-msg', m], check = True, stdout = subprocess.DEVNULL)
+    move_win_to_cur_workspace(win_id)
 
 def start_browser(args):
     def find_browser(obj):
         return find_win_with_prop('window_role', 'browser', obj)
     start_program(['google-chrome'] + args, find_browser,
-            process_name = 'chrome', sleep = 0.5)
+            process_name = 'chrome')
+
+def start_email(args):
+    def find_email_client(obj):
+        return find_win_with_prop('title', 'neomutt', obj)
+    dotrc = os.environ['DOTRC']
+    email_client = os.path.join(dotrc, 'other_files', 'email_client.sh')
+    start_program([email_client] + args, find_email_client,
+                  process_name = 'neomutt', single_run = True)
 
 def start_telegram(args):
     def find_telegram(obj):
@@ -140,12 +155,10 @@ def start_dictionary(args):
 def parse_cmd_line_args():
     desc = 'Start singleton GUI program.'
     parser = argparse.ArgumentParser(description = desc)
-    programs_supported = ['browser', 'telegram', 'skype', 'dictionary']
+    programs_supported = ['browser', 'email', 'telegram', 'skype', 'dictionary']
     parser.add_argument('program', choices = programs_supported,
             help = 'program to start')
-    parser.add_argument('args', nargs = '*',
-            help = 'command line arguments for a program to start')
-    return parser.parse_args()
+    return parser.parse_known_args()
 
 def main():
     # start_skype()
@@ -154,8 +167,8 @@ def main():
     # start_dictionary_lookup()
     # import sys; sys.exit()
     args = parse_cmd_line_args()
-    func = 'start_' + args.program
-    globals()[func](args.args)
+    func = 'start_' + args[0].program
+    globals()[func](args[1])
 
 if __name__ == '__main__':
     main()

@@ -9,4 +9,4 @@ if pidof skypeforlinux 1>/dev/null ; then
     done
 fi
 
-$START_S skype
+$DOTRC/other_files/start_singleton_gui_program.py skype

@@ -9,7 +9,7 @@ fi
 
 # exec x-terminal-emulator -e nvim -c ':set norelativenumber' -c ':set nonumber' -c ':startinsert' -c ":e term://$*"
 
-exec x-terminal-emulator -e $@
+exec x-terminal-emulator -e "$@"
 
 # Generate unique directory name in $HOME/terminal:
 FULL_TERMINAL_FOLDER_PATH=$(mktemp -d --tmpdir=$HOME/terminal XXXXXX)

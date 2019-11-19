@@ -1,0 +1,6 @@
+application/octet-stream; $DOTRC/other_files/mailcap_open.sh %s pdf pdf_djvu_open.sh FILE
+application/pdf; $DOTRC/other_files/mailcap_open.sh %s pdf pdf_djvu_open.sh FILE
+application/msword; $DOTRC/other_files/mailcap_open.sh --in-background %s docx soffice FILE
+image/jpeg; $DOTRC/other_files/mailcap_open.sh %s jpeg $DOTRC/other_files/view_image.sh FILE
+text/plain; e %s
+text/html; $DOTRC/other_files/mailcap_open.sh %s html $DOTRC/other_files/start_singleton_gui_program.py browser file://FILE

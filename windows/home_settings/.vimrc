@@ -325,6 +325,9 @@ autocmd BufEnter *.ds setlocal filetype=arm_ds_5_script " my filetype
 " note: originally for *.ds filetype was "datascript".
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 " autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
+autocmd BufEnter *.mbsyncrc,*.msmtprc setlocal filetype=conf
+autocmd BufEnter *.muttrc setlocal filetype=muttrc
+
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
             \ | call My_configure_tcomment()
 

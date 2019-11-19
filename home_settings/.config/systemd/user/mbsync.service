@@ -1,0 +1,7 @@
+[Unit]
+Description=Mailbox synchronization service
+
+[Service]
+Type=oneshot
+; ExecStart=/usr/bin/mbsync -Va
+ExecStart=/media/files/workspace/dotrc/other_files/check_for_new_emails.sh

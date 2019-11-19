@@ -189,6 +189,8 @@ filextype *.html,*.htm,*.svg
 
 " filetype *.html,*.htm links, lynx
 
+filextype *.eml thunderbird %f &
+
 " Object
 " filetype *.o nm %f | less
 

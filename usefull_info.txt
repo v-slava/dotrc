@@ -182,8 +182,11 @@ colordiff -uN "$@"
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
-# remote desktop / RDP client:
+# remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
+
+# list only directories in $DIR:
+ls -d $DIR/*/
 
 # transmission disable password:
 in /etc/transmission-daemon/settings.json set:
@@ -213,6 +216,9 @@ gcc --help=optimizers -Q -O0 2>&1 | perl -ane 'if ($F[1] =~/enabled/) {$F[0] =~ 
 
 # To find out what gcc -pthread actually does:
 gcc -dumpspecs | grep pthread
+
+# Set terminal emulator's title (urxvt, heading):
+echo -ne "\033]0;SOME TITLE HERE\007"
 
 # get current tty device (terminal):
 tty
@@ -491,6 +497,10 @@ shopt -s dotglob
 
 # Crosscompile for ARM 64 using clang:
 clang --target=aarch64-linux-gnu --sysroot=/path/to/sysroot
+
+# Get linux distro (distribution) information:
+lsb_release -a
+cat /etc/apt/sources.list
 
 # Icecream (distributed compilation, see also distcc, ccache):
 sudo apt-get install icecc icecc-monitor

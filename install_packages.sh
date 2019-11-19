@@ -10,20 +10,23 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    vim vifm fzf less bash-completion python dhex xxd \
-    apt-file apt-rdepends apt-utils dialog locales isc-dhcp-client \
-    wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables traceroute wget \
+    neovim vbindiff vifm ripgrep progress fzf less bash-completion python xxd \
+    apt-file apt-rdepends apt-utils dialog locales \
+    wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
+    isc-dhcp-client traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
-    openssh-client sshfs fuse kbd \
-    gcc-doc libc-dev glibc-doc glibc-doc-reference strace ltrace bear \
-    gdb gdb-doc gdbserver gdb-multiarch \
-    zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar \
-    sox libsox-fmt-mp3 ffmpeg \
-    exuberant-ctags cscope doxygen graphviz pv htop colordiff socat psmisc \
-    tree git git-email make patch dos2unix file bsdutils android-tools-adb \
-    lame ntpdate ntfs-3g fuseiso9660 netcat-openbsd keepass2 qalculate \
-    gcc g++ cmake build-essential \
-    clang-7.0 clang-tidy-7.0 clang-tools-7.0 libclang-7.0-dev llvm-6.0 \
+    gcc-doc libc-dev glibc-doc glibc-doc-reference \
+    gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
+    gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
+    rtags exuberant-ctags cscope doxygen git git-email make patch dos2unix \
+    zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
+    colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
+    ntpdate fuseiso9660 netcat-openbsd keepass2 \
+
+# sox libsox-fmt-mp3 android-tools-adb lame fuse kbd sshfs qalculate ntfs-3g
+# libclang-dev llvm vim dhex
+# Install my (patched) version for:
+# bear
 
 apt-file update
 
@@ -64,8 +67,8 @@ apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprinti
 # keynav
 
 # Destop notifications (use notify-send to send a message):
-# apt-get install libnotify-bin dunst
-# notify-osd
+apt-get install libnotify-bin dunst
+# notify-osd # heavy-weight, has issues with i3wm
 
 # Install vim instance, which is able to access X clipboard:
 apt-get install vim-gtk
@@ -77,7 +80,8 @@ apt-get install vim-gtk
 # apt-get install joe
 
 # Install email client:
-apt-get install thunderbird
+apt-get install isync msmtp neomutt
+# apt-get install thunderbird
 # icedove
 # For microsoft exchange server:
 # apt-get -t buster-backports install evolution evolution-ews
