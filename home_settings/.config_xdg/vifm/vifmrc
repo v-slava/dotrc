@@ -538,7 +538,7 @@ nmap im :winrun ^ !mc %d %D<CR>
 " open (duplicate, clone) vifm instance:
 nmap if :winrun ^ !$DOTRC/other_files/open_terminal.sh vifm %d %D &<CR>
 nmap it :!touch %c<CR>
-nmap ib :!beautify_file.sh %d/%c<CR>
+" nmap ib :!beautify.sh %d/%c<CR>
 command hexview xxd %c | less
 command hexedit hed %c
 

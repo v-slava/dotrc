@@ -1088,15 +1088,13 @@ endfunction
 
 function! My_rtags_preprocess()
     function! s:My_rtags_preprocess_file_handler(result)
-        let l:preprocessed_file = '/tmp/vim_rtags_preprocessed.i'
-        let l:formatted_file = '/tmp/vim_rtags_preprocessed_formatted.i'
+        let l:preprocessed_file = '/tmp/vim_rtags_preprocessed_formatted.i'
         execute 'vnew ' . l:preprocessed_file
         normal ggdG
         call append(0, a:result)
         silent execute 'wq'
-        silent execute '!beautify_file.sh < ' . l:preprocessed_file . ' > ' .
-                \ l:formatted_file
-        execute 'vsplit ' . l:formatted_file
+        silent execute '!beautify.sh ' . l:preprocessed_file
+        execute 'vsplit ' . l:preprocessed_file
     endfunction
     call rtags#ExecuteThen({'-E' : expand("%:p")},
                 \ [function('s:My_rtags_preprocess_file_handler')])
