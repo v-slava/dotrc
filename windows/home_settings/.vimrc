@@ -1217,6 +1217,7 @@ let g:which_key_map.f = {'name' : '+files',
 \ }
 
 " \   's' : [':Gstatus', 'status'],
+" Use 'P' in *.fugitiveblame to reblame at parent, see: help fugitive-:Gblame
 let g:which_key_map.g = {'name' : '+git',
 \   'b' : [':Gblame', 'blame'],
 \   'c' : {'name' : '+commit',
