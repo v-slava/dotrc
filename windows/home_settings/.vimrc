@@ -345,21 +345,22 @@ let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
 autocmd FileType
 \ rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot,html,css
+\,kconfig
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
     if g:My_user_id != 0 && !g:My_is_windows
         DetectIndent
     endif
     if My_is_linux_kernel_source_file(expand("%:p"))
-        setlocal tabstop=8
-        setlocal shiftwidth=8
-    else
-        setlocal tabstop=4
+        if &expandtab == 0
+            setlocal shiftwidth=8
+        endif
     endif
     if &filetype == "vim"
         setlocal shiftwidth=4
     endif
     call My_apply_tab_settings_s()
+    execute 'setlocal tabstop=' . &shiftwidth
 endfunction
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
