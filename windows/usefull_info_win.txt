@@ -137,6 +137,9 @@ echo %time% && cmd %% echo %time%
 # powershell:
 Measure-Command {cmd}
 
+# nc, netcat, telnet:
+New-Object System.Net.Sockets.TcpClient("8.8.8.8", 8080)
+
 # Preprocess (msvc):
 1) Create new win32 console msvc project. Add single source file with the following contents:
      #include "preprocessed.i"
