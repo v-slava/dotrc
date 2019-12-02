@@ -56,6 +56,9 @@ vim -V9log_file.txt [your_vim_args]
 # gvpr: graphviz preprocessor
 # foliant: allows to embed graphviz into markdown
 
+# GNU Make syncronous output:
+make -O
+
 # some yocto commands (tags: bitbake):
 devtool status
 devtool modify busybox
