@@ -590,10 +590,11 @@ function! My_swap_keyboard_layout()
 endfunction
 
 function! My_insert_snippet()
+    let l:file_name = expand('%:t')
+    let l:file_path = expand('%:p')
+    let l:ext = expand('%:e')
     if &filetype == "c" || &filetype == "cpp"
-        let l:ext = expand('%:e')
         if l:ext == 'h' || l:ext == 'hpp'
-            let l:file_name = expand('%:t')
             let l:guard_name = tr(toupper(l:file_name), '.', '_')
             call append(0, ['#ifndef ' . l:guard_name, '#define '
                         \ . l:guard_name])
@@ -634,15 +635,33 @@ function! My_insert_snippet()
             normal 3k
         endif
     elseif &filetype == "sh"
-        call append(0, [
+        if stridx(l:file_path, 'other_files/settings_merge/') != -1
+            if stridx(l:file_path, '/dotrc_s/') != -1
+                let l:func = 'config_dotrc_s'
+            else
+                let l:func = 'config_dotrc'
+            endif
+            call append(0, [
+\ l:func . "()",
+\ "(",
+\ "    set -e",
+\ ")",
+\ ])
+            if getline('.') == ''
+                normal dd
+            endif
+            normal gg2j
+        else
+            call append(0, [
 \ "#!/bin/bash",
 \ "",
 \ "echo \"\\$# = |$#|\"; echo \"\\$0 = |$0|\"; echo \"\\$@ = |$@|\"",
 \ ])
-        if getline('.') == ''
-            normal dd
-        else
-            normal k
+            if getline('.') == ''
+                normal dd
+            else
+                normal k
+            endif
         endif
     elseif &filetype == "python"
         call append(0, [

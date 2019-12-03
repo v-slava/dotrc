@@ -1,5 +1,3 @@
-source $DOTRC/other_files/i3_msg.sh
-
 dotrc_s_overwrite()
 (
     set -e
@@ -90,89 +88,6 @@ config_virtualbox()
     mv "$TMP_FILE" "$DEST"
 )
 
-config_generate_home()
-(
-    set -e
-    case "$FILE" in
-        ".mbsyncrc")
-            if ! $DOTRC/other_files/virtual_box.sh ; then
-                config_preprocess
-                chmod 600 "$DEST"
-                if [ "$(id -u)" != "0" ]; then
-                    mkdir -p $HOME/mail/slava65536@gmail.com
-                    mkdir -p $HOME/mail/viacheslav.volkov.1@gmail.com
-                    # Add short symlinks for sidebar in neomutt:
-                    if [ ! -L $HOME/mail/s ]; then
-                        ln -s $HOME/mail/slava65536@gmail.com $HOME/mail/s
-                    fi
-                    if [ ! -L $HOME/mail/v ]; then
-                        ln -s $HOME/mail/viacheslav.volkov.1@gmail.com \
-                            $HOME/mail/v
-                    fi
-                fi
-            fi
-            ;;
-        ".msmtprc")
-            if ! $DOTRC/other_files/virtual_box.sh ; then
-                config_preprocess
-                chmod 600 "$DEST"
-            fi
-            ;;
-        ".spacemacs" | \
-        ".bashrc")
-            config_symlink_dotrc
-            ;;
-        ".Xmodmap")
-            config_concat_dotrc_s
-            config_virtualbox
-            ;;
-        ".Xresources")
-            config_concat_dotrc_s
-            if [ -n "$DISPLAY" ]; then
-                xrdb "$DEST"
-            fi
-            ;;
-        ".config_xdg/i3/config")
-            $DOTRC/other_files/xrandr.sh update_i3_config
-            i3_msg reload
-            ;;
-        ".config_xdg/vifm/vifmrc")
-            config_concat_dotrc_s
-            sed -i "$DEST" \
-                -e "s|\$DOTRC_S|$DOTRC_S|g" \
-                -e "s|\$DOTRC|$DOTRC|g" \
-                -e "s|\$WORKSPACE|$WORKSPACE|g"
-            ;;
-        ".config/dunst/dunstrc")
-            config_concat_dotrc_s
-            if [ "$(id -u)" != "0" ]; then
-                systemctl --user restart dunst.service
-            fi
-            ;;
-        ".config/systemd/user/mbsync.timer" | \
-        ".config/systemd/user/rdm.socket")
-            config_concat_dotrc_s
-            if [ "$(id -u)" != "0" ]; then
-                BASE_NAME=$(basename $FILE)
-                systemctl --user enable $BASE_NAME
-            fi
-            ;;
-        ".vim/init.vim")
-            config_copy_symlink
-            ;;
-        *) config_concat_dotrc_s
-    esac
-)
-
-config_generate_root()
-(
-    set -e
-    case "$FILE" in
-        "etc/resolv.conf") dotrc_s_overwrite ;;
-        *) config_concat_dotrc_s
-    esac
-)
-
 config_generate()
 (
     MODE="$1"
@@ -182,18 +97,28 @@ config_generate()
         -h)
             SETTINGS="home_settings"
             DEST_DIR="$HOME/"
-            FUNC=config_generate_home
             ;;
         -r)
             SETTINGS="root_settings"
             DEST_DIR="/"
-            FUNC=config_generate_root
             ;;
         *) exit 1
     esac
     DOTRC_FILE="$DOTRC/$SETTINGS/$FILE"
     DOTRC_S_FILE="$DOTRC_S/$SETTINGS/$FILE"
+    MERGE_SUFFIX=other_files/settings_merge/$SETTINGS/${FILE}.sh
+    MERGE=$DOTRC/$MERGE_SUFFIX
+    MERGE_S=$DOTRC_S/$MERGE_SUFFIX
     DEST="${DEST_DIR}$FILE"
+    FUNC=config_concat_dotrc_s # default
+    if [ -f "$MERGE" ]; then
+        . "$MERGE"
+        FUNC=config_dotrc
+    fi
+    if [ -f "$MERGE_S" ]; then
+        . "$MERGE_S"
+        FUNC=config_dotrc_s
+    fi
     mkdir -p "$(dirname "$DEST")"
     $FUNC
 )

@@ -17,7 +17,8 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
-    gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
+    gdb gdb-doc gdbserver gdb-multiarch uftrace strace ltrace graphviz python3 \
+    linux-base linux-perf-5.3 \
     rtags exuberant-ctags cscope doxygen git git-email make patch dos2unix \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \

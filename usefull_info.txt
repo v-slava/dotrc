@@ -1984,6 +1984,11 @@ rpm --eval "%{_prefix}"
 # List all filesystems, devices backed by them, mount points:
 findmnt
 
+# trace userspace program like "function_graph" in ftrace:
+gcc -pg file.c -o file.out
+uftrace ./file.out
+sudo uftrace -k ./file.out
+
 # trace execve syscalls (including child processes):
 strace -f -s 8192 -o trace_file -e trace=execve CMD
 # attach to process and begin tracing:
