@@ -38,7 +38,6 @@ config_preprocess()
         echo "Error: $DOTRC_FILE is not a regular file" 1>&2
         return 1
     fi
-    rm -rf "$DEST"
     REGEX='.*#INCLUDE_FILE_FROM_DOTRC_S: (\S+)'
     cat "$DOTRC_FILE" | $DOTRC/other_files/preprocess.py "$REGEX" \
         "$DOTRC_S/other_files/$SETTINGS" > "$DEST"

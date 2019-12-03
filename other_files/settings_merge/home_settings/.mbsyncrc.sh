@@ -1,20 +1,34 @@
+create_maildir()
+(
+    set -e
+    if [ $# -ne 2 ]; then
+        echo "config_create_maildir(): error: wrong args" 1>&2
+        false
+    fi
+    LONG="$1"
+    SHORT="$2"
+    mkdir -p $HOME/mail/$LONG
+    # Add short symlink for sidebar in neomutt:
+    if [ ! -L $HOME/mail/$SHORT ]; then
+        ln -s $HOME/mail/$LONG $HOME/mail/$SHORT
+    fi
+)
+
+config_mbsyncrc()
+(
+    set -e
+    if [ "$(id -u)" != "0" ]; then
+        config_preprocess
+        chmod 600 "$DEST"
+        create_maildir slava65536@gmail.com s
+        create_maildir viacheslav.volkov.1@gmail.com v
+    fi
+)
+
 config_dotrc()
 (
     set -e
     if ! $DOTRC/other_files/virtual_box.sh ; then
-        config_preprocess
-        chmod 600 "$DEST"
-        if [ "$(id -u)" != "0" ]; then
-            mkdir -p $HOME/mail/slava65536@gmail.com
-            mkdir -p $HOME/mail/viacheslav.volkov.1@gmail.com
-            # Add short symlinks for sidebar in neomutt:
-            if [ ! -L $HOME/mail/s ]; then
-                ln -s $HOME/mail/slava65536@gmail.com $HOME/mail/s
-            fi
-            if [ ! -L $HOME/mail/v ]; then
-                ln -s $HOME/mail/viacheslav.volkov.1@gmail.com \
-                    $HOME/mail/v
-            fi
-        fi
+        config_mbsyncrc
     fi
 )
