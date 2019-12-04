@@ -87,6 +87,8 @@ macro index <Space>sgt <change-folder>=${my_account}/[Gmail]/Trash<enter> \
 
 # bind pager v view-attachments
 macro index,pager b "<view-attachments><search>text/html<enter><view-mailcap><exit>" "open text/html attachment in browser"
-macro index,pager s "$<shell-escape>mbsync -a<enter>" "sync mailbox"
+macro index,pager S "$<shell-escape>mbsync -a<enter>" "sync mailbox"
+# To save the message we will open the message in raw eml format in vim:
+bind index,pager s edit-raw-message
 
 # source some_file.muttrc
