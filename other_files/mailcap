@@ -4,4 +4,4 @@ application/msword; $DOTRC/other_files/mailcap_open.sh --in-background %s docx s
 image/jpeg; $DOTRC/other_files/mailcap_open.sh %s jpeg $DOTRC/other_files/view_image.sh FILE
 image/png; $DOTRC/other_files/mailcap_open.sh %s png $DOTRC/other_files/view_image.sh FILE
 text/plain; e %s
-text/html; $DOTRC/other_files/mailcap_open.sh %s html $DOTRC/other_files/start_singleton_gui_program.py browser file://FILE
+text/html; $DOTRC/other_files/mailcap_open.sh %s html $DOTRC/other_files/start_singleton_gui_program.py browser --new-window file://FILE
