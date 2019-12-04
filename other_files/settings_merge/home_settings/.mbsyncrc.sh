@@ -14,21 +14,21 @@ create_maildir()
     fi
 )
 
-config_mbsyncrc()
+configure_maildirs()
 (
     set -e
-    if [ "$(id -u)" != "0" ]; then
-        config_preprocess
-        chmod 600 "$DEST"
-        create_maildir slava65536@gmail.com s
-        create_maildir viacheslav.volkov.1@gmail.com v
-    fi
+    create_maildir slava65536@gmail.com s
+    create_maildir viacheslav.volkov.1@gmail.com v
 )
 
 config_dotrc()
 (
     set -e
-    if ! $DOTRC/other_files/virtual_box.sh ; then
-        config_mbsyncrc
+    # if ! $DOTRC/other_files/virtual_box.sh ; then
+    if [ "$(id -u)" != "0" ]; then
+        config_preprocess
+        chmod 600 "$DEST"
+        configure_maildirs
     fi
+    # fi
 )

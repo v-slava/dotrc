@@ -1,56 +1,11 @@
 # Warning: settings order and empty lines matter!
 # Fetch all accounts:
 # mbsync -a [-V]
-# Fetch only some specific account:
-# mbsync viacheslav.volkov.1
+# Fetch only some specific account (for ~/mail/FOLDER):
+# mbsync FOLDER
 
-#
-# Account settings
-#
+#DEFINE MY_ACCOUNT slava65536
+#INCLUDE_FILE: gmail.com.mbsyncrc
 
-IMAPAccount slava65536
-Host imap.gmail.com
-# Port 993
-User slava65536
-# Pass "your_password"
-# PassCmd "gpg --pinentry-mode loopback --passphrase $(keyfetch) -d ~/.password/some_file.gpg"
-# See also for gpg: --quiet --for-your-eyes-only --decrypt --no-tty
-#INCLUDE_FILE_FROM_DOTRC_S: slava65536.mbsyncrc
-# SSLType IMAP # old and insecure (no SSL/TLS?)
-# The following works if:
-# * you have "2 step verification" and you use "app-specific password"
-# * you don't have "2 step verification" and you "allow insecure apps"
-SSLType IMAPS
-# AuthMech XOAUTH2 # need token from google (see thunderbird)
-# AuthMechs LOGIN # this seems to be default
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-#
-# Remote settings
-#
-
-IMAPStore slava65536-remote
-Account slava65536
-
-#
-# Local settings
-#
-
-MaildirStore slava65536-local
-Path ~/mail/slava65536@gmail.com/
-Inbox ~/mail/slava65536@gmail.com/inbox
-# On-disk folder naming style (use same names as on remote server):
-Subfolders Verbatim
-
-#
-# Sync settings
-#
-
-Channel slava65536
-Master :slava65536-remote:
-Slave :slava65536-local:
-Create Both
-Expunge Both
-Patterns *
-# Patterns * !Trash
-SyncState *
+#DEFINE MY_ACCOUNT viacheslav.volkov.1
+#INCLUDE_FILE: gmail.com.mbsyncrc

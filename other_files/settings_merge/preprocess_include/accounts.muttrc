@@ -1,0 +1,5 @@
+set my_account = "slava65536@gmail.com"
+# Short symlink for sidebar: s -> slava65536@gmail.com:
+mailboxes =s/inbox =s/Drafts =s/Queue =s/Sent =s/Trash \
+"=s/[Gmail]/All Mail" =s/[Gmail]/Drafts =s/[Gmail]/Important \
+"=s/[Gmail]/Sent Mail" =s/[Gmail]/Spam =s/[Gmail]/Starred =s/[Gmail]/Trash

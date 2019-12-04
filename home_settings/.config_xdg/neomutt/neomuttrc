@@ -13,20 +13,14 @@ set folder = "~/mail"
 
 # set from = "slava65536@gmail.com"
 # set realname = "Viacheslav Volkov"
-set my_account = "slava65536@gmail.com"
-set spoolfile = "+${my_account}/inbox"
 # set record = "+Sent"
 # set trash = "+Trash"
 # set postponed = "+Drafts"
 
 # Account-specific settings:
-# Short symlink for sidebar: s -> slava65536@gmail.com:
-mailboxes =s/inbox =s/Drafts =s/Queue =s/Sent =s/Trash \
-"=s/[Gmail]/All Mail" =s/[Gmail]/Drafts =s/[Gmail]/Important \
-"=s/[Gmail]/Sent Mail" =s/[Gmail]/Spam =s/[Gmail]/Starred =s/[Gmail]/Trash
-# Short symlink for sidebar: v -> viacheslav.volkov.1@gmail.com:
-# TODO add here
+#INCLUDE_FILE: accounts.muttrc
 
+set spoolfile = "+${my_account}/inbox"
 set mailcap_path = $DOTRC/other_files/mailcap
 set sort = 'reverse-date' # sort messages according to date starting from newest
 set delete = yes # don't ask for delete confirmation
@@ -62,9 +56,12 @@ bind pager N search-opposite
 # bind pager ? search-reverse
 macro pager e "<view-attachments><search>text/plain<enter><view-mailcap><exit>" "open text/plain attachment in editor"
 
-bind index \Cj sidebar-next
-bind index \Ck sidebar-prev
-bind index \Cl sidebar-open
+bind index,pager \Cj sidebar-next
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cl sidebar-open
+macro attach \Cj "q<sidebar-next>"
+macro attach \Ck "q<sidebar-prev>"
+macro attach \Cl "q<sidebar-open>"
 macro index <Space>sv <sidebar-toggle-visible>
 
 macro index <Space>si <change-folder>=${my_account}/inbox<enter> "switch to inbox folder"

@@ -34,13 +34,22 @@ config_concat_dotrc_s()
 config_preprocess()
 (
     set -e
-    if [ ! -f "$DOTRC_FILE" ]; then
-        echo "Error: $DOTRC_FILE is not a regular file" 1>&2
-        return 1
+    IN_FILE="$DOTRC_FILE"
+    INC_SUFFIX=other_files/settings_merge/preprocess_include
+    if [ -f "$DOTRC_S_FILE" ]; then
+        IN_FILE="$DOTRC_S_FILE"
     fi
-    REGEX='.*#INCLUDE_FILE_FROM_DOTRC_S: (\S+)'
-    cat "$DOTRC_FILE" | $DOTRC/other_files/preprocess.py "$REGEX" \
-        "$DOTRC_S/other_files/$SETTINGS" > "$DEST"
+    cat "$IN_FILE" | $DOTRC/other_files/preprocess.py \
+        --include-regex '.*#INCLUDE_FILE: (\S+)' \
+        --define-regex '.*#DEFINE (\w+) (.+)\n' \
+        --undef-regex '.*#UNDEF (\w+)' \
+        --included-lines \
+            "#DEFINE DOTRC_S $DOTRC_S" \
+            "#DEFINE DOTRC $DOTRC" \
+        --allow-redefine --include-dirs \
+            "$DOTRC_S/$INC_SUFFIX" \
+            "$DOTRC/$INC_SUFFIX" \
+        > "$DEST"
 )
 
 config_copy_symlink()
