@@ -16,10 +16,8 @@ tdr: https://translate.google.com/?hl=en#de/ru/%s GoogleTranslate de -> ru
 # Google translate (any->any language): 'en/ru/phrase_to_translate' (de, uk, ko)
 to: https://translate.google.com/?hl=en#%s GoogleTranslate specify languages
 
-
 # Search for music:
-mus: http://spaces.ru/files/?r=main/search&Gs=1&Slist=61&link_id=80753&word=%s Music
-# mus: http://pleer.com/search?q=%s Music
+mus: https://spac1.com/files/search/?Slist=61&stt=53gKAM65OUA&word=%s Music
 # https://myzuka.org
 # www.audiopoisk.com
 # http://mp3brainz.net/
