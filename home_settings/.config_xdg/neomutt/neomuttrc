@@ -21,7 +21,7 @@ set folder = "~/mail"
 #INCLUDE_FILE: accounts.muttrc
 
 set spoolfile = "+${my_account}/inbox"
-set mailcap_path = $DOTRC/other_files/mailcap
+set mailcap_path = DOTRC/other_files/mailcap
 set sort = 'reverse-date' # sort messages according to date starting from newest
 set delete = yes # don't ask for delete confirmation
 push <first-entry> # focus first (top) email on startup
