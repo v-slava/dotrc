@@ -1,4 +1,10 @@
-set my_account = "slava65536@gmail.com"
+set my_account = "viacheslav.volkov.1@gmail.com"
+# Short symlink for sidebar: v -> viacheslav.volkov.1@gmail.com:
+mailboxes =v/inbox =v/Drafts =v/Queue =v/Sent =v/Trash \
+"=v/[Gmail]/All Mail" =v/[Gmail]/Drafts =v/[Gmail]/Important \
+"=v/[Gmail]/Sent Mail" =v/[Gmail]/Spam =v/[Gmail]/Starred =v/[Gmail]/Trash
+
+# set my_account = "slava65536@gmail.com"
 # Short symlink for sidebar: s -> slava65536@gmail.com:
 mailboxes =s/inbox =s/Drafts =s/Queue =s/Sent =s/Trash \
 "=s/[Gmail]/All Mail" =s/[Gmail]/Drafts =s/[Gmail]/Important \
