@@ -4,7 +4,11 @@ NOTIFICATIONS_TO_SHOW=3
 MAIL=$HOME/mail
 
 set -e
-mbsync -a
+
+if ! pidof mbsync 1>/dev/null ; then
+    mbsync -a
+fi
+
 find $HOME/mail -maxdepth 1 -type d -not -path $HOME/mail \
         | while read ACCOUNT_DIR ; do
     INBOX=${ACCOUNT_DIR}inbox
