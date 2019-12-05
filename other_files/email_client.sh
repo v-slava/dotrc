@@ -5,9 +5,7 @@ set -e
 sync_mail()
 (
     set -e
-    if ! pidof mbsync ; then
-        mbsync -a
-    fi
+    $DOTRC/other_files/check_for_new_emails.sh
 )
 
 if [ "$1" = "--startup" ]; then

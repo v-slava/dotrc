@@ -2,11 +2,13 @@
 
 NOTIFICATIONS_TO_SHOW=3
 MAIL=$HOME/mail
+LOCK_DIR=/tmp/mbsync_lock_dir
 
 set -e
 
-if ! pidof mbsync 1>/dev/null ; then
+if mkdir "$LOCK_DIR" 2>/dev/null ; then
     mbsync -a
+    rm -rf "$LOCK_DIR"
 fi
 
 find $HOME/mail -maxdepth 1 -type d -not -path $HOME/mail \
