@@ -1,3 +1,5 @@
+! See: urxvt-extensions(1), urxvtperl(3)
+
 ! Dump scrollback buffer with <Ctrl>+PrintScreen:
 URxvt.print-pipe: /bin/bash -c '$DOTRC/other_files/handle_terminal_scrollback_buffer.sh'
 URxvt.scrollTtyOutput: false
@@ -11,7 +13,9 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 ! Reduce distance between letters:
 ! URxvt.letterSpace: -1
 
-URxvt.perl-ext-common: default,matcher,font-size,clipboard,vtwheel
+URxvt.perl-ext-common: default,matcher,font-size,vtwheel,my-handle-buffer
+
+URxvt.keysym.Control-k: perl:my-handle-buffer:copy_file_to_clipboard
 
 ! Clickable URLs (ctrl + left button):
 URxvt.urlLauncher: /usr/bin/x-www-browser
@@ -23,13 +27,13 @@ URxvt.keysym.C-Down:   perl:font-size:decrease
 ! URxvt.keysym.C-A-Up:   perl:font-size:incglobal
 ! URxvt.keysym.C-A-Down: perl:font-size:decglobal
 
-! Clipboard extension:
-URxvt.keysym.Mod1-c:   perl:clipboard:copy
-URxvt.keysym.Mod1-v:   perl:clipboard:paste
-! URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
-! URxvt.clipboard.autocopy: If true, PRIMARY overwrites clipboard
-URxvt.clipboard.copycmd:  clipboard.sh
-URxvt.clipboard.pastecmd: clipboard.sh -o
+! Disable built-in clipboard hotkeys:
+URxvt.keysym.Control-Meta-c: builtin-string:
+URxvt.keysym.Control-Meta-v: builtin-string:
+! Use my clipboard hotkeys:
+URxvt.keysym.Mod1-c: eval:selection_to_clipboard
+URxvt.keysym.Mod1-v: eval:paste_clipboard
+
 ! Other:
 URxvt.saveLines: 1000000
 URxvt.scrollBar: false

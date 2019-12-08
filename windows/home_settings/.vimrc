@@ -364,6 +364,9 @@ function! My_apply_tab_settings()
     execute 'setlocal tabstop=' . &shiftwidth
 endfunction
 
+" For some reason which-key doesn't work with perl files. Bug?
+autocmd FileType perl call My_register_which_key(g:which_key_map, '')
+
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php
             \ setlocal textwidth=80 | setlocal formatoptions+=t
@@ -663,6 +666,19 @@ function! My_insert_snippet()
             else
                 normal k
             endif
+        endif
+    elseif &filetype == "perl"
+        call append(0, [
+\ "#!/usr/bin/perl",
+\ "",
+\ "use strict;",
+\ "use warnings;",
+\ "",
+\ 'print "hello world!\n";',
+\ 'use Data::Dumper qw(Dumper); print Dumper \@ARGV;',
+\ ])
+        if getline('.') == ''
+            normal dd
         endif
     elseif &filetype == "python"
         call append(0, [
@@ -974,6 +990,10 @@ function! My_insert_eval_region(text)
         let l:has_shebang = 1
         let l:cmd = 'i# EVAL REGION BEGINS HERE: |# |# ' . a:text
                     \ . '# EVAL REGION ENDS HERE.k'
+    elseif &filetype == "perl"
+        let l:has_shebang = 1
+        let l:cmd = 'i# EVAL REGION BEGINS HERE: |# |' . a:text
+                    \ . 'EVAL REGION ENDS HERE.k'
     elseif &filetype == "vim"
         let l:cmd = 'i" EVAL REGION BEGINS HERE: |" |' . a:text
                     \ . 'EVAL REGION ENDS HERE.k0'
@@ -1260,7 +1280,7 @@ let g:which_key_map.g = {'name' : '+git',
 
 let g:which_key_map.i = { 'name' : '+insert',
 \   'e' : [':call My_insert_eval_region("")', 'insert eval region'],
-\   's' : [':call My_insert_snippet()', 'snippet'],
+\   's' : [':call My_insert_snippet()', 'insert snippet'],
 \   'v' : [':call My_insert_eval_variable()', 'insert eval variable'],
 \ }
 
