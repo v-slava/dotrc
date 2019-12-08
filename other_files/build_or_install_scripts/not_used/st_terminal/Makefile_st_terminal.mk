@@ -10,7 +10,7 @@ patch_src: download_git
 PHONY += download_git
 download_git:
 	git clone http://git.suckless.org/st
-	cd st && git tag && git checkout 0.5
+	cd st && git tag && git checkout 0.8.2
 
 PHONY += clean
 clean:

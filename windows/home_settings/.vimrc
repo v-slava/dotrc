@@ -326,6 +326,7 @@ autocmd BufEnter *.ds setlocal filetype=arm_ds_5_script " my filetype
 autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 " autocmd BufEnter *.gl setlocal filetype=glanguage " my filetype
 autocmd BufEnter *.mbsyncrc,*.msmtprc setlocal filetype=conf
+autocmd BufEnter *kitty/*.conf setlocal filetype=conf
 autocmd BufEnter *.muttrc setlocal filetype=muttrc
 
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
