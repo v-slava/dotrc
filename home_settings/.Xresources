@@ -15,7 +15,7 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 
 URxvt.perl-ext-common: default,matcher,font-size,vtwheel,my-handle-buffer
 
-URxvt.keysym.Control-k: perl:my-handle-buffer:copy_file_to_clipboard
+URxvt.keysym.Control-Meta-k: perl:my-handle-buffer:copy_file_to_clipboard
 
 ! Clickable URLs (ctrl + left button):
 URxvt.urlLauncher: /usr/bin/x-www-browser

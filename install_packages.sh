@@ -40,9 +40,10 @@ apt-get install go-mtpfs
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
 # Install xorg (use xserver-xorg-video-vmware for virtualbox):
-apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-evdev \
-    xserver-xorg-input-synaptics xinit rxvt-unicode-256color rxvt-unicode \
-    libpam-systemd
+apt-get install xorg xserver-xorg-video-intel \
+    xserver-xorg-input-evdev xserver-xorg-input-synaptics \
+    xinit rxvt-unicode-256color rxvt-unicode libpam-systemd
+# Alternative for evdev and synaptics: xserver-xorg-input-libinput
 
 # Install window manager, status bar, screen locker, keyboard layout
 # indicator:
