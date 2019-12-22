@@ -420,6 +420,9 @@ autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | silent MyRunShellCmdNoOpen "
     \ . "$DOTRC/other_files/update_page_in_web_browser.sh"
 
+autocmd FileType sql if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | silent MyRunShellCmd sqlite3 < " . expand("%:p") | endif
+
 function! My_is_linux_kernel_source_file(full_path)
     if g:My_is_windows
         return 0
@@ -685,6 +688,19 @@ function! My_insert_snippet()
 \ "#!/usr/bin/python3",
 \ "",
 \ "import sys; print(sys.argv)",
+\ ])
+        if getline('.') == ''
+            normal dd
+        else
+            normal k
+        endif
+    elseif &filetype == "sql"
+        call append(0, [
+\ "create table " . expand("%:r") . "(text, priority INTEGER);",
+\ "insert into " . expand("%:r") . " values('deliver project description', 10);",
+\ "insert into " . expand("%:r") . " values('lunch with Christine', 100);",
+\ "",
+\ "select * from " . expand("%:r") . ";",
 \ ])
         if getline('.') == ''
             normal dd
