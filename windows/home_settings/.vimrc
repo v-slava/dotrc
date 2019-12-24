@@ -416,6 +416,12 @@ autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
     " "silent wa | silent !gcc -E -P -C -x c-header -o /tmp/" . expand("%:t")
     " "silent wa | silent !gpp.sh -o /tmp/" . expand("%:t")
 
+autocmd FileType markdown if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | silent !markdown " . expand("%:p") . " > /tmp/markdown.html"
+    \ . " && if pgrep -x chrome > /dev/null ; then true ; "
+    \ . "else google-chrome /tmp/markdown.html & fi &&"
+    \ . "$DOTRC/other_files/update_page_in_web_browser.sh" | endif
+
 autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | silent MyRunShellCmdNoOpen "
     \ . "$DOTRC/other_files/update_page_in_web_browser.sh"
