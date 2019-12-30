@@ -12,7 +12,7 @@
  * EVAL REGION ENDS HERE. */
 
 /* EVAL REGION BEGINS HERE: |* |
- * let g:My_eval_var = "silent wa | MyRunShellCmd genmc 1.c"
+ * let g:My_eval_var = "silent wa | MyRunShellCmd genmc -print-error-trace 1.c"
  * EVAL REGION ENDS HERE. */
 
 #define NUM_THREADS 2
