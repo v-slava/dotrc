@@ -45,12 +45,23 @@ static void *start_routine(void *arg)
     return NULL;
 }
 
+#ifdef GENMC
+
+/* genmc doesn't support vfprintf(). fprintf() is supported, but there is a
+ * warning when using stdout or stderr:
+ *
+ * WARNING: Inadequate naming info for variable stderr.
+ * Please submit a bug report to michalis@mpi-sws.org
+ */
+#define error(format, ...) do {    \
+    printf((format), __VA_ARGS__); \
+    exit(1);                       \
+} while (0)
+
+#else
+
 static void __attribute__((noreturn)) error(const char *format, ...)
 {
-    // genmc doesn't support vfprintf()
-#ifdef GENMC
-    (void)format;
-#else
     va_list ap;
     va_start(ap, format);
 #pragma GCC diagnostic push
@@ -58,9 +69,10 @@ static void __attribute__((noreturn)) error(const char *format, ...)
     vfprintf(stderr, format, ap);
 #pragma GCC diagnostic pop
     va_end(ap);
-#endif
     exit(1);
 }
+
+#endif /* #ifdef GENMC */
 
 int main(void)
 {
