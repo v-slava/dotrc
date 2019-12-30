@@ -12,7 +12,8 @@
  * EVAL REGION ENDS HERE. */
 
 /* EVAL REGION BEGINS HERE: |* |
- * let g:My_eval_var = "silent wa | MyRunShellCmd genmc -print-error-trace 1.c"
+ * let g:My_eval_var = "silent wa | MyRunShellCmd genmc -print-error-trace -- "
+ * \ . "-DGENMC " . expand("%:t")
  * EVAL REGION ENDS HERE. */
 
 #define NUM_THREADS 2
@@ -46,8 +47,10 @@ static void *start_routine(void *arg)
 
 static void __attribute__((noreturn)) error(const char *format, ...)
 {
-    // genmc doesn't like vfprintf()
-#if 0
+    // genmc doesn't support vfprintf()
+#ifdef GENMC
+    (void)format;
+#else
     va_list ap;
     va_start(ap, format);
 #pragma GCC diagnostic push
@@ -55,8 +58,6 @@ static void __attribute__((noreturn)) error(const char *format, ...)
     vfprintf(stderr, format, ap);
 #pragma GCC diagnostic pop
     va_end(ap);
-#else
-    (void)format;
 #endif
     exit(1);
 }
