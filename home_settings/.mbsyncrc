@@ -6,6 +6,7 @@
 
 #DEFINE MY_ACCOUNT slava65536
 #INCLUDE_FILE: gmail.com.mbsyncrc
+# Pass "your_password"
 
 #DEFINE MY_ACCOUNT viacheslav.volkov.1
 #INCLUDE_FILE: gmail.com.mbsyncrc
