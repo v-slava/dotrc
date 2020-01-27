@@ -135,6 +135,8 @@ fi
 
 OTHER_OUTPUTS="HDMI1 HDMI2 DP1 VGA1 VGA-2"
 
+unset LEFT_OUTPUT
+unset RIGHT_OUTPUT
 for OUTPUT in $OTHER_OUTPUTS ; do
     if xrandr | grep -q "^$OUTPUT connected" ; then
         xrandr --output $OUTPUT $ARGS

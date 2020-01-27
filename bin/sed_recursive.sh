@@ -8,12 +8,12 @@ if [ "$1" = "-v" ]; then
     shift
 fi
 
-find -type f | while read file ; do
-    if echo $file | grep -q '.git' ; then
+find -type f | while read FILE ; do
+    if echo "$FILE" | grep -q '\.git' ; then
         continue
     fi
     if [ "$VERBOSE" = "true" ]; then
-        echo "+ sed -i \"$file\" $@"
+        echo "+ sed -i \"$FILE\" \"$@\""
     fi
-    sed -i "$file" "$@"
+    sed -i "$FILE" "$@"
 done
