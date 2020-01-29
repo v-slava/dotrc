@@ -8,6 +8,7 @@ def get_output_string(arg):
         return arg
     arg = arg.replace("–", "-") # 0xE2 0x80 0x93 -> 0x2D
     arg = delete_before_dot_mp3(arg, " (mp3cut.net)")
+    arg = delete_before_dot_mp3(arg, "-spaces.im")
     arg = delete_before_dot_mp3(arg, "-spaces.ru")
     arg = delete_before_dot_mp3(arg, "-spcs.me")
     arg = delete_before_dot_mp3(arg, "_-_spcs.me")
