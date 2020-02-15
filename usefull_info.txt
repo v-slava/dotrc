@@ -2240,6 +2240,9 @@ avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
 # Cut mp3 [00:16; 00:26]:
 avconv -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
 
+# Concat mp3:
+avconv -i "concat:in1.mp3|in2.mp3" -acodec copy out.mp3
+
 # extract audio (mp3) from video:
 avconv -i video.mp4 -q:a 0 -map a audio.mp3
 
