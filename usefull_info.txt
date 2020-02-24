@@ -1,3 +1,7 @@
+vim Dockerfile
+docker build -t NAME .
+docker run --mount type=bind,source=/media/files/workspace/docker_workspace,destination=/workspace -it NAME bash
+
 # (generate) configure xorg:
 X -configure
 
@@ -2348,7 +2352,7 @@ hexdump -v -e '/4 "%08X\n"' FILE
 # Format: 0000461f:   D5
 hexdump -v -e '/1 "%08_ax:   "' -e '/1 "%02X\n"' FILE
 # Format: C array: 0x0A, 0x69
-hexdump -v -e '/1 "0x%02X, "' FILE
+hexdump -v -e '/1 "0x%02X,\n"' FILE
 # Format: shell string of hex-encoded characters: \x0A\x69
 hexdump -v -e '"\\" /1 "x%02X"' FILE
 # Format: space-delimited bytes in hex: 0A 69
