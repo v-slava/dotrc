@@ -176,6 +176,7 @@ bindsym $Alt_L+r mode "resize"
 for_window [workspace="0"] layout tabbed
 for_window [title="Choose.*by pressing"] move container to workspace 0
 for_window [title="background_window"] move container to workspace 0
+for_window [title="temp_window"] fullscreen
 for_window [title="FVP terminal_*"] move container to workspace 0
 for_window [class="kolourpaint"] move container to workspace 0
 for_window [window_role="browser"] mark --replace browser

@@ -13,8 +13,8 @@ sub on_user_command {
         # Last visible row (cursor may stay above): $self->nrow - 1.
         # Here row is in range [0; screen_height), column we don't need.
         my ($row, $column) = $self->screen_cur();
-        # This loop doesn't include the row we are standing on:
-        for (my $i = 0; $i < $row; $i++) {
+        # This loop includes the row we are standing on (latest command prompt):
+        for (my $i = 0; $i <= $row; $i++) {
             my $row_text = $self->ROW_t($i);
             print PIPE "$row_text\n";
         }

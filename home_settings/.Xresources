@@ -1,4 +1,5 @@
 ! See: urxvt-extensions(1), urxvtperl(3)
+! Alt_L = Mod1, Alt_R = Mod3 (see i3 config)
 
 ! Dump scrollback buffer with <Ctrl>+PrintScreen:
 URxvt.print-pipe: /bin/bash -c '$DOTRC/other_files/handle_terminal_scrollback_buffer.sh'
@@ -13,9 +14,9 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 ! Reduce distance between letters:
 ! URxvt.letterSpace: -1
 
-URxvt.perl-ext-common: default,matcher,font-size,vtwheel,my-handle-buffer
+URxvt.perl-ext-common: default,matcher,font-size,vtwheel,my-handle-buffer,-searchable-scrollback
 
-URxvt.keysym.Control-Mod1-k: perl:my-handle-buffer:copy_file_to_clipboard
+URxvt.keysym.Mod3-s: perl:my-handle-buffer:copy_path_to_clipboard
 
 ! Clickable URLs (ctrl + left button):
 URxvt.urlLauncher: /usr/bin/x-www-browser
