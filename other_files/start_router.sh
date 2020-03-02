@@ -16,7 +16,8 @@ killall -q dnsmasq || true
 
 ifconfig $SRV_IF 172.30.1.1
 
-dnsmasq -i $SRV_IF --dhcp-range=172.30.0.2,172.30.0.254,12h
+dnsmasq -q -i $SRV_IF --dhcp-range=172.30.0.2,172.30.0.254,12h
+# See: cat /var/lib/misc/dnsmasq.leases
 
 sysctl net.ipv4.ip_forward=1
 
