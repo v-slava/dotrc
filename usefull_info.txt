@@ -154,8 +154,11 @@ vnstat -i wlp3s0 --oneline | cut -d';' -f4
 # tx today:
 vnstat -i wlp3s0 --oneline | cut -d';' -f5
 
-# simple http server to transfer files over local network:
+# simple http server to transfer files over local network.
+# send file:
 woof FILE
+# receive file:
+woof -U
 
 # install busybox (see also: other_files/create_rootfs.sh):
 busybox --install -s
@@ -215,6 +218,9 @@ crontab -e
 
 lsusb analog:
 usb-devices
+
+# gcc delete (remove) sections (optimize size):
+gcc -ffunction-sections -fdata-sections -Wl,--gc-sections
 
 # gcc show detailed default optimization options:
 gcc --help=optimizers -Q -O0
