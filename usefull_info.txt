@@ -2001,6 +2001,7 @@ sudo uftrace -k ./file.out
 
 # trace execve syscalls (including child processes):
 strace -f -s 8192 -o trace_file -e trace=execve CMD
+strace -f -s 8192 -o trace_file -e trace=openat CMD
 # attach to process and begin tracing:
 strace -p PID
 

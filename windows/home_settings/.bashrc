@@ -90,6 +90,7 @@ fi
 
 # export PATH=$ORIG_PATH
 PATH_prepend $DOTRC/bin $HOME/.local/bin
+PATH_prepend $HOME/.cargo/bin
 PATH_append /sbin /usr/sbin
 
 if [ -d "$DOTRC_S/bin" ]; then

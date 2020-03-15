@@ -9,6 +9,7 @@ fi
 
 # exec x-terminal-emulator -e nvim -c ':set norelativenumber' -c ':set nonumber' -c ':startinsert' -c ":e term://$*"
 
+source ~/.bashrc
 exec x-terminal-emulator -e "$@"
 
 # Generate unique directory name in $HOME/terminal:
