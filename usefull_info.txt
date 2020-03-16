@@ -1,7 +1,14 @@
 # Rust commands:
 rustup update
+rustup self uninstall
 rustup doc
+cargo new --help
 cargo new my_project
+cargo build [--release]
+cargo run
+cargo check
+cargo fetch
+cargo --offline ...
 
 vim Dockerfile
 docker build -t NAME .
