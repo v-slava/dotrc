@@ -345,7 +345,7 @@ let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
 autocmd FileType
-\ rust,c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot,html,css
+\ c,cpp,rust,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot,html,css
 \,kconfig
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()
@@ -368,7 +368,7 @@ endfunction
 autocmd FileType perl call My_register_which_key(g:which_key_map, '')
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
-autocmd FileType c,cpp,java,sh,expect,cmake,vim,python,perl,lua,php
+autocmd FileType c,cpp,rust,java,sh,expect,cmake,vim,python,perl,lua,php
             \ setlocal textwidth=80 | setlocal formatoptions+=t
 " setlocal cindent | setlocal noautoindent | setlocal expandtab
 
@@ -403,6 +403,11 @@ autocmd FileType c if ! exists('g:My_eval_var') | let g:My_eval_var =
 
 autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent wa | MyRunShellCmd clang++ -g3 -Weverything -pedantic "
+    \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
+    \ . expand("%:t") . ".out" | endif
+
+autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
+    \ "silent wa | MyRunShellCmd rustc "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
@@ -633,6 +638,21 @@ function! My_insert_snippet()
         else
             normal 3k
         endif
+        endif
+    elseif &filetype == "rust"
+        call append(0, [
+\ "use std::env;",
+\ "",
+\ "fn main()",
+\ "{",
+\ "    let args: Vec<String> = env::args().collect();",
+\ "    println!(\"args: {:?}\", args);",
+\ "}",
+\ ])
+        if getline('.') == ''
+            normal dd2k
+        else
+            normal 3k
         endif
     elseif &filetype == "java"
         call append(0, [
@@ -1002,7 +1022,8 @@ endfunction
 
 function! My_insert_eval_region(text)
     let l:has_shebang = 0
-    if &filetype == "c" || &filetype == "cpp" || &filetype == "java"
+    if &filetype == "c" || &filetype == "cpp"
+                \ || &filetype == "rust" || &filetype == "java"
         let l:cmd = 'i/* EVAL REGION BEGINS HERE: |* |' . a:text
                     \ . 'EVAL REGION ENDS HERE. */k0'
     elseif &filetype == "dot"
