@@ -1,7 +1,30 @@
+# In google-chrome get developer console:
+F12
+# JS hello world:
+alert("hello world");
+# In browser URL:
+javascript:alert("hello world");
+# JS push a button:
+document.getElementsByTagName('button')[0].click();
+# launch chrome with remote debugging enabled:
+google-chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
+# Determine websocket URL for current google chrome tab:
+URL=$(curl -sg http://127.0.0.1:9222/json | grep webSocketDebuggerUrl | cut -d'"' -f4)
+# Execute simple javascript in this tab:
+echo 'Runtime.evaluate {"expression":"alert(\"hello\");"}' | websocat -n1 --jsonrpc $URL
+# Another option: connect to remote debugging from another chrome instance:
+google-chrome http://localhost:9222/
+
+# Run simple tcp server:
+nc -l localhost 9222
+# Run simple tcp client (connect to the server above):
+nc localhost 9222
+
 # Rust commands:
 rustup update
 rustup self uninstall
 rustup doc
+rustfmt file.rs
 cargo new --help
 cargo new my_project
 cargo build [--release]
@@ -9,6 +32,10 @@ cargo run
 cargo check
 cargo fetch
 cargo --offline ...
+
+daemonize $(which cmd) args
+nohup cmd &
+cmd & disown
 
 vim Dockerfile
 docker build -t NAME .
@@ -700,6 +727,9 @@ LD_PRELOAD=/usr/lib/coreutils/libstdbuf.so _STDBUF_O=0 YOUR_CMD
 
 # Search additional path for libraries at runtime:
 LD_LIBRARY_PATH=/some/path/to/libs YOUR_CMD
+
+# Log data stream to stdout on localhost's tcp port 9222:
+tcpflow -i any -C -g port 9222
 
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
