@@ -352,6 +352,11 @@ function! My_apply_tab_settings()
     if g:My_user_id != 0 && !g:My_is_windows
         DetectIndent
     endif
+    if expand("%:e") == "rs"
+        " For some reason DetectIndent sets tabstop and shiftwidth to 1.
+        setlocal tabstop=4
+        setlocal shiftwidth=4
+    endif
     if My_is_linux_kernel_source_file(expand("%:p"))
         if &expandtab == 0
             setlocal shiftwidth=8
@@ -546,6 +551,15 @@ function! My_run_shell_cmd(no_open_window_on_success, cmd)
 endfunction
 command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd(0, '<args>')
 command! -nargs=1 MyRunShellCmdNoOpen :call My_run_shell_cmd(1, '<args>')
+
+function! My_run_shell_cmd_interactive(cmd)
+    let l:dir = expand('%:p:h')
+    execute '!x-terminal-emulator -e bash -c "cd ' . l:dir . ' && ' . a:cmd
+                \ . ' ; echo \"Exit code: $?\" && vifm-pause"'
+    redraw
+endfunction
+command! -nargs=1 MyRunShellCmdInteractive :call
+            \ My_run_shell_cmd_interactive('<args>')
 
 function! My_is_lq_list()
     exec 'redir @x | silent ls | redir END'

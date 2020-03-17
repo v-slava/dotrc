@@ -1,3 +1,22 @@
+# Complile with debug information:
+javac [-cp path/to/dependency_1.jar:path/to/dependency_2.jar] -g main.java
+# Run:
+java [-cp path/to/dependency_1.jar:.] main_class
+# Note: on windows use ';' instead of ':'.
+# Java: build jar:
+ant jar
+gradle jar
+# By default gradle builds debug version. For release version use:
+compileJava {
+    options.debug = false
+}
+# To check debug information:
+javap -v main.class | grep LocalVariableTable
+
+# autotools:
+autoconf
+autoreconf -i
+
 # In google-chrome get developer console:
 F12
 # JS hello world:
@@ -25,6 +44,7 @@ rustup update
 rustup self uninstall
 rustup doc
 rustfmt file.rs
+cargo doc --open
 cargo new --help
 cargo new my_project
 cargo build [--release]
@@ -1296,7 +1316,7 @@ ssh -p port user@host
 sshpass -p PASSWORD ssh user@host
 sshpass -p PASSWORD scp FILE user@host:/some/path/
 
-# View machines, connected via ssh:
+# View machines, connected via ssh (list of current users):
 who -a
 
 # Mount folder over SSH:
@@ -1348,6 +1368,14 @@ git submodule foreach 'git remote -v'
 
 # svn show remote repository URL (git remote -v):
 svn info .
+# svn for "git checkout COMMIT":
+svn update --revision REV
+# svn for "git tag":
+svn ls -v ^/logging/log4j/tags
+# svn for "git show SHA":
+svn diff -c REV
+# svn for git checkout master:
+svn switch https://.../log4j/trunk
 
 # ~/.ssh/config example:
 Host github-custom
