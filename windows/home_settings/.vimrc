@@ -648,7 +648,7 @@ function! My_insert_snippet()
 \ "}",
 \ ])
         if getline('.') == ''
-            normal dd2k
+            normal "zdd2k
         else
             normal 3k
         endif
@@ -664,7 +664,7 @@ function! My_insert_snippet()
 \ "}",
 \ ])
         if getline('.') == ''
-            normal dd2k
+            normal "zdd2k
         else
             normal 3k
         endif
@@ -677,7 +677,7 @@ function! My_insert_snippet()
 \ "}",
 \ ])
         if getline('.') == ''
-            normal dd2k
+            normal "zdd2k
         else
             normal 3k
         endif
@@ -695,7 +695,7 @@ function! My_insert_snippet()
 \ ")",
 \ ])
             if getline('.') == ''
-                normal dd
+                normal "zdd
             endif
             normal gg2j
         else
@@ -705,7 +705,7 @@ function! My_insert_snippet()
 \ "echo \"\\$# = |$#|\"; echo \"\\$0 = |$0|\"; echo \"\\$@ = |$@|\"",
 \ ])
             if getline('.') == ''
-                normal dd
+                normal "zdd
             else
                 normal k
             endif
@@ -721,7 +721,7 @@ function! My_insert_snippet()
 \ 'use Data::Dumper qw(Dumper); print Dumper \@ARGV;',
 \ ])
         if getline('.') == ''
-            normal dd
+            normal "zdd
         endif
     elseif &filetype == "python"
         call append(0, [
@@ -730,7 +730,7 @@ function! My_insert_snippet()
 \ "import sys; print(sys.argv)",
 \ ])
         if getline('.') == ''
-            normal dd
+            normal "zdd
         else
             normal k
         endif
@@ -743,7 +743,7 @@ function! My_insert_snippet()
 \ "select * from " . expand("%:r") . ";",
 \ ])
         if getline('.') == ''
-            normal dd
+            normal "zdd
         else
             normal k
         endif

@@ -16,6 +16,7 @@ URxvt.boldfont:xft:Inconsolata LGC:pixelsize=18:style=Bold
 
 URxvt.perl-ext-common: default,matcher,font-size,vtwheel,my-handle-buffer,-searchable-scrollback
 
+! Alt_R+s:
 URxvt.keysym.Mod3-s: perl:my-handle-buffer:copy_path_to_clipboard
 
 ! Clickable URLs (ctrl + left button):

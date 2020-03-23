@@ -1,0 +1,25 @@
+# Download and build flatbuffers:
+git clone https://github.com/google/flatbuffers.git
+mkdir flatbuffers_build
+cd flatbuffers_build
+cmake ../flatbuffers
+make -j5
+cd ..
+
+# To generate monster_generated.h execute:
+./flatbuffers_build/flatc --cpp monster.fbs
+
+# Compile monster_test.cpp:
+CFLAGS="\
+	-Wno-c++98-compat -Wno-reserved-id-macro \
+	-Wno-documentation-unknown-command -Wno-c++98-compat-pedantic \
+	-Wno-sign-conversion -Wno-padded -Wno-zero-as-null-pointer-constant \
+	-Wno-covered-switch-default -Wno-double-promotion -Wno-weak-vtables \
+	-Weverything -pedantic -g3 -Iflatbuffers/include \
+	"
+clang++ $CFLAGS monster_test.cpp
+
+# monster_test.cpp can serialize monster to orc.bin
+
+# Create json from serialized binary:
+./flatbuffers_build/flatc --json --raw-binary monster.fbs -- orc.bin

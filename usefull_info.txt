@@ -17,6 +17,22 @@ javap -v main.class | grep LocalVariableTable
 autoconf
 autoreconf -i
 
+# HTTP web site:
+http://neverssl.com
+
+# OSI model:
+1) physical (repeater, hub): interface ID, arrival time, frame number, frame length.
+2) data link (bridge): source & destination MAC address, type (= IPv4).
+   switch = multiport bridge.
+   A bridge maintains a table (which mac address belongs to which subnetwork).
+   Initially the table is empty. It fills entry on packet receival (uses source
+   MAC address). If destination MAC address is not in table => broadcast the
+   frame to all bridge ports except from incoming port.
+3) network: time to live, source & destination IP address, header checksum.
+4.1) tcp: source & destination port, (seq, next seq & ack) numbers, checksum.
+4.2) udp: source & destination port, length, checksum.
+# Note: we can use the same port number for both TCP and UDP simultaneously.
+
 # In google-chrome get developer console:
 F12
 # JS hello world:
@@ -25,8 +41,10 @@ alert("hello world");
 javascript:alert("hello world");
 # JS push a button:
 document.getElementsByTagName('button')[0].click();
-# launch chrome with remote debugging enabled:
+# Launch chrome with remote debugging enabled (Chrome DevTools Protocol):
 google-chrome --remote-debugging-port=9222 --user-data-dir=remote-profile
+# See also Mozilla/Firefox (remote) debugging protocol, and:
+https://github.com/ChromeDevTools/awesome-chrome-devtools
 # Determine websocket URL for current google chrome tab:
 URL=$(curl -sg http://127.0.0.1:9222/json | grep webSocketDebuggerUrl | cut -d'"' -f4)
 # Execute simple javascript in this tab:
