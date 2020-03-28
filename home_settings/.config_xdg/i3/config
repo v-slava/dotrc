@@ -230,7 +230,7 @@ bindsym $Alt_R+$Shift_R+t exec --no-startup-id exec $START_S telegram
 exec --no-startup-id exec $START telegram
 
 bindsym $Alt_R+$Shift_R+v exec --no-startup-id exec viber
-# exec --no-startup-id exec /opt/viber/Viber
+exec --no-startup-id exec $START viber
 bindsym $Alt_R+$Shift_R+s exec --no-startup-id exec $START_S skype
 bindsym $Alt_R+$Ctrl_L+s exec --no-startup-id exec $DOTRC/other_files/restart_skype.sh
 exec --no-startup-id exec $START_S skype
