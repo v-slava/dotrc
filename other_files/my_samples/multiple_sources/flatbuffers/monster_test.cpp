@@ -117,10 +117,16 @@ static void read(void *buf, size_t buf_size)
     auto second_weapon_name = weapons->Get(1)->name()->str();
     auto second_weapon_damage = weapons->Get(1)->damage();
 
-    printf("hp = %hd, mana = %hd, name = %s, pos = (%f, %f, %f)"
-            ", 3rd item = %d, 2nd weapon: {name = %s, damage = %d}\n",
-            hp, mana, name, x, y, z, third_item, second_weapon_name.c_str(),
-            second_weapon_damage);
+    size_t sizeof_monster = sizeof(monster);
+
+    printf("sizeof(monster) = %zu\n"
+           "hp = %hd, mana = %hd, name = %s, pos = (%f, %f, %f),\n"
+           "3rd item = %d, 2nd weapon: {name = %s, damage = %d}\n",
+           sizeof_monster, hp, mana, name, x, y, z, third_item,
+           second_weapon_name.c_str(), second_weapon_damage);
+    // sizeof(monster) = 8
+    // hp = 300, mana = 150, name = Orc, pos = (1.000000, 2.000000, 3.000000),
+    // 3rd item = 2, 2nd weapon: {name = Axe, damage = 5}
 
     (void)inv_len;
     (void)weapon_len;
@@ -136,6 +142,7 @@ static void read(void *buf, size_t buf_size)
 
         printf("weapon: {name = %s, damage = %d}\n", weapon_name.c_str(),
                 weapon_damage);
+        // weapon: {name = Axe, damage = 5}
     }
 }
 
