@@ -10,6 +10,7 @@ static void write(void **buf, size_t *buf_size)
     // monsters' FlatBuffers.
     flatbuffers::FlatBufferBuilder builder(1024);
 
+    // flatbuffers::Offset<flatbuffers::String>
     auto weapon_one_name = builder.CreateString("Sword");
 
     short weapon_one_damage = 3;
@@ -17,6 +18,7 @@ static void write(void **buf, size_t *buf_size)
     short weapon_two_damage = 5;
     // Use the `CreateWeapon` shortcut to create Weapons with all the fields set.
     auto sword = CreateWeapon(builder, weapon_one_name, weapon_one_damage);
+    // flatbuffers::Offset<MyGame::Sample::Weapon>
     auto axe = CreateWeapon(builder, weapon_two_name, weapon_two_damage);
 
     // Serialize a name for our monster, called "Orc".
@@ -25,18 +27,22 @@ static void write(void **buf, size_t *buf_size)
     // could correspond to an item that can be claimed after he is slain.
     unsigned char treasure[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto inventory = builder.CreateVector(treasure, 10);
+    // flatbuffers::Offset<flatbuffers::Vector<unsigned char> >
 
     // Place the weapons into a `std::vector`, then convert that into a FlatBuffer `vector`.
     std::vector<flatbuffers::Offset<Weapon>> weapons_vector;
     weapons_vector.push_back(sword);
     weapons_vector.push_back(axe);
     auto weapons = builder.CreateVector(weapons_vector);
+    // flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<MyGame::Sample::Weapon> > >
 
     Vec3 points[] = { Vec3(1.0f, 2.0f, 3.0f), Vec3(4.0f, 5.0f, 6.0f) };
     auto path = builder.CreateVectorOfStructs(points, 2);
+    // flatbuffers::Offset<flatbuffers::Vector<const MyGame::Sample::Vec3 *> >
 
     // Create the position struct
     auto position = Vec3(1.0f, 2.0f, 3.0f);
+    // MyGame::Sample::Vec3
     // Set his hit points to 300 and his mana to 150.
     short hp = 300;
     short mana = 150;
@@ -45,6 +51,7 @@ static void write(void **buf, size_t *buf_size)
     auto orc = CreateMonster(builder, &position, mana, hp, name, inventory,
                             Color_Red, weapons, Equipment_Weapon, axe.Union(),
                             path);
+    // flatbuffers::Offset<MyGame::Sample::Monster>
 
     // You can use this code instead of `CreateMonster()`, to create our orc
     // manually.
@@ -81,9 +88,11 @@ static void read(void *buf, size_t buf_size)
 {
     // Get a pointer to the root object inside the buffer.
     auto monster = GetMonster(buf);
+    // const MyGame::Sample::Monster *
+
     (void)buf_size;
     // `monster` is of type `Monster *`.
-    // Note: root object pointers are NOT the same as `buffer_pointer`.
+    // Note: root object pointers are NOT the same as `buf`.
     // `GetMonster` is a convenience function that calls `GetRoot<Monster>`,
     // the latter is also available for non-root types.
 
@@ -92,15 +101,18 @@ static void read(void *buf, size_t buf_size)
     auto name = monster->name()->c_str();
 
     auto pos = monster->pos();
+    // const MyGame::Sample::Vec3 *
     auto x = pos->x();
     auto y = pos->y();
     auto z = pos->z();
 
     auto inv = monster->inventory(); // A pointer to a `flatbuffers::Vector<>`.
+    // const flatbuffers::Vector<unsigned char> *
     auto inv_len = inv->size();
     auto third_item = inv->Get(2);
 
     auto weapons = monster->weapons(); // A pointer to a `flatbuffers::Vector<>`.
+    // const flatbuffers::Vector<flatbuffers::Offset<MyGame::Sample::Weapon> > *
     auto weapon_len = weapons->size();
     auto second_weapon_name = weapons->Get(1)->name()->str();
     auto second_weapon_damage = weapons->Get(1)->damage();
@@ -115,7 +127,9 @@ static void read(void *buf, size_t buf_size)
 
     auto union_type = monster->equipped_type();
     if (union_type == Equipment_Weapon) {
-        auto weapon = static_cast<const Weapon*>(monster->equipped());
+        auto equipped = monster->equipped();
+        // 'const void *'
+        auto weapon = static_cast<const Weapon*>(equipped);
         // Requires `static_cast` to type `const Weapon*`.
         auto weapon_name = weapon->name()->str();
         auto weapon_damage = weapon->damage();
