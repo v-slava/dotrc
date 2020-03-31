@@ -34,7 +34,7 @@
 " To reindent json: 1) Make a selection. 2) :!python -m json.tool
 "
 " To repeat last colon command (in normal mode): @:, @@, @@, @@, ...
-" Toggle language: <C-K>
+" Toggle language: <C-k>
 "
 " To reformat text to fit max 80 columns: select text, and type 'gq'.
 " In normal mode: 'gq' + motion
@@ -1248,9 +1248,9 @@ let g:magit_default_fold_level=2
 let g:magit_discard_untracked_do_delete=1
 let g:magit_discard_hunk_mapping='X'
 
-nmap <C-;> :call My_swap_keyboard_layout()<CR>
-vmap <C-;> <Esc>:call My_swap_keyboard_layout()<CR>gv
-imap <C-;> <Esc>:call My_swap_keyboard_layout()<CR>gi
+nmap <C-k> :call My_swap_keyboard_layout()<CR>
+vmap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gv
+imap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gi
 " Apply macro to selected lines:
 vmap i :normal @
 " Block comment (use gcb<motion> in normal mode):
