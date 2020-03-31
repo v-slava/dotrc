@@ -607,6 +607,7 @@ function! My_update_status_line(message, status)
     set laststatus=2
     redrawstatus!
 endfunction
+call My_update_status_line('', 'normal')
 
 function! My_swap_keyboard_layout()
     if &iminsert == 1 " If current layout is russian
