@@ -89,7 +89,8 @@ def start_program(cmd, find_window, process_name = None, single_run = False):
     if is_running and single_run:
         ret = subprocess.run(['i3-msg', '-t', 'get_tree'], check = True,
                 capture_output = True, encoding = 'utf8')
-        win = find_win_with_prop('title', 'neomutt', json.loads(ret.stdout))
+        win = find_window(json.loads(ret.stdout))
+        assert(win != None)
         move_win_to_cur_workspace(get_win_id(win))
         return
     dotrc = os.environ['DOTRC']
@@ -147,6 +148,11 @@ def start_skype(args):
         return find_win_with_prop('class', 'Skype', obj)
     start_program(['skypeforlinux'] + args, find_skype)
 
+def start_viber(args):
+    def find_viber(obj):
+        return find_win_with_prop('class', 'ViberPC', obj)
+    start_program(['viber'] + args, find_viber)
+
 def start_dictionary(args):
     def find_dictionary(obj):
         return find_win_with_prop('class', 'GoldenDict', obj)
@@ -155,7 +161,8 @@ def start_dictionary(args):
 def parse_cmd_line_args():
     desc = 'Start singleton GUI program.'
     parser = argparse.ArgumentParser(description = desc)
-    programs_supported = ['browser', 'email', 'telegram', 'skype', 'dictionary']
+    programs_supported = ['browser', 'email', 'telegram', 'skype', 'viber',
+            'dictionary']
     parser.add_argument('program', choices = programs_supported,
             help = 'program to start')
     return parser.parse_known_args()
