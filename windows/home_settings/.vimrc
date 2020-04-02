@@ -385,39 +385,39 @@ autocmd FileType vim if ! exists('g:My_eval_var') | let g:My_eval_var =
 
 if g:My_win_cmd_exe
     autocmd FileType dosbatch if ! exists('g:My_eval_var') |
-        \ let g:My_eval_var = "silent wa | silent MyRunShellCmd call "
+        \ let g:My_eval_var = "silent MyRunShellCmd call "
         \ . expand("%:p") | endif
 
     autocmd FileType python if ! exists('g:My_eval_var')
-        \ | let g:My_eval_var = "silent wa | MyRunShellCmd python3 "
+        \ | let g:My_eval_var = "MyRunShellCmd python3 "
         \ . expand("%:p") | endif
 else
     autocmd FileType sh,python,perl if ! exists('g:My_eval_var')
-        \ | let g:My_eval_var = "silent wa | MyRunShellCmd chmod +x ./"
+        \ | let g:My_eval_var = "MyRunShellCmd chmod +x ./"
         \ . expand("%:t") . " && ./" . expand("%:t") | endif
 endif
 
 autocmd FileType make if ! exists('g:My_eval_var')
-    \ | let g:My_eval_var = "silent wa | MyRunShellCmd make -f ./"
+    \ | let g:My_eval_var = "MyRunShellCmd make -f ./"
     \ . expand("%:t") | endif
 
 autocmd FileType c if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | MyRunShellCmd clang -g3 -Weverything -pedantic "
+    \ "MyRunShellCmd clang -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
 autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | MyRunShellCmd clang++ -g3 -Weverything -pedantic "
+    \ "MyRunShellCmd clang++ -g3 -Weverything -pedantic "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
 autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | MyRunShellCmd rustc "
+    \ "MyRunShellCmd rustc "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | MyRunShellCmd javac -d /tmp " . expand("%:t")
+    \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
     \ . " && java -cp /tmp " . expand("%:t:r") | endif
 
 autocmd FileType dot if ! exists('g:My_eval_var') | let g:My_eval_var =
@@ -433,11 +433,11 @@ autocmd FileType markdown if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . "$DOTRC/other_files/update_page_in_web_browser.sh" | endif
 
 autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | silent MyRunShellCmdNoOpen "
+    \ "silent MyRunShellCmdNoOpen "
     \ . "$DOTRC/other_files/update_page_in_web_browser.sh"
 
 autocmd FileType sql if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "silent wa | silent MyRunShellCmd sqlite3 < " . expand("%:p") | endif
+    \ "silent MyRunShellCmd sqlite3 < " . expand("%:p") | endif
 
 function! My_is_linux_kernel_source_file(full_path)
     if g:My_is_windows
@@ -505,7 +505,19 @@ endfunction
 let g:My_vim_errors_file = g:My_tmp_dir . '/vim_errors__'
             \ . tr(expand('%:t'), '/', '_') . '.err'
 
-function! My_run_shell_cmd(no_open_window_on_success, cmd)
+function! My_run_shell_cmd(open_window_on_success, cmd)
+    silent wa
+
+    silent execute '!$DOTRC/other_files/nvim_execute_cmd.py --exclude '
+                \ . v:servername . ' "call My_save_all_files()"'
+    " Previous command generated 1 empty line in message area. AFterwards we
+    " will additionally print command exit code (2nd line). In this case due to
+    " more than 1 line of output, the user will be forced to type ENTER and
+    " presented with the following message:
+    " Press ENTER or type command to continue
+    " To avoid 2nd line message we will redraw the screen:
+    redraw
+
     silent! execute 'noautocmd silent botright pedit ' . g:My_vim_errors_file
     " jump to previous window:
     noautocmd wincmd P
@@ -541,7 +553,7 @@ function! My_run_shell_cmd(no_open_window_on_success, cmd)
     let g:My_use_denite_errors = 0
     wincmd p
     if v:shell_error == 0
-        if a:no_open_window_on_success
+        if ! a:open_window_on_success
             pclose
         endif
         echo "Command succeeded (exit code = 0)"
@@ -549,8 +561,8 @@ function! My_run_shell_cmd(no_open_window_on_success, cmd)
         echo "Command failed (exit code = " . v:shell_error . ")"
     endif
 endfunction
-command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd(0, '<args>')
-command! -nargs=1 MyRunShellCmdNoOpen :call My_run_shell_cmd(1, '<args>')
+command! -nargs=1 MyRunShellCmd :call My_run_shell_cmd(1, '<args>')
+command! -nargs=1 MyRunShellCmdNoOpen :call My_run_shell_cmd(0, '<args>')
 
 function! My_run_shell_cmd_interactive(cmd)
     let l:dir = expand('%:p:h')
@@ -781,6 +793,15 @@ function! My_close_window_if_temporary()
     endif
 endfunction
 command! MyCloseWindowIfTemporary call My_close_window_if_temporary()
+
+function! My_save_all_files()
+    try
+        wa
+        " catch exception if there was no file name associated with the buffer:
+    catch /^Vim\%((\a\+)\)\=:E141/ " no file name for this buffer
+        echo v:exception
+    endtry
+endfunction
 
 if ! exists('g:My_modify_line___text_to_prepend')
     let g:My_modify_line___text_to_prepend = '        '
@@ -1437,11 +1458,12 @@ let g:which_key_map.s = {'name' : '+search/select/spell/symbol',
 \ }
 " Put in $DOTRC_S/home_settings/.vimrc:
 " let g:which_key_map.s.P = [
-"             \ ':let g:My_eval_var = "silent wa | MyRunShellCmd make -C /tmp"'
+"             \ ':let g:My_eval_var = "MyRunShellCmd make -C /tmp"'
 "             \ , 'my single project']
 
 let g:which_key_map.w = { 'name' : '+windows',
 \   '-' : [':split', 'split horizontally'],
+\   'a' : [':wa', 'save all files'],
 \   'h' : [':wincmd h', 'focus left'],
 \   'j' : [':wincmd j', 'focus bottom'],
 \   'k' : [':wincmd k', 'focus top'],
