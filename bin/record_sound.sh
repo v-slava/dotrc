@@ -2,36 +2,48 @@
 
 set -e
 
-USAGE="Usage: $(basename $0) {--wav|--mp3|--ogg} FILE
+USAGE="Usage: $(basename $0) {-m|-s} {--wav|--mp3|--ogg} FILE
+
+-m
+    Record from microphone.
+-s
+    Record from speakers.
 
 Note: FILE should be without extension.
-
-Set volume to 100% when recording mp3.
-Otherwise output volume will be low.
 "
 
 usage()
 {
-	echo -e "$USAGE"
-	exit 1
+    echo -e "$USAGE"
+    exit 1
 }
 
-if [ $# -ne 2 ] ; then
-	usage
+if [ $# -ne 3 ] ; then
+    usage
 fi
 
-SINK_NAME="$($DOTRC/other_files/get_sink_name.sh)"
-FILE="$2"
+MODE="$1"
+shift
+FORMAT="$1"
+shift
+FILE="$1"
+shift
 
-# To record input sound (from microphone) only:
-# $ parec -d alsa_input.pci-0000_00_1b.0.analog-stereo
+case "$MODE" in
+    ("-m")
+        DEVICE="$($DOTRC/other_files/get_source_name.sh)"
+        # Note: in this case we could also omit specifying device for parec.
+        ;;
+    ("-s") DEVICE="$($DOTRC/other_files/get_sink_name.sh).monitor" ;;
+    (*) usage ;;
+esac
 
 # To record output sound only (either speaker or bluetooth headset):
-case "$1" in
-	("--wav") parec -d "$SINK_NAME.monitor" --file-format=wav "${FILE}.wav" ;;
-	("--mp3") parec -d "$SINK_NAME.monitor" | lame -r - "${FILE}.mp3" ;; # --cbr -b 320
-	("--ogg") parec -d "$SINK_NAME.monitor" | oggenc -b 192 -o "${FILE}.ogg" --raw - ;;
-	(*) usage ;;
+case "$FORMAT" in
+    ("--wav") parec -d "$DEVICE" --file-format=wav "${FILE}.wav" ;;
+    ("--mp3") parec -d "$DEVICE" | lame -r - "${FILE}.mp3" ;; # --cbr -b 320
+    ("--ogg") parec -d "$DEVICE" | oggenc -b 192 -o "${FILE}.ogg" --raw - ;;
+    (*) usage ;;
 esac
 
 # To record both input and output sound:

@@ -490,6 +490,9 @@ gcc -Q --help=target | grep arch
 gcc -E -P -C -x c-header -o OUT IN
 # See also: m4, gpp, filepp, gema, dpp, pp
 
+# Preprocess templates (c++):
+clang++ -Xclang -ast-print -fsyntax-only test.cpp
+
 # Preprocess source file for further compilation:
 gcc FILE.c -o FILE.i -E -P -dN
 # (see -dCHARS in "man gcc")
