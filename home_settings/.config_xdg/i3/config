@@ -220,7 +220,8 @@ bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && e
 bindsym $Alt_L+s exec --no-startup-id exec $START $DOTRC/other_files/say_word.sh "$(clipboard.sh -o)"
 bindsym $WIN+c exec exec $START qalculate
 
-bindsym $WIN+a exec --no-startup-id exec $START $DOTRC/other_files/start_anki.sh
+# bindsym $WIN+a exec --no-startup-id exec $START $DOTRC/other_files/start_anki.sh
+bindsym $WIN+t exec --no-startup-id exec $START $DOTRC/other_files/torrent_download.sh
 
 # browser
 bindsym XF86HomePage exec --no-startup-id exec $START_S browser $WWW_START_PAGE
