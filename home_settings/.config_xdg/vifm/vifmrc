@@ -1,18 +1,20 @@
 " Ctrl-G creates a window showing detailed information about the current file.
 " cl     change link target
-" al     puts symbolic links with absolute paths.
-" rl     puts symbolic links with relative paths.
+" al     put symbolic links with absolute paths.
+" rl     put symbolic links with relative paths.
 
 " ------------------------------------------------------------------------------
 
 " This is the actual command used to start vi.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
-
 " set vicmd=nvim
 " set vicmd=vim
 " set vicmd="vim --servername VIM"
 set vixcmd='e'
+
+fileviewer * $DOTRC/other_files/vifm_view_file.sh %c
+nmap <c-v> :view<CR>
 
 " set cpoptions='fst' " Default value
 set cpoptions='fs'
@@ -23,28 +25,22 @@ set cpoptions='fs'
 " files by deleting them and then using p to put the file in the new location.
 " I recommend not changing this until you are familiar with vifm.
 " This probably shouldn't be an option.
-
 set trash
 
 " This is how many directories to store in the directory history.
-
 set history=100
 
 " Automatically resolve symbolic links on l or Enter.
-
 set nofollowlinks
 
 " With this option turned on you can run partially entered commands with
 " unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
-
 set fastrun
 
 " Natural sort of (version) numbers within text.
-
 set sortnumbers
 
 " Maximum number of changes that can be undone.
-
 set undolevels=100
 
 " If you installed the vim.txt help file set vimhelp.
@@ -54,65 +50,53 @@ set novimhelp
 
 " If you would like to run an executable file when you
 " press return on the file name set this.
-
 set norunexec
 
-" Use KiB, MiB, ... instead of KB, MB, ...
-
+" Do not use KiB, MiB, ... instead of KB, MB, ...:
 set noiec
 
 " set confirm=delete,permdelete
 set confirm=permdelete
 
 " Selected color scheme
-
 " colorscheme Default
 
 " The FUSE_HOME directory will be used as a root dir for all FUSE mounts.
 " Unless it exists with write/exec permissions set, vifm will attempt to
 " create it.
-
 set fusehome=/tmp/vifm_FUSE
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
 " See man date or man strftime for details.
-
 set timefmt=%T\ \ %F
 
 " Show list of matches on tab completion in command-line mode
-
 set wildmenu
 
 " Ignore case in search patterns unless it contains at least one uppercase
 " letter
-
 set ignorecase
 set smartcase
 
 " Don't highlight search results automatically
-
 set nohlsearch
 
 " Use increment searching (search while typing)
 set incsearch
 
 " Try to leave some space from cursor to upper/lower border in lists
-
 set scrolloff=4
 
 " Don't do too many requests to slow file systems
-
 set slowfs=curlftpfs
 
 " Set custom status line look
-
 set statusline="  %t%= %A %10u:%-7g %15s %30d  "
 
 " ------------------------------------------------------------------------------
 
-" The file type is for the default programs to be used with
-" a file extension.
+" The file type is for the default programs to be used with a file extension.
 " :filetype pattern1,pattern2 defaultprogram,program2
 " :fileviewer pattern1,pattern2 consoleviewer
 " The other programs for the file type can be accessed with the :file command
@@ -139,7 +123,7 @@ set statusline="  %t%= %A %10u:%-7g %15s %30d  "
 
 " Pdf
 filextype *.pdf
-	\ pdf_djvu_open.sh %c,
+	\ $DOTRC/other_files/pdf_djvu_open.sh %c,
 	\ apvlv %c %i &,
 	\ zathura %c %i &,
 	\ mupdf %c &,
@@ -156,7 +140,7 @@ filextype *.pdf
 
 " Djvu
 filextype *.djvu
-	\ pdf_djvu_open.sh %c,
+	\ $DOTRC/other_files/pdf_djvu_open.sh %c,
 	\ apvlv %c %i &,
 	\ zathura %c %i &,
 
@@ -274,7 +258,7 @@ filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.xls,*.xlsx,
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
-filetype *.pcapng wireshark %f &
+filextype *.pcapng wireshark %f &
 
 " filetype *.gl,*.vim,*vimrc,.*vimrc vim %f
 

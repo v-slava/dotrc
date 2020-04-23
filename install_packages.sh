@@ -82,7 +82,9 @@ apt-get install vim-gtk
 # apt-get install joe
 
 # Install email client:
-apt-get install isync msmtp neomutt
+apt-get install isync
+apt-get install mmh
+# apt-get install msmtp neomutt
 # apt-get install thunderbird
 # icedove
 # For microsoft exchange server:

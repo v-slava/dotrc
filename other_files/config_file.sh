@@ -31,6 +31,15 @@ config_concat_dotrc_s()
     fi
 )
 
+config_create_dir_only()
+(
+    set -e
+    DIR="${DEST_DIR}$(dirname "$DOTRC_FILE")"
+    if [ ! -d "$DIR" ]; then
+        mkdir -p "$DIR"
+    fi
+)
+
 config_preprocess()
 (
     set -e
@@ -119,6 +128,9 @@ config_generate()
     MERGE_S=$DOTRC_S/$MERGE_SUFFIX
     DEST="${DEST_DIR}$FILE"
     FUNC=config_concat_dotrc_s # default
+    if [ "$(basename "$FILE")" = "__keep_this_dir" ]; then
+        FUNC=config_create_dir_only
+    fi
     if [ -f "$MERGE" ]; then
         . "$MERGE"
         FUNC=config_dotrc
