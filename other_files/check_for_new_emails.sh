@@ -2,14 +2,14 @@
 
 NOTIFICATIONS_TO_SHOW=3
 MAIL=$HOME/mail
-LOCK_DIR=/tmp/mbsync_lock_dir
+# LOCK_DIR=/tmp/mbsync_lock_dir
 
 set -e
 
-if mkdir "$LOCK_DIR" 2>/dev/null ; then
+# if mkdir "$LOCK_DIR" 2>/dev/null ; then
     mbsync -a
-    rm -rf "$LOCK_DIR"
-fi
+#     rm -rf "$LOCK_DIR"
+# fi
 
 find $HOME/mail -maxdepth 1 -type d -not -path $HOME/mail \
         | while read ACCOUNT_DIR ; do
@@ -33,5 +33,7 @@ find $HOME/mail -maxdepth 1 -type d -not -path $HOME/mail \
         # In 3 minutes (300 000 ms) we will check for new emails once again.
         notify-send -u low -t 280000 "Got new email from $FROM:
 $SUBJECT"
+        # To mark new email as "seen":
+        # mv inbox/new/${EMAIL_FILE} inbox/cur/${EMAIL_FILE}S
     done
 done

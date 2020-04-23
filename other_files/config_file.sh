@@ -34,7 +34,7 @@ config_concat_dotrc_s()
 config_create_dir_only()
 (
     set -e
-    DIR="${DEST_DIR}$(dirname "$DOTRC_FILE")"
+    DIR="${DEST_DIR}$(realpath --relative-to "$DOTRC/home_settings" $(dirname "$DOTRC_FILE"))"
     if [ ! -d "$DIR" ]; then
         mkdir -p "$DIR"
     fi

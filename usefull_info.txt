@@ -1915,8 +1915,8 @@ git blame COMMIT~1 FILE
 # git blame deleted line:
 git log -S part_of_deleted_string path/to/file
 
-# git blame deleted file:
-git log -- path/to/file
+# git log/blame find commit which deleted file:
+git log [--full-history] -- FILE_PATH_REGEX
 
 # git delete non-existend (obsolete, stale) remote branches:
 git remote prune REMOTE
