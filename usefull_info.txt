@@ -1064,11 +1064,12 @@ convert in.jpg -rotate 90 out.jpg
 set -o pipefail
 
 # icedove / thunderbird:
-# see ~/other/icedove_thunderbird
-# use firetray addon
-http://forums.mozillazine.org/viewtopic.php?f=48&t=72994
-http://mozilla.dorando.at/keyconfig.xpi
-# See file .icedove/PROFILE/mimeTypes.rdf for default browser
+# see $DOTRC/other_files/icedove_thunderbird
+
+# view/extract FILE.eml (note: file extension matters for thunderbird):
+thunderbird FILE.eml
+munpack -t FILE.eml
+$DOTRC/other_files/my_samples/single_sources/view_eml.py
 
 # Determine unit tests coverage:
 gcc UNIT_TESTS.c -o UNIT_TESTS.out --coverage
