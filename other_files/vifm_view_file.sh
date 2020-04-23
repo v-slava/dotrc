@@ -9,7 +9,7 @@ MIME="$(file -b --mime-type "$DEST")"
 
 case "$MIME" in
     inode/directory) tree -a "$DEST" ;;
-    message/rfc822) echo email ;;
+    message/rfc822) show -file "$DEST" ;;
     text/*) head -n $NUM_TERMINAL_LINES "$DEST" ;;
     *) echo "Can't view: unknown file type." ;;
 esac
