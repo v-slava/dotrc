@@ -414,7 +414,7 @@ autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
 autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd rustc "
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
-    \ . expand("%:t") . ".out" | endif
+    \ . expand("%:t") . ".out" | endif | set errorformat=\ \ -->\ %f:%l:%c
 
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
@@ -1143,6 +1143,10 @@ function! My_goto_error(error)
         let l:action = 'silent ' . l:action . ' | ' . l:prefix . 'previous!'
     else
         let l:action = l:action . ' ' . a:error
+    endif
+
+    if stridx(g:My_eval_var, 'cargo ') != -1
+        execute 'cd ' . system('git rev-parse --show-toplevel')[:-2]
     endif
 
     let l:err_buf_name = g:My_vim_errors_file
