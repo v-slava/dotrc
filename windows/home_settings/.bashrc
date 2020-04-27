@@ -61,9 +61,9 @@ else
     export WORKSPACE=/media/files/workspace
     export DOTRC=$WORKSPACE/dotrc
     export DOTRC_S=$WORKSPACE/dotrc_s
+    # export EDITOR=emacs
     # export EDITOR=/usr/bin/vim
-    # export EDITOR=nvim
-    export EDITOR=emacs
+    export EDITOR=nvim
     source /usr/share/bash-completion/completions/git
 
     # default colorless prompt:
