@@ -34,6 +34,7 @@ fi
 
 mkdir -p "$DIR"
 scrot "$@" "$FILE"
+# gnome-screenshot -p
 if [ "$PRINT_FILE_PATH" = "true" ]; then
     echo "$FILE"
 fi
