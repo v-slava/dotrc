@@ -417,7 +417,8 @@ autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . expand("%:t") . ".out" | endif | set errorformat=\ \ -->\ %f:%l:%c
 
 autocmd BufEnter Cargo.toml,Cargo.lock if ! exists('g:My_eval_var') | let
-    \ g:My_eval_var = 'MyRunShellCmd cargo run' | endif
+    \ g:My_eval_var = "exe 'cd ' . system('git rev-parse --show-toplevel')[:-2]"
+    \ . " | MyRunShellCmd cargo run" | endif
 
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
@@ -1148,9 +1149,9 @@ function! My_goto_error(error)
         let l:action = l:action . ' ' . a:error
     endif
 
-    if stridx(g:My_eval_var, 'cargo ') != -1
-        execute 'cd ' . system('git rev-parse --show-toplevel')[:-2]
-    endif
+    " if stridx(g:My_eval_var, 'cargo ') != -1
+    "     execute 'cd ' . system('git rev-parse --show-toplevel')[:-2]
+    " endif
 
     let l:err_buf_name = g:My_vim_errors_file
     let l:in_err_win = 0
