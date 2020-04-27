@@ -1371,7 +1371,7 @@ git cherry-pick start..end
 git rev-parse --show-toplevel
 
 # git extract subfolder to a dedicated repository:
-$DOTRC/other_files/git_trim_repo_to_subdir.sh
+$DOTRC/other_files/my_samples/single_sources/git_trim_repo_to_subdir.sh
 
 # git remove (delete) submodule:
 1. Delete the relevant section from the .gitmodules file.
