@@ -416,6 +416,9 @@ autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif | set errorformat=\ \ -->\ %f:%l:%c
 
+autocmd BufEnter Cargo.toml,Cargo.lock if ! exists('g:My_eval_var') | let
+    \ g:My_eval_var = 'MyRunShellCmd cargo run' | endif
+
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
     \ . " && java -cp /tmp " . expand("%:t:r") | endif
