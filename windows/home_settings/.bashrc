@@ -62,7 +62,8 @@ else
     export DOTRC=$WORKSPACE/dotrc
     export DOTRC_S=$WORKSPACE/dotrc_s
     # export EDITOR=/usr/bin/vim
-    export EDITOR=nvim
+    # export EDITOR=nvim
+    export EDITOR=emacs
     source /usr/share/bash-completion/completions/git
 
     # default colorless prompt:
