@@ -1407,7 +1407,7 @@ let g:which_key_map.m = { 'name' : '+my',
 \ }
 
 let g:which_key_map.o = { 'name' : '+other',
-\   'c' : ['0D', 'clear current line'],
+\   'c' : ['"z0D', 'clear current line'],
 \   'f' : [':execute g:My_eval_var', 'evaluate variable'],
 \ }
 
