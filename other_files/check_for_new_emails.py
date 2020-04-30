@@ -40,7 +40,6 @@ for account_dir in account_dirs:
                         break
                 if line.startswith('Subject: '):
                     assert not Subject
-                    From = line[len('From: '):-1]
                     Subject = line[len('Subject: '):-1]
                     if From:
                         break
