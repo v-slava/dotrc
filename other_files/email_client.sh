@@ -5,7 +5,7 @@ set -e
 sync_mail()
 (
     set -e
-    $DOTRC/other_files/check_for_new_emails.sh
+    $DOTRC/other_files/check_for_new_emails.py
 )
 
 if [ "$1" = "--startup" ]; then
