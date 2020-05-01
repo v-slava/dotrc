@@ -46,8 +46,7 @@ fi
 
 if [ -n "$WINDIR" ]; then
     # settings for windows:
-    export DOTRC=/d/root_folder/dotrc
-    export DOTRC_S=/d/root_folder/dotrc_s
+    WORKSPACE=/d/root_folder/workspace
     # export EDITOR=vim
     export EDITOR=gvim
     PATH_append "/c/Program Files (x86)/Vim/vim81"
@@ -58,9 +57,7 @@ if [ -n "$WINDIR" ]; then
     }
 else
     # settings for linux:
-    export WORKSPACE=/media/files/workspace
-    export DOTRC=$WORKSPACE/dotrc
-    export DOTRC_S=$WORKSPACE/dotrc_s
+    WORKSPACE=/media/files/workspace
     # export EDITOR=emacs
     # export EDITOR=/usr/bin/vim
     export EDITOR=nvim
@@ -88,6 +85,8 @@ else
     # update the values of LINES and COLUMNS.
     shopt -s checkwinsize
 fi
+export DOTRC=$WORKSPACE/dotrc
+export DOTRC_S=$WORKSPACE/dotrc_s
 
 # export PATH=$ORIG_PATH
 PATH_prepend $DOTRC/bin $HOME/.local/bin
@@ -98,11 +97,6 @@ PATH_append /sbin /usr/sbin
 if [ -d "$DOTRC_S/bin" ]; then
     PATH_prepend $DOTRC_S/bin
 fi
-
-export PI_PORT=53535
-export PI_USR=pi
-export PI_HOST=94.154.220.9
-export PI_SSH="ssh -p $PI_PORT $PI_USR@$PI_HOST"
 
 # XDG Base Directory Specification (canonical settings):
 # export XDG_DATA_HOME=$HOME/.local/share
@@ -212,7 +206,7 @@ set -o vi
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+# HISTCONTROL=ignoreboth
 
 # Handle bash history from multiple terminals:
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
