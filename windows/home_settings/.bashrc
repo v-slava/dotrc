@@ -114,6 +114,7 @@ export XDG_CACHE_HOME=$HOME/.cache_xdg
 
 # Other settings:
 export MINICOM='-c on'
+export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
 
 # export QUILT_PATCHES=debian/patches
 

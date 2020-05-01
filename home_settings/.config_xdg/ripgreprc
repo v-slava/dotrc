@@ -1,0 +1,6 @@
+--smart-case
+# --hidden
+
+# To search only in these file types use: rg -t web PATTERN
+--type-add
+web:*.{html,css,js}*
