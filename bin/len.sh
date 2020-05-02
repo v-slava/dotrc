@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Print lines that are longer than MAX_COLUMNS. Without "-r" reads from stdin.
+
 TAB_LEN=8
 MAX_COLUMNS=80
 

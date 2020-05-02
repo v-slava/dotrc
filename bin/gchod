@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# If "git checkout BRANCH" failed because it is already checked out in another
+# workspace, you can call this script to switch to detached head state in
+# another workspace and retry "git checkout BRANCH" in this workspace.
+
 LAST_CMD=$(tail -n 1 ~/.bash_history)
 
 VALID_LAST_CMD=false
