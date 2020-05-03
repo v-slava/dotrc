@@ -2,7 +2,7 @@ OUT := $(PWD)/dmenu_out
 
 # Use git repository:
 DMENU_VERSION := dmenu
-DMENU_COMMIT := 4.8
+DMENU_COMMIT := 4.9
 DMENU_URL := http://git.suckless.org/dmenu
 
 # Use suckless tools website:
@@ -10,7 +10,7 @@ DMENU_URL := http://git.suckless.org/dmenu
 # DMENU_ARCHIVE_NAME := $(DMENU_VERSION).tar.gz
 # DMENU_URL := dl.suckless.org/tools/$(DMENU_ARCHIVE_NAME)
 
-CLIPBOARD_PATCH := $(DOTRC)/other_files/dmenu_clipboard.patch
+CLIPBOARD_PATCH := $(DOTRC)/other_files/build_or_install_scripts/dmenu/dmenu_clipboard.patch
 
 # Generate CLIPBOARD_PATCH (old method, no git):
 # diff -urn dmenu_orig_folder dmenu_modified_folder > dmenu.diff

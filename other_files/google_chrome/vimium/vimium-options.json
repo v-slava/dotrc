@@ -1,21 +1,13 @@
 {
-  "settingsVersion": "1.64.6",
+  "settingsVersion": "1.66",
   "exclusionRules": [
     {
       "pattern": "https://accounts.google.com/*",
       "passKeys": "gmail"
     },
     {
-      "pattern": "https://www.commerzbank.de/*",
-      "passKeys": "commerzbank"
-    },
-    {
-      "pattern": "https://kreditkarten-banking.lbb.de/*",
-      "passKeys": "lbb"
-    },
-    {
-      "pattern": "https://www.amazon.de/*",
-      "passKeys": "amazon"
+      "pattern": "https://www.privat24.ua/*",
+      "passKeys": "privat24"
     }
   ],
   "filterLinkHints": false,

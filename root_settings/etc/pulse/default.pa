@@ -66,6 +66,10 @@ load-module module-bluetooth-policy
 load-module module-bluetooth-discover
 .endif
 
+.ifexists module-switch-on-connect.so
+load-module module-switch-on-connect
+.endif
+
 ### Load several protocols
 .ifexists module-esound-protocol-unix.so
 load-module module-esound-protocol-unix

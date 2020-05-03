@@ -8,7 +8,7 @@ create_maildir()
     LONG="$1"
     SHORT="$2"
     mkdir -p $HOME/mail/$LONG
-    # Add short symlink for sidebar in neomutt:
+    # Add short symlink for sidebar in mutt:
     if [ ! -L $HOME/mail/$SHORT ]; then
         ln -s $HOME/mail/$LONG $HOME/mail/$SHORT
     fi

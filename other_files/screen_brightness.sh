@@ -23,3 +23,12 @@ if [ "$AMOUNT" -eq 0 ]; then
     AMOUNT=1
 fi
 xbacklight $OP $AMOUNT
+# If xbacklight returns an error "No outputs have backlight property" on ASUS
+# X541UA laptop, we need to do the following:
+# 1) Shutdown X server:
+#    systemctl stop getty@tty1.service
+#    i3-msg exit
+# 2) Generate /etc/X11/xorg.conf:
+#    X -configure
+# 3) Put generated file to proper location:
+#    mv ~/xorg.conf.new /etc/X11/xorg.conf

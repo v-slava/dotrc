@@ -1,4 +1,6 @@
+From 69be7f9aacb8d1004cf9023fd9c87d7c97e00dd2 Mon Sep 17 00:00:00 2001
 From: Viacheslav Volkov <viacheslav.volkov.1@gmail.com>
+Date: Sun, 3 May 2020 17:50:55 +0300
 Subject: [PATCH] Add "-selection" option and Alt+i hotkey.
 
 ---
@@ -8,12 +10,12 @@ Subject: [PATCH] Add "-selection" option and Alt+i hotkey.
  3 files changed, 36 insertions(+), 15 deletions(-)
 
 diff --git a/config.mk b/config.mk
-index 50fe52c..b32ea72 100644
+index 0929b4a..2b0766e 100644
 --- a/config.mk
 +++ b/config.mk
-@@ -5,8 +5,7 @@ VERSION = 4.8
+@@ -5,8 +5,7 @@ VERSION = 4.9
  PREFIX = /usr/local
- MANPREFIX = ${PREFIX}/share/man
+ MANPREFIX = $(PREFIX)/share/man
  
 -X11INC = /usr/X11R6/include
 -X11LIB = /usr/X11R6/lib
@@ -24,21 +26,21 @@ index 50fe52c..b32ea72 100644
 @@ -20,12 +19,12 @@ FREETYPEINC = /usr/include/freetype2
  
  # includes and libs
- INCS = -I${X11INC} -I${FREETYPEINC}
--LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
-+LIBS = -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXmu
+ INCS = -I$(X11INC) -I$(FREETYPEINC)
+-LIBS = -L$(X11LIB) -lX11 $(XINERAMALIBS) $(FREETYPELIBS)
++LIBS = -lX11 $(XINERAMALIBS) $(FREETYPELIBS) -lXmu
  
  # flags
--CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
-+CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} -O2 -flto
- CFLAGS   = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
--LDFLAGS  = -s ${LIBS}
-+LDFLAGS  = -s ${LIBS} -O2 -flto
+-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XINERAMAFLAGS)
++CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XINERAMAFLAGS) -O2 -flto
+ CFLAGS   = -std=c99 -pedantic -Wall -Os $(INCS) $(CPPFLAGS)
+-LDFLAGS  = $(LIBS)
++LDFLAGS  = $(LIBS) -O2 -flto
  
  # compiler and linker
  CC = cc
 diff --git a/dmenu.1 b/dmenu.1
-index fbb3f76..269a351 100644
+index 323f93c..edd66fb 100644
 --- a/dmenu.1
 +++ b/dmenu.1
 @@ -10,6 +10,8 @@ dmenu \- dynamic menu
@@ -51,24 +53,24 @@ index fbb3f76..269a351 100644
  .IR font ]
  .RB [ \-nb
 @@ -160,11 +162,8 @@ Delete line left
- C\-w
+ .B C\-w
  Delete word left
  .TP
--C\-y
+-.B C\-y
 -Paste from primary X selection
 -.TP
--C\-Y
+-.B C\-Y
 -Paste from X clipboard
-+A\-v
++.B A\-v
 +Paste from clipboard
  .TP
- M\-b
+ .B M\-b
  Move cursor to the start of the current word
 diff --git a/dmenu.c b/dmenu.c
-index 5e9c367..70b2639 100644
+index 6b8f51b..bbf7c7c 100644
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -10,6 +10,7 @@
+@@ -11,6 +11,7 @@
  #include <X11/Xlib.h>
  #include <X11/Xatom.h>
  #include <X11/Xutil.h>
@@ -76,7 +78,7 @@ index 5e9c367..70b2639 100644
  #ifdef XINERAMA
  #include <X11/extensions/Xinerama.h>
  #endif
-@@ -27,6 +28,13 @@
+@@ -28,6 +29,13 @@
  /* enums */
  enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
  
@@ -90,7 +92,7 @@ index 5e9c367..70b2639 100644
  struct item {
  	char *text;
  	struct item *left, *right;
-@@ -345,11 +353,6 @@ keypress(XKeyEvent *ev)
+@@ -354,11 +362,6 @@ keypress(XKeyEvent *ev)
  			while (cursor > 0 && !strchr(worddelimiters, text[nextrune(-1)]))
  				insert(NULL, nextrune(-1) - cursor);
  			break;
@@ -101,8 +103,8 @@ index 5e9c367..70b2639 100644
 -			return;
  		case XK_Left:
  			movewordedge(-1);
- 			ksym = NoSymbol;
-@@ -383,6 +386,18 @@ keypress(XKeyEvent *ev)
+ 			goto draw;
+@@ -388,6 +391,18 @@ keypress(XKeyEvent *ev)
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
@@ -121,7 +123,7 @@ index 5e9c367..70b2639 100644
  		default:
  			return;
  		}
-@@ -689,6 +704,14 @@ main(int argc, char *argv[])
+@@ -698,6 +713,14 @@ main(int argc, char *argv[])
  		if (!strcmp(argv[i], "-v")) {      /* prints version information */
  			puts("dmenu-"VERSION);
  			exit(0);
@@ -137,5 +139,5 @@ index 5e9c367..70b2639 100644
  			topbar = 0;
  		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 -- 
-2.16.2
+2.26.2
 

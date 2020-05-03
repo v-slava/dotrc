@@ -1272,9 +1272,6 @@ systemctl start teamviewerd.service
 # determine wifi network / access point properties (if already connected):
 iwlist wlan0 scan
 
-# Connect manually to wifi (wpasupplicant):
-wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
-
 # LG G2 path to camera photos:
 /storage/emulated/legacy/DCIM/Camera/
 
@@ -2672,6 +2669,18 @@ mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3
 
 # Create U-Boot script image:
 mkimage -A arm -O u-boot -T script -C none -n 'UbootUpdateScript' -d update_script.txt update_script.scr
+
+# connect to wifi via network manager (nmcli):
+# ("d" stands for "device")
+# turn on wifi radio interface:
+nmcli r && nmcli r wifi on
+# list available wifi networks:
+nmcli d wifi list
+# connect to wifi network:
+nmcli d wifi connect <SSID> password <PASSWORD>
+
+# Connect manually to wifi (wpasupplicant):
+wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
 
 # Add bridge:
 brctl addbr br0

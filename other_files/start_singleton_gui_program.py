@@ -132,11 +132,11 @@ def start_browser(args):
 
 def start_email(args):
     def find_email_client(obj):
-        return find_win_with_prop('title', 'neomutt', obj)
+        return find_win_with_prop('title', 'mutt', obj)
     dotrc = os.environ['DOTRC']
     email_client = os.path.join(dotrc, 'other_files', 'email_client.sh')
     start_program([email_client] + args, find_email_client,
-                  process_name = 'neomutt', single_run = True)
+                  process_name = 'mutt', single_run = True)
 
 def start_telegram(args):
     def find_telegram(obj):

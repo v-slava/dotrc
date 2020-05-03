@@ -17,10 +17,10 @@ if [ "$1" = "--startup" ]; then
 fi
 
 # In this case "push <first-entry>" doesn't work:
-# $DOTRC/other_files/open_terminal.sh neomutt
+# $DOTRC/other_files/open_terminal.sh mutt
 
 $DOTRC/other_files/open_terminal.sh bash -i -c \
-    'echo -ne "\033]0;neomutt\007" && cd ~/downloads && neomutt && true'
+    'echo -ne "\033]0;mutt\007" && cd ~/downloads && mutt && true'
 
 sync_mail
 exit 0

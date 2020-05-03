@@ -1,8 +1,26 @@
 #!/usr/bin/env bash
 
-# already installed packages: linux-image-amd64 systemd systemd-sysv
-# efibootmgr
-# grub-pc os-prober
+# Install debian:
+# mkfs -t ext4 -L root_partition /dev/sdX2
+# mount /dev/sdX2 rootfs_dir
+# debootstrap --arch=amd64 --variant=minbase bullseye rootfs_dir
+
+# copy /etc/apt/apt.conf, create /etc/fstab
+# mount -B /proc rootfs_dir/proc
+# mount -B /sys rootfs_dir/sys
+# mount -B /dev rootfs_dir/dev
+# mount -B /dev/pts rootfs_dir/dev/pts
+# chroot rootfs_dir
+# passwd
+
+# apt-get install linux-image-amd64 systemd systemd-sysv
+# apt-get install efibootmgr
+# apply postinst for kernel and initramfs
+# alternative: apt-get install grub-pc os-prober
+
+# apt-get install network-manager
+
+# exit && umount -R rootfs_dir && sync && reboot
 
 set -ex
 
@@ -10,7 +28,7 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    neovim vbindiff vifm ripgrep progress fzf less bash-completion python xxd \
+    vbindiff vifm ripgrep progress fzf less bash-completion python xxd \
     apt-file apt-rdepends apt-utils dialog locales \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
     isc-dhcp-client traceroute wget \
@@ -18,7 +36,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
     gdb gdb-doc gdbserver gdb-multiarch uftrace strace ltrace graphviz python3 \
-    linux-base linux-perf-5.3 \
+    linux-base linux-perf ripgrep \
     rtags exuberant-ctags cscope doxygen git git-email make patch dos2unix \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
@@ -31,13 +49,28 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 
 apt-file update
 
-# apt-get install jmtpfs
 apt-get install go-mtpfs
+# jmtpfs
 
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
 # apt-get install firmware-atheros
 # For Asus F541U:
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
+
+# Install GUI:
+# apt-get install sway swaylock kitty wofi
+# dunst -> mako (desktop notifications)
+# dmenu -> bemenu
+# xclip, xsel -> wl-clipboard
+# scrot -> slurp, grim (screenshots)
+# Commands:
+# sway
+# WAYLAND_DISPLAY=wayland-0 kitty
+# KITTY_ENABLE_WAYLAND=1 kitty # no effect
+# export EGL_LOG_LEVEL=debug
+# export LIBGL_DEBUG=verbose
+# export MESA_DEBUG=1
+# See also egl_version.c in $DOTRC/other_files/my_samples/single_sources/egl_version.c
 
 # Install xorg (use xserver-xorg-video-vmware for virtualbox):
 apt-get install xorg xserver-xorg-video-intel \
@@ -60,9 +93,10 @@ apt-get install bluez pavucontrol
 # Install audio player:
 # apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
 apt-get install xmms2-client-nycli xmms2-plugin-mpg123 xmms2-plugin-pulse
+apt-get install id3v2 alsa-utils # for volume control (amixer)
 
 # Install qemu:
-apt-get install qemu-system-x86 qemu-kvm spice-client
+# apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
 apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
@@ -73,20 +107,13 @@ apt-get install libnotify-bin dunst
 # notify-osd # heavy-weight, has issues with i3wm
 
 # Install vim instance, which is able to access X clipboard:
-apt-get install vim-gtk
-# apt-get install --install-recommends python-pip python3-pip
-# pip3 install --user --upgrade pynvim
-# pip install --user --upgrade pynvim
-# pip install --user --upgrade youtube_dl
-# editor for big / text-binary files (self-extracting archives):
-# apt-get install joe
+apt-get install neovim
+apt-get install --install-recommends python3-pip
+pip3 install --user neovim youtube_dl psutil
 
 # Install email client:
-apt-get install isync
-apt-get install mmh
-# apt-get install msmtp neomutt
-# apt-get install thunderbird
-# icedove
+apt-get install isync mutt mmh
+# thunderbird icedove msmtp
 # For microsoft exchange server:
 # apt-get -t buster-backports install evolution evolution-ews
 
@@ -113,9 +140,6 @@ apt-get install libreoffice
 apt-get install zathura
 # editable pdf support: evince
 
-# Install whatever is necessary for spacemacs:
-apt-get install emacs python-jedi python-setuptools clang-format
-
 # Install alternative browsers:
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 dpkg -i google-chrome-stable_current_amd64.deb
@@ -124,10 +148,7 @@ dpkg -i google-chrome-stable_current_amd64.deb
 # chromium-l10n pepperflashplugin-nonfree uzbl
 
 # dmenu:
-make -f $DOTRC/other_files/Makefile_dmenu.mk
-
-# ripgrep (rg):
-$DOTRC/other_files/install_ripgrep_rg.sh
+make -f $DOTRC/other_files/build_or_install_scripts/dmenu/Makefile_dmenu.mk
 
 # fzy:
 # apt-get install fzy

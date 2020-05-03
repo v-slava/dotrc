@@ -42,5 +42,6 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
             CONFIGDIR=virtual
         fi
     fi
-    exec startx -- -configdir $CONFIGDIR
+    # exec startx -- -configdir $CONFIGDIR
+    exec startx
 fi

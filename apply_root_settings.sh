@@ -40,10 +40,6 @@ list_files()
     config_generate -r "$FILE"
 done
 
-if $DOTRC/other_files/virtual_box.sh ; then
-    rm -f /etc/systemd/system/wpa_supplicant.service
-fi
-
 LINUX_ARGS=()
 if ! which dmidecode 1>/dev/null 2>&1 ; then
     echo "Missing: apt-get install dmidecode" 1>&2
@@ -97,7 +93,6 @@ locale-gen 1>/dev/null
 if systemctl is-enabled systemd-networkd.service ; then
     systemctl disable systemd-networkd.service 1>/dev/null
 fi
-# systemctl status wpa_supplicant
 # systemctl set-default default_system_gui.target
 
 # apply vifm settings to vim:
