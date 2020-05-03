@@ -2,7 +2,7 @@ OUT := $(PWD)/dmenu_out
 
 # Use git repository:
 DMENU_VERSION := dmenu
-DMENU_COMMIT := 4.9
+DMENU_COMMIT := master # 4.9
 DMENU_URL := http://git.suckless.org/dmenu
 
 # Use suckless tools website:

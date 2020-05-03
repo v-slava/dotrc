@@ -526,7 +526,7 @@ nmap if :winrun ^ !$DOTRC/other_files/open_terminal.sh vifm %d %D &<CR>
 nmap it :!touch %c<CR>
 " nmap ib :!beautify.sh %d/%c<CR>
 command hexview xxd %c | less
-command hexedit hed %c
+command hexedit bvi %c
 
 " noremap j j:echo system('readlink -f ' . expand('%c:p'))<CR>
 " noremap k k:echo system('readlink -f ' . expand('%c:p'))<CR>

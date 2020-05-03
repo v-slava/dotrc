@@ -36,7 +36,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
     gdb gdb-doc gdbserver gdb-multiarch uftrace strace ltrace graphviz python3 \
-    linux-base linux-perf ripgrep \
+    linux-base linux-perf ripgrep bvi \
     rtags exuberant-ctags cscope doxygen git git-email make patch dos2unix \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \

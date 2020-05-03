@@ -18,5 +18,4 @@
 <Multi_key> <Cyrillic_HARDSIGN> : "Ї"   # Ъ
 <Multi_key> <Cyrillic_e>        : "є"   # э
 <Multi_key> <Cyrillic_E>        : "Є"   # Э
-<Multi_key> <Cyrillic_io>       : "’"   # ё
-
+<Multi_key> <Cyrillic_io>       : "'"   # ё
