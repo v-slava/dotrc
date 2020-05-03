@@ -45,7 +45,6 @@ load-module module-switch-on-port-available
 ### Automatically load driver modules depending on the hardware available
 .ifexists module-udev-detect.so
 load-module module-udev-detect
-# load-module module-udev-detect ignore_dB=1
 .else
 ### Use the static hardware detection module (for systems that lack udev support)
 load-module module-detect
@@ -65,7 +64,6 @@ load-module module-bluetooth-policy
 
 .ifexists module-bluetooth-discover.so
 load-module module-bluetooth-discover
-load-module module-switch-on-connect
 .endif
 
 ### Load several protocols
