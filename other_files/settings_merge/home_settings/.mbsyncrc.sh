@@ -1,24 +1,19 @@
 create_maildir()
 (
     set -e
-    if [ $# -ne 2 ]; then
+    if [ $# -ne 1 ]; then
         echo "config_create_maildir(): error: wrong args" 1>&2
         false
     fi
-    LONG="$1"
-    SHORT="$2"
-    mkdir -p $HOME/mail/$LONG
-    # Add short symlink for sidebar in mutt:
-    if [ ! -L $HOME/mail/$SHORT ]; then
-        ln -s $HOME/mail/$LONG $HOME/mail/$SHORT
-    fi
+    DIR="$1"
+    mkdir -p "$HOME/mail/isync/$DIR"
 )
 
 configure_maildirs()
 (
     set -e
-    create_maildir slava65536@gmail.com s
-    create_maildir viacheslav.volkov.1@gmail.com v
+    create_maildir slava65536@gmail.com
+    create_maildir viacheslav.volkov.1@gmail.com
 )
 
 config_dotrc()

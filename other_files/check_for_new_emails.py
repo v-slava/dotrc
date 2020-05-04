@@ -4,7 +4,7 @@ import sys, os, email, pathlib, subprocess, email
 from email.policy import default
 
 notifications_to_show = 3
-mail = os.path.join(pathlib.Path.home(), 'mail')
+mail = os.path.join(pathlib.Path.home(), 'mail', 'isync')
 
 # lock_dir = '/tmp/mbsync_lock_dir'
 #

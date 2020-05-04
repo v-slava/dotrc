@@ -31,8 +31,8 @@ Account MY_ACCOUNT
 #
 
 MaildirStore MY_ACCOUNT-local
-Path ~/mail/MY_ACCOUNT@gmail.com/
-Inbox ~/mail/MY_ACCOUNT@gmail.com/inbox
+Path ~/mail/isync/MY_ACCOUNT@gmail.com/
+Inbox ~/mail/isync/MY_ACCOUNT@gmail.com/inbox
 # On-disk folder naming style (use same names as on remote server):
 Subfolders Verbatim
 

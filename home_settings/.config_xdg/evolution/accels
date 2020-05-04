@@ -1,0 +1,6 @@
+(gtk_accel_path "<Actions>/mail/mail-next" "j")
+(gtk_accel_path "<Actions>/mail/mail-previous" "k")
+(gtk_accel_path "<Actions>/mail/mail-message-open" "l")
+(gtk_accel_path "<Actions>/action-group-standard/close" "q")
+(gtk_accel_path "<Actions>/mail/mail-delete" "d")
+(gtk_accel_path "<Actions>/action-group-standard/mail-load-images" "i")

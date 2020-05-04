@@ -111,8 +111,8 @@ apt-get install --install-recommends python3-pip
 pip3 install --user neovim youtube_dl psutil
 
 # Install email client:
-apt-get install isync mutt mmh
-# thunderbird icedove msmtp
+apt-get install evolution
+# thunderbird icedove msmtp mutt mmh
 # For microsoft exchange server:
 # apt-get -t buster-backports install evolution evolution-ews
 
