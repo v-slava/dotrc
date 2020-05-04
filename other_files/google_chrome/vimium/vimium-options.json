@@ -1,15 +1,6 @@
 {
   "settingsVersion": "1.66",
-  "exclusionRules": [
-    {
-      "pattern": "https://accounts.google.com/*",
-      "passKeys": "gmail"
-    },
-    {
-      "pattern": "https://www.privat24.ua/*",
-      "passKeys": "privat24"
-    }
-  ],
+  "exclusionRules": [],
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,

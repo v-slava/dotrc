@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-import sys, os, email, pathlib, subprocess
-from email import header
+import sys, os, email, pathlib, subprocess, email
+from email.policy import default
 
 notifications_to_show = 3
 mail = os.path.join(pathlib.Path.home(), 'mail')
@@ -30,25 +30,15 @@ for account_dir in account_dirs:
         if notifications_to_show == 0:
             sys.exit(0)
         notifications_to_show = notifications_to_show - 1
-        From, Subject = None, None
-        with open(os.path.join(new, eml_file), 'r') as f:
-            for line in f:
-                if line.startswith('From: '):
-                    assert not From
-                    From = line[len('From: '):-1]
-                    if Subject:
-                        break
-                if line.startswith('Subject: '):
-                    assert not Subject
-                    Subject = line[len('Subject: '):-1]
-                    if From:
-                        break
+        with open(os.path.join(new, eml_file), 'rb') as f:
+            msg = email.message_from_binary_file(f, policy = default)
+        From, Subject = msg['From'], msg['Subject']
         Subject = email.header.decode_header(Subject)[0][0]
         try:
             Subject = Subject.decode()
         except (UnicodeDecodeError, AttributeError):
             pass
-        # In 3 minutes (300 000 ms) we will check for new emails once again.
+        # In 5 minutes (300 000 ms) we will check for new emails once again.
         subprocess.run(['notify-send', '-u', 'low', '-t', '280000',
             f'Got new email from {From}:\n{Subject}'], check = True)
         # To mark new email as "seen":
