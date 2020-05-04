@@ -1,0 +1,11 @@
+@-moz-document url(chrome://browser/content/browser.xul) {
+    #main-window,
+    browser[type="content-primary"],
+    browser[type="content"],
+    tabbrowser#content,
+    #content,
+    browser[type="content"] > html
+    {
+        background: #101010 !important;
+    }
+}
