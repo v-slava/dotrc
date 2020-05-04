@@ -73,8 +73,7 @@ apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 # See also egl_version.c in $DOTRC/other_files/my_samples/single_sources/egl_version.c
 
 # Install xorg (use xserver-xorg-video-vmware for virtualbox):
-apt-get install xorg xserver-xorg-video-intel \
-    xserver-xorg-input-evdev xserver-xorg-input-synaptics \
+apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-libinput \
     xinit rxvt-unicode-256color rxvt-unicode libpam-systemd
 # Alternative for evdev and synaptics: xserver-xorg-input-libinput
 

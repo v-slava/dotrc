@@ -320,9 +320,6 @@ bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/programs/keyboar
 bindsym $Alt_L+F2 exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
 bindsym XF86TouchpadToggle exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
 
-# turn off touchpad by default:
-exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
-
 # dmenu (a program launcher)
 bindsym $Alt_L+d exec --no-startup-id exec $START $DOTRC/other_files/dmenu.sh
 

@@ -1,0 +1,2 @@
+# turn off touchpad by default:
+$DOTRC/other_files/toggle_touchpad.sh --init

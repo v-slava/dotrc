@@ -22,4 +22,7 @@ case "$VALUE" in
     1) ACTION=--disable ;;
     *) echo "Error: got unexpected enabled VALUE = |$VALUE| (neither |0|, nor |1|)" 1>&2 ; exit 1 ;;
 esac
+if [ "$1" = "--init" ]; then
+    xinput set-prop $TOUCHPAD_ID "libinput Natural Scrolling Enabled" 1
+fi
 xinput $ACTION $TOUCHPAD_ID
