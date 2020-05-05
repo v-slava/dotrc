@@ -9,6 +9,9 @@ https://addons.mozilla.org/en-US/firefox/addon/darkreader/?src=search
 https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/?src=search
 https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/?src=search
 
+4) Add gmail bookmark:
+https://mail.google.com/mail/u/0/h/?v=lui
+
 # ==============================================================================
 # The following settings are currently not used:
 

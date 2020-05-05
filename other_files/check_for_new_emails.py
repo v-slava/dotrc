@@ -11,6 +11,19 @@ def check(func):
         connection.logout()
         sys.exit(1)
 
+def decode(arg):
+    ret = ''
+    for value, encoding in email.header.decode_header(arg):
+        if type(value) is bytes:
+            if encoding:
+                ret += value.decode(encoding)
+            else:
+                ret += value.decode() # encoding is None => use default (UTF-8).
+        else:
+            assert type(value) is str
+            ret += value
+    return ret
+
 pass_dir = os.path.join(os.environ['DOTRC_S'], 'other_files', 'settings_merge',
         'preprocess_include', 'passwords')
 for item in os.listdir(pass_dir):
@@ -37,12 +50,7 @@ for item in os.listdir(pass_dir):
         ret, data = connection.fetch(num, '(RFC822)')
         check('fetch')
         msg = email.message_from_string(data[0][1].decode())
-        From, Subject = msg['From'], msg['Subject']
-        Subject = email.header.decode_header(Subject)[0][0]
-        try:
-            Subject = Subject.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
+        From, Subject = decode(msg['From']), decode(msg['Subject'])
         # In 5 minutes (300 000 ms) we will check for new emails once again.
         subprocess.run(['notify-send', '-u', 'low', '-t', '280000',
             f'Got new email from {From}:\n{Subject}'], check = True)
