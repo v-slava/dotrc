@@ -1,10 +1,10 @@
 [Unit]
-Description=Mailbox synchronization timer
+Description=Check new email timer
 
 [Timer]
 OnBootSec=2m
 OnUnitActiveSec=5m
-Unit=mbsync.service
+Unit=check_new_email.service
 
 [Install]
 WantedBy=timers.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=Check new email service
+
+[Service]
+Type=oneshot
+; ExecStart=/usr/bin/mbsync -Va
+ExecStart=/bin/bash -c 'source ~/.bashrc \
+          && DOTRC/other_files/check_for_new_emails.py'

@@ -1,37 +1,42 @@
 #!/usr/bin/python3
 
-import sys, os, email, pathlib, subprocess, email
-from email.policy import default
+import sys, os, imaplib, email, subprocess
 
 notifications_to_show = 3
-mail = os.path.join(pathlib.Path.home(), 'mail', 'isync')
 
-# lock_dir = '/tmp/mbsync_lock_dir'
-#
-# try:
-#     os.mkdir(lock_dir)
-#     got_lock = True
-# except (FileExistsError):
-#     got_lock = False
-#
-# if got_lock:
-#     subprocess.run(['mbsync', '-a'], check = True)
-#     os.rmdir(lock_dir)
+def check(func):
+    if ret != 'OK':
+        print(f'{func}() failed for IMAP4_SSL connection', file = sys.stderr)
+        connection.close()
+        connection.logout()
+        sys.exit(1)
 
-subprocess.run(['mbsync', '-a'], check = True)
-
-paths = [os.path.join(mail, item) for item in os.listdir(mail)]
-account_dirs = [d for d in paths if os.path.isdir(d) and not os.path.islink(d)]
-for account_dir in account_dirs:
-    new = os.path.join(account_dir, 'inbox', 'new')
-    if not os.path.isdir(new):
-        continue
-    for eml_file in os.listdir(new):
+pass_dir = os.path.join(os.environ['DOTRC_S'], 'other_files', 'settings_merge',
+        'preprocess_include', 'passwords')
+for item in os.listdir(pass_dir):
+    account_file = os.path.join(pass_dir, item)
+    account = item[:-len('.mbsyncrc')]
+    provider = account.split('@')[1]
+    host, port = {
+            'gmail.com' : ('imap.gmail.com', imaplib.IMAP4_SSL_PORT),
+            }.get(provider, (None, None))
+    if not host:
+        print(f'Error: unknown email provider: {provider}', file = sys.stderr)
+        break
+    with open(account_file, 'r') as f:
+        password = f.read()[len('Pass "'):-2]
+    connection = imaplib.IMAP4_SSL(host, port)
+    connection.login(account, password)
+    connection.select(mailbox = 'INBOX', readonly = True)
+    ret, data = connection.search(None, 'UnSeen')
+    check('search')
+    for num in data[0].split():
         if notifications_to_show == 0:
-            sys.exit(0)
+            break
         notifications_to_show = notifications_to_show - 1
-        with open(os.path.join(new, eml_file), 'rb') as f:
-            msg = email.message_from_binary_file(f, policy = default)
+        ret, data = connection.fetch(num, '(RFC822)')
+        check('fetch')
+        msg = email.message_from_string(data[0][1].decode())
         From, Subject = msg['From'], msg['Subject']
         Subject = email.header.decode_header(Subject)[0][0]
         try:
@@ -41,5 +46,7 @@ for account_dir in account_dirs:
         # In 5 minutes (300 000 ms) we will check for new emails once again.
         subprocess.run(['notify-send', '-u', 'low', '-t', '280000',
             f'Got new email from {From}:\n{Subject}'], check = True)
-        # To mark new email as "seen":
+        # To mark new email as "seen" for maildir (isync/mbsync):
         # mv inbox/new/${EMAIL_FILE} inbox/cur/${EMAIL_FILE}S
+    connection.close()
+    connection.logout()
