@@ -54,7 +54,7 @@ def vifm_rename(in_file, action, force):
     vifm_cmd = "unselect * | "
     if out_exists:
         vifm_cmd += vifm_select(out_file) + " | delete | "
-    vifm_cmd += vifm_select(in_file) + " | rename " + out_file
+    vifm_cmd += vifm_select(in_file) + " | rename '" + out_file + "'"
     shell_cmd = ["vifm", "--server-name", os.environ["VIFM_SERVER_NAME"],
                  "--remote", "-c", vifm_cmd]
     check_call(shell_cmd)

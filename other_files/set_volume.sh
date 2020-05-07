@@ -20,6 +20,7 @@ SINK_NAME="@DEFAULT_SINK@"
 
 # amixer set Master 3%+
 pactl -- set-sink-volume "$SINK_NAME" "$VOLUME"
+exit
 
 # Set the same volume for all applications:
 NEW_VOLUME=$($DOTRC/other_files/get_volume.sh)
