@@ -418,7 +418,7 @@ autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
 
 autocmd BufEnter Cargo.toml,Cargo.lock if ! exists('g:My_eval_var') | let
     \ g:My_eval_var = "exe 'cd ' . system('git rev-parse --show-toplevel')[:-2]"
-    \ . " | MyRunShellCmd cargo run" | endif
+    \ . " | MyRunShellCmd cargo run" | endif | set errorformat=\ \ -->\ %f:%l:%c
 
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
@@ -1406,8 +1406,13 @@ let g:which_key_map.m = { 'name' : '+my',
 \   'e' : [':call My_eval_vim()', 'eval vim'],
 \ }
 
+" If we use:
+" \   'c' : ['0"zD', 'clear current line'],
+" we get error: Vim(call):E116: Invalid arguments for function feedkeys
+" Problem: double quote in string. Therefore we will remap this later
+" (see LABEL_1).
 let g:which_key_map.o = { 'name' : '+other',
-\   'c' : ['"z0D', 'clear current line'],
+\   'c' : ['0D', 'clear current line'],
 \   'f' : [':execute g:My_eval_var', 'evaluate variable'],
 \ }
 
@@ -1508,6 +1513,8 @@ if globpath(&runtimepath, "autoload/which_key.vim") != ""
 else
     call My_register_which_key(g:which_key_map, '')
 endif
+" LABEL_1: remap <Leader>oc again (fixes error due to double quote, see above):
+nmap <Leader>oc 0"zD
 
 function! My_source_vimrc_s()
     let l:file = $DOTRC_S . "/home_settings/.vimrc"
