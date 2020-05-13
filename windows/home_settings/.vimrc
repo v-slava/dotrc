@@ -411,14 +411,8 @@ autocmd FileType cpp if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
     \ . expand("%:t") . ".out" | endif
 
-autocmd FileType rust if ! exists('g:My_eval_var') | let g:My_eval_var =
-    \ "MyRunShellCmd rustc "
-    \ . expand("%:t") . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
-    \ . expand("%:t") . ".out" | endif | set errorformat=\ \ -->\ %f:%l:%c
-
-autocmd BufEnter Cargo.toml,Cargo.lock if ! exists('g:My_eval_var') | let
-    \ g:My_eval_var = "exe 'cd ' . system('git rev-parse --show-toplevel')[:-2]"
-    \ . " | MyRunShellCmd cargo run" | endif | set errorformat=\ \ -->\ %f:%l:%c
+autocmd FileType rust call My_rust_lang()
+autocmd BufEnter Cargo.toml,Cargo.lock call My_rust_lang()
 
 autocmd FileType java if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "MyRunShellCmd javac -d /tmp " . expand("%:t")
@@ -442,6 +436,45 @@ autocmd FileType html if ! exists('g:My_eval_var') | let g:My_eval_var =
 
 autocmd FileType sql if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "silent MyRunShellCmd sqlite3 < " . expand("%:p") | endif
+
+function! My_set_cargo_cmd(cmd)
+    let g:My_eval_var = g:My_cargo_prefix . a:cmd
+endfunction
+
+function! My_rust_lang()
+    " set errorformat=\ \ -->\ %f:%l:%c
+    " The following errorformat is stolen from:
+    " https://github.com/rust-lang/rust.vim/blob/master/compiler/rustc.vim
+    set errorformat=
+            \%-G,
+            \%-Gerror:\ aborting\ %.%#,
+            \%-Gerror:\ Could\ not\ compile\ %.%#,
+            \%Eerror:\ %m,
+            \%Eerror[E%n]:\ %m,
+            \%Wwarning:\ %m,
+            \%Inote:\ %m,
+            \%C\ %#-->\ %f:%l:%c,
+            \%E\ \ left:%m,%C\ right:%m\ %f:%l:%c,%Z
+    if exists('g:My_eval_var')
+        return
+    endif
+    let l:out = system("cargo locate-project")
+    if stridx(l:out, 'error: could not find `Cargo.toml` in ') == 0
+        let g:My_eval_var = "MyRunShellCmd rustc -g " . expand("%:t")
+                    \ . " -o /tmp/" . expand("%:t") . ".out && /tmp/"
+                    \ . expand("%:t") . ".out"
+        return
+    endif
+    " l:out should look like: '{"root":"/path/to/Cargo.toml"}'
+    let l:tmp = strpart(l:out, 9)
+    let l:dir = "'" . strpart(l:tmp, 0, strlen(l:tmp) - 14) . "'"
+    " let l:dir = "system('git rev-parse --show-toplevel')[:-2]"
+    let g:My_cargo_prefix = "exe 'cd ' . " . l:dir . " | MyRunShellCmd cargo "
+    let g:My_eval_var = g:My_cargo_prefix . 'run'
+    let g:which_key_map.r.b = [':call My_set_cargo_cmd("build")', 'cargo build']
+    let g:which_key_map.r.r = [':call My_set_cargo_cmd("run")', 'cargo run']
+    let g:which_key_map.r.t = [':call My_set_cargo_cmd("test")', 'cargo test']
+endfunction
 
 function! My_is_linux_kernel_source_file(full_path)
     if g:My_is_windows
@@ -1069,7 +1102,7 @@ function! My_insert_eval_region(text)
     elseif &filetype == "dot"
         let l:cmd = 'i/* EVAL REGION BEGINS HERE: |* | * ' . a:text
                     \ . '* EVAL REGION ENDS HERE. */k0'
-    elseif &filetype == "sh" || &filetype == "python"
+    elseif &filetype == "sh" || &filetype == "python" || &filetype == "toml"
         let l:has_shebang = 1
         let l:cmd = 'i# EVAL REGION BEGINS HERE: |# |# ' . a:text
                     \ . '# EVAL REGION ENDS HERE.k'

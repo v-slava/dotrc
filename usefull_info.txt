@@ -70,6 +70,7 @@ cargo run
 cargo check
 cargo fetch
 cargo --offline ...
+# Rust gdb breakpoint on main: "b CRATE::main" or "b _1::main".
 
 daemonize $(which cmd) args
 nohup cmd &
