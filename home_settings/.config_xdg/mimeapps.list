@@ -1,0 +1,12 @@
+[Default Applications]
+text/html=web_browser.desktop # google-chrome.desktop
+x-scheme-handler/http=web_browser.desktop
+x-scheme-handler/https=web_browser.desktop
+x-scheme-handler/about=web_browser.desktop
+x-scheme-handler/unknown=web_browser.desktop
+x-scheme-handler/tg=telegramdesktop.desktop
+# x-scheme-handler/viber=viber.desktop
+# x-scheme-handler/magnet=userapp-transmission-gtk-R93GJ0.desktop
+
+[Added Associations]
+# x-scheme-handler/magnet=userapp-transmission-gtk-R93GJ0.desktop;
