@@ -5,7 +5,6 @@
 2) Use firefox's built-in black theme.
 
 3) Install addons:
-https://addons.mozilla.org/en-US/firefox/addon/darkreader/?src=search
 https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/?src=search
 https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/?src=search
 

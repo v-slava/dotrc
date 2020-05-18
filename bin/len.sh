@@ -12,7 +12,7 @@ usage()
 }
 
 set -e
-OPTIONS=$(getopt -o t:r -l tab-len:,recursive -- "$@")
+OPTIONS=$(getopt -n $0 -o t:r -l tab-len:,recursive -- "$@")
 if [ $? -ne 0 ]; then
     usage
 fi
@@ -24,11 +24,12 @@ while true; do
             TAB_LEN="$1"
             ;;
         "-r" | "--recursive")
+            shift
             RECURSIVE=true
             ;;
         '--')
             shift
-            if [ $# -ge 1 ]; then
+            if [ $# -gt 0 ]; then
                 echo "Error: unrecognized options found: $@" 2>&1
                 usage
             fi

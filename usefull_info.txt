@@ -1411,7 +1411,7 @@ Host github-custom
   IdentityFile ~/.ssh/id_rsa_something
 
 # Generate SSH keys:
-ssh-keygen -t rsa -C "user@email.com"
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -P '' -C "user@email.com"
 # Add authorization without password:
 ssh-copy-id user@hostname
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
