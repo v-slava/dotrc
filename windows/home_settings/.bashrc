@@ -115,6 +115,12 @@ export XDG_CACHE_HOME=$HOME/.cache_xdg
 export MINICOM='-c on'
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
 
+# iris: A new experimental Gallium driver for Intel Gen8+ GPUs
+# export MESA_LOADER_DRIVER_OVERRIDE=iris
+# Workaround for smplayer/vlc crash:
+# https://bugs.launchpad.net/ubuntu/+source/mesa/+bug/1876219
+export MESA_LOADER_DRIVER_OVERRIDE=i965
+
 # export QUILT_PATCHES=debian/patches
 
 # unset MAKEFLAGS

@@ -442,19 +442,20 @@ function! My_set_cargo_cmd(cmd)
 endfunction
 
 function! My_rust_lang()
-    " set errorformat=\ \ -->\ %f:%l:%c
+    set errorformat=\ \ -->\ %f:%l:%c
     " The following errorformat is stolen from:
     " https://github.com/rust-lang/rust.vim/blob/master/compiler/rustc.vim
-    set errorformat=
-            \%-G,
-            \%-Gerror:\ aborting\ %.%#,
-            \%-Gerror:\ Could\ not\ compile\ %.%#,
-            \%Eerror:\ %m,
-            \%Eerror[E%n]:\ %m,
-            \%Wwarning:\ %m,
-            \%Inote:\ %m,
-            \%C\ %#-->\ %f:%l:%c,
-            \%E\ \ left:%m,%C\ right:%m\ %f:%l:%c,%Z
+    " For this case my error navigation is broken (if num_errors > 1):
+    " set errorformat=
+    "         \%-G,
+    "         \%-Gerror:\ aborting\ %.%#,
+    "         \%-Gerror:\ Could\ not\ compile\ %.%#,
+    "         \%Eerror:\ %m,
+    "         \%Eerror[E%n]:\ %m,
+    "         \%Wwarning:\ %m,
+    "         \%Inote:\ %m,
+    "         \%C\ %#-->\ %f:%l:%c,
+    "         \%E\ \ left:%m,%C\ right:%m\ %f:%l:%c,%Z
     if exists('g:My_eval_var')
         return
     endif
@@ -1181,10 +1182,6 @@ function! My_goto_error(error)
     else
         let l:action = l:action . ' ' . a:error
     endif
-
-    " if stridx(g:My_eval_var, 'cargo ') != -1
-    "     execute 'cd ' . system('git rev-parse --show-toplevel')[:-2]
-    " endif
 
     let l:err_buf_name = g:My_vim_errors_file
     let l:in_err_win = 0

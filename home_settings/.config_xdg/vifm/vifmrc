@@ -166,6 +166,7 @@ filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2
 
 " Web
 filextype *.html,*.htm,*.svg
+	\ x-www-browser %f &,
 	\ google-chrome %f 2>/dev/null &,
 	\ vimb %f %i &,
 	\ dwb %f %i &,

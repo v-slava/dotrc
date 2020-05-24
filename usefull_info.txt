@@ -1,3 +1,11 @@
+# Setup vpn (protonvpn):
+# Execute from root:
+apt-get install openvpn
+pip3 install protonvpn-cli
+protonvpn init
+# See OpenVPN / IKEv2 username and password in protonvpn web site
+protonvpn c -f # systemctl --user stop check_new_email.timer
+
 # Complile with debug information:
 javac [-cp path/to/dependency_1.jar:path/to/dependency_2.jar] -g main.java
 # Run:
@@ -2347,6 +2355,8 @@ ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.D
 avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
 # Cut mp3 [00:16; 00:26]:
 avconv -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
+# Cut mp3 [00:16; end]:
+avconv -ss 00:16 -i input.mp3 -codec copy out.mp3
 
 # Concat mp3:
 avconv -i "concat:in1.mp3|in2.mp3" -acodec copy out.mp3
