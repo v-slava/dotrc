@@ -389,7 +389,7 @@ mark d ~/downloads
 mark t ~/temporary
 mark T /tmp
 mark m /media
-mark w $WORKSPACE
+mark w /media/files/workspace
 mark o $DOTRC
 mark O $DOTRC_S
 mark u /media/usb

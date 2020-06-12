@@ -8,6 +8,7 @@ x-scheme-handler/unknown=web_browser.desktop
 x-scheme-handler/tg=telegramdesktop.desktop
 # x-scheme-handler/viber=viber.desktop
 # x-scheme-handler/magnet=userapp-transmission-gtk-R93GJ0.desktop
+application/pdf=org.pwmt.zathura.desktop
 
 [Added Associations]
 # x-scheme-handler/magnet=userapp-transmission-gtk-R93GJ0.desktop;

@@ -4,7 +4,7 @@ set -e
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PATCH="$THIS_DIR/bear.patch"
-TMP="$WORKSPACE/tmp"
+TMP="/media/files/workspace/tmp"
 # PROGRAMS="/media/files/programs"
 # BEAR_OUT="$PROGRAMS/bear"
 
