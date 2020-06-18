@@ -643,7 +643,11 @@ set iminsert=0 " default english in insert mode
 set imsearch=0 " default english while searching
 function! My_update_status_line(message, status)
     if &iminsert == 1
-        let l:lang='RU'
+        if &keymap == 'russian-jcukenwin'
+            let l:lang='RU'
+        else
+            let l:lang='UA'
+        endif
     else
         let l:lang='EN'
     endif
@@ -668,6 +672,15 @@ function! My_swap_keyboard_layout()
         " then switch to russian
         set iminsert=1
         set imsearch=1
+    endif
+    call My_update_status_line('', 'normal')
+endfunction
+
+function! My_swap_keymap()
+    if &keymap == 'russian-jcukenwin'
+        set keymap=ukrainian-jcuken
+    else
+        set keymap=russian-jcukenwin
     endif
     call My_update_status_line('', 'normal')
 endfunction
@@ -1311,6 +1324,11 @@ let g:magit_discard_hunk_mapping='X'
 nmap <C-k> :call My_swap_keyboard_layout()<CR>
 vmap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gv
 imap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gi
+
+nmap <C-l> :call My_swap_keymap()<CR>
+vmap <C-l> <Esc>:call My_swap_keymap()<CR>gv
+imap <C-l> <Esc>:call My_swap_keymap()<CR>gi
+
 " Apply macro to selected lines:
 vmap i :normal @
 " Block comment (use gcb<motion> in normal mode):
