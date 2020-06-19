@@ -504,8 +504,12 @@ nnoremap yg :!realpath --relative-to="$(git rev-parse --show-toplevel)" ./%c | c
 nnoremap am :! mount /dev/sdb1<CR>
 nnoremap au :! umount /media/usb<CR>
 " Android (smartphone):
+" old:
 " nnoremap cm :! jmtpfs -o nonempty /media/usb<CR>
-nnoremap cm :! go-mtpfs -usb-timeout 60000 -allow-other /media/usb<CR>
+" new:
+" nnoremap cm :! go-mtpfs -usb-timeout 60000 -allow-other /media/usb<CR>
+" ios (iphone, smartphone):
+nnoremap cm :! ifuse -o allow_root /media/usb<CR>
 nnoremap cu :! fusermount -u /media/usb<CR>
 
 command df echo -e "\nFile: %c\n" && df -h %c 2> /dev/null && echo && vifm-pause

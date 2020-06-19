@@ -13,6 +13,7 @@
 /bin/clang-tidy
 /bin/scan-build
 /bin/llvm-config
+/bin/miniserve
 /bin/gcc
 /bin/cc
 /bin/c++

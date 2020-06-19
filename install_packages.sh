@@ -49,8 +49,12 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 
 apt-file update
 
-apt-get install go-mtpfs
-# jmtpfs
+# To mount android file system:
+# apt-get install go-mtpfs
+# another option: jmtpfs
+
+# To mount ios file system:
+apt-get install ifuse usbmuxd
 
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
 # apt-get install firmware-atheros

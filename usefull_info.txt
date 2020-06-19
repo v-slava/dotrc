@@ -248,6 +248,17 @@ vnstat -i wlp3s0 --oneline | cut -d';' -f5
 woof FILE
 # receive file:
 woof -U
+# woof is written in python2 and hence will be deprecated soon.
+# For python3:
+# Standard, but there is no upload:
+cd some_folder && python3 -m http.server
+# woof fork:
+https://gist.github.com/igitur/b582653e920e4622de4f0c307c7c4988
+# similar to woof (simple http server with upload):
+https://gist.github.com/UniIsland/3346170
+# rust version:
+wget https://github.com/svenstaro/miniserve/releases
+./miniserve-linux-x86_64 -u -z -r -c Monokai -- some/folder
 
 # install busybox (see also: other_files/create_rootfs.sh):
 busybox --install -s
