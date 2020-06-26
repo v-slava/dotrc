@@ -79,6 +79,9 @@ cargo check
 cargo fetch
 cargo --offline ...
 # Rust gdb breakpoint on main: "b CRATE::main" or "b _1::main".
+# static linking:
+rustup target add x86_64-unknown-linux-musl
+rustc --target=x86_64-unknown-linux-musl main.rs -o main.out
 
 daemonize $(which cmd) args
 nohup cmd &

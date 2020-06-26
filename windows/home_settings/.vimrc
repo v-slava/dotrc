@@ -664,23 +664,20 @@ endfunction
 call My_update_status_line('', 'normal')
 
 function! My_swap_keyboard_layout()
-    if &iminsert == 1 " If current layout is russian
-        " then switch to english
-        set iminsert=0
-        set imsearch=0
-    else " if current layout is english
+    if &iminsert == 0 " if current layout is english
         " then switch to russian
         set iminsert=1
         set imsearch=1
-    endif
-    call My_update_status_line('', 'normal')
-endfunction
-
-function! My_swap_keymap()
-    if &keymap == 'russian-jcukenwin'
-        set keymap=ukrainian-jcuken
-    else
         set keymap=russian-jcukenwin
+    else
+        if &keymap == 'russian-jcukenwin' " if current layout is russian
+            " then switch to ukrainian
+            set keymap=ukrainian-jcuken
+        else " current layout is ukrainian
+            " switch to english
+            set iminsert=0
+            set imsearch=0
+        endif
     endif
     call My_update_status_line('', 'normal')
 endfunction
@@ -1324,10 +1321,6 @@ let g:magit_discard_hunk_mapping='X'
 nmap <C-k> :call My_swap_keyboard_layout()<CR>
 vmap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gv
 imap <C-k> <Esc>:call My_swap_keyboard_layout()<CR>gi
-
-nmap <C-l> :call My_swap_keymap()<CR>
-vmap <C-l> <Esc>:call My_swap_keymap()<CR>gv
-imap <C-l> <Esc>:call My_swap_keymap()<CR>gi
 
 " Apply macro to selected lines:
 vmap i :normal @
