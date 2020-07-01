@@ -345,7 +345,7 @@ let g:detectindent_preferred_indent = 4
 let g:detectindent_preferred_when_mixed = 1
 let g:detectindent_max_lines_to_analyse = 1024
 autocmd FileType
-\ c,cpp,rust,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot,html,css
+\ c,cpp,rust,java,sh,expect,cmake,vim,python,perl,lua,php,json,dot,html,css,vb
 \,kconfig
 \ call My_apply_tab_settings()
 function! My_apply_tab_settings()

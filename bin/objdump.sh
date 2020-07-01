@@ -13,10 +13,13 @@ case "$FILE_INFO" in
     *) echo "Can't disassemble: not an ELF file!" 1>&2 ; exit 1 ;;
 esac
 
-case "$FILE_INFO" in
-    *32-bit*ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
-    *64-bit*ARM*) CROSS_COMPILE=aarch64-linux-gnu- ;;
-    *PowerPC*) CROSS_COMPILE=powerpc-linux-gnu- ;;
-    *) CROSS_COMPILE= ;;
-esac
+# case "$FILE_INFO" in
+#     *32-bit*ARM*) CROSS_COMPILE=arm-linux-gnueabihf- ;;
+#     *64-bit*ARM*) CROSS_COMPILE=aarch64-linux-gnu- ;;
+#     *PowerPC*) CROSS_COMPILE=powerpc-linux-gnu- ;;
+#     *) CROSS_COMPILE= ;;
+# esac
+
+CROSS_COMPILE=llvm-
+
 ${CROSS_COMPILE}objdump $@
