@@ -224,6 +224,7 @@ bindsym $WIN+c exec exec $START qalculate
 bindsym $WIN+t exec --no-startup-id exec $START $DOTRC/other_files/torrent_download.sh
 
 # browser
+# XF86Back, XF86Shutdown
 bindsym XF86HomePage exec --no-startup-id exec $START_S browser $WWW_START_PAGE
 bindsym $Alt_L+b exec --no-startup-id exec $START_S browser $WWW_START_PAGE
 

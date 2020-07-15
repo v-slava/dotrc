@@ -298,6 +298,14 @@ watch -d -n 2 COMMAND
 # remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
 
+# screen sharing (x11vnc server uses port 5900):
+# On client start SSH tunnel:
+ssh -L 5900:localhost:5900 user@screen_sharing_host
+# On server:
+x11vnc [-passwd YOUR_PASSWORD]
+# On client:
+gvncviewer screen_sharing_host
+
 # list only directories in $DIR:
 ls -d $DIR/*/
 
@@ -316,8 +324,14 @@ transmission-remote -t all -i
 
 # cron:
 crontab -e
-# run script.sh at every hour at minute 42:
-42 *   *   *   *      /home/user/script.sh
+# run script.sh every hour at minute 42:
+# m h  dom mon dow   command
+ 42 *   *   *   *      /home/user/script.sh
+# run script.sh every day at 4:00:
+# m h  dom mon dow   command
+  0 4   *   *   *      /home/user/script.sh
+# see also:
+apt-cache show cron-apt
 
 lsusb analog:
 usb-devices
@@ -1291,9 +1305,6 @@ systemctl get-default
 
 # start teamviewer service:
 systemctl start teamviewerd.service
-
-# determine wifi network / access point properties (if already connected):
-iwlist wlan0 scan
 
 # LG G2 path to camera photos:
 /storage/emulated/legacy/DCIM/Camera/
@@ -2709,7 +2720,20 @@ nmcli d wifi list
 nmcli d wifi connect <SSID> password <PASSWORD>
 
 # Connect manually to wifi (wpasupplicant):
+cat << EOF > /etc/wpa_supplicant/my_wpa_supplicant.conf
+ctrl_interface=/var/run/wpa_supplicant
+network={
+	ssid="your_wifi_ssid"
+	psk="your_wifi_password"
+	priority=1
+# 	key_mgmt=WPA-PSK
+# 	scan_ssid=1
+}
+EOF
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
+
+# Connect to wifi (either open network or WEP, doesn't work for WPA):
+iwconfig wlan0 essid WIFI_SSID key WIFI_PASSWORD
 
 # Add bridge:
 brctl addbr br0
@@ -2755,11 +2779,7 @@ dig [@8.8.8.8] +short unix.stackexchange.com
 route add default gw 192.168.1.1
 
 # Get wireless networks list:
-iwlist wlan0 scan
-
-# Connect to wireless network:
-iwconfig wlan0 essid Egorator key 9173557391
-# After this I'm unable to get IP by DHCP. Need to run wpa_supplicant first?
+sudo iwlist wlan0 scan
 
 # Use ifup to configure according to /etc/network/interfaces:
 ifup --all --verbose

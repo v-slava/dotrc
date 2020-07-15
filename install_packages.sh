@@ -78,7 +78,7 @@ apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
 # Install xorg (use xserver-xorg-video-vmware for virtualbox):
 apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-libinput \
-    xinit rxvt-unicode-256color rxvt-unicode libpam-systemd
+    xinit rxvt-unicode-256color libpam-systemd
 # Alternative for evdev and synaptics: xserver-xorg-input-libinput
 
 # Install window manager, status bar, screen locker, keyboard layout
@@ -151,6 +151,19 @@ dpkg -i google-chrome-stable_current_amd64.deb
 
 # dmenu:
 make -f $DOTRC/other_files/build_or_install_scripts/dmenu/Makefile_dmenu.mk
+
+# Install rdp server:
+apt-get install xrdp xorgxrdp
+
+# Install rdp client:
+apt-get install remmina remmina-plugin-rdp
+
+# Install screen sharing server:
+apt-get install x11vnc
+
+# Install screen sharing client:
+apt-get install gvncviewer
+# apt-cache search vncviewer
 
 # fzy:
 # apt-get install fzy
