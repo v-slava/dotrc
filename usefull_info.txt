@@ -298,7 +298,7 @@ watch -d -n 2 COMMAND
 # remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
 
-# screen sharing (x11vnc server uses port 5900):
+# share screen sharing (x11vnc server uses port 5900):
 # On client start SSH tunnel:
 ssh -L 5900:localhost:5900 user@screen_sharing_host
 # On server:
