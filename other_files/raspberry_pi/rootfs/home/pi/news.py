@@ -37,4 +37,7 @@ with open(final_html, 'w') as f:
                 break
             f.write(line + '\n')
 
-subprocess.run(['firefox', 'file://' + final_html], check = True)
+if len(sys.argv) == 1: # no arguments
+    subprocess.run(['firefox', 'file://' + final_html], check = True)
+# else:
+#     subprocess.run()

@@ -70,8 +70,8 @@ EOF
     efibootmgr -c -L 'Debian (EFI stub)' -l '/EFI/debian/vmlinuz' -u "$LINUX_ARGS"
 else
     cat << EOF >> /etc/fstab
-/dev/sda1              /             ext4      defaults,noatime      0      1
-/dev/sda2              /media/files  ext4      defaults,noatime      0      2
+/dev/sda2              /             ext4      defaults,noatime      0      1
+/dev/sda3              /media/files  ext4      defaults,noatime      0      2
 EOF
     rm -f /etc/initramfs/post-update.d/zz-update-efistab
     rm -f /etc/kernel/postinst.d/zz-update-efistab
