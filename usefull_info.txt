@@ -295,6 +295,9 @@ colordiff -uN "$@"
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
+# Do not turn screen off:
+xset s off -dpms
+
 # remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
 

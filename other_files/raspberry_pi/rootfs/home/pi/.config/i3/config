@@ -127,6 +127,8 @@ bindsym Control+Shift+t exec x-terminal-emulator
 
 exec --no-startup-id exec /home/pi/news.py
 
+exec --no-startup-id exec xset s off -dpms
+
 # resize window (you can also use the mouse for that)
 # mode "resize" {
 #         # These bindings trigger as soon as you enter the resize mode
