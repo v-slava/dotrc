@@ -255,7 +255,7 @@ filextype *.xcf
 " fileviewer *.7z 7z l %c
 
 " Office files
-filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.xlsm,*.odp,*.ppt,*.pptx,*.csv libreoffice %f %i &
+filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.xlsm,*.odp,*.ppt,*.pptx,*.csv,*.vsd libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 

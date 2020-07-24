@@ -246,7 +246,7 @@ vnstat -i wlp3s0 --oneline | cut -d';' -f4
 # tx today:
 vnstat -i wlp3s0 --oneline | cut -d';' -f5
 
-# simple http server to transfer files over local network.
+# simple http (web) server to transfer files over local network.
 # send file:
 woof FILE
 # receive file:
@@ -515,9 +515,6 @@ getcap FILE
 # Add capabilities to a file:
 setcap 'cap_sys_rawio+ep' FILE
 
-# Print properties of window (find PID by clicking):
-xprop
-
 # gcc print architecture
 gcc -dumpmachine
 gcc -v | grep arch
@@ -743,9 +740,11 @@ dpkg -S FILE
 # Find all packages that provide www-browser:
 aptitude search '~Pwww-browser'
 
-# show window properties:
+# show window properties (find PID by clicking):
 xprop
 xwininfo
+# See also:
+xsev, xdotool, xprop
 
 # show all windows, PIDs and process names:
 wmctrl -p -G -l
@@ -1500,6 +1499,24 @@ sudo dpkg-reconfigure ca-certificates
 # Scan network for NetBIOS name information (with IP):
 nbtscan 192.168.2.3/16
 nmap -p 139 -sT '192.168.*.*'
+
+# create samba share (start samba server) on linux:
+apt-get install samba
+mkdir /media/share
+sudo smbpasswd -a USER_NAME
+cat << EOF >> /etc/samba/smb.conf
+[share]
+path = /media/share
+available = yes
+valid users = slava
+read only = no
+browsable = yes
+public = yes
+writable = yes
+EOF
+service smbd restart
+# on windows access:
+\\laptop\share
 
 # List samba services available on server:
 smbclient -U USER_NAME[%PASSWORD] -L SERVER [-W DOMAIN] [-m {SMB3|SMB2|NT1}]

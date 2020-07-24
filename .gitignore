@@ -1,5 +1,6 @@
 *.pyc
 /bin/viber
+/bin/websocat
 /bin/telegram
 /bin/teamviewer
 /bin/teams-for-linux
