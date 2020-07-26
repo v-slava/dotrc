@@ -141,6 +141,10 @@ markdown readme.md > /tmp/readme.html && google-chrome /tmp/readme.html
 # debug vim plugins:
 vim -V9log_file.txt [your_vim_args]
 
+# Create python3 standalone executable:
+pip3 install pyinstaller
+pyinstaller -F ./your_script.py
+
 # graphviz (xdot, dot):
 # See also python "blockdiag" module
 # See also python bindings for graphviz:
