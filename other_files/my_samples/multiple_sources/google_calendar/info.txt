@@ -1,0 +1,18 @@
+https://calendar.google.com/calendar/r/week/2016/8/10
+
+1) export calendar into .ics file:
+https://support.google.com/calendar/answer/37111
+
+2) remove all events from calendar:
+https://support.google.com/calendar/answer/37113
+
+3) import calendar from .ics file:
+https://support.google.com/calendar/answer/37111
+
+https://play.google.com/store/apps/details?id=ws.xsoh.etar
+https://github.com/Etar-Group/Etar-Calendar
+https://developers.google.com/calendar
+
+https://developers.google.com/calendar/batch
+
+https://googleapis.github.io/google-api-python-client/docs/epy/googleapiclient.http.BatchHttpRequest-class.html#execute
