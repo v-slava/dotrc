@@ -38,6 +38,8 @@ def update_html():
 def main():
     update_html()
     os.system('firefox file://' + final_html + ' &')
+    subprocess.run(['xdotool', 'search', '--sync', '--onlyvisible', '--class',
+        'Firefox', 'windowactivate', 'key', 'F11'], check = True)
     while True:
         time.sleep(30 * 60)
         update_html()

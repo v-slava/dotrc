@@ -655,6 +655,8 @@ icemon
 pkg-config --list-all
 # Get compile flags:
 pkg-config PKG_NAME --cflags-only-I
+# Example: compile libevdev client:
+gcc libevdev_client.c $(pkg-config --cflags --libs libevdev)
 
 # Upgrade when "The following packages have been kept back:":
 apt-get dist-upgrade

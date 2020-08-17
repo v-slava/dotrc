@@ -126,6 +126,7 @@ bindsym Control+Shift+t exec x-terminal-emulator
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 exec --no-startup-id exec /home/pi/news.py
+exec --no-startup-id exec sudo /home/pi/filter_input
 
 exec --no-startup-id exec xset s off -dpms
 
