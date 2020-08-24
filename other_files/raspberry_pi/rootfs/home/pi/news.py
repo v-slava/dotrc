@@ -48,14 +48,14 @@ def _update_html():
     last = '<br clear=all><br>'
 
     # iconv -f windows-1251 -t UTF-8 in.html > out.html
-    index_html = requests.get(main_url).content.decode('windows-1251')
+    index_html = requests.get(main_url, timeout = 100).content.decode('windows-1251')
     with open(final_html, 'w') as f:
         for line in index_html.splitlines():
             if not line.startswith('<pdalink>http://pda.pravda.com.ua/news/id_'):
                 continue
             assert line.endswith('</pdalink>')
             link = line[len('<pdalink>'):-len('</pdalink>')]
-            article_html = requests.get(link).content.decode('windows-1251')
+            article_html = requests.get(link, timeout = 100).content.decode('windows-1251')
             for line in article_html.splitlines():
                 if line == windows_1251_charset_line:
                     line = utf8_charset_line
