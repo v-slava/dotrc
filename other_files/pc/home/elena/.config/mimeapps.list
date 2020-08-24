@@ -1,0 +1,5 @@
+[Added Associations]
+text/plain=gedit_cp1251.desktop;gnome.gedit.desktop;mousepad.desktop;libreoffice-writer.desktop;
+
+[Default Applications]
+x-scheme-handler/viber=viber.desktop

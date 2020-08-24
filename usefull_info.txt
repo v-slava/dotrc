@@ -206,10 +206,6 @@ nvim-qt --server 127.0.0.1:7777
 NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim -u ~/.vimrc --embed
 nvim-qt --server /tmp/nvimsocket
 
-# Read korean text (locale):
-apt-get install fonts-baekmuk
-LANG=ko_KR.EUC-KR gvim file.cpp
-
 # Convert dot graph to different formats:
 dot -Tpdf input.dot > output.pdf
 dot -Tsvg input.dot > output.svg
@@ -309,7 +305,7 @@ remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
 # On client start SSH tunnel:
 ssh -L 5900:localhost:5900 user@screen_sharing_host
 # On server:
-x11vnc [-passwd YOUR_PASSWORD]
+x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
 gvncviewer screen_sharing_host
 
@@ -619,6 +615,10 @@ env -i bash --noprofile --norc
 
 # Unset environment variable (bash):
 unset ENV_VAR_NAME
+
+# Read korean text (locale):
+apt-get install fonts-baekmuk
+LANG=ko_KR.EUC-KR gvim file.cpp
 
 # use russian windows locale:
 LANG=ru_RU.CP1251 PROGRAM_TO_RUN

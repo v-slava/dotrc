@@ -1,0 +1,1 @@
+uncomment ru_RU.CP1251 in /etc/locale.gen, run locale-gen

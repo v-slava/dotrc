@@ -170,6 +170,9 @@ apt-get install gvncviewer
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
 
 # Install also: Viber, Skype, Telegram, Teamviewer
+# Implicit viber dependencies:
+apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+    libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
 
 # Coreutils viewer:
 # apt-get install libncurses5-dev pkg-config
