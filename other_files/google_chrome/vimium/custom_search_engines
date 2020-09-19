@@ -2,9 +2,13 @@ s: https://www.google.com/search?q=%s Google
 we: https://en.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (en)
 wr: https://ru.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia (ru)
 y: https://www.youtube.com/results?search_query=%s Youtube
+
 map: https://www.google.com/maps?q=%s GoogleMaps
-tor_rus: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
-tor_eng: https://katcrs.win/search/%s/ kickass torrents
+# map_dir: https://www.google.com/maps/dir/%s
+# map_dir: https://www.google.com/maps/dir/${from}/${to}
+
+r: http://rutracker.org/forum/tracker.php?nm=%s RuTracker
+# tor_eng: https://katcrs.win/search/%s/ kickass torrents
 
 l https://elixir.bootlin.com/linux/latest/ident/%s Linux Cross Reference
 

@@ -131,12 +131,12 @@ use Settings -> Display -> Graphics Controller: VBoxSVGA
 # texinfo documentation format:
 makeinfo file.texi
 texi2any --html file.texi
-google-chrome ./file/index.html
+x-www-browser ./file/index.html
 # other formats:
 # markdown, ReStructured Text (rst), yaml, latex, MediaWiki, asciidoc
 
 # View markdown (.md):
-markdown readme.md > /tmp/readme.html && google-chrome /tmp/readme.html
+markdown readme.md > /tmp/readme.html && x-www-browser /tmp/readme.html
 
 # debug vim plugins:
 vim -V9log_file.txt [your_vim_args]
@@ -995,6 +995,17 @@ CFLAGS_file_name.o := -O0
 # see also:
 $DOTRC/other_files/my_samples/single_sources/no_optimize_gcc_wrapper.sh
 
+# Linux syscall execution flow (read):
+arch/arm/tools/syscall.tbl +/sys_read
+include/linux/syscalls.h '+/define SYSCALL_DEFINE3'
+include/linux/syscalls.h '+/define SYSCALL_DEFINEx'
+include/linux/syscalls.h '+/define SYSCALL_METADATA'
+include/linux/syscalls.h '+/define __SYSCALL_DEFINEx'
+# TODO continue here
+fs/read_write.c +/SYSCALL_DEFINE.*read
+fs/read_write.c +/ksys_read
+fs/read_write.c +/vfs_read
+
 # linux kernel loading:
 insmod executes syscall init_module -> sys_init_module() in kernel
 rmmod executes syscall delete_module -> sys_delete_module() in kernel
@@ -1280,6 +1291,9 @@ date +%Z
 # View systemd log (from root):
 journalctl
 
+# view network manager logs:
+journalctl -e -u NetworkManager
+
 # Recursively show control group contents:
 systemd-cgls
 
@@ -1486,7 +1500,7 @@ edit Doxyfile
 # generate documentation:
 doxygen
 # view generated documentation:
-firefox html/index.html
+x-www-browser html/index.html
 
 # OpenGL: use software rendering:
 LIBGL_ALWAYS_SOFTWARE=1 glxinfo
@@ -2398,6 +2412,9 @@ xev
 # Canonicalize PATH:
 readlink -f PATH
 realpath PATH
+
+# Delete first audio track:
+ffmpeg -i in.mkv -map 0 -map -0:a:0 -c copy out.mkv
 
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png

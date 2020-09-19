@@ -93,6 +93,9 @@ locale-gen 1>/dev/null
 if systemctl is-enabled systemd-networkd.service ; then
     systemctl disable systemd-networkd.service 1>/dev/null
 fi
+if systemctl is-enabled minidlna.service ; then
+    systemctl disable minidlna.service 1>/dev/null
+fi
 # systemctl set-default default_system_gui.target
 
 # apply vifm settings to vim:

@@ -1,0 +1,9 @@
+ACTION=="add" \
+, ATTRS{idVendor}=="2717" \
+, ATTRS{idProduct}=="ff40" \
+, ENV{DISPLAY}=":0.0" \
+, ENV{XAUTHORITY}="/home/elena/.Xauthority" \
+, RUN+="go-mtpfs -usb-timeout 60000 -allow-other /media/elena/usb"
+
+# TODO:
+/sys/devices/pci0000:00/0000:00:12.2/usb1/1-5/1-5:1.0
