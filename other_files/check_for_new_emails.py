@@ -41,6 +41,17 @@ def import_file(full_name, path):
 
 def get_email_settings(account):
     provider = account.split('@')[1]
+    # Example email_settings.py:
+    #
+    # import imaplib
+    #
+    # def get_email_settings(account, provider):
+    #     if provider != 'some_org.com':
+    #         return (None, None, None)
+    #     if account != 'Viacheslav.Volkov@some_org.com':
+    #         return (None, None, None)
+    #     return ('VVolkov', 'mail.some_org.com', imaplib.IMAP4_SSL_PORT)
+    #
     dotrc_s_file = os.path.join(os.environ['DOTRC_S'], 'other_files',
             'email_settings.py')
     if os.path.isfile(dotrc_s_file):
