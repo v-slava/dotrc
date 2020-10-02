@@ -152,6 +152,11 @@ def start_viber(args):
         return find_win_with_prop('class', 'ViberPC', obj)
     start_program(['viber'] + args, find_viber)
 
+def start_slack(args):
+    def find_slack(obj):
+        return find_win_with_prop('class', 'Slack', obj)
+    start_program(['slack'] + args, find_slack)
+
 def start_dictionary(args):
     def find_dictionary(obj):
         return find_win_with_prop('class', 'GoldenDict', obj)
@@ -161,7 +166,7 @@ def parse_cmd_line_args():
     desc = 'Start singleton GUI program.'
     parser = argparse.ArgumentParser(description = desc)
     programs_supported = ['browser', 'email', 'telegram', 'skype', 'viber',
-            'dictionary']
+            'slack', 'dictionary']
     parser.add_argument('program', choices = programs_supported,
             help = 'program to start')
     return parser.parse_known_args()

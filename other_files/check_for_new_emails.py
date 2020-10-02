@@ -35,7 +35,7 @@ for item in os.listdir(pass_dir):
             }.get(provider, (None, None))
     if not host:
         print(f'Error: unknown email provider: {provider}', file = sys.stderr)
-        break
+        sys.exit(1)
     with open(account_file, 'r') as f:
         password = f.read()[len('Pass "'):-2]
     connection = imaplib.IMAP4_SSL(host, port)

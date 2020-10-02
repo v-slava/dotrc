@@ -339,6 +339,9 @@ apt-cache show cron-apt
 lsusb analog:
 usb-devices
 
+# reverse Fn keys behavior:
+Fn+Esc
+
 # gcc delete (remove) sections (optimize size):
 gcc -ffunction-sections -fdata-sections -Wl,--gc-sections
 
