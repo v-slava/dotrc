@@ -20,7 +20,7 @@ USER_PASSWD=$USER_NAME
 
 echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
 
-if ! usermod -a -G audio,video,systemd-journal,netdev,plugdev,bluetooth $USER_NAME ; then
+if ! usermod -a -G sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth $USER_NAME ; then
 	echo "Failed to add user to groups!" 1>&2
 	exit 1
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAIN_OUTPUT=eDP1
+MAIN_OUTPUT="$(xrandr | grep eDP | cut -d' ' -f1)" # eDP1 or eDP-1
 MAIN_MODE="--mode 1920x1080"
 MAIN_DPI="--dpi 144"
 # MAIN_DPI="--dpi 96"
