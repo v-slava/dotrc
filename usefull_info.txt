@@ -2683,8 +2683,8 @@ umount /mnt
 4) Mount first partition to mnt.
 5) mkdir -p mnt/EFI/debian
 6) cp /vmlinuz mnt/EFI/debian/
-7) cp initrd.img mnt/EFI/debian/
-9) efibootmgr -c -L 'Debian (EFI stub)' -l /EFI/debian/vmlinuz -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img'
+7) cp /initrd.img mnt/EFI/debian/
+8) efibootmgr -c -d /dev/sda -L 'Debian (EFI stub)' -l /EFI/debian/vmlinuz -u 'root=/dev/sda2 add_efi_memmap initrd=/EFI/debian/initrd.img'
 # In running linux:
 1) Mount EFI system partition (ESP) to /boot/efi
 2) See "efistub" in debian wiki

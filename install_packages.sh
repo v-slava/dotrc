@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Install debian:
+# mkfs -t vfat -F 32 -n EFI /dev/sdX1
 # mkfs -t ext4 -L root_partition /dev/sdX2
+# mkfs -t ext4 -m 0 -L files_partition /dev/sdX3
 # mount /dev/sdX2 rootfs_dir
 # debootstrap --arch=amd64 --variant=minbase bullseye rootfs_dir
 
@@ -12,11 +14,26 @@
 # mount -B /dev/pts rootfs_dir/dev/pts
 # chroot rootfs_dir
 # passwd
+# mount /dev/sda1 /boot/efi
 
 # apt-get install linux-image-amd64 systemd systemd-sysv
+#
+# alternative #1 (EFI stub, PC firmware may ignore kernel arguments):
 # apt-get install efibootmgr
 # apply postinst for kernel and initramfs
-# alternative: apt-get install grub-pc os-prober
+#
+# alternative #2 (BIOS grub2, obsolete):
+# apt-get install grub-pc os-prober
+#
+# alternative #2 (EFI grub2, recommended):
+# mount /dev/sda1 /boot/efi # 512M
+# mkdir -p /boot/efi/EFI/Debian
+# apt-get install grub-efi-amd64 os-prober
+#
+# For grub2:
+# sed -i /etc/default/grub -e \
+# 's|^GRUB_CMDLINE_LINUX_DEFAULT="quiet"$|GRUB_CMDLINE_LINUX_DEFAULT="rw"|g'
+# update-grub
 
 # apt-get install network-manager
 
@@ -28,18 +45,22 @@ apt-get upgrade --yes
 
 # Install non-gui packages:
 apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
-    vbindiff vifm ripgrep progress fzf less bash-completion python xxd \
+    vbindiff vifm ripgrep progress fzf less bash-completion xxd \
     apt-file apt-rdepends apt-utils dialog locales \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
     isc-dhcp-client traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
-    gdb gdb-doc gdbserver gdb-multiarch uftrace strace ltrace graphviz python3 \
+    gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
     linux-base linux-perf ripgrep bvi git git-email make patch dos2unix \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     ntpdate fuseiso9660 netcat-openbsd keepass2 \
+
+# apt-get install uftrace
+
+exit
 
 # exuberant-ctags cscope doxygen
 # sox libsox-fmt-mp3 android-tools-adb lame fuse kbd sshfs qalculate ntfs-3g
@@ -143,8 +164,8 @@ apt-get install zathura
 # editable pdf support: evince
 
 # Install alternative browsers:
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-dpkg -i google-chrome-stable_current_amd64.deb
+# wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# dpkg -i google-chrome-stable_current_amd64.deb
 # apt-get install iceweasel iceweasel-l10n-ru
 # apt-get install chromium
 # chromium-l10n pepperflashplugin-nonfree uzbl
@@ -176,28 +197,10 @@ apt-get install minidlna
 # Implicit viber dependencies:
 apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
     libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
-
-# Coreutils viewer:
-# apt-get install libncurses5-dev pkg-config
-# make -f $DOTRC/other_files/Makefile_coreutils_viewer.mk
-
-# vifm:
-# make -f $DOTRC/other_files/Makefile_vifm.mk
-
-# dpkg --add-architecture i386
-# apt-get update
-
-# Download skype.deb via browser
-# dpkg -i skype.deb # install skype
 # apt-get -f install # fix missing dependencies
-
-# Build and install vimb:
-# apt-get install libwebkitgtk-dev libwebkitgtk-1.0-0 flashplugin-nonfree
-# make -f $DOTRC/other_files/Makefile_vimb
 
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
 # libreoffice-pdfimport abiword gnumeric mupdf suckless-tools # (dmenu)
 # kolourpaint4 vlc apvlv fonts-inconsolata
 # claws-mail-multi-notifier claws-mail # On wheezy: claws-mail-trayicon
-

@@ -40,7 +40,7 @@ list_files()
     config_generate -r "$FILE"
 done
 
-LINUX_ARGS=()
+LINUX_ARGS=(rw)
 if ! which dmidecode 1>/dev/null 2>&1 ; then
     echo "Missing: apt-get install dmidecode" 1>&2
     exit 1
@@ -50,50 +50,27 @@ case "${LAPTOP,,}" in
     asus*x541ua*) LINUX_ARGS+=(acpi_backlight=vendor pci=noaer) ;;
 esac
 
-    echo "Generating /etc/fstab ..."
-    cat << EOF > /etc/fstab
-# <file system>        <dir>         <type>    <options>           <dump> <pass>
-EOF
+echo "Updating grub..."
+sed -i /etc/default/grub -e \
+"s|^# TODO sed replace: GRUB_CMDLINE_LINUX_DEFAULT=\"some_args\"$|\
+GRUB_CMDLINE_LINUX_DEFAULT=\"${LINUX_ARGS[@]}\"|g"
 
-if [ -d /sys/firmware/efi ]; then
-    LINUX_ARGS+=(root=/dev/sda2 initrd=/EFI/debian/initrd.img)
-    LINUX_ARGS+=(add_efi_memmap)
-    LINUX_ARGS="${LINUX_ARGS[@]}"
-    cat << EOF >> /etc/fstab
-/dev/sda1              /boot/efi     vfat      defaults              0      0
-/dev/sda2              /             ext4      defaults,noatime      0      1
-/dev/sda3              /media/files  ext4      defaults,noatime      0      2
-EOF
-    set +e -x
-    efibootmgr -b 0000 -B
-    set -e
-    efibootmgr -c -L 'Debian (EFI stub)' -l '/EFI/debian/vmlinuz' -u "$LINUX_ARGS"
-else
-    cat << EOF >> /etc/fstab
-/dev/sda2              /             ext4      defaults,noatime      0      1
-/dev/sda3              /media/files  ext4      defaults,noatime      0      2
-EOF
-    rm -f /etc/initramfs/post-update.d/zz-update-efistab
-    rm -f /etc/kernel/postinst.d/zz-update-efistab
-    sed -i /etc/default/grub -e \
-'s|^GRUB_CMDLINE_LINUX_DEFAULT="quiet"$|GRUB_CMDLINE_LINUX_DEFAULT="rw"|g'
-    echo "Updating GRUB ..."
-    update-grub
-fi
+update-grub
 
-    cat << EOF >> /etc/fstab
-# /dev/sda5              none          swap      defaults              0      0
-# Mount /media/usb:
-/dev/sdb1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0
-/dev/sdc1              /media/usb   vfat noauto,noatime,user,flush,rw,exec 0 0
-EOF
-
-echo "Generating locales ..."
+echo "Generating locales..."
 locale-gen 1>/dev/null
-if systemctl is-enabled systemd-networkd.service ; then
+
+echo "Configuring services..."
+systemctl-is-enabled() {
+    SERVICE="$1"
+    [ $(systemctl list-unit-files "$SERVICE" | wc -l) -gt 3 ] \
+        && systemctl is-enabled "$SERVICE" 1>/dev/null
+}
+
+if systemctl-is-enabled systemd-networkd.service ; then
     systemctl disable systemd-networkd.service 1>/dev/null
 fi
-if systemctl is-enabled minidlna.service ; then
+if systemctl-is-enabled minidlna.service ; then
     systemctl disable minidlna.service 1>/dev/null
 fi
 # systemctl set-default default_system_gui.target
