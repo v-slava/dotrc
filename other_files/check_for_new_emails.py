@@ -24,22 +24,54 @@ def decode(arg):
             ret += value
     return ret
 
+class EmailSettings():
+    def __init__(self, user, host, port):
+        self.user = user
+        self.host = host
+        self.port = port
+    def __repr__(self):
+        return f'{self.user}@{self.host}:{self.port}'
+
+def import_file(full_name, path):
+    from importlib import util
+    spec = util.spec_from_file_location(full_name, path)
+    mod = util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+def get_email_settings(account):
+    provider = account.split('@')[1]
+    dotrc_s_file = os.path.join(os.environ['DOTRC_S'], 'other_files',
+            'email_settings.py')
+    if os.path.isfile(dotrc_s_file):
+        dotrc_s_module = import_file('my_email_settings', dotrc_s_file)
+        user, host, port = dotrc_s_module.get_email_settings(account, provider)
+        if user:
+            assert(host)
+            assert(port)
+            return EmailSettings(user, host, port)
+    user, host, port = {
+            'gmail.com' : (account, f'imap.{provider}', imaplib.IMAP4_SSL_PORT),
+            }.get(provider, (None, None, None))
+    if not user:
+        print(f'Error: unknown email provider: {provider}', file = sys.stderr)
+        sys.exit(1)
+    assert(host)
+    assert(port)
+    return EmailSettings(user, host, port)
+
 pass_dir = os.path.join(os.environ['DOTRC_S'], 'other_files', 'settings_merge',
         'preprocess_include', 'passwords')
+# In viacheslav.volkov.1@gmail.com.mbsyncrc :
+# Pass "your_password"
 for item in os.listdir(pass_dir):
     account_file = os.path.join(pass_dir, item)
     account = item[:-len('.mbsyncrc')]
-    provider = account.split('@')[1]
-    host, port = {
-            'gmail.com' : ('imap.gmail.com', imaplib.IMAP4_SSL_PORT),
-            }.get(provider, (None, None))
-    if not host:
-        print(f'Error: unknown email provider: {provider}', file = sys.stderr)
-        sys.exit(1)
+    email_settings = get_email_settings(account)
     with open(account_file, 'r') as f:
         password = f.read()[len('Pass "'):-2]
-    connection = imaplib.IMAP4_SSL(host, port)
-    connection.login(account, password)
+    connection = imaplib.IMAP4_SSL(email_settings.host, email_settings.port)
+    connection.login(email_settings.user, password)
     connection.select(mailbox = 'INBOX', readonly = True)
     ret, data = connection.search(None, 'UnSeen')
     check('search')
