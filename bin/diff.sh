@@ -19,7 +19,7 @@ if [ -d "$LEFT" ]; then
 		usage
 	fi
 	# diff -uNr "$LEFT" "$RIGHT" 2>&1 | less -iN
-	colordiff -ur "$LEFT" "$RIGHT" 2>&1 | less -iNR
+	colordiff --no-dereference -ur "$LEFT" "$RIGHT" 2>&1 | less -iNR
 else
 	if [ -d "$RIGHT" ]; then
 		usage
