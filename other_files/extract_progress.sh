@@ -112,6 +112,7 @@ EOF
         *.igz)
             # pv "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
             unmkinitramfs "$FILE_FULL_PATH" . ;;
+        *.squashfs) unsquashfs -d rootfs "$FILE_FULL_PATH" ;;
         *.cpio) pv "$FILE_FULL_PATH" | cpio -i ;;
         # *.7z) pv "$FILE_FULL_PATH" | 7z x -si > "$UNCOMPRESSED_FILE" ;; # Error: E_NOTIMPL
         *.7z) 7z x "$FILE_FULL_PATH" ;;
@@ -119,11 +120,28 @@ EOF
         *.zip | *.apk) unzip "$FILE_FULL_PATH" ;; # impossible to read from stdin?
         # *.Z) uncompress "$FILE_FULL_PATH" ;;
         *)
-            echo "Error: \"$FILE\" - unknown archive format." 1>&2
-            # see also: https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/extract
-            cd -
-            rm -rf "$DIR"
-            exit 1
+            FILE_TYPE="$(file --brief "$FILE_FULL_PATH")"
+            case "$FILE_TYPE" in
+                u-boot\ legacy\ uImage,\ *Multi-File\ Image\ \(Not\ compressed\),\ *)
+                    METAINF=meta_information.txt
+                    echo "$ dumpimage -l $FILE" > $METAINF
+                    OUTPUT="$(dumpimage -l "$FILE_FULL_PATH")"
+                    echo -e "$OUTPUT" >> $METAINF
+                    # echo -e "$OUTPUT" | grep '   Image .:' | cut -c 5-
+                    mkdir images
+                    NUM_IMAGES=$(echo -e "$OUTPUT" | tail -n1 | cut -c 10- | cut -d: -f1)
+                    for i in $(seq 0 ${NUM_IMAGES}) ; do
+                        dumpimage -p $i -o images/$i "$FILE_FULL_PATH"
+                    done
+                    ;;
+                *)
+                    echo "Error: \"$FILE\" - unknown archive format." 1>&2
+                    # see also: https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/extract
+                    cd -
+                    rm -rf "$DIR"
+                    exit 1
+                    ;;
+            esac
             ;;
     esac
 done
