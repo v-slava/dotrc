@@ -1455,6 +1455,8 @@ git submodule foreach 'git remote -v'
 svn info .
 # svn for "git checkout COMMIT":
 svn update --revision REV
+# svn for "git checkout FILE":
+svn revert FILE
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
 # svn for "git show SHA":
@@ -2460,6 +2462,16 @@ objdump -g FILE
 # All info elf:
 readelf -a FILE
 
+# readelf sections "Section headers":
+"Addr" - virtual address in running process
+"Off" - offset from beginning of ELF file
+# readelf segments "Program Headers":
+"Offset" - offset from beginning of ELF file
+"VirtAddr" - virtual address in running process
+"PhysAddr" - physical address in running process
+"FileSiz" - size in ELF file (doesn't have .bss section with zeros)
+"MemSiz" - size in memory of running process (may contain .bss section)
+
 # Check debug info (debug symbols, debug sections) in elf:
 readelf --sections FILE | grep debug
 # always present: .debug_aranges, .debug_info, .debug_abbrev, .debug_line, .debug_ranges
@@ -2849,13 +2861,6 @@ wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
 gcc -O0 -g3 backtrace_example.c -o backtrace_exe
 ./backtrace_exe 4 | grep -o '\[0x.\+\]' | cut -d'[' -f2 | cut -d']' -f1 | addr2line -p -f -e ./backtrace_exe
 
-# run gdbserver:
-gdbserver :PORT cmd args
-gdb -> target remote :PORT
-
-gdbserver --once --multi :PORT
-gdb -> target extended-remote :PORT
-
 # Jtag (J-Link) do not cache flash memory (gdb command):
 monitor ExcludeFlashCacheRange START_ADDRESS,SIZE
 
@@ -2975,6 +2980,15 @@ frame
 
 # gdb: disable overloading of c++ function names:
 set overload-resolution off
+
+# gdb: "From" and "To" show where .text sections of shared libraries are mapped
+# in running process view loaded shared libraries:
+info sharedlibrary
+# To add symbols use: add-symbol-file /path/to/libsomething.so "From"
+
+# gdb: mapping in running process from "Start Addr" to "End Addr" (which results
+# in total "Size") from "objfile" starting from "Offset":
+info proc mappings
 
 # gdb: debug program with core dump:
 gdb -e PROGRAM -c core.dump
@@ -3131,9 +3145,6 @@ set solib-search-path DIR # not recommended, single step doesn't work without ld
 
 # gdb: change sources path:
 set substitute-path FROM TO
-
-# gdb: view loaded shared libraries:
-info sharedlibrary
 
 # Generate core dump on runtime error:
 ulimit -c unlimited && ./launch_buggy_program

@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -ex
-
-cp /initrd.img /boot/efi/EFI/debian/

@@ -82,6 +82,9 @@ apt-get install ifuse usbmuxd
 # For Asus F541U:
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
+# For Dell Latitude 5401:
+apt-get install firmware-misc-nonfree wireless-regdb
+
 # Install GUI:
 # apt-get install sway swaylock kitty wofi
 # dunst -> mako (desktop notifications)
