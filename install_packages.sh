@@ -83,7 +83,7 @@ apt-get install ifuse usbmuxd
 apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
 # For Dell Latitude 5401:
-apt-get install firmware-misc-nonfree wireless-regdb
+apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 
 # Install GUI:
 # apt-get install sway swaylock kitty wofi
