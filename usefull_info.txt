@@ -827,7 +827,7 @@ tcpflow -i any -C -g port 9222
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
 # Enable USB monitoring:
-su -c 'modprobe usbmon'
+sudo modprobe usbmon
 # Dump packets and feed them to wireshark through unnamed pipe:
 tcpdump -i usbmon1 -w - -U [tcp port 7777] | wireshark -k -i -
 
@@ -1451,7 +1451,7 @@ git ls-tree HEAD
 # git remote -v submodules:
 git submodule foreach 'git remote -v'
 
-# svn show remote repository URL (git remote -v):
+# svn for "git remote -v" (show remote repository URL):
 svn info .
 # svn for "git checkout COMMIT":
 svn update --revision REV
@@ -1460,9 +1460,11 @@ svn revert FILE
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
 # svn for "git show SHA":
-svn diff -c REV
-# svn for git checkout master:
+svn diff -c REV # for message: svn log | less # search for REV
+# svn for "git checkout master":
 svn switch https://.../log4j/trunk
+# svn for "git blame FILE":
+svn blame FILE
 
 # ~/.ssh/config example:
 Host github-custom
@@ -2388,7 +2390,7 @@ du -h -s
 du -h -d 1
 
 # Mount usb so that all users can write to it:
-su -c 'mount -ouser,umask=0000,exec /dev/sdb1 /media/USB'
+sudo mount -ouser,umask=0000,exec /dev/sdb1 /media/USB
 
 # Replace symbol (space in this case) witn \n:
 cat FILE_BEFORE | tr ' ' '\n' > FILE_AFTER

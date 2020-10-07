@@ -17,10 +17,11 @@ rm -rf Bear
 git clone https://github.com/rizsotto/Bear
 cd Bear
 git checkout 2.4.2
+git config user.email "viacheslav.volkov.1@gmail.com"
 git am < "$PATCH"
 mkdir out
 cd out
 # -DCMAKE_INSTALL_PREFIX="$BEAR_OUT"
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j5
-su -c 'make -j5 install'
+sudo make -j5 install

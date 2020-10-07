@@ -51,13 +51,14 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     isc-dhcp-client traceroute wget \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
-    gcc g++ cmake build-essential clang clang-format clang-tidy clang-tools \
+    gcc g++ cmake build-essential \
     gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
     linux-base linux-perf ripgrep bvi git git-email make patch dos2unix \
     zip unzip gzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     ntpdate fuseiso9660 netcat-openbsd keepass2 \
 
+# apt-get install clang clang-format clang-tidy clang-tools
 # apt-get install uftrace
 
 exit

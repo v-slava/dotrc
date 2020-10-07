@@ -19,11 +19,11 @@ CLIPBOARD_PATCH := $(DOTRC)/other_files/build_or_install_scripts/dmenu/dmenu_cli
 PHONY := all
 all: apply_patch install_dependencies
 	make -C $(OUT)/$(DMENU_VERSION)
-	su -c "make -C $(OUT)/$(DMENU_VERSION) install"
+	sudo make -C $(OUT)/$(DMENU_VERSION) install
 
 PHONY += install_dependencies
 install_dependencies:
-	su -c "apt-get install libxinerama-dev libx11-dev libxft-dev libfreetype6-dev libxmu-dev"
+	sudo apt-get install libxinerama-dev libx11-dev libxft-dev libfreetype6-dev libxmu-dev
 
 PHONY += apply_patch
 apply_patch: $(OUT)/$(DMENU_VERSION) $(CLIPBOARD_PATCH)
