@@ -333,10 +333,6 @@ bindsym $Alt_L+d exec --no-startup-id exec $START $DOTRC/other_files/dmenu.sh
 
 # exec --no-startup-id i3-msg 'workspace 2; exec uzbl -u URL'
 
-bindsym $WIN+$Shift_L+s exec --no-startup-id exec $START $DOTRC/other_files/xrandr.sh --same-as
-bindsym $WIN+$Shift_L+h exec --no-startup-id exec $START $DOTRC/other_files/xrandr.sh --left-of
-bindsym $WIN+$Shift_L+l exec --no-startup-id exec $START $DOTRC/other_files/xrandr.sh --right-of
-
 bindcode $PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --focused --border
 bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screenshot.sh --my-sleep 6 --my-edit-image
