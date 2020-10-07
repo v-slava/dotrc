@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
 
+usage()
+{
+    echo "\
+Usage: $(basename $0) [--pause {always|on_failure}] \"COMMAND_TO_RUN\"" 1>&2
+    exit 1
+}
+
 if [ -z "$1" ]; then
-	echo "Usage: $(basename $0) [--pause] \"COMMAND_TO_RUN\"" 1>&2
-	exit 1
+    usage
 fi
+
 if [ "$1" = "--pause" ]; then
-	PAUSE=true
-	shift
+    if [ $# -lt 3 ]; then
+        usage
+    fi
+    shift
+    case "$1" in
+        always) PAUSE_ALWAYS=true ;;
+        on_failure) PAUSE_ON_FAILURE=true ;;
+        *) usage ;;
+    esac
+    shift
 fi
-COMMAND_TO_RUN="$1"
+COMMAND_TO_RUN="$@"
 
 VIFM_RESET_COLORS='\x1b[0m'
 VIFM_COMMAND_PREFIX='\x1b[34m'
@@ -23,13 +38,16 @@ eval ${COMMAND_TO_RUN}
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 0 ]; then
-	echo -e "${VIFM_EXIT_CODE_SUCCESS}Command succeeded (exit code = $EXIT_CODE)"
+    echo -e "${VIFM_EXIT_CODE_SUCCESS}Command succeeded (exit code = $EXIT_CODE)"
 else
-	echo -e "${VIFM_EXIT_CODE_FAIL}Command failed (exit code = $EXIT_CODE)"
+    echo -e "${VIFM_EXIT_CODE_FAIL}Command failed (exit code = $EXIT_CODE)"
 fi
 echo -en "${VIFM_END}${VIFM_RESET_COLORS}"
 
-if [ ! -z "$PAUSE" ]; then
-	vifm-pause
+if [ ! -z "$PAUSE_ALWAYS" ]; then
+    vifm-pause
+elif [ ! -z "$PAUSE_ON_FAILURE" ]; then
+    if [ $EXIT_CODE -ne 0 ]; then
+        vifm-pause
+    fi
 fi
-
