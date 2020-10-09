@@ -335,8 +335,9 @@ bindsym $Alt_L+d exec --no-startup-id exec $START $DOTRC/other_files/dmenu.sh
 
 bindcode $PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh
 bindcode $Alt_L+$PrintScreen exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --focused --border
-bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screenshot.sh --my-sleep 6 --my-edit-image
-bindsym $WIN+q exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --my-edit-image --focused --border
+bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screenshot.sh --my-sleep 6
+# bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screenshot.sh --my-sleep 6 --my-edit-image
+# bindsym $WIN+q exec --no-startup-id exec $START $DOTRC/other_files/screenshot.sh --my-edit-image --focused --border
 
 # CapsLock (caps lock):
 bindsym $WIN+j exec --no-startup-id exec $START xdotool key Caps_Lock

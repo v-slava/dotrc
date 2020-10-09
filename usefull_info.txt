@@ -840,6 +840,9 @@ wireshark -X lua_script:/path/to/plugin/file.lua
 # port IP filter:
 (tcp.port == 443) || (udp.port == 23)
 
+# protocol filter:
+tcp
+
 # packet contents (frame) filter:
 frame contains "some_string"
 
@@ -1453,8 +1456,13 @@ git submodule foreach 'git remote -v'
 
 # svn for "git remote -v" (show remote repository URL):
 svn info .
-# svn for "git checkout COMMIT":
-svn update --revision REV
+# svn determine repository root:
+svn info | grep '^Repository Root: ' | cut -d' ' -f3
+# svn determine branch a commit (revision) belongs to:
+svn log -v -q URL_OF_REPO_ROOT -r REVISION -l 1
+# svn for "git checkout COMMIT" (but first check out proper branch in another
+# folder!):
+svn up -r REVISION # svn update --revision REVISION
 # svn for "git checkout FILE":
 svn revert FILE
 # svn for "git tag":
@@ -1465,6 +1473,8 @@ svn diff -c REV # for message: svn log | less # search for REV
 svn switch https://.../log4j/trunk
 # svn for "git blame FILE":
 svn blame FILE
+# svn for "git branch -a":
+svn ls URL_OF_REPO_ROOT/branches --verbose
 
 # ~/.ssh/config example:
 Host github-custom
@@ -2323,6 +2333,9 @@ than go to main menu, select "Save setup as dfl"
 # Continue printing in minicom:
 ESC
 
+# To check ctrl-c settings in terminal:
+stty -a | grep intr # should be "intr = ^C"
+
 # Start screen:
 screen /dev/ttyUSB0 115200N1
 screen
@@ -2888,8 +2901,11 @@ $JLINK -device $DEVICE -if $INTERFACE -speed auto -JTAGConf -1,-1 -CommandFile $
 
 # gdb:
 show max-value-size
-set max-value-size 100000
+set max-value-size unlimited # 100000
 set breakpoint pending off
+
+# gdb: disable "Type <return> to continue, or q <return to quit---":
+set pagination off
 
 # gdb commands logging:
 set logging redirect on
@@ -2931,9 +2947,6 @@ p *argv@argc
 # gdb print (echo) string:
 echo "some text\n"
 printf "my int value = %d\n", my_value
-
-# gdb: disable "Type <return> to continue, or q <return to quit---":
-set pagination off
 
 # gdb: continue multiple times (breakpoint won't break until the Nth time it is reached):
 c N

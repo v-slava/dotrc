@@ -48,6 +48,8 @@
 " zc               - refold/rehide text
 " zr               - unfold both files completely
 "
+" <C-G> - print current cursor position (percentage), etc...
+"
 " <C-E> - line up
 " <C-Y> - line down
 " <C-B> - page up

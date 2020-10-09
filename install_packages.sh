@@ -58,6 +58,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     ntpdate fuseiso9660 netcat-openbsd keepass2 \
 
+# apt-get install rsyslog
 # apt-get install clang clang-format clang-tidy clang-tools
 # apt-get install uftrace
 
