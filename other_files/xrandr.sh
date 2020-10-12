@@ -8,9 +8,16 @@
 # xrandr --output --set "underscan hborder" 38
 # xrandr --output --set "underscan vborder" 23
 
+# xrandr --listproviders
+# xrandr --setprovideroutputsource 4 0
+
+# See also: /usr/share/doc/xserver-xorg-video-intel/xorg.conf
+
 if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
     . $DOTRC_S/other_files/xrandr.sh
 fi
+
+LOG=/tmp/log_xrandr_sh
 
 set_default()
 {
@@ -21,29 +28,55 @@ set_default()
     fi
 }
 
-# eDP1 or eDP-1 on laptops:
-set_default CENTRAL_OUTPUT "$(xrandr | grep eDP | cut -d' ' -f1)"
-set_default CENTRAL_MODE "--mode 1920x1080"
-set_default CENTRAL_DPI "--dpi 144"
-# set_default CENTRAL_DPI "--dpi 96"
+init_vars()
+{
+    echo "starting init_vars" >> $LOG
+    # DisplayLink configuration adds new outputs to xrandr:
+    NUM_PROVIDERS=$(xrandr --listproviders | head -n 1 | cut -d' ' -f4)
+    echo "NUM_PROVIDERS=$NUM_PROVIDERS" >> $LOG
+    if [ $NUM_PROVIDERS -eq 5 ]; then
+        echo "executing xrandr --setprovideroutputsource" >> $LOG
+        xrandr --setprovideroutputsource 3 0
+        xrandr --setprovideroutputsource 4 0
+    else
+        echo "skipping xrandr --setprovideroutputsource" >> $LOG
+    fi
 
-set_default RIGHT_OUTPUT "$(xrandr | grep -v eDP | grep ' connected ' \
-    | head -n 1 | cut -d' ' -f1)"
-# RIGHT_MODE=
-# RIGHT_DPI=
+    # eDP1 or eDP-1 on laptops:
+    set_default CENTRAL_OUTPUT "$(xrandr | grep eDP | cut -d' ' -f1)"
+    # set_default CENTRAL_MODE "--mode 1920x1080"
+    # set_default CENTRAL_MODE "--auto"
+    set_default CENTRAL_DPI "--dpi 144"
+    # set_default CENTRAL_DPI "--dpi 96"
 
-# LEFT_OUTPUT=
-# LEFT_MODE=
-# LEFT_DPI=
+    set_default RIGHT_OUTPUT "$(xrandr | grep ' connected ' \
+        | grep -v $CENTRAL_OUTPUT | head -n 1 | cut -d' ' -f1)"
+    RIGHT_MODE="--auto"
+    # RIGHT_DPI=
 
-# MAIN_OUTPUT has tray:
-set_default MAIN_OUTPUT "$CENTRAL_OUTPUT"
+    if [ -n "$RIGHT_OUTPUT" ]; then
+        set_default LEFT_OUTPUT "$(xrandr | grep ' connected ' \
+            | grep -v $CENTRAL_OUTPUT | grep -v $RIGHT_OUTPUT | head -n 1 \
+            | cut -d' ' -f1)"
+        LEFT_MODE="--auto"
+        # LEFT_MODE="--mode 1920x1080"
+        # LEFT_DPI=
+    fi
+
+    # MAIN_OUTPUT has tray:
+    set_default MAIN_OUTPUT "$CENTRAL_OUTPUT"
+
+    echo "MAIN_OUTPUT=|$MAIN_OUTPUT|, CENTRAL_OUTPUT=|$CENTRAL_OUTPUT|" >> $LOG
+    echo "RIGHT_OUTPUT=|$RIGHT_OUTPUT|, LEFT_OUTPUT=|$LEFT_OUTPUT|" >> $LOG
+    echo "ending init_vars" >> $LOG
+}
 
 set -e
 source $DOTRC/other_files/config_file.sh
 
 update_i3_config()
 {
+    echo "starting update_i3_config()" >> $LOG
     FILE=".config_xdg/i3/config"
     DOTRC_FILE="$DOTRC/home_settings/$FILE"
     DOTRC_S_FILE="$DOTRC_S/home_settings/$FILE"
@@ -101,14 +134,13 @@ update_i3_config()
             sed -i $I3_CONF -e "s/OUTPUT_${i}_TEMPLATE/$CENTRAL_OUTPUT/g"
         done
     fi
+    echo "ending update_i3_config()" >> $LOG
 }
 
-if [ "$1" = "update_i3_config" ]; then
-    update_i3_config
-    exit
-fi
-
-if [ "$1" = "xinitrc" ]; then
+xinitrc()
+{
+    echo "starting xinitrc()" >> $LOG
+    init_vars
     update_i3_config
     ARGS=""
     if [ -n "$LEFT_OUTPUT" ]; then
@@ -119,7 +151,27 @@ if [ "$1" = "xinitrc" ]; then
         ARGS="$ARGS --output $RIGHT_OUTPUT $RIGHT_MODE $RIGHT_DPI \
             --right-of $CENTRAL_OUTPUT"
     fi
-    set -x
-    xrandr --output $CENTRAL_OUTPUT $CENTRAL_MODE $CENTRAL_DPI $ARGS
+    CMD="xrandr --output $CENTRAL_OUTPUT $CENTRAL_MODE $CENTRAL_DPI $ARGS"
+    echo "executing: $CMD" >> $LOG
+    $CMD
+    echo "executing: i3-msg reload" >> $LOG
+    i3-msg reload
+    echo "ending xinitrc()" >> $LOG
+}
+
+if [ "$1" = "update_i3_config" ]; then
+    echo "starting update_i3_config" >> $LOG
+    init_vars
+    update_i3_config
+    echo "ending update_i3_config" >> $LOG
     exit
 fi
+
+if [ "$1" = "xinitrc" ]; then
+    echo "starting xinitrc" >> $LOG
+    xinitrc
+    echo "ending xinitrc" >> $LOG
+    exit
+fi
+
+xinitrc

@@ -116,7 +116,7 @@ bindsym $Alt_L+9 workspace 9
 
 # exec --no-startup-id sleep 4 && $DOTRC/other_files/xrandr.sh xinitrc && exec sudo udevadm trigger --subsystem-match=input --action=change
 
-workspace m output $OUTPUT_TRAY
+# workspace m output $OUTPUT_TRAY
 
 workspace 1 output $OUTPUT_1
 workspace 2 output $OUTPUT_2
