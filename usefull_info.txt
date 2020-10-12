@@ -309,6 +309,13 @@ x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
 gvncviewer screen_sharing_host
 
+# ssh query algorithms:
+ssh -Q KexAlgorithms
+ssh -Q HostKeyAlgorithms
+ssh -Q Ciphers
+# ssh specify algorithms:
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oCiphers=+aes256-cbc user@host
+
 # list only directories in $DIR:
 ls -d $DIR/*/
 
