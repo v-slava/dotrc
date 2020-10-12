@@ -40,20 +40,20 @@ list_files()
     config_generate -r "$FILE"
 done
 
-LINUX_ARGS=(rw)
+LINUX_ARGS="rw"
 if ! which dmidecode 1>/dev/null 2>&1 ; then
     echo "Missing: apt-get install dmidecode" 1>&2
     exit 1
 fi
 LAPTOP="$(dmidecode -s system-manufacturer) $(dmidecode -s system-product-name)"
 case "${LAPTOP,,}" in
-    asus*x541ua*) LINUX_ARGS+=(acpi_backlight=vendor pci=noaer) ;;
+    asus*x541ua*) LINUX_ARGS="$LINUX_ARGS acpi_backlight=vendor pci=noaer" ;;
 esac
 
 echo "Updating grub..."
 sed -i /etc/default/grub -e \
 "s|^# TODO sed replace: GRUB_CMDLINE_LINUX_DEFAULT=\"some_args\"$|\
-GRUB_CMDLINE_LINUX_DEFAULT=\"${LINUX_ARGS[@]}\"|g"
+GRUB_CMDLINE_LINUX_DEFAULT=\"$LINUX_ARGS\"|g"
 
 update-grub
 
