@@ -501,7 +501,7 @@ nnoremap yg :!realpath --relative-to="$(git rev-parse --show-toplevel)" ./%c | c
 " nnoremap yb :!du -b %c | cut -f1 | clipboard.sh -n<CR>
 
 " Mount / umount:
-nnoremap am :! mount /dev/sdb1<CR>
+nnoremap am :! mount /media/usb<CR>
 nnoremap au :! umount /media/usb<CR>
 " Android (smartphone):
 " old:
