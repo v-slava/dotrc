@@ -12,4 +12,8 @@ if pgrep telegram 1>/dev/null ; then
     killall telegram
 fi
 
+if pgrep slack 1>/dev/null ; then
+    killall slack
+fi
+
 $DOTRC/other_files/stop_email_notifications.sh
