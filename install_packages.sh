@@ -204,6 +204,9 @@ apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
     libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
 # apt-get -f install # fix missing dependencies
 
+# Use google-chrome for microsoft teams
+# Use google-chrome for zoom
+
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11
 # libreoffice-pdfimport abiword gnumeric mupdf suckless-tools # (dmenu)

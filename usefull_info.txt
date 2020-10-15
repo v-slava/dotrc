@@ -1472,6 +1472,10 @@ svn log -v -q URL_OF_REPO_ROOT -r REVISION -l 1
 svn up -r REVISION # svn update --revision REVISION
 # svn for "git checkout FILE":
 svn revert FILE
+# svn for "git checkout -- .":
+svn revert -R .
+# svn for "git clean -fdx":
+svn status | grep '^?      ' | cut -d' ' -f8- | xargs rm -rf
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
 # svn for "git show SHA":
@@ -1482,6 +1486,8 @@ svn switch https://.../log4j/trunk
 svn blame FILE
 # svn for "git branch -a":
 svn ls URL_OF_REPO_ROOT/branches --verbose
+# svn for "git apply PATCH_FILE"
+svn patch PATCH_FILE
 
 # ~/.ssh/config example:
 Host github-custom
