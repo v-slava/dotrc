@@ -17,7 +17,7 @@ if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
     . $DOTRC_S/other_files/xrandr.sh
 fi
 
-LOG=/tmp/log_xrandr_sh
+LOG=/tmp/log_xrandr_sh_$(id -u)
 
 set_default()
 {

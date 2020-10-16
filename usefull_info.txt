@@ -1605,6 +1605,41 @@ tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
 # See logs in /var/log/syslog
 
+# # Configure rsyslog client (/etc/rsyslog.conf):
+# Old format:
+$template my_template,"%timegenerated% %HOSTNAME% %fromhost-ip% %syslogtag%%msg:::drop-last-lf%\n"
+# $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+$ActionFileDefaultTemplate my_template
+echo "*.* @10.70.126.74:514" >> /etc/rsyslog.conf
+# For UDP:
+*.* @rsyslog_server:514
+# For TCP:
+*.* @@rsyslog_server:514
+# New format:
+template(name="my_template" type="list") {
+    constant(value="{\"version\":\"1.1\",")
+    property(name="hostname")
+    property(name="fromhost-ip")
+    property(name="fromhost")
+    property(name="msg" format="json")
+    property(name="timegenerated" dateformat="unixtimestamp")
+    property(name="timegenerated" dateformat="rfc3164")
+    property(name="syslogseverity")
+    property(name="pri")
+    property(name="pri-text")
+}
+action(type="omfwd" target="10.70.126.162" port="514" protocol="udp" template="my_template")
+# # Configure rsyslog server (/etc/rsyslog.conf):
+cat << EOF >> /etc/rsyslog.conf
+# provides UDP syslog reception
+module(load="imudp")
+input(type="imudp" port="514")
+# provides TCP syslog reception
+module(load="imtcp")
+input(type="imtcp" port="514")
+EOF
+systemctl restart rsyslog.service
+
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
 
