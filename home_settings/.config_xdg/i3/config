@@ -341,3 +341,5 @@ bindcode $WIN+$PrintScreen exec --no-startup-id $START $DOTRC/other_files/screen
 
 # CapsLock (caps lock):
 bindsym $WIN+j exec --no-startup-id exec $START xdotool key Caps_Lock
+
+bindsym $WIN+x exec --no-startup-id exec $START $DOTRC/other_files/xrandr.sh

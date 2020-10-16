@@ -1364,7 +1364,6 @@ let g:which_key_map.d = {'name' : '+diff',
 \   'k' : [':bdelete [denite]-default', 'kill denite'],
 \   'm' : [':MyModifyLine', 'modify line'],
 \   'q' : [':windo MyCloseWindowIfTemporary', 'close temporary windows'],
-\   's' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
 \   't' : [':resize +1000 | vertical resize +1000', 'show this panel only, hide'
 \             . ' another one'],
 \   'u' : [':diffupdate', 'diffupdate (recalculate diff)'],
@@ -1517,9 +1516,10 @@ let g:which_key_map.s = {'name' : '+search/select/spell/symbol',
 "             \ ':let g:My_eval_var = "MyRunShellCmd make -C /tmp"'
 "             \ , 'my single project']
 
-let g:which_key_map.w = { 'name' : '+windows',
+let g:which_key_map.w = { 'name' : '+windows/whitespace',
 \   '-' : [':split', 'split horizontally'],
 \   'a' : [':wa', 'save all files'],
+\   'd' : [':%s/\s\+$//e', 'delete whitespaces at the end of lines'],
 \   'h' : [':wincmd h', 'focus left'],
 \   'j' : [':wincmd j', 'focus bottom'],
 \   'k' : [':wincmd k', 'focus top'],

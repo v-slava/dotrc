@@ -2449,6 +2449,10 @@ realpath PATH
 # Delete first audio track:
 ffmpeg -i in.mkv -map 0 -map -0:a:0 -c copy out.mkv
 
+# Compose $OUT from a video stream from $IN_VIDEO and audio stream from $IN_AUDIO.
+# All other audio and subtitle streams from $IN_VIDEO will be lost:
+ffmpeg -i $IN_VIDEO -i $IN_AUDIO -c copy -shortest -map 0:v:0 -map 1:a:0 $OUT
+
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
