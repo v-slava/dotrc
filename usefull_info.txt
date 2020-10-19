@@ -1628,6 +1628,18 @@ template(name="my_template" type="list") {
     property(name="pri")
     property(name="pri-text")
 }
+template(name="my_RSYSLOG_TraditionalFileFormat" type="list") {
+    constant(value="<")
+    property(name="pri")
+    constant(value=">")
+    property(name="timegenerated" dateformat="rfc3164")
+    constant(value=" ")
+    property(name="hostname")
+    constant(value=" ")
+    property(name="programname")
+    constant(value=":")
+    property(name="msg")
+}
 action(type="omfwd" target="10.70.126.162" port="514" protocol="udp" template="my_template")
 # # Configure rsyslog server (/etc/rsyslog.conf):
 cat << EOF >> /etc/rsyslog.conf
