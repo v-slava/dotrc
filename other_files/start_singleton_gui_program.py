@@ -78,6 +78,7 @@ def find_win_with_prop(prop_name, prop_value, obj):
 
 def start_program(cmd, find_window, process_name = None, single_run = False):
     def get_win_id(win):
+        assert(win)
         return win[0]['window']
     def move_win_to_cur_workspace(win_id):
         focused_workspace = get_focused_workspace()
@@ -90,7 +91,7 @@ def start_program(cmd, find_window, process_name = None, single_run = False):
         ret = subprocess.run(['i3-msg', '-t', 'get_tree'], check = True,
                 capture_output = True, encoding = 'utf8')
         win = find_window(json.loads(ret.stdout))
-        assert(win != None)
+        assert(win)
         move_win_to_cur_workspace(get_win_id(win))
         return
     dotrc = os.environ['DOTRC']
@@ -131,11 +132,11 @@ def start_browser(args):
 
 def start_email(args):
     def find_email_client(obj):
-        return find_win_with_prop('title', 'mutt', obj)
+        return find_win_with_prop('class', 'Evolution', obj)
     dotrc = os.environ['DOTRC']
     email_client = os.path.join(dotrc, 'other_files', 'email_client.sh')
     start_program([email_client] + args, find_email_client,
-                  process_name = 'mutt', single_run = True)
+                  process_name = 'evolution', single_run = True)
 
 def start_telegram(args):
     def find_telegram(obj):

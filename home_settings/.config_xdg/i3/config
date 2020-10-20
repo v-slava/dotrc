@@ -195,7 +195,7 @@ for_window [class="GoldenDict"] floating disable
 # for_window [class="Icedove"] focus, mark --replace mail
 # for_window [class="thunderbird" title="Search Messages"] floating enable
 # for_window [class="thunderbird"] focus, mark --replace mail, move container to workspace m
-for_window [title="mutt"] mark --replace mail
+# for_window [title="mutt"] mark --replace mail
 for_window [class="ViberPC"] mark --replace viber
 for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
 for_window [class="TeamViewer" title="Computers & Contacts"] kill
