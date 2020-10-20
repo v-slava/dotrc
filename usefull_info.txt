@@ -1417,6 +1417,15 @@ sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount
 ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
 ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
+# git clone official linux kernel:
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+cd linux
+git remote remove origin
+git remote add torvalds git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git branch --set-upstream-to=torvalds/master master
+git remote add stable   git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+git fetch stable
+
 # git delete orphan commits:
 git reflog expire --expire=now --all
 git gc --prune=all --aggressive
