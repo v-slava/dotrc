@@ -26,3 +26,5 @@
 [alias]
 	# add only non-whitespace changes:
 	addnw = !sh -c 'git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
+[pull]
+	ff = only
