@@ -387,6 +387,9 @@ echo $?
 # Detect encoding:
 uchardet FILE
 
+# Umount recursively:
+umount -R rootfs_dir
+
 # list available MTP devices:
 jmtpfs -l
 # mount MTP device:
@@ -1426,6 +1429,12 @@ git branch --set-upstream-to=torvalds/master master
 git remote add stable   git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 git fetch stable
 
+# git lfs fetch binaries:
+git lfs pull
+# git lfs list files:
+git lfs ls-files
+git lfs status
+
 # git delete orphan commits:
 git reflog expire --expire=now --all
 git gc --prune=all --aggressive
@@ -1474,6 +1483,7 @@ git submodule foreach 'git remote -v'
 svn info .
 # svn determine repository root:
 svn info | grep '^Repository Root: ' | cut -d' ' -f3
+# quick log: svn log -l10
 # svn determine branch a commit (revision) belongs to:
 svn log -v -q URL_OF_REPO_ROOT -r REVISION -l 1
 # svn for "git checkout COMMIT" (but first check out proper branch in another
@@ -1670,6 +1680,10 @@ echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00
 # Simulate root access via LD_PRELOAD:
 fakeroot id
 echo "id ; whoami" | fakeroot
+
+# debootstrap ubuntu 16.04:
+fakeroot fakechroot debootstrap --arch=amd64 --variant=fakechroot xenial ./rootfs_ubuntu_16_04_xenial http://archive.ubuntu.com/ubuntu/
+# fakeroot debootstrap --arch=amd64 --variant=minbase --foreign xenial ./rootfs_ubuntu_16_04_xenial http://archive.ubuntu.com/ubuntu/
 
 # Create tarball for variant=fakechroot (use variant=minbase without fakechroot):
 fakechroot debootstrap --arch=armhf --download-only --variant=minbase --make-tarball=debootstrap.tgz buster tmp_dir
