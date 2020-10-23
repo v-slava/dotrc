@@ -1240,6 +1240,9 @@ echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
 # xargs spaces (files with spaces, print size in bytes):
 find -type f -print0 | xargs -0 du -b
 
+# Pack (zip) folder recursively:
+zip -r folder.zip folder/
+
 # Create initramfs:
 mkinitramfs -o initramfs.igz
 

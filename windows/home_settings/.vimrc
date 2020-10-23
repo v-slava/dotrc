@@ -367,6 +367,9 @@ function! My_apply_tab_settings()
     if &filetype == "vim"
         setlocal shiftwidth=4
     endif
+    if &filetype == "text"
+        setlocal epandtab
+    endif
     call My_apply_tab_settings_s()
     execute 'setlocal tabstop=' . &shiftwidth
 endfunction

@@ -13,6 +13,15 @@
 
 # See also: /usr/share/doc/xserver-xorg-video-intel/xorg.conf
 
+if [ "$1" = "udev" ]; then
+    export DISPLAY=:0
+    export DOTRC=/media/files/workspace/dotrc
+    export DOTRC_S=/media/files/workspace/dotrc_s
+    export HOME=/home/slava
+    export XAUTHORITY=$HOME/.Xauthority
+    sleep 0.5
+fi
+
 if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
     . $DOTRC_S/other_files/xrandr.sh
 fi
@@ -139,19 +148,23 @@ update_i3_config()
 
 xinitrc()
 {
-    echo "starting xinitrc()" >> $LOG
+    echo -e "\nstarting xinitrc()" >> $LOG
     init_vars
     update_i3_config
     ARGS=""
     if [ -n "$LEFT_OUTPUT" ]; then
         ARGS="$ARGS --output $LEFT_OUTPUT $LEFT_MODE $LEFT_DPI \
             --left-of $CENTRAL_OUTPUT"
+    else
+        ARGS="$ARGS --pos 0x0"
     fi
     if [ -n "$RIGHT_OUTPUT" ]; then
         ARGS="$ARGS --output $RIGHT_OUTPUT $RIGHT_MODE $RIGHT_DPI \
             --right-of $CENTRAL_OUTPUT"
     fi
     CMD="xrandr --output $CENTRAL_OUTPUT $CENTRAL_MODE $CENTRAL_DPI $ARGS"
+    echo "executing: xrandr -s 0" >> $LOG
+    xrandr -s 0
     echo "executing: $CMD" >> $LOG
     $CMD
     echo "executing: i3-msg reload" >> $LOG
