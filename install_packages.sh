@@ -48,7 +48,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     vbindiff vifm ripgrep progress fzf less bash-completion xxd \
     apt-file apt-rdepends apt-utils dialog locales \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
-    isc-dhcp-client traceroute wget \
+    isc-dhcp-client traceroute wget at \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential \

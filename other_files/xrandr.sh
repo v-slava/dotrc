@@ -14,12 +14,17 @@
 # See also: /usr/share/doc/xserver-xorg-video-intel/xorg.conf
 
 if [ "$1" = "udev" ]; then
+    echo "$(realpath $0) at" | at now
+    # echo "sleep 1 && $(realpath $0) at" | at now
+    exit
+fi
+
+if [ "$1" = "at" ]; then
     export DISPLAY=:0
     export DOTRC=/media/files/workspace/dotrc
     export DOTRC_S=/media/files/workspace/dotrc_s
     export HOME=/home/slava
     export XAUTHORITY=$HOME/.Xauthority
-    sleep 0.5
 fi
 
 if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
