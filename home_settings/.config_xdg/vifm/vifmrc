@@ -259,6 +259,8 @@ filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.docm,*.xls,
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
+filextype *.dia dia %f %i &
+
 filextype *.pcapng wireshark %f &
 
 " filetype *.gl,*.vim,*vimrc,.*vimrc vim %f

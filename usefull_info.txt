@@ -1482,6 +1482,10 @@ git ls-tree HEAD
 # git remote -v submodules:
 git submodule foreach 'git remote -v'
 
+# svn diff (REV_START; REV_END] (here REV_START < REV_END):
+svn diff -r REV_START:REV_END
+# svn for "git status":
+svn status [-q]
 # svn for "git remote -v" (show remote repository URL):
 svn info .
 # svn determine repository root:

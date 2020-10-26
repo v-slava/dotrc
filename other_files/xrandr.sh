@@ -53,7 +53,7 @@ init_vars()
     # DisplayLink configuration adds new outputs to xrandr:
     NUM_PROVIDERS=$(xrandr --listproviders | head -n 1 | cut -d' ' -f4)
     echo "NUM_PROVIDERS=$NUM_PROVIDERS" >> $LOG
-    if [ $NUM_PROVIDERS -eq 5 ]; then
+    if [ -n "$NUM_PROVIDERS" ] && [ "$NUM_PROVIDERS" -eq 5 ]; then
         echo "executing xrandr --setprovideroutputsource" >> $LOG
         xrandr --setprovideroutputsource 3 0
         xrandr --setprovideroutputsource 4 0
