@@ -1507,7 +1507,7 @@ svn switch https://.../log4j/trunk
 # svn for "git blame FILE":
 svn blame FILE
 # svn for "git branch -a":
-svn ls URL_OF_REPO_ROOT/branches --verbose
+svn ls URL_OF_REPO_ROOT --verbose
 # svn for "git apply PATCH_FILE"
 svn patch PATCH_FILE
 
