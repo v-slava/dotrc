@@ -1432,9 +1432,20 @@ git branch --set-upstream-to=torvalds/master master
 git remote add stable   git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 git fetch stable
 
+# git lfs workflow:
+sudo apt-get install git-lfs
+mkdir git_repo_root && cd git_repo_root && git init .
+# git lfs install --local # what does it change?
+git lfs track '*.a'
+git add .gitattributes
+git commit -m 'Add .gitattributes'
+cp /path/to/big_file.a .
+git add big_file.a
+git commit -m 'Add big_file.a using git lfs'
+# ...
 # git lfs fetch binaries:
 git lfs pull
-# git lfs list files:
+# git lfs useful commands:
 git lfs ls-files
 git lfs status
 
