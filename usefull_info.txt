@@ -1441,9 +1441,9 @@ git remote add stable   git://git.kernel.org/pub/scm/linux/kernel/git/stable/lin
 git fetch stable
 
 # git lfs workflow:
-sudo apt-get install git-lfs
+sudo apt-get install git-lfs # updates git system config in /etc/gitconfig
 mkdir git_repo_root && cd git_repo_root && git init .
-# git lfs install --local # what does it change?
+# git lfs install --local
 git lfs track '*.a'
 git add .gitattributes
 git commit -m 'Add .gitattributes'
@@ -2781,7 +2781,7 @@ umount /mnt/usb_mnt
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.01.tar.xz
 dd if=syslinux-6.01/bios/mbr/mbr.bin of=/dev/sdX
 sync
-# For grub2 version syslinux is not necessary (see $DOTRC/other_files/grub.cfg)
+# For grub2 version syslinux is not necessary (see $DOTRC/other_files/my_samples/single_sources/grub.cfg)
 
 # Create bootable usb (grub2):
 dd if=/dev/zero of=/dev/sdX bs=1k count=1
