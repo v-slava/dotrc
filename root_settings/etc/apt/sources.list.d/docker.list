@@ -1,0 +1,4 @@
+# deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable
+# deb-src [arch=amd64] https://download.docker.com/linux/debian bullseye stable
+
+# deb [arch=amd64] https://download.docker.com/linux/debian buster stable

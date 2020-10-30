@@ -87,9 +87,17 @@ daemonize $(which cmd) args
 nohup cmd &
 cmd & disown
 
-vim Dockerfile
+# See also example in $DOTRC/other_files/my_samples/single_sources/docker_example.sh
+e Dockerfile
 docker build -t NAME .
+# docker build -f /path/to/a/Dockerfile .
 docker run --mount type=bind,source=/media/files/workspace/docker_workspace,destination=/workspace -it NAME bash
+# Show running containers:
+docker ps -a
+# Delete specific container image:
+docker rm CONTAINER_ID
+# Delete all not executing container images:
+docker rm $(docker ps -a -q -f status=exited)
 
 # (generate) configure xorg:
 X -configure
@@ -172,7 +180,7 @@ bitbake -e <target> # print environment
 bitbake -g -u taskexp bitbake_target
 bitbake -g -u depexp bitbake_target
 bitbake -g -n -v bitbake_target
-vim pn-buildlist
+e pn-buildlist
 # Render (view, visualize, generate) dot (graph) files:
 xdot task-depends.dot
 xdot recipe-depends.dot

@@ -18,13 +18,14 @@ fi
 USER_NAME=$1
 USER_PASSWD=$USER_NAME
 
-echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
+# echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
+useradd $USER_NAME
+echo "${USER_NAME}:${USER_PASSWD}" | chpasswd
 
-if ! usermod -a -G sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth $USER_NAME ; then
+GROUPS=sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth,docker
+if ! usermod -a -G $GROUPS $USER_NAME ; then
 	echo "Failed to add user to groups!" 1>&2
 	exit 1
 fi
 
 # usermod -a -G vboxsf $USER_NAME
-
-passwd $USER_NAME
