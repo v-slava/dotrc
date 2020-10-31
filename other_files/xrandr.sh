@@ -178,7 +178,10 @@ xinitrc()
     echo "executing: $CMD" >> $LOG
     $CMD
     echo "executing: i3-msg reload" >> $LOG
-    i3-msg reload
+    set +e
+    i3-msg reload 2 >> $LOG
+    echo "i3-msg exit code: $?" >> $LOG
+    set -e
     echo "ending xinitrc()" >> $LOG
 }
 
