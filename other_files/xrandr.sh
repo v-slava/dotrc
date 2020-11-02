@@ -34,10 +34,6 @@ if [ "$1" = "at" ]; then
     export XAUTHORITY=$HOME/.Xauthority
 fi
 
-if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
-    . $DOTRC_S/other_files/xrandr.sh
-fi
-
 set_default()
 {
     VAR_NAME=$1
@@ -59,6 +55,10 @@ init_vars()
         xrandr --setprovideroutputsource 4 0
     else
         echo "skipping xrandr --setprovideroutputsource" >> $LOG
+    fi
+
+    if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
+        . $DOTRC_S/other_files/xrandr.sh
     fi
 
     # eDP1 or eDP-1 on laptops:
