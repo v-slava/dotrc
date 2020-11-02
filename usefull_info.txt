@@ -6,6 +6,12 @@ protonvpn init
 # See OpenVPN / IKEv2 username and password in protonvpn web site
 protonvpn c -f # systemctl --user stop check_new_email.timer
 
+# Reset windows 7 password from linux:
+mount WIN_PARTIOTION /mnt
+cd /mnt/WINDOWS/System32/config
+ls SAM
+chntpw -u Administrator SAM
+
 # Complile with debug information:
 javac [-cp path/to/dependency_1.jar:path/to/dependency_2.jar] -g main.java
 # Run:
@@ -2959,6 +2965,8 @@ dhclient -v eth0
 /etc/resolv.conf
 
 # Query DNS server and get IP address:
+nslookup unix.stackexchange.com
+host unix.stackexchange.com
 dig [@8.8.8.8] +short unix.stackexchange.com
 
 # Add default gateway:

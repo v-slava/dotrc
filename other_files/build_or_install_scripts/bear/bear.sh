@@ -5,6 +5,7 @@ set -e
 TMP="/media/files/workspace/tmp"
 
 set -x
+sudo apt-get install libssl-dev
 mkdir -p "$TMP"
 cd "$TMP"
 rm -rf Bear
