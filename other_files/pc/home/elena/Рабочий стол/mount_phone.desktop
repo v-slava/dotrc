@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=подключить телефон
+Exec=/home/elena/mount_phone.sh
+Terminal=false
+Type=Application

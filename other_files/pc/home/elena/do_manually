@@ -1,1 +1,3 @@
 uncomment ru_RU.CP1251 in /etc/locale.gen, run locale-gen
+# To make delete button work in Thunar file manager on disk D:
+mkdir /media/elena/disk_d/.Trash-1000

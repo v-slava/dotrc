@@ -321,7 +321,7 @@ ssh -L 5900:localhost:5900 user@screen_sharing_host
 # On server:
 x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
-gvncviewer screen_sharing_host
+gvncviewer {screen_sharing_host|localhost}
 
 # ssh query algorithms:
 ssh -Q KexAlgorithms
@@ -2781,7 +2781,7 @@ avprobe file.avi
 deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main
 
 # Create usb to install Windows 7 (without grub):
-dd if=/dev/zero of=/dev/sdX count=3000
+dd if=/dev/zero of=/dev/sdX bs=1k count=1
 fdisk /dev/sdX
 mkfs -t ntfs -f -L windows_7 /dev/sdX1
 # Copy files:
