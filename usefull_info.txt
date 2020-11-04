@@ -1604,6 +1604,9 @@ sudo dpkg-reconfigure ca-certificates
 nbtscan 192.168.2.3/16
 nmap -p 139 -sT '192.168.*.*'
 
+# Ubuntu list of preinstalled packages:
+http://releases.ubuntu.com/focal/ubuntu-20.04.1-desktop-amd64.manifest
+
 # create samba share (start samba server) on linux:
 apt-get install samba
 mkdir /media/share
@@ -1702,6 +1705,7 @@ module(load="imtcp")
 input(type="imtcp" port="514")
 EOF
 systemctl restart rsyslog.service
+# Reread new hostname: kill -SIGHUP $(cat /var/run/rsyslogd.pid)
 
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
@@ -2964,7 +2968,10 @@ dhclient -v eth0
 # DNS server:
 /etc/resolv.conf
 
-# Query DNS server and get IP address:
+# Query DNS server and get IP address (resolve hostname):
+# The following uses libnss (ls /lib/x86_64-linux-gnu/libnss*; man nsswitch.conf):
+getent hosts unix.stackexchange.com
+# The following bypasses libnss:
 nslookup unix.stackexchange.com
 host unix.stackexchange.com
 dig [@8.8.8.8] +short unix.stackexchange.com
