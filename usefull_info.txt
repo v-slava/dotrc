@@ -1705,7 +1705,9 @@ module(load="imtcp")
 input(type="imtcp" port="514")
 EOF
 systemctl restart rsyslog.service
-# Reread new hostname: kill -SIGHUP $(cat /var/run/rsyslogd.pid)
+# Reread new hostname (works for new rsyslog?): kill -SIGHUP $(cat /var/run/rsyslogd.pid)
+# Send a message from command line:
+logger hello world
 
 # register foreign (x86-64 elf files) binary format:
 echo ':qemu-x86_64:M:0:\x7F\x45\x4C\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3E\x00:\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF:/usr/bin/qemu-x86_64:OC' > /proc/sys/fs/binfmt_misc/register
