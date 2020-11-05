@@ -99,6 +99,8 @@ let g:EasyMotion_do_mapping = 0
 let g:rtagsUseDefaultMappings = 0
 " let g:swoopUseDefaultKeyMap = 0 " we use denite instead
 
+let g:rtagsUseLocationList = 0
+
 let g:My_win_cmd_exe = 0
 let g:My_tmp_dir = "/tmp"
 if $WINDIR != ""
@@ -553,7 +555,7 @@ function! My_run_shell_cmd(open_window_on_success, cmd)
 
     silent execute '!$DOTRC/other_files/nvim_execute_cmd.py --exclude '
                 \ . v:servername . ' "call My_save_all_files()"'
-    " Previous command generated 1 empty line in message area. AFterwards we
+    " Previous command generated 1 empty line in message area. Afterwards we
     " will additionally print command exit code (2nd line). In this case due to
     " more than 1 line of output, the user will be forced to type ENTER and
     " presented with the following message:
@@ -592,7 +594,12 @@ function! My_run_shell_cmd(open_window_on_success, cmd)
     normal 0ggdd
     silent w
     set readonly
+
+    " wincmd p
+    " execute 'lgetfile ' . g:My_vim_errors_file
+    " wincmd p
     execute 'cgetfile ' . g:My_vim_errors_file
+
     let g:My_use_denite_errors = 0
     wincmd p
     if v:shell_error == 0
@@ -1182,11 +1189,13 @@ function! My_goto_error(error)
         return
     endif
 
-    if len(getloclist(0)) != 0
-        let l:prefix = 'l'
-    else
-        let l:prefix = 'c'
-    endif
+    " if len(getloclist(0)) != 0
+    "     let l:prefix = 'l'
+    " else
+    "     let l:prefix = 'c'
+    " endif
+    let l:prefix = 'c'
+
     let l:action = l:prefix . l:prefix . '!'
     if a:error == 'current'
         let l:action = l:action
