@@ -205,6 +205,7 @@ apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
 # apt-get -f install # fix missing dependencies
 
 # Use google-chrome for zoom, microsoft teams
+# Note: zoom audio and video is lagging in google-chrome...
 
 # Other/old packages:
 # hostapd dnsmasq cifs-utils smbclient smbnetfs goldendict sdcv dbus dbus-x11

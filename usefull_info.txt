@@ -2908,6 +2908,14 @@ mkimage -A arm -O linux -T kernel -C none -a 0x80008000 -e 0x80008000 -n Linux-3
 # Create U-Boot script image:
 mkimage -A arm -O u-boot -T script -C none -n 'UbootUpdateScript' -d update_script.txt update_script.scr
 
+# Ethernet frame format:
+https://en.wikipedia.org/wiki/Frame_check_sequence#/media/File:Ethernet_Frame.png
+
+# Show interface (ethernet) speed:
+ethtool INTERFACE
+# Set interface (ethernet) speed:
+ethtool -s INTERFACE {10|100|1000}
+
 # connect to wifi via network manager (nmcli):
 # ("d" stands for "device")
 # turn on wifi radio interface:
@@ -2940,6 +2948,9 @@ brctl addif br0 eth0
 # Set mac address:
 ifconfig eth0 hw ether 12:34:56:78:9a:bc
 ip link set eth0 address 12:34:56:78:9a:bc
+
+# Set MTU:
+ifconfig eth0 mtu 1500
 
 # show ipsec network packets going through the device:
 ip x m
