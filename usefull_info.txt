@@ -2283,6 +2283,9 @@ aplay -v file.wav
 fuser FILE
 fuser -m FOLDER
 
+# Show process priorities:
+ps -e -o pid,comm,cmd,pri
+
 # Show session IDs and process group IDs:
 ps -eo sid,pgid,ppid,pid,comm
 
