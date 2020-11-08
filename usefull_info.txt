@@ -567,7 +567,7 @@ gcc -save-temps=obj
 # Standard compiler include search paths:
 touch foo.h && gcc -c -v foo.h
 
-# Standard compiler macros (preprocessor, defines):
+# Standard (embedded) compiler macros (preprocessor, defines):
 gcc -dM -E - < /dev/null
 
 # Preprocess using cmake:

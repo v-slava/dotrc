@@ -74,22 +74,22 @@ int main(void)
 
     puts("Receiving...");
 
-/* #define MTU 46 */
-#define MTU 1500
-/* #define MTU 9000 */
-#define BUF_SIZE (sizeof(struct ether_header) + MTU)
-    unsigned char recvbuf[BUF_SIZE];
+    // max(L2_PAYLOAD) = MTU
+/* #define L2_PAYLOAD 46 */
+#define L2_PAYLOAD 1500
+/* #define L2_PAYLOAD 9000 */
+#define BUF_SIZE (sizeof(struct ether_header) + L2_PAYLOAD)
+    unsigned char recv_buf[BUF_SIZE];
 
-    size_t iter = 0, iter_compare = 0;
+    size_t packet_size = ((7 + 1) + (6 + 6 + 2) + L2_PAYLOAD + (4 + 8)) * 8;
+    size_t iter_receiver = 0, total_bits_lost = 0, total_bits_received = 0;
     while (1) {
-        ++iter;
-
         int flags = 0;
         errno = 0;
         /* struct sockaddr_ll sock_addr; // See packet (7). */
         memset(&sock_addr, 0, sizeof(sock_addr));
         socklen_t addrlen = sizeof(sock_addr);
-        ssize_t num_bytes = recvfrom(sockfd, recvbuf, sizeof(recvbuf), flags,
+        ssize_t num_bytes = recvfrom(sockfd, recv_buf, sizeof(recv_buf), flags,
                                (struct sockaddr*)&sock_addr, &addrlen);
         if (num_bytes < 0) {
             perror("recvfrom");
@@ -108,32 +108,36 @@ sock_addr.sll_addr[3], sock_addr.sll_addr[4], sock_addr.sll_addr[5]);
         */
 
         size_t expected_num_bytes = BUF_SIZE;
-        if ((size_t)num_bytes != expected_num_bytes)
-            printf("Expected: %zu bytes, received: %zd bytes.\n",
-                    expected_num_bytes, num_bytes);
-        /* if (memcmp(sendbuf, sendbuf_backup, tx_len) != 0) */
-        /*     puts("sendbuf has been changed..."); */
+        if ((size_t)num_bytes != expected_num_bytes) {
+            /* printf("Expected: %zu bytes, received: %zd bytes.\n", */
+            /*         expected_num_bytes, num_bytes); */
+            continue;
+        }
+        ++iter_receiver;
+        total_bits_received += packet_size;
         /* if (memcmp(&sock_addr, &sock_addr_backup, sizeof(sock_addr)) != 0) */
         /*     puts("sock_addr has been changed..."); */
 
         size_t iter_sender;
-        memcpy(&iter_sender, recvbuf + sizeof(struct ether_header),
+        memcpy(&iter_sender, recv_buf + sizeof(struct ether_header),
                 sizeof(iter_sender));
-        ++iter_compare;
-        if (iter_sender != iter_compare) {
-            assert(iter_sender > iter_compare);
-            printf("Sender iteration: %zu, receiver iteration: %zu, diff = %zu\n",
-                    iter_sender, iter_compare, iter_sender - iter_compare);
-            iter_compare = iter_sender;
+        if (iter_sender != iter_receiver) {
+            assert(iter_sender > iter_receiver);
+            size_t cur_diff = iter_sender - iter_receiver;
+            total_bits_lost += cur_diff * packet_size;
+            size_t total_bits_sent = iter_sender * packet_size;
+            double lost_percent = (double)(total_bits_lost * 100) / (double)total_bits_sent;
+
+            printf("Sender iteration: %zu, receiver iteration: %zu, cur_diff = %zu, total_bits_lost = %zu (%f%%)\n",
+                    iter_sender, iter_receiver, cur_diff, total_bits_lost, lost_percent);
+            iter_receiver = iter_sender;
             /* close(sockfd); */
             /* return 7; */
         }
 
-        /* if ((iter % 1000) == 0) { */
-        /*     // printf("Iteration #%zu\n", iter); */
-        /*     size_t packet_size = ((7 + 1) + (6 + 6 + 2) + MTU + (4 + 8)) * 8; */
-        /*     printf("Bits received: %zu\n", iter * packet_size); */
-        /* } */
+        /* usleep(100000); */
+        if ((iter_receiver % 1000) == 0)
+            printf("Bits received: %zu\n", total_bits_received);
     }
 
     /* close(sockfd); */

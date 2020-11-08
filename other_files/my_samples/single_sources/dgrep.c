@@ -95,7 +95,7 @@ static bool ParseCmdLineArgsSucceeded(int argc, char* const argv[], input_args* 
         }
         ret = getopt(argc, argv, opt_string);
     }
-    if (argc != optind + 1)
+    if (optind + 1 != argc)
         return false;
     arguments->search_string = argv[optind];
     return true;
@@ -204,7 +204,7 @@ static void ProcessString(parsing_ctx* ctx)
     }
 }
 
-int main(int argc, char* const argv[])
+int main(int argc, char* argv[])
 {
     parsing_ctx ctx;
     InitCtx(argc, argv, &ctx);

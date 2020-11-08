@@ -57,38 +57,40 @@ int main(void)
         return 3;
     }
 
-/* #define MTU 46 */
-#define MTU 1500
-/* #define MTU 9000 */
-#define BUF_SIZE (sizeof(struct ether_header) + MTU)
-    unsigned char sendbuf[BUF_SIZE];
-    memset(sendbuf, 0, sizeof(sendbuf));
-    struct ether_header *eh = (struct ether_header *)sendbuf;
+    // max(L2_PAYLOAD) = MTU
+/* #define L2_PAYLOAD 46 */
+#define L2_PAYLOAD 1500
+/* #define L2_PAYLOAD 9000 */
+#define BUF_SIZE (sizeof(struct ether_header) + L2_PAYLOAD)
+    unsigned char send_buf[BUF_SIZE];
+    memset(send_buf, 0, sizeof(send_buf));
+    struct ether_header *eh = (struct ether_header *)send_buf;
 
     memcpy(eh->ether_shost, &ifr.ifr_hwaddr.sa_data, ETH_ALEN);
     memcpy(eh->ether_dhost, dest_mac, ETH_ALEN);
     eh->ether_type = 0xFFFF; // ETH_P_IP
 
     size_t tx_len = sizeof(*eh);
-    for (int i = 1; i <= MTU; i++) {
-        sendbuf[tx_len++] = (unsigned char)i;
+    for (int i = 1; i <= L2_PAYLOAD; i++) {
+        send_buf[tx_len++] = (unsigned char)i;
     }
-    memset(sendbuf + sizeof(*eh), 0, 16);
+    memset(send_buf + sizeof(*eh), 0, 16);
 
     // backup data:
-    unsigned char sendbuf_backup[BUF_SIZE];
-    memcpy(sendbuf_backup, sendbuf, tx_len);
+    unsigned char send_buf_backup[BUF_SIZE];
+    memcpy(send_buf_backup, send_buf, tx_len);
     struct sockaddr_ll sock_addr_backup;
     memcpy(&sock_addr_backup, &sock_addr, sizeof(sock_addr));
 
+    size_t packet_size = ((7 + 1) + (6 + 6 + 2) + L2_PAYLOAD + (4 + 8)) * 8;
     size_t iter = 0;
     while (1) {
         ++iter;
-        memcpy(sendbuf + sizeof(*eh), &iter, sizeof(iter));
+        memcpy(send_buf + sizeof(*eh), &iter, sizeof(iter));
 
         int flags = 0;
         errno = 0;
-        ssize_t num_bytes = sendto(sockfd, sendbuf, tx_len, flags,
+        ssize_t num_bytes = sendto(sockfd, send_buf, tx_len, flags,
                                (struct sockaddr*)&sock_addr, sizeof(sock_addr));
         if (num_bytes < 0) {
             perror("sendto");
@@ -96,17 +98,17 @@ int main(void)
             return 4;
         }
 
-        if ((size_t)num_bytes != tx_len)
+        if ((size_t)num_bytes != tx_len) {
             printf("attempted to send: %zu, actually sent: %zd\n", tx_len,
                     num_bytes);
-        /* if (memcmp(sendbuf, sendbuf_backup, tx_len) != 0) */
-        /*     puts("sendbuf has been changed..."); */
+        }
+        /* if (memcmp(send_buf, send_buf_backup, tx_len) != 0) */
+        /*     puts("send_buf has been changed..."); */
         /* if (memcmp(&sock_addr, &sock_addr_backup, sizeof(sock_addr)) != 0) */
         /*     puts("sock_addr has been changed..."); */
 
         if ((iter % 1000) == 0) {
             /* printf("Iteration #%zu\n", iter); */
-            size_t packet_size = ((7 + 1) + (6 + 6 + 2) + MTU + (4 + 8)) * 8;
             printf("Bits sent: %zu\n", iter * packet_size);
         }
     }
