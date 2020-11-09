@@ -57,9 +57,11 @@ init_vars()
         echo "skipping xrandr --setprovideroutputsource" >> $LOG
     fi
 
+    echo "before sourcing $DOTRC_S/other_files/xrandr.sh" >> $LOG
     if [ -e $DOTRC_S/other_files/xrandr.sh ]; then
         . $DOTRC_S/other_files/xrandr.sh
     fi
+    echo "after sourcing $DOTRC_S/other_files/xrandr.sh" >> $LOG
 
     # eDP1 or eDP-1 on laptops:
     set_default CENTRAL_OUTPUT "$(xrandr | grep eDP | cut -d' ' -f1)"
@@ -179,7 +181,7 @@ xinitrc()
     $CMD
     echo "executing: i3-msg reload" >> $LOG
     set +e
-    i3-msg reload 2 >> $LOG
+    i3-msg reload 2>>$LOG
     echo "i3-msg exit code: $?" >> $LOG
     set -e
     echo "ending xinitrc()" >> $LOG
