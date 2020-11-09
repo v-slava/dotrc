@@ -198,6 +198,7 @@ apt-get install minidlna
 # apt-get install fzy
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
 
+apt-get -install telegram-cli
 # Install also: Viber, Skype, Telegram, Teamviewer
 # For teamviewer:
 # sudo apt-get install lightdm && sudo systemctl disable lightdm.service

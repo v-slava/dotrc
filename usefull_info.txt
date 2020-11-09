@@ -296,6 +296,9 @@ cansend CAN_INTERFACE 543#11.22.33.44.55
 http://www.columbia.edu/~fdc/sample.html
 http://128.59.105.24/~fdc/sample.html
 
+# telegram-cli commands:
+telegram-cli -e contact_list
+
 # telegram bot:
 0) Bot API reference:
       https://core.telegram.org/bots/api
