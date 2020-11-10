@@ -486,10 +486,10 @@ nnoremap ot :!objdump.sh -t ./%c | c++filt | less -i<CR>
 nnoremap od :!objdump.sh -D ./%c | c++filt | less -i<CR>
 nnoremap os :!objdump.sh -S ./%c | less -i<CR>
 
-nmap xx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/extract_progress.sh '%f'<CR>
-vmap xx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/extract_progress.sh %f<CR>
-nmap xc :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/compress.sh %f<CR>
-nmap xj :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/compress.sh -e %f<CR>
+nmap xx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/extract_progress.sh '%f'<CR><c-l>
+vmap xx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/extract_progress.sh %f<CR><c-l>
+nmap xc :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/compress.sh %f<CR><c-l>
+nmap xj :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/compress.sh -e %f<CR><c-l>
 
 " Yank current directory path into the clipboard
 nnoremap yd :!echo -n %d | clipboard.sh<CR>
