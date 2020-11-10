@@ -23,8 +23,10 @@ if [ "$AMOUNT" -eq 0 ]; then
     AMOUNT=1
 fi
 xbacklight $OP $AMOUNT
-# If xbacklight returns an error "No outputs have backlight property" on ASUS
-# X541UA laptop, we need to do the following:
+# Warning: monitors from displaylink dock station don't work for me if default
+# /etc/X11/xorg.conf is present.
+# If xbacklight returns an error "No outputs have backlight property":
+# 1,2) X :1 -configure # use this instead of following 1), 2).
 # 1) Shutdown X server:
 #    systemctl stop getty@tty1.service
 #    i3-msg exit
