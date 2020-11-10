@@ -42,6 +42,10 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
             CONFIGDIR=virtual
         fi
     fi
+    # if ! dpkg -l | grep -q lightdm ; then
+    # lightdm should be disabled:
+    # sudo systemctl disable lightdm.service
     # exec startx -- -configdir $CONFIGDIR
     exec startx
+    # fi
 fi

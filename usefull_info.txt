@@ -71,6 +71,12 @@ nc -l localhost 9222
 # Run simple tcp client (connect to the server above):
 nc localhost 9222
 
+# Connect over telnet:
+telnet HOST PORT
+
+# to exit telnet:
+ctrl+] and afterwards ctrl+d
+
 # Rust commands:
 rustup update
 rustup self uninstall
@@ -2430,9 +2436,6 @@ man -K -w KEYWORD
 # Get DPI (dots per inch):
 xdpyinfo | grep -B 2 resolution
 
-# to exit telnet:
-ctrl+] and afterwards ctrl+d
-
 # Qemu monitor:
 qemu-system-arm -monitor pty
 > pid 23969's current affinity mask: ff
@@ -2991,6 +2994,17 @@ getent hosts unix.stackexchange.com
 nslookup unix.stackexchange.com
 host unix.stackexchange.com
 dig [@8.8.8.8] +short unix.stackexchange.com
+
+# For multicast DNS (mDNS) name resolution to work we need (on both machines):
+sudo apt-get install avahi-daemon libnss-mdns
+# Check also /etc/nsswitch.conf (it shall contain something like: mdns).
+# Use: ping HOSTNAME.local
+
+# TODO check:
+# # For windows (netbios) name resolution to work we need:
+# sudo apt-get install libnss-winbind samba
+# # Check also /etc/nsswitch.conf (it shall contain something like: wins).
+# # Use: ping HOSTNAME
 
 # Add default gateway:
 route add default gw 192.168.1.1

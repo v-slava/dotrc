@@ -60,8 +60,9 @@ bindsym $Alt_L+m exec --no-startup-id exec $START $DOTRC/other_files/i3_mark_win
 # goto window by mark (label name):
 bindcode $Alt_L+48 exec --no-startup-id exec $START $DOTRC/other_files/i3_goto_marked_window.py
 
-# switch to virtual console 2
+# switch to virtual consoles:
 bindsym $Ctrl_L+$ALT_L+F2 exec --no-startup-id exec sudo chvt 2
+bindsym $Ctrl_L+$ALT_L+F7 exec --no-startup-id exec sudo chvt 7
 
 # change focus
 bindsym $Alt_L+h focus left

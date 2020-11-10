@@ -48,7 +48,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     vbindiff vifm ripgrep progress fzf less bash-completion xxd \
     apt-file apt-rdepends apt-utils dialog locales \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
-    isc-dhcp-client traceroute wget at \
+    isc-dhcp-client traceroute wget at kbd \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential \
@@ -65,7 +65,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
 exit
 
 # exuberant-ctags cscope doxygen
-# sox libsox-fmt-mp3 android-tools-adb lame fuse kbd sshfs qalculate ntfs-3g
+# sox libsox-fmt-mp3 android-tools-adb lame fuse sshfs qalculate ntfs-3g
 # libclang-dev llvm vim dhex
 # Install my (patched) version for:
 # bear rtags
@@ -199,6 +199,14 @@ apt-get install minidlna
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
 
 # Install also: Viber, Skype, Telegram, Teamviewer
+# For teamviewer:
+# sudo apt-get install lightdm && sudo systemctl disable lightdm.service
+# To run teamviewer:
+# 1) Start lightdm manually from my GUI session: systemctl start lightdm.service
+# 2) sudo chvt 7 # login to lightdm, spawn a terminal emulator
+# 3) DISPLAY=:0 teamviewer # by default DISPLAY would be :1
+# 4) sudo chvt 1 # go back to original GUI session
+# 5) When done: killall TeamViewer && sudo systemctl stop lightdm.service
 # Implicit viber dependencies:
 apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
     libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
