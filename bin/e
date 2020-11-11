@@ -90,7 +90,12 @@ case "$EDITOR" in
         # --nofork vim and nvim handle themselves...
         # There is no need to handle "$WAIT" here...
         ARGS=("${ARGS_TMP[@]}" "${ARGS[@]}")
-        exec "$CLIENT_EXE" "${ARGS[@]}"
+        "$CLIENT_EXE" "${ARGS[@]}"
+        RET=$?
+        if [ -n "$VIFM_SERVER_NAME" ]; then
+            vifm --server-name $VIFM_SERVER_NAME --remote -c redraw
+        fi
+        exit $RET
     ;;
 esac
 

@@ -71,6 +71,13 @@ nc -l localhost 9222
 # Run simple tcp client (connect to the server above):
 nc localhost 9222
 
+# terminal (urxvt) send ^H (ctrl-H) as backspace (for telnet):
+stty erase ^H
+printf "\e[?67h"
+# terminal (urxvt) send ^? as backspace (for telnet):
+stty erase ^?
+printf "\e[?67l"
+
 # Connect over telnet:
 telnet HOST PORT
 
