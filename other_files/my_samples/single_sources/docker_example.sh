@@ -31,6 +31,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
     build-essential gcc make git
 RUN apt-file update
 
+# ARG user=$USER
+
 RUN useradd -G sudo $USER
 RUN echo 'root:root_p' | chpasswd
 RUN echo '${USER}:${USER}_p' | chpasswd
@@ -40,9 +42,23 @@ RUN cp /root/.bashrc /home/$USER/
 RUN cp /root/.profile /home/$USER/
 RUN chown -R $USER:$USER /home/$USER
 
+# Install bear:
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
+#     --yes bear
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
+    --yes cmake
+RUN wget --no-check-certificate https://raw.githubusercontent.com/v-slava/dotrc/d833f3df2070094cabe25cf47229520aa82ef990/other_files/build_or_install_scripts/bear/bear.patch
+RUN git -c http.sslVerify=false clone https://github.com/rizsotto/Bear
+RUN cd Bear && git checkout 2.4.2 && \
+    git config user.email viacheslav.volkov.1@gmail.com && \
+    git am < ../bear.patch && mkdir out && cd out && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && make -j9 && make install
+
 # RUN echo '$USER ALL= NOPASSWD: ALL' > /etc/sudoers.d/all_no_password
 # ADD some_file /opt/some_file
+# VOLUME $REPO_DIR
 WORKDIR $REPO_DIR
+# USER $USER
 CMD echo "+ ls" && ls && bash
 EOF
 
