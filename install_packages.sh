@@ -200,7 +200,8 @@ apt-get install minidlna
 
 apt-get -install telegram-cli
 # Install also: Viber, Skype, Telegram, Teamviewer
-# For teamviewer:
+# For teamviewer see issue with login manager/display manager/session:
+# https://community.teamviewer.com/t5/Linux-EN/TeamViewer-13-amp-debian-9-3-NO-GUI/td-p/29138
 # sudo apt-get install lightdm && sudo systemctl disable lightdm.service
 # To run teamviewer:
 # 1) Start lightdm manually from my GUI session: systemctl start lightdm.service
