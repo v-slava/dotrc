@@ -81,13 +81,13 @@ def main():
     #       os.path.expandvars('$DOTRC_S/bin/gcc'),
     # ]
     args = parse_cmd_line_args()
-    if args.statistics:
-        show_statistics(args.input_file)
-    elif args.exclude_compilers:
+    if args.exclude_compilers:
         print('Statistics before filtering:\n')
         show_statistics(args.input_file)
         filter_compilers(args.input_file, args.exclude_compilers)
         print('\nStatistics after filtering:\n')
+        show_statistics(args.input_file)
+    elif args.statistics:
         show_statistics(args.input_file)
 
 if __name__ == '__main__':
