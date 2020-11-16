@@ -1,7 +1,7 @@
 /* EVAL REGION BEGINS HERE: |* |
  * let g:My_eval_var = "MyRunShellCmd clang -g3 -Weverything -pedantic
  * \ -pthread traffic_generator.c -o /tmp/traffic_generator.c.out &&
- * \ /tmp/traffic_generator.c.out"
+ * \ /tmp/traffic_generator.c.out -h"
  * EVAL REGION ENDS HERE. */
 
 #include <string.h>
