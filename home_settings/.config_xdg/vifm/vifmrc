@@ -392,6 +392,7 @@ mark t ~/temporary
 mark T /tmp
 mark m /media
 mark w /media/files/workspace
+mark l /media/files/workspace/linux
 mark o $DOTRC
 mark O $DOTRC_S
 mark u /media/usb

@@ -2665,7 +2665,14 @@ break.set 0x12345678 /condition register(r0)==0x12345678
 go.till register(r0)==0x12
 r.s r4 <value>
 
+# Crash the kernel:
+# Use SysRq key (the key combination to dump core is Alt+SysRq+C).
+# In minicom: ctrl-a, z, f, c
+# See sysrq_handle_crash() in linux kernel sources
+echo c | sudo tee -a /proc/sysrq-trigger
+
 # Core dump:
+# See also crash utility apart from gdb.
 # CONFIG_COREDUMP=y
 # grep core_pattern linux_src/Documentation/sysctl/kernel.txt
 # cat /proc/sys/kernel/core_pattern
@@ -2675,6 +2682,10 @@ echo "core.dump.%e.%p" | sudo tee /proc/sys/kernel/core_pattern
 ulimit -c unlimited
 ulimit -a
 # now launch executable crashed..
+# See also:
+echo 1 > /proc/sys/kernel/panic_on_oops
+# It is the same as using kernel config PANIC_ON_OOPS
+# and the same as kernel cmd line option "oops=panic".
 
 # Restore deleted file:
 mkdir restore
