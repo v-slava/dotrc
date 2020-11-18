@@ -325,6 +325,17 @@ colordiff -uN "$@"
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
+# Linux works with watchdog if CONFIG_WATCHDOG is set.
+# If nobody opens /dev/watchdog or CONFIG_WATCHDOG is not set, the state of
+# watchdog HW depends on uboot.
+# When some process opens /dev/watchdog, watchdog timer is started and must be
+# constantly pinged by userspace afterwards to avoid system reset.
+# Just 1 process can open /dev/watchdog (rest get error "resource busy").
+# When process closes /dev/watchdog, watchdog will be disabled unless
+# CONFIG_WATCHDOG_NOWAYOUT is set or driver supports "magic close" feature
+# (in this case we need to write 'V' before closing /dev/watchdog).
+# See also: linux/Documentation/watchdog/watchdog-api.rst
+
 # Do not turn screen off:
 xset s off -dpms
 
@@ -1461,6 +1472,9 @@ git remote add torvalds git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/l
 git branch --set-upstream-to=torvalds/master master
 git remote add stable   git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 git fetch stable
+
+# git clone official uboot (u-boot):
+git clone https://gitlab.denx.de/u-boot/u-boot.git
 
 # git lfs workflow:
 sudo apt-get install git-lfs # updates git system config in /etc/gitconfig
@@ -2686,6 +2700,8 @@ ulimit -a
 echo 1 > /proc/sys/kernel/panic_on_oops
 # It is the same as using kernel config PANIC_ON_OOPS
 # and the same as kernel cmd line option "oops=panic".
+# For linux kernel oops/crash/core dump see:
+# linux/Documentation/admin-guide/kdump/kdump.rst
 
 # Restore deleted file:
 mkdir restore
@@ -2766,6 +2782,8 @@ cat /etc/resolv.conf
 ls /dev/disk/by-uuid
 sudo blkid /dev/sda6
 lsblk
+mtdinfo -a
+cat /proc/mtd
 
 # Linux directories rights access:
 # If no access to file then open() syscall fails.
@@ -2780,6 +2798,8 @@ lsblk
 
 # Check whether swap is enabled (empty output means "no swap"):
 swapon --show
+swapon {--summary|-s}
+cat /proc/swaps
 
 # Format partition as a swap:
 mkswap -L linux_swap /dev/sdaX
