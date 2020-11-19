@@ -9,7 +9,7 @@ order += "cpu_usage"
 # order += "ipv6"
 order += "disk /"
 order += "disk /media/files"
-# order += "disk /media/sdb1"
+# order += "disk /media/usb"
 # order += "run_watch DHCP"
 # order += "run_watch VPN"
 # order += "wireless wlan0"
@@ -66,8 +66,8 @@ disk "/media/files" {
 	format = "files: %free / %total"
 }
 
-disk "/media/sdb1" {
-	format = "sdb1: %free / %total"
+disk "/media/usb" {
+	format = "usb: %free / %total"
 }
 
 cpu_usage {
