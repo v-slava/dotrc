@@ -1383,7 +1383,6 @@ let g:which_key_map.d = {'name' : '+diff',
 
 let g:which_key_map.e = {'name' : '+errors',
 \   'c' : [':call My_goto_error("current")', 'current error'],
-\   'l' : [':lopen', 'location list errors'],
 \   'm' : [':botright pedit ' . g:My_vim_errors_file . ' | set readonly',
 \             'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
