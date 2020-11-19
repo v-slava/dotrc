@@ -1,7 +1,6 @@
 /* EVAL REGION BEGINS HERE: |* |
  * let g:My_eval_var = "MyRunShellCmd clang -g3 -Weverything -pedantic
- * \ -pthread traffic_generator.c -o /tmp/traffic_generator.c.out &&
- * \ /tmp/traffic_generator.c.out -h"
+ * \ -pthread traffic_generator.c -o ~/my/traffic_generator"
  * EVAL REGION ENDS HERE. */
 
 #include <string.h>
@@ -378,13 +377,17 @@ sock_addr.sll_addr[0], sock_addr.sll_addr[1], sock_addr.sll_addr[2],
 sock_addr.sll_addr[3], sock_addr.sll_addr[4], sock_addr.sll_addr[5]);
         */
 
+        // Skip packets from do_send():
+        if (sock_addr.sll_pkttype == PACKET_OUTGOING)
+            continue;
+
         if ((size_t)num_bytes != recv_size) {
             /* printf("Expected: %zu bytes, received: %zd bytes.\n", */
             /*         expected_num_bytes, num_bytes); */
             continue;
         }
-        if (memcmp(eh->ether_dhost, my_mac, ETH_ALEN) != 0)
-            continue; // Wrong destination MAC -> ignore
+        // if (memcmp(eh->ether_dhost, my_mac, ETH_ALEN) != 0)
+        //     continue; // Wrong destination MAC -> ignore
 
         if (iter_receiver == 0) {
             get_time(&start);

@@ -533,7 +533,7 @@ udevadm info -q path --path /sys/devices/soc/...
 udevadm control -R
 # debug udev rules (note: prefix "/sys" is missing):
 udevadm test /devices/pci0000:00/0000:00:14.0/usb1/1-3
-# debug /dev/ nodes creation (mknode, udev):
+# debug /dev/ nodes creation (mknod, udev):
 udevadm monitor --property
 # test udev rule:
 udevadm control --reload-rules
