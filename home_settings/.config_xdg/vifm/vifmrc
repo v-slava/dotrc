@@ -480,8 +480,8 @@ nmap cd :cd<SPACE>
 nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
 
-nmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR>
-vmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR>
+nmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>
+vmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>
 
 nnoremap ot :!objdump.sh -t ./%c | c++filt | less -i<CR>
 nnoremap od :!objdump.sh -D ./%c | c++filt | less -i<CR>

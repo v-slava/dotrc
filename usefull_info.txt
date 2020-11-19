@@ -1476,6 +1476,10 @@ git fetch stable
 # git clone official uboot (u-boot):
 git clone https://gitlab.denx.de/u-boot/u-boot.git
 
+# git clone official buildroot:
+git clone https://git.busybox.net/buildroot
+git clone git://git.busybox.net/buildroot
+
 # git lfs workflow:
 sudo apt-get install git-lfs # updates git system config in /etc/gitconfig
 mkdir git_repo_root && cd git_repo_root && git init .
