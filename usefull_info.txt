@@ -117,6 +117,8 @@ docker ps -a
 docker rm CONTAINER_ID
 # Delete all not executing container images:
 docker rm $(docker ps -a -q -f status=exited)
+# Show all built images:
+docker image ls
 
 # (generate) configure xorg:
 X -configure
@@ -1154,9 +1156,6 @@ masterpdfeditor5
 # Extract attachment from encrypted pdf:
 pdftk <input_file.pdf> input_pw <password> unpack_files
 
-# Extract images from pdf file:
-mkdir /tmp/images_folder && pdfimages -all input.pdf /tmp/images_folder
-
 # cut pages range from pdf:
 pdftk A=in_1.pdf input_pw='PASSWORD' B=in_2.pdf cat A3-5 B3left A2right output out.pdf
 # rotate pages in pdf:
@@ -1165,7 +1164,7 @@ pdftk in.pdf cat 1-endright output out.pdf
 # apt-get install imagemagick
 convert page*.png mydoc.pdf
 # extract images from pdf:
-pdfimages input.pdf output_folder
+pdfimages [-all] input.pdf output_folder
 
 # compress (minimize) image size (jpg, png):
 mogrify -quality "80%" -resize 1048x768 file.jpg
@@ -1335,6 +1334,9 @@ pactl -- set-sink-volume INDEX +3%
 
 # get volume:
 LANGUAGE=en pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
+
+# show date and time for scripts:
+date '+%Y_%m_%d__%H_%M_%S_%N'
 
 # Set time 3 hours back:
 date -s "$(date -R -d '-3 hour')"
