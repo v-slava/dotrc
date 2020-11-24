@@ -1562,7 +1562,7 @@ svn revert FILE
 # svn for "git checkout -- .":
 svn revert -R .
 # svn for "git clean -fdx":
-svn status | grep '^?      ' | cut -d' ' -f8- | xargs rm -rf
+$DOTRC/bin/svn_clean.sh
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
 # svn for "git show SHA":
