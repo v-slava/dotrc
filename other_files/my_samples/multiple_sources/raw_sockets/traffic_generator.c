@@ -1,12 +1,16 @@
 /* EVAL REGION BEGINS HERE: |* |
- * let g:My_eval_var = "MyRunShellCmd clang -g3 -Weverything -pedantic
+ * let g:My_eval_var = "MyRunShellCmd clang -g3 -Weverything -pedantic -lgmp
  * \ -pthread traffic_generator.c -o ~/my/traffic_generator"
  * EVAL REGION ENDS HERE. */
+
+// sudo apt-get install libgmp-dev # libgmp10-doc
+// See also: https://gmplib.org/manual/Integer-Functions
 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdatomic.h>
 #include <time.h>
@@ -21,6 +25,8 @@
 #include <net/if.h>
 #include <linux/if_packet.h>
 #include <netinet/ether.h>
+
+#include <gmp.h>
 
 #define NO_RETURN __attribute__((noreturn))
 #define UNUSED(var) ((void)(var))
@@ -430,19 +436,44 @@ sock_addr.sll_addr[3], sock_addr.sll_addr[4], sock_addr.sll_addr[5]);
             printf("Receiver: bits received: %zu\n", total_bits_received);
     }
 
-    unsigned long long start_ns = (unsigned long long)start.tv_sec
-                            * 1000000000ull + (unsigned long long)start.tv_nsec;
-    unsigned long long end_ns = (unsigned long long)end.tv_sec
-                              * 1000000000ull + (unsigned long long)end.tv_nsec;
-    unsigned long long delta_ns = end_ns - start_ns;
-    unsigned long long throughput_bits_per_sec = total_bits_received
-                                                 * 1000000000ull / delta_ns;
+    // 64 bit integers can hold more than 500 years in nanoseconds.
+    uint64_t ns_in_sec = 1000000000ull;
+    uint64_t start_ns = (uint64_t)start.tv_sec * ns_in_sec
+                                               + (uint64_t)start.tv_nsec;
+    uint64_t end_ns = (uint64_t)end.tv_sec * ns_in_sec
+                                           + (uint64_t)end.tv_nsec;
+    uint64_t delta_ns = end_ns - start_ns;
+
+    // Here we can get multiplication overflow for unsigned long long on more
+    // than 20 seconds of 1Gbit network throughput.
+    // uint64_t throughput_bits_per_sec = total_bits_received * ns_in_sec
+    //                                                        / delta_ns;
+#define mpz_init_set_u64(mpz, val) do { \
+    char buf[32];                       \
+    sprintf(buf, "%"PRIu64, (val));     \
+    mpz_init_set_str((mpz), buf, 10);   \
+} while (0)
+    mpz_t total_bits_received___mpz;
+    mpz_init_set_u64(total_bits_received___mpz, (uint64_t)total_bits_received);
+    mpz_t mul___mpz;
+    mpz_init(mul___mpz); // mul___mpz is 0.
+    mpz_mul_ui(mul___mpz, total_bits_received___mpz, (unsigned long)ns_in_sec);
+    mpz_clear(total_bits_received___mpz);
+    mpz_t delta_ns___mpz;
+    mpz_init_set_u64(delta_ns___mpz, delta_ns);
+    mpz_t div___mpz;
+    mpz_init(div___mpz);
+    mpz_tdiv_q(div___mpz, mul___mpz, delta_ns___mpz);
+    mpz_clear(delta_ns___mpz);
+    mpz_clear(mul___mpz);
+    unsigned long throughput_bits_per_sec = mpz_get_ui(div___mpz);
+    mpz_clear(div___mpz);
 
     size_t total_bits_sent = iter_receiver * packet_size;
     double lost_x100 = (double)(total_bits_lost * 100);
     double lost_percent = lost_x100 / (double)total_bits_sent;
     printf("\nReceiver: total bits: sent %zu, received %zu, lost %zu"
-           " (%f%%), throughput %llu bits/sec\n\n", total_bits_sent,
+           " (%f%%), throughput %lu bits/sec\n\n", total_bits_sent,
            total_bits_received, total_bits_lost, lost_percent,
            throughput_bits_per_sec);
 
