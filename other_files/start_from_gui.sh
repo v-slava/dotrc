@@ -11,7 +11,11 @@ shift
 OUTPUT="$("$EXECUTABLE" "$@" 2>&1)"
 RET=$?
 if [ $RET -ne 0 ] && [ "$ZENITY" = "true" ]; then
-    zenity --error --title "Command \"$EXECUTABLE $@\" failed with exit code $RET. Output:" \
-           --text "$OUTPUT"
+    LOG=/tmp/start_from_gui_log___$(date '+%Y_%m_%d__%H_%M_%S_%N')
+    echo -e "------------------ START ---------------------------------" >> $LOG
+    echo "Command \"$EXECUTABLE $@\" failed with exit code $RET. Output:" >> $LOG
+    echo -e "{$OUTPUT}" >> $LOG
+    echo -e "------------------- END ----------------------------------" >> $LOG
+    zenity --error --title "Command failed" --text "See $LOG for details"
 fi
 exit $RET
