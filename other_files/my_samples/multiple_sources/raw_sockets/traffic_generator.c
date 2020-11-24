@@ -23,6 +23,7 @@
 #include <netinet/ether.h>
 
 #define NO_RETURN __attribute__((noreturn))
+#define UNUSED(var) ((void)(var))
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpadded"
@@ -386,6 +387,7 @@ sock_addr.sll_addr[3], sock_addr.sll_addr[4], sock_addr.sll_addr[5]);
             /*         expected_num_bytes, num_bytes); */
             continue;
         }
+        UNUSED(eh);
         // if (memcmp(eh->ether_dhost, my_mac, ETH_ALEN) != 0)
         //     continue; // Wrong destination MAC -> ignore
 
