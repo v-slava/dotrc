@@ -1021,11 +1021,14 @@ remake SOME_OPTIONS
 # Variables "V" or "VERBOSE" are normally analysed by Makefiles:
 make V=1
 make VERBOSE=1
-# Create linux man pages (docs):
-make mandocs
-make installmandocs # installs in /usr/local/man/man9
+
 # Get info about all targets (linux kernel only):
 make help
+# Get minimal default kernel config:
+make allnoconfig
+# Get optimized by size kernel config for embedded systems, the binary built is
+# smaller than allnoconfig. See commit 0da1d4a0b9516adb2acc4841e9f6da6618f47f4e:
+make tinyconfig
 # Execute linux kernel self tests:
 make kselftest
 # See also ktest.pl (build kernel, boot it on remote machine and run some
@@ -1690,7 +1693,7 @@ apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME
 # On TFTP client:
-curl tftp://SERVER_IP_ADDRESS/FILE_NAME
+curl tftp://SERVER_IP_ADDRESS/FILE_NAME -o OUTPUT_FILE
 tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
 # See logs in /var/log/syslog
@@ -2793,6 +2796,12 @@ sudo blkid /dev/sda6
 lsblk
 mtdinfo -a
 cat /proc/mtd
+# Erase first 42 blocks from MTD device:
+flash_erase /dev/mtdXX 0 42
+# Same as "dd if=/dev/mtdXX":
+nanddump -a /dev/mtdXX
+# Write data to MTD device:
+echo hello | nandwrite -p /dev/mtdXX -
 
 # Linux directories rights access:
 # If no access to file then open() syscall fails.
