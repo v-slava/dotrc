@@ -289,6 +289,8 @@ bindsym $WIN+h        exec --no-startup-id exec $START xmms2 seek -3
 bindsym $WIN+l        exec --no-startup-id exec $START xmms2 seek +3
 bindsym $WIN+0        exec --no-startup-id exec $START xmms2 seek 0
 
+bindsym $Alt_R+a exec --no-startup-id exec $START pavucontrol
+
 # volume hotkeys:
 bindsym XF86AudioMute        exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh 0%
 bindsym XF86AudioRaiseVolume exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh +5%

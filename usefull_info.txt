@@ -2802,8 +2802,12 @@ cat /proc/mtd
 flash_erase /dev/mtdXX 0 42
 # Same as "dd if=/dev/mtdXX":
 nanddump -a /dev/mtdXX
-# Write data to MTD device:
+# Write data to MTD device (prior flash_erase may be necessary, otherwise we
+# will get ECC errors while reading from device, we can only change 1 -> 0):
 echo hello | nandwrite -p /dev/mtdXX -
+# Write FILE to MTD device (no prior erase required, FILE must be multiple of
+# "Minimum input/output unit size", see "mtdinfo -a"):
+flashcp FILE /dev/mtdXX
 
 # Linux directories rights access:
 # If no access to file then open() syscall fails.
