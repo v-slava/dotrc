@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# See also $DOTRC/other_files/uboot_mem_dump_extract_strings.sh
+# See also $DOTRC/other_files/my_samples/single_sources/uboot_mem_dump_extract_strings.sh
 
 import sys
 f = sys.argv[1]

@@ -327,6 +327,10 @@ colordiff -uN "$@"
 # execute COMMAND every 2 seconds, showing output fullscreen and highlight diff:
 watch -d -n 2 COMMAND
 
+# A tool to dump contents of /dev/mem:
+https://github.com/tchebb/memdump
+# ./memdump 0x1234abcd 3000 | xxd
+
 # Linux works with watchdog if CONFIG_WATCHDOG is set.
 # If nobody opens /dev/watchdog or CONFIG_WATCHDOG is not set, the state of
 # watchdog HW depends on uboot.
@@ -467,6 +471,9 @@ grep -m 1 OTHER_OPTIONS
 # Find \r symbols:
 grep -r $'\r'
 
+# Remove duplicates from input list:
+echo -e 'item1\nitem2\nitem1' | sort -u
+
 # Print symbols from ELF fils and sort them by their size:
 nm [--demangle] --print-size --size-sort file.elf
 
@@ -494,7 +501,7 @@ setenv VARIABLE
 saveenv
 reset
 if test $VARIABLE = "VALUE" ; then echo "equals" ; else echo "not equals" ; fi
-bootm ADDRESS [ADDITIONAL_ARGS]
+boot[mz] ADDRESS [ADDITIONAL_ARGS]
 boot
 
 # If libreoffice draw is slow (with grid enabled), turn on the following settings:
@@ -1694,6 +1701,9 @@ sudo service nfs-kernel-server restart
 apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME
+# Use the following portable tftp server for windows:
+# https://www.softpedia.com/get/PORTABLE-SOFTWARE/Internet/Servers/Tftpd32-Portable.shtml#download
+# See also: $DOTRC/windows/desktop_bat_files/download_from_miniserve.bat
 # On TFTP client:
 curl tftp://SERVER_IP_ADDRESS/FILE_NAME -o OUTPUT_FILE
 tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
@@ -1835,7 +1845,8 @@ zcat /proc/config.gz
 pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
 # printk "array" format specifier: %5ph - print 5 bytes in hex.
-# printk "function pointer" format specifier: Documentation/core-api/printk-formats.rst
+# printk "function pointer" format specifier:
+# Documentation/core-api/printk-formats.rst
 # For dynamic debugging:
 pr_debug(char *format, ...);
 # To enable output from pr_debug() for kobject_uevent.c:
@@ -1849,8 +1860,18 @@ dev_dbg(struct device *dev, char *format, ...);
 # Set log buffer (dmesg) size:
 log_buf_len=n # Here "n" is a power of 2 number
 
-# Get linux kernel printk ring buffer address (in hex):
+# Get linux kernel printk ring buffer VIRTUAL address (in hex):
 readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
+# Usually VIRTUAL address looks like 0xc057b3f0. Virtual linux kernel memory
+# mapping starts from 0xc0000000 => offset = 0x0057b3f0. In DTB for my board:
+#
+# memory@80000000 {
+# 	device_type = "memory";
+# 	reg = <0x80000000 0x20000000>;
+# };
+#
+# PHYSICAL address = start_of(PHYSICAL memory) + offset =
+# = 0x80000000 + 0x0057b3f0
 # See also $DOTRC/bin/uboot_mem_dump_extract_strings.sh
 
 # Enable all (debug-level) messages:

@@ -1387,7 +1387,7 @@ let g:which_key_map.e = {'name' : '+errors',
 \             'my list errors'],
 \   'n' : [':call My_goto_error("next")', 'next error'],
 \   'p' : [':call My_goto_error("previous")', 'previous error'],
-\   'q' : [':copen', 'quickfix list errors'],
+\   'q' : [':copen', 'quickfix list errors (restore errors window)'],
 \ }
 
 " :EditVifm :SplitVifm :VsplitVifm :DiffVifm :TabVifm
