@@ -194,6 +194,9 @@ apt-get install gvncviewer
 # Install media sharing server for smart TV (DLNA):
 apt-get install minidlna
 
+# Record video from screen during lection / meeting / ... :
+apt-get install simplescreenrecorder
+
 # fzy:
 # apt-get install fzy
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
