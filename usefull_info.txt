@@ -503,6 +503,8 @@ reset
 if test $VARIABLE = "VALUE" ; then echo "equals" ; else echo "not equals" ; fi
 boot[mz] ADDRESS [ADDITIONAL_ARGS]
 boot
+# See also bootz command example in comments in:
+# $DOTRC/other_files/my_samples/single_sources/build_initramfs.sh
 
 # If libreoffice draw is slow (with grid enabled), turn on the following settings:
 Tools -> Options -> View -> Use OpenGL for all rendering (on restart)
@@ -987,17 +989,17 @@ rustc -O -Z print-link-args main.rs
 # show lines in file (head, tail):
 tail -n +${START_LINE} | head -n $NUM_LINES
 
-# get line with specified number from file:
-sed -n '<line number>p' < file
+# get line with specified number from FILE:
+sed -n '<line number>p' < FILE
 
-# Delete (remove) lines matching regex from file:
-sed -i OLD_FILE -e '/REGEX/d'
+# Delete (remove) lines matching regex from FILE:
+sed -i FILE -e '/REGEX/d'
 
-# Delete specified lines interval from file:
-sed -i OLD_FILE -e '<start line>,<end line>d'
+# Delete specified lines interval from FILE:
+sed -i FILE -e '<start line>,<end line>d'
 
-# Insert specified line into text file under a given line number:
-sed -i OLD_FILE -e '<line number>i<text to be inserted>'
+# Insert specified line into text FILE under a given line number:
+sed -i FILE -e '<line number>i<text to be inserted>'
 # A line, which is currently under <line number> will be
 # under <line number>+1 after execution.
 
@@ -1029,6 +1031,10 @@ remake SOME_OPTIONS
 make V=1
 make VERBOSE=1
 
+# Linux kernel command line arguments (options, parameters):
+linux/Documentation/admin-guide/kernel-parameters.rst
+linux/Documentation/admin-guide/kernel-parameters.txt
+
 # Get info about all targets (linux kernel only):
 make help
 # Get minimal default kernel config:
@@ -1043,7 +1049,7 @@ make kselftest
 # See also: LTP
 # See also: https://kernelci.org/
 
-# linux kernel boot sequence (tags: startup, debugging, jtag, system):
+# linux kernel boot sequence (process, tags: startup, debugging, jtag, system):
 uboot:
     boot_jump_linux()
 linux/arch/arm/boot/compressed/vmlinux (decompression stub),
@@ -1058,6 +1064,8 @@ linux/vmlinux, address offset 0:
     __mmap_switched
     start_kernel
     smp_init
+# See also comments in:
+# $DOTRC/other_files/my_samples/single_sources/build_initramfs.sh
 
 # linux kernel disable optimizations (CFLAGS):
 CFLAGS_file_name.o := -O0
@@ -1295,6 +1303,7 @@ zip -r folder.zip folder/
 
 # Create initramfs:
 mkinitramfs -o initramfs.igz
+# See also $DOTRC/other_files/my_samples/single_sources/build_initramfs.sh
 
 # Pack initramfs:
 cd EXTRACTED_INITRD && find | cpio -o -H newc | gzip -9 > /path/to/initramfs.igz
@@ -1491,6 +1500,10 @@ git clone https://gitlab.denx.de/u-boot/u-boot.git
 # git clone official buildroot:
 git clone https://git.busybox.net/buildroot
 git clone git://git.busybox.net/buildroot
+
+# git clone official busybox:
+git clone https://git.busybox.net/busybox/
+git clone git://busybox.net/busybox.git
 
 # git lfs workflow:
 sudo apt-get install git-lfs # updates git system config in /etc/gitconfig
@@ -1872,7 +1885,7 @@ readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
 #
 # PHYSICAL address = start_of(PHYSICAL memory) + offset =
 # = 0x80000000 + 0x0057b3f0
-# See also $DOTRC/bin/uboot_mem_dump_extract_strings.sh
+# See also CONFIG_AUTO_ZRELADDR, $DOTRC/bin/uboot_mem_dump_extract_strings.sh
 
 # Enable all (debug-level) messages:
 echo 7 > /proc/sys/kernel/printk
@@ -1973,6 +1986,9 @@ mount -t proc none /proc
 
 # mount sysfs (/sys):
 mount -t sysfs none /sys
+
+# mount devpts (/dev/pts):
+mount -t devpts none /dev/pts
 
 # Linux kernel find driver that controls /dev/* (devtmpfs) file:
 # determine major number by running:
