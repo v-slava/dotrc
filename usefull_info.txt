@@ -505,6 +505,25 @@ boot[mz] ADDRESS [ADDITIONAL_ARGS]
 boot
 # See also bootz command example in comments in:
 # $DOTRC/other_files/my_samples/single_sources/build_initramfs.sh
+# bootz [addr [initrd[:size]] [fdt]]
+#     - boot Linux zImage stored in memory
+# 	The argument 'initrd' is optional and specifies the address
+# 	of the initrd in memory. The optional argument ':size' allows
+# 	specifying the size of RAW initrd.
+# 	When booting a Linux kernel which requires a flat device-tree
+# 	a third argument is required which is the address of the
+# 	device-tree blob. To boot that kernel without an initrd image,
+# 	use a '-' for the second argument. If you do not pass a third
+# 	a bd_info struct will be passed instead
+# bootm [addr [arg ...]]
+#     - boot application image stored in memory
+# 	passing arguments 'arg ...'; when booting a Linux kernel,
+# 	'arg' can be the address of an initrd image
+# 	When booting a Linux kernel which requires a flat device-tree
+# 	a third argument is required which is the address of the
+# 	device-tree blob. To boot that kernel without an initrd image,
+# 	use a '-' for the second argument. If you do not pass a third
+	a bd_info struct will be passed instead
 
 # If libreoffice draw is slow (with grid enabled), turn on the following settings:
 Tools -> Options -> View -> Use OpenGL for all rendering (on restart)
@@ -1297,6 +1316,9 @@ echo "stdin args" | xargs -I replace_str CMD args_before replace_str args_after
 
 # xargs spaces (files with spaces, print size in bytes):
 find -type f -print0 | xargs -0 du -b
+
+# "du -b FILE" alternative (e.g. busybox doesn't support "du -b FILE"):
+wc -c < FILE
 
 # Pack (zip) folder recursively:
 zip -r folder.zip folder/

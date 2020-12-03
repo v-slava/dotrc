@@ -94,12 +94,17 @@ where executable
 # Check whether file/folder/directory exists:
 if not exist FILE (
     CMD1
-) else (
+) else if exist FILE2 (
     CMD2
+) else (
+    CMD3
 )
 
 # Delete directory if exists:
 if exist C:\some\directory\nul rmdir /s /q C:\some\directory
+
+# Check if directory contains at least 1 file:
+>nul 2>nul dir /a-d "C:\some\directory\*" && (echo have_files) || (echo no_files)
 
 # Print current working directory (echo $PWD):
 echo %cd%

@@ -64,11 +64,48 @@ mount -t devtmpfs none /dev
 EOF
 chmod +x $INITRAMFS_DIR/etc/init.d/rcS
 
+# cat << EOF > /tmp/hello.c
+# #include <stdio.h>
+# int main(void) {
+#     puts("hello");
+#     return 0;
+# }
+# EOF
+# ${CROSS_COMPILE}gcc /tmp/hello.c -o $INITRAMFS_DIR/hello.c.out
+# # Note: not a static compilation, command:
+# # readelf -d $INITRAMFS_DIR/hello.c.out | grep NEEDED
+# # reports that only libc.so.6 is required.
+# # The following allows to run hello.c.out:
+# mkdir $INITRAMFS_DIR/lib
+# LIB=/usr/arm-linux-gnueabihf/lib
+# cp -d $LIB/ld-linux-armhf.so.3 $INITRAMFS_DIR/lib/
+# cp -d $(realpath $LIB/ld-linux-armhf.so.3) $INITRAMFS_DIR/lib/
+# cp -d $LIB/libc.so.6 $INITRAMFS_DIR/lib/
+# cp -d $(realpath $LIB/libc.so.6) $INITRAMFS_DIR/lib/
+# # The following additionally allows busybox to work without CONFIG_STATIC=y:
+# cp -d $LIB/libm.so.6 $INITRAMFS_DIR/lib/
+# cp -d $(realpath $LIB/libm.so.6) $INITRAMFS_DIR/lib/
+# cp -d $LIB/libresolv.so.2 $INITRAMFS_DIR/lib/
+# cp -d $(realpath $LIB/libresolv.so.2) $INITRAMFS_DIR/lib/
+
 make CONFIG_PREFIX=$INITRAMFS_DIR install
 cd $INITRAMFS_DIR
 find | cpio -o -H newc -R root:root > $INITRAMFS_IMG # | gzip -9
 # In linux kernel configuration:
 # CONFIG_INITRAMFS_SOURCE="$INITRAMFS_IMG"
+# Without this config we must use:
+# bootz 0x85000000 $INITRAMFS_IMAGE_ADDR 0x84000000
+# But uboot may be misconfigured and report:
+#
+# Wrong Ramdisk Image Format
+# Ramdisk image is corrupt or invalid
+#
+# So better stick to CONFIG_INITRAMFS_SOURCE.
+#
+# To debug early userspace (/sbin/init), use the following kernel command line
+# argument: init=/my_script.sh
+# Make /my_script.sh executable, mount /dev, echo some_info > /dev/YOUR_TTY,
+# pat attention to exit code of /my_script.sh that linux prints.
 #
 # In uboot command line:
 # setenv bootargs 'console=ttymxc0,115200' && tftpboot 0x85000000
