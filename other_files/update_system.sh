@@ -11,7 +11,8 @@ set -x
 # sudo update-pepperflashplugin-nonfree --install
 sudo apt-get clean
 sudo apt-get update
-sudo apt-get upgrade --yes
+sudo apt-get upgrade --with-new-pkgs --yes
+sudo apt-get autoremove --purge --yes
 if which youtube-dl 1>/dev/null ; then
     pip3 install --user --upgrade youtube_dl
 fi
