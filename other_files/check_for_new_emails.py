@@ -83,6 +83,24 @@ for item in os.listdir(pass_dir):
         password = f.read()[len('Pass "'):-2]
     connection = imaplib.IMAP4_SSL(email_settings.host, email_settings.port)
     connection.login(email_settings.user, password)
+    # for i in connection.list()[1]:
+    #     folder = i.decode('utf8').split('"')[3]
+    #     print(f"'{folder}'")
+    # sys.exit()
+
+    # connection.select(mailbox = 'INBOX', readonly = False)
+    # ret, data = connection.search(None, 'UnSeen')
+    # check('search')
+    # for num in data[0].split():
+    #     ret, data = connection.fetch(num, '(UID)') # data == [b'34 (UID 11849)']
+    #     check('fetch')
+    #     msg_uid = re.match('\d+ \(UID (?P<uid>\d+)\)',
+    #             data[0].decode('utf8')).group('uid')
+    #     result = connection.uid('COPY', msg_uid, '[Gmail]/Spam')
+    #     if result[0] != 'OK':
+    #         raise Exception(f'IMAP COPY failed: result = {result}')
+    # connection.close()
+
     connection.select(mailbox = 'INBOX', readonly = True)
     ret, data = connection.search(None, 'UnSeen')
     check('search')
