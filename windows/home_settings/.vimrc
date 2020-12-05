@@ -489,20 +489,26 @@ function! My_is_linux_kernel_source_file(full_path)
         return 0
     endif
     let l:full_path = system("realpath '" . a:full_path . "'")[:-2]
-    let l:idx_linux = stridx(l:full_path, "linux")
-    if l:idx_linux == -1
-        return 0
-    endif
-    let l:idx_slash = stridx(l:full_path, "/", l:idx_linux)
-    let l:linux_root_dir = strpart(l:full_path, 0, l:idx_slash) . "/"
     let l:subdirs = ['arch', 'crypto', 'drivers', 'fs', 'init', 'ipc', 'kernel',
                 \ 'mm', 'net', 'security', 'sound']
-    for l:subdir in l:subdirs
-        if ! isdirectory(l:linux_root_dir . l:subdir)
+    let l:cur_dir = l:full_path
+    while 1
+        let l:idx = strridx(l:cur_dir, '/')
+        if l:idx <= 0
             return 0
         endif
-    endfor
-    return 1
+        let l:cur_dir = strpart(l:cur_dir, 0, l:idx)
+        let l:subdir_not_found = 0
+        for l:subdir in l:subdirs
+            if ! isdirectory(l:cur_dir . '/' . l:subdir)
+                let l:subdir_not_found = 1
+                break
+            endif
+        endfor
+        if l:subdir_not_found == 0
+            return 1
+        endif
+    endwhile
 endfunction
 
 function! My_grep_in_dir(dir)
