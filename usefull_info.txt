@@ -918,6 +918,9 @@ wireshark -X lua_script:/path/to/plugin/file.lua
 # wireshark IP filter:
 (ip.src == SOME_IP) || (ip.dst == SOME_IP)
 
+# wireshark MAC address filter:
+eth.addr == MAC # results for both SRC and DST MAC
+
 # port IP filter:
 (tcp.port == 443) || (udp.port == 23)
 

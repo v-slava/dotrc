@@ -29,7 +29,7 @@ FIFO=/tmp/wireshark_tcpdump_fifo
 rm -f $FIFO
 mkfifo $FIFO
 
-tcpdump -i "$1" -w - -U > $FIFO &
+tcpdump -i "$1" -w - -U > $FIFO & # -I
 cat $FIFO | wireshark -k -i -
 killall tcpdump
 rm -f $FIFO
