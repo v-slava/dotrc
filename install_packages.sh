@@ -138,7 +138,8 @@ apt-get install libnotify-bin dunst
 # Install vim instance, which is able to access X clipboard:
 apt-get install neovim
 apt-get install --install-recommends python3-pip
-pip3 install --user neovim youtube_dl psutil
+apt-get install libcairo2-dev # needed for $DOTRC/other_files/update_system.sh
+pip3 install neovim youtube_dl psutil # --user
 
 # Install email client:
 apt-get install evolution
