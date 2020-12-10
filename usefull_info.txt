@@ -1611,14 +1611,20 @@ svn up -r REVISION # svn update --revision REVISION
 svn revert FILE
 # svn for "git checkout -- .":
 svn revert -R .
+# svn for "git checkout master":
+svn switch https://.../log4j/trunk
+# svn for "git checkout -b new_branch" (creates commit with no changes in
+# new_branch):
+svn copy "$(svn info | grep '^URL: ' | cut -d' ' -f2)" NEW_BRANCH_URL \
+         [-m 'Creating a new branch: new_branch']
+# svn for "git push REMOTE --delete BRANCH" (delete remote branch):
+svn rm NEW_BRANCH_URL
 # svn for "git clean -fdx":
 $DOTRC/bin/svn_clean.sh
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
 # svn for "git show SHA":
 svn diff -c REV # for message: svn log | less # search for REV
-# svn for "git checkout master":
-svn switch https://.../log4j/trunk
 # svn for "git blame FILE":
 svn blame FILE
 # svn for "git branch -a":
@@ -2251,7 +2257,7 @@ git config user.email 'your_email@gmail.com'
 # git show parent commits (parents):
 git log --pretty=%P -n 1 HEAD
 
-# git delete remote branch (from remote repository):
+# git delete/remove remote branch (from remote repository):
 git push REMOTE --delete BRANCH
 git push REMOTE :BRANCH
 
