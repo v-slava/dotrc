@@ -1625,8 +1625,10 @@ svn rm NEW_BRANCH_URL
 $DOTRC/bin/svn_clean.sh
 # svn for "git tag":
 svn ls -v ^/logging/log4j/tags
-# svn for "git show SHA":
+# svn for "git show SHA" (in the same branch):
 svn diff -c REV # for message: svn log | less # search for REV
+# svn for "git show SHA" (in another branch):
+svn diff -r REV_BEFORE:REV_AFTER URL
 # svn for "git blame FILE":
 svn blame FILE
 # svn for "git branch -a":

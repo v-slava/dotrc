@@ -95,11 +95,12 @@ EOF
                 fi
             fi
             ;;
-        *.jar) pv "$FILE_FULL_PATH" | jar x ;;
-        *.tar)                pv "$FILE_FULL_PATH" | tar x ;;
-        *.tgz | *.tar.gz)    pv "$FILE_FULL_PATH" | tar xz ;;
-        *.tar.bz2 | *.tbz2)    pv "$FILE_FULL_PATH" | tar xj ;;
-        *.tar.xz | *.txz)    pv "$FILE_FULL_PATH" | tar xJ ;;
+        *.jar)              pv "$FILE_FULL_PATH" | jar x        ;;
+        *.tar)              pv "$FILE_FULL_PATH" | tar x        ;;
+        *.tgz | *.tar.gz)   pv "$FILE_FULL_PATH" | tar xz       ;;
+        *.tar.lz)           pv "$FILE_FULL_PATH" | tar x --lzip ;;
+        *.tar.bz2 | *.tbz2) pv "$FILE_FULL_PATH" | tar xj       ;;
+        *.tar.xz | *.txz)   pv "$FILE_FULL_PATH" | tar xJ       ;;
         *.xz)
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
             pv "$FILE_FULL_PATH" | unxz > "$UNCOMPRESSED_FILE" ;;

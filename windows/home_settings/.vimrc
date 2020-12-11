@@ -381,8 +381,9 @@ autocmd FileType perl call My_register_which_key(g:which_key_map, '')
 
 " Auto insert <EOL> and move last word to next line if it reaches 81 column
 autocmd FileType c,cpp,rust,java,sh,expect,cmake,vim,python,perl,lua,php
-            \ setlocal textwidth=80 | setlocal formatoptions+=t
+            \ setlocal formatoptions+=t
 " setlocal cindent | setlocal noautoindent | setlocal expandtab
+" setlocal textwidth=80
 
 autocmd FileType unknown if ! exists('g:My_eval_var') | let g:My_eval_var =
     \ "echo 'using dummy g:My_eval_var value'" | endif
