@@ -1530,6 +1530,10 @@ git clone git://git.busybox.net/buildroot
 git clone https://git.busybox.net/busybox/
 git clone git://busybox.net/busybox.git
 
+# git clone official glibc:
+git clone https://sourceware.org/git/glibc.git
+git clone git://sourceware.org/git/glibc.git
+
 # git lfs workflow:
 sudo apt-get install git-lfs # updates git system config in /etc/gitconfig
 mkdir git_repo_root && cd git_repo_root && git init .

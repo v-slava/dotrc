@@ -5,7 +5,11 @@ PATCH="$THIS_DIR/hotkey.patch"
 TMP="/media/files/workspace/tmp"
 set -ex
 sudo apt-get purge evolution libevolution
-sudo apt-get install evolution-common evolution-data-server evolution-data-server-common
+
+sudo apt-get install evolution-common evolution-data-server \
+    evolution-data-server-common libgnome-autoar-0-0 libgnome-autoar-gtk-0-0 \
+    libgnome-desktop-3-19 libgspell-1-2 libgail-3-0
+
 sudo apt-get build-dep evolution
 mkdir -p "$TMP"
 cd "$TMP"
