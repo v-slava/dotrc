@@ -13,27 +13,6 @@
 
 # See also: /usr/share/doc/xserver-xorg-video-intel/xorg.conf
 
-LOG=/tmp/log_xrandr_sh_$(id -u)
-BOOTED=/tmp/xrandr_booted
-
-if [ "$1" = "udev" ]; then
-    if [ ! -d $BOOTED ]; then
-        echo "Ignoring call from udev: the system is not yet booted" >> $LOG
-        exit
-    fi
-    echo "$(realpath $0) at" | at now
-    # echo "sleep 1 && $(realpath $0) at" | at now
-    exit
-fi
-
-if [ "$1" = "at" ]; then
-    export DISPLAY=:0
-    export DOTRC=/media/files/workspace/dotrc
-    export DOTRC_S=/media/files/workspace/dotrc_s
-    export HOME=/home/slava
-    export XAUTHORITY=$HOME/.Xauthority
-fi
-
 set_default()
 {
     VAR_NAME=$1
@@ -199,7 +178,7 @@ if [ "$1" = "xinitrc" ]; then
     echo "starting xinitrc" >> $LOG
     xinitrc
     echo "ending xinitrc" >> $LOG
-    mkdir $BOOTED
+    mkdir $BOOTED_DIR
     exit
 fi
 

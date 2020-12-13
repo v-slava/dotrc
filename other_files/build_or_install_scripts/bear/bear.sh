@@ -1,10 +1,8 @@
 #!/bin/bash
 
-set -e
-
 TMP="/media/files/workspace/tmp"
 
-set -x
+set -ex
 sudo apt-get install libssl-dev cmake pkg-config
 mkdir -p "$TMP"
 cd "$TMP"

@@ -670,7 +670,7 @@ function! My_update_status_line(message, status)
     else
         let l:lang='EN'
     endif
-    let &statusline=l:lang . '   file: %f   ' . a:message
+    let &statusline=l:lang . '   file: %f %p%%   ' . a:message
     if a:status == 'error'
         hi StatusLine ctermbg=160
     endif

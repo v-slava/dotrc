@@ -128,7 +128,8 @@ def start_program(cmd, find_window, process_name = None, single_run = False):
 def start_browser(args):
     def find_browser(obj):
         return find_win_with_prop('window_role', 'browser', obj)
-    start_program(['firefox'] + args, find_browser)
+    # start_program(['firefox'] + args, find_browser)
+    start_program(['google-chrome'] + args, find_browser)
 
 def start_email(args):
     def find_email_client(obj):

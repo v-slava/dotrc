@@ -2910,6 +2910,7 @@ swapon /swapfile
 ls -l /etc/alternatives
 update-alternatives --query x-window-manager
 update-alternatives --set x-window-manager $(which i3)
+# tags: x-terminal-emulator, x-www-browser
 
 # Get audio/video file info (package libav-tools needed):
 avprobe file.avi

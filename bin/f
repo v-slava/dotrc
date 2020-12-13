@@ -9,6 +9,7 @@ Usage: $(basename $0) [nc|--no-clipboard] [MODE]
 
 Here MODE can be one of:
 s|--standard (default one)
+x|--executable-files
 g|--git-files
 a|--all-files
 d|--directories
@@ -26,10 +27,11 @@ while [ $# -gt 0 ] ; do
             NO_CLIPBOARD=true
             shift
             ;;
-        "s" | "--standard"    | \
-        "g" | "--git-files"   | \
-        "a" | "--all-files"   | \
-        "d" | "--directories" )
+        "s" | "--standard"         | \
+        "x" | "--executable-files" | \
+        "g" | "--git-files"        | \
+        "a" | "--all-files"        | \
+        "d" | "--directories"      )
             MODE="$1"
             shift
             ;;
@@ -42,6 +44,7 @@ done
 if [ -z "$MODE" ]; then
     MODE=$(cat << EOF | fzf
 standard
+executable files
 git files
 all files
 directories
@@ -53,6 +56,7 @@ fi
 SELECTED=$(
 case "$MODE" in
     "s" | "--standard") fzf ;;
+    "x" | "--executable-files") find -L -type f -executable | fzf ;;
     "g" | "--git-files")
         set -e
         GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
