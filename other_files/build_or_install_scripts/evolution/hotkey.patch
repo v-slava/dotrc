@@ -1,0 +1,137 @@
+From 33b8861dffdd148de5f26dc1339e04bbe8b40f5c Mon Sep 17 00:00:00 2001
+From: Viacheslav Volkov <viacheslav.volkov.1@gmail.com>
+Date: Sun, 13 Dec 2020 18:13:23 +0200
+Subject: [PATCH] Add CTRL-o hotkey to select another INBOX folder
+
+Warning: not a good implementation: dirty hacks.
+---
+ data/ui/evolution-mail.ui                    |  1 +
+ src/modules/mail/e-mail-shell-view-actions.c | 93 ++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+
+diff --git a/data/ui/evolution-mail.ui b/data/ui/evolution-mail.ui
+index f3b1fac0a2..962ef0ce62 100644
+--- a/data/ui/evolution-mail.ui
++++ b/data/ui/evolution-mail.ui
+@@ -32,6 +32,7 @@
+       </placeholder>
+       <separator/>
+       <placeholder name='mail-message-list-actions'>
++        <menuitem action='mail-goto-next-inbox-folder'/>
+         <menuitem action='mail-goto-folder'/>
+         <separator/>
+         <menuitem action='mail-threads-group-by'/>
+diff --git a/src/modules/mail/e-mail-shell-view-actions.c b/src/modules/mail/e-mail-shell-view-actions.c
+index dd56b508e8..6429853eac 100644
+--- a/src/modules/mail/e-mail-shell-view-actions.c
++++ b/src/modules/mail/e-mail-shell-view-actions.c
+@@ -1225,6 +1225,92 @@ action_mail_global_expunge_cb (GtkAction *action,
+ 		GTK_WIDGET (shell_window), session);
+ }
+ 
++static void my_show_error(const char *mes)
++{
++	char cmd[4096];
++	sprintf(cmd, "zenity --error --title Evolution --text \"%s\"", mes);
++	system(cmd);
++}
++
++#define MY_ERROR(mes) do { \
++	my_show_error(mes); \
++	return; \
++} while (false)
++
++static void action_mail_goto_next_inbox_folder_cb(GtkAction *action,
++	EMailShellView *mail_shell_view)
++{
++	EMailShellSidebar *mail_shell_sidebar = mail_shell_view->priv->mail_shell_sidebar;
++	EMFolderTree *folder_tree = e_mail_shell_sidebar_get_folder_tree(mail_shell_sidebar);
++	CamelStore *store = em_folder_tree_ref_selected_store(folder_tree);
++	char current_uid[128];
++	const char *config_xdg;
++	char buf[4096];
++	char *uid = NULL;
++	FILE *f;
++	char *ret;
++	gchar *uri = buf;
++	static const char folder_s[] = "folder://";
++	static const char store_s[] = "[Store ";
++	size_t offset = sizeof(folder_s) - sizeof(store_s);
++	const gchar *cur_uid;
++	if (!store)
++		MY_ERROR("em_folder_tree_ref_selected_store() returned NULL");
++	cur_uid = camel_service_get_uid(CAMEL_SERVICE(store));
++	assert(cur_uid);
++	if (strlen(cur_uid) >= sizeof(current_uid)) {
++		g_object_unref(store);
++		MY_ERROR("current uid is too long");
++	}
++	strcpy(current_uid, cur_uid);
++	g_object_unref(store);
++	// gchar *uri = "folder://51dd9ba4a1bf23a88a1c799e5908a0297c2ed347/%5bGmail%5d/All%20Mail";
++	// gchar *uri = "folder://51dd9ba4a1bf23a88a1c799e5908a0297c2ed347/INBOX";
++	// Search for: [Store 893607e71fea6c5889cf3b0eb90a4244641cbdb6]
++	// In ~/.config_xdg/evolution/mail/state.ini
++	//
++	// Here email account UIDs are:
++	// 51dd9ba4a1bf23a88a1c799e5908a0297c2ed347
++	// 893607e71fea6c5889cf3b0eb90a4244641cbdb6
++	config_xdg = getenv("XDG_CONFIG_HOME");
++	if (!config_xdg)
++		MY_ERROR("getenv(XDG_CONFIG_HOME) failed");
++#define STATE_INI "evolution/mail/state.ini"
++	sprintf(buf, "%s/%s", config_xdg, STATE_INI);
++	f = fopen(buf, "r");
++	if (!f)
++		MY_ERROR("fopen($XDG_CONFIG_HOME/" STATE_INI ") failed");
++	while (!feof(f)) {
++		ret = fgets(buf + offset, sizeof(buf) - offset, f);
++		if (!ret) {
++			fclose(f);
++			MY_ERROR("fgets($XDG_CONFIG_HOME/" STATE_INI ") failed");
++		}
++		if (strlen(buf + offset) >= sizeof(buf) - offset - 1) {
++			fclose(f);
++			MY_ERROR("$XDG_CONFIG_HOME/" STATE_INI " contains too long lines");
++		}
++		if (0 != strncmp(buf + offset, store_s, sizeof(store_s) - 1))
++			continue;
++		uid = buf + offset + sizeof(store_s) - 1;
++		ret = strchr(uid, ']');
++		if (!ret) {
++			fclose(f);
++			MY_ERROR("$XDG_CONFIG_HOME/" STATE_INI ": unexpected store format");
++		}
++		*ret = 0;
++		if (0 != strcmp(uid, current_uid))
++			break; // found another (not selected) email account uid
++		uid = NULL;
++	}
++	fclose(f);
++	if (!uid)
++		MY_ERROR("$XDG_CONFIG_HOME/" STATE_INI ": store not found");
++	memcpy(buf, folder_s, sizeof(folder_s) - 1);
++	strcat(buf, "/INBOX");
++	em_folder_tree_set_selected(folder_tree, uri, FALSE);
++}
++
+ static void
+ action_mail_goto_folder_cb (GtkAction *action,
+ 			    EMailShellView *mail_shell_view)
+@@ -1709,6 +1795,13 @@ static GtkActionEntry mail_entries[] = {
+ 	  N_("Permanently remove all the deleted messages from all accounts"),
+ 	  G_CALLBACK (action_mail_global_expunge_cb) },
+ 
++	{ "mail-goto-next-inbox-folder",
++	  NULL,
++	  N_("Go to next inbox _Folder"),
++	  "<Control>o",
++	  N_("Opens next inbox folder"),
++	  G_CALLBACK (action_mail_goto_next_inbox_folder_cb) },
++
+ 	{ "mail-goto-folder",
+ 	  NULL,
+ 	  N_("Go to _Folder"),
+-- 
+2.29.2
+
