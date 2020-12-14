@@ -1595,6 +1595,8 @@ git ls-tree HEAD
 # git remote -v submodules:
 git submodule foreach 'git remote -v'
 
+# svn merge branch1 to current branch:
+svn merge [--reintegrate] https://HOST/repository/branches/branch1
 # svn repository URL changed:
 svn switch --relocate URL_REPO_ROOT_FROM URL_REPO_ROOT_TO .
 # svn diff (REV_START; REV_END] (here REV_START < REV_END):

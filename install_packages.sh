@@ -54,7 +54,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     gcc g++ cmake build-essential \
     gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
     linux-base linux-perf ripgrep bvi git git-email make patch dos2unix \
-    zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar pv htop \
+    zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar zstd pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     ntpdate fuseiso9660 netcat-openbsd keepass2 \
 
