@@ -1632,6 +1632,8 @@ svn switch https://.../log4j/trunk
 # new_branch):
 svn copy "$(svn info | grep '^URL: ' | cut -d' ' -f2)" NEW_BRANCH_URL \
          [-m 'Creating a new branch: new_branch']
+# svn for "git add FILE":
+svn {add|rm} FILE
 # svn commit local changes directly to new branch:
 svn copy . REPO_ROOT_URL/NEW_BRANCH
 # svn for "git push REMOTE --delete BRANCH" (delete remote branch):
