@@ -1388,11 +1388,20 @@ hwclock -w
 # Date 3 days back:
 date -R -d '-3 day'
 
-# Set timezone (EET = Eastern European Time = UTC+2):
+# Show ntp server currently used in the system:
+systemctl status systemd-timesyncd
+
+# Permanently set timezone (EET = Eastern European Time = UTC+2):
 ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+# See also:
+# $DOTRC/other_files/my_samples/single_sources/build_zoneinfo_tzdata.sh
+
+# Temporarily change timezone:
+# date && TZ='Africa/Accra' date
 
 # View timezone:
 date +%Z
+# timezone affects libc functions like strftime()
 
 # View systemd log (from root):
 journalctl
