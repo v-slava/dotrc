@@ -4,6 +4,19 @@ set -e
 
 REPO_DIR=/media/files/workspace/repo_root
 
+# $DOTRC/other_files/my_samples/single_sources/docker_example.sh ". my_env && make"
+
+if [ $# -eq 0 ]; then
+    BASH_ARGS=
+else
+    if [ $# -ne 1 ]; then
+        echo "There should be only 1 argument: bash cmd to execute" 1>&2
+        exit 1
+    fi
+    BASH_ARGS="-c '$1'"
+fi
+# BASH_ARGS="-c '. my_env && make'"
+
 TOOLCHAIN_DIR=/opt/marvell
 CONTAINER=my_container
 DOCKER_DIR=/tmp/docker
@@ -23,12 +36,18 @@ else
 fi
 
 cat << EOF > $CONTAINER_FILE
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade --no-install-recommends --yes
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
     --yes apt-utils locales dialog sudo file vim-tiny apt-file tree \
     build-essential gcc make git
+# For menuconfig:
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
+    --yes libncurses-dev
+# For https:
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
+    --yes ca-certificates
 RUN apt-file update
 
 # ARG user=$USER
@@ -42,13 +61,14 @@ RUN cp /root/.bashrc /home/$USER/
 RUN cp /root/.profile /home/$USER/
 RUN chown -R $USER:$USER /home/$USER
 
+RUN echo '$USER ALL= NOPASSWD: ALL' > /etc/sudoers.d/all_no_password
 # Install bear:
 # RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
 #     --yes bear
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
     --yes cmake
 RUN wget --no-check-certificate https://raw.githubusercontent.com/v-slava/dotrc/d833f3df2070094cabe25cf47229520aa82ef990/other_files/build_or_install_scripts/bear/bear.patch
-RUN git -c http.sslVerify=false clone https://github.com/rizsotto/Bear
+RUN git clone https://github.com/rizsotto/Bear
 RUN cd Bear && git checkout 2.4.2 && \
     git config user.email viacheslav.volkov.1@gmail.com && \
     git am < ../bear.patch && mkdir out && cd out && \
@@ -59,12 +79,15 @@ RUN cd Bear && git checkout 2.4.2 && \
 # VOLUME $REPO_DIR
 WORKDIR $REPO_DIR
 # USER $USER
-CMD echo "+ ls" && ls && bash
+CMD echo "+ ls" && ls && bash $BASH_ARGS
 EOF
 
 if ! diff "$CONTAINER_FILE" "$OLD_CONTAINER_FILE" 1>/dev/null 2>&1 ; then
-    if docker ps -a | grep -q "$CONTAINER" ; then
-        docker ps -a | grep "$CONTAINER" | cut -d' ' -f1 | xargs docker rm
+    set +e
+    OUTPUT="$(docker ps -a -f status=exited | grep "$CONTAINER")"
+    set -e
+    if [ -n "$OUTPUT" ]; then
+        echo -e "$OUTPUT" | cut -d' ' -f1 | xargs docker rm
     fi
     echo "Building the container..."
     cat $CONTAINER_FILE | docker build -t $CONTAINER - # --no-cache

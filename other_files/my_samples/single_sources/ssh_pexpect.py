@@ -5,12 +5,20 @@ import pexpect, sys, pathlib, subprocess
 def parse_cmd_line_args():
     import argparse
     parser = argparse.ArgumentParser(description = 'ssh login.')
-    parser.add_argument('ip', help = 'IP address', metavar = 'IP')
-    return parser.parse_args()
+    parser.add_argument('-c', '--command', help = 'shell command to execute',
+            metavar = 'CMD', nargs = '?')
+    parser.add_argument('-i', '--interact', action = 'store_true',
+            help = 'give control to user after executing shell command')
+    parser.add_argument('target_ip', help = 'target IP address',
+            metavar = 'TARGET_IP')
+    args = parser.parse_args()
+    if not args.command:
+        args.interact = True
+    return args
 
 def spawn(process):
-    print(f'+ {process}')
-    c = pexpect.spawn(process)
+    print(f'+ {" ".join(process)}')
+    c = pexpect.spawn(process[0], process[1:])
     c.logfile_read = sys.stdout.buffer
     return c
 
@@ -41,24 +49,39 @@ def ssh_keygen_retry(c, process, ip):
 
 def main():
     args = parse_cmd_line_args()
-    process = f'ssh root@{args.ip}'
-    password_prompt = f"root@{args.ip}'s password:"
+    process = ['ssh', f'root@{args.target_ip}']
+    # if args.command:
+    #     process += [f'{args.command}']
+    # process = f'ssh-h root@{args.target_ip}'
+    password_prompt = f"root@{args.target_ip}'s password:"
     c = spawn(process)
     n = 0
-    while n != 2:
+    while n != 3:
         n = c.expect(['@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
             "The authenticity of host [^\n]+ can't be established.",
+            f'ssh: connect to host {args.target_ip} port 22: No route to host',
             password_prompt])
         if n == 0: # got '@@@@@@...'
-            c = ssh_keygen_retry(c, process, args.ip)
+            c = ssh_keygen_retry(c, process, args.target_ip)
         elif n == 1: # got 'The authenticity of host ...'
             c.expect('ECDSA key fingerprint is SHA256:[^\n]+.')
             c.expect('Are you sure you want to continue connecting \(yes/no/\[fingerprint\]\)?')
             c.sendline('yes')
+        elif n == 2:
+            sys.exit(1)
     c.sendline('our_password') # our password
     c.expect('/home/user # ')
-    c.logfile_read = None
-    c.interact()
+    if args.command:
+        c.sendline(args.command)
+    if args.interact:
+        c.logfile_read = None
+        c.interact()
+    else:
+        # Note: expect() has default timeout = 30 seconds.
+        c.expect('/home/user # ', timeout = None)
+        # c.sendline('exit')
+        # c.expect(f'Connection to {args.target_ip} closed.')
+        c.wait()
 
 if __name__ == '__main__':
     main()

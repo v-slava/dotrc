@@ -1509,7 +1509,7 @@ ssh -p port user@host
 sshpass -p PASSWORD ssh user@host
 sshpass -p PASSWORD scp FILE user@host:/some/path/
 
-# View machines, connected via ssh (list of current users):
+# View machines, connected via ssh (list of currently logged users):
 who -a
 
 # Mount folder over SSH:
