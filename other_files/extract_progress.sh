@@ -5,6 +5,8 @@
 
 set -e
 
+PV_FLAGS=
+
 usage()
 {
     echo "Usage: $(basename $0) FILE ..." 1>&2
@@ -80,7 +82,7 @@ EOF
             fi
             ;;
         *.deb | *.ipk) ar x "$FILE_FULL_PATH" ;;
-        *.rpm) rpm2cpio "$FILE_FULL_PATH" | pv | cpio -idm ;;
+        *.rpm) rpm2cpio "$FILE_FULL_PATH" | pv $PV_FLAGS | cpio -idm ;;
         *.sh)
             split_script_binary_archive.sh -ob data.bin "$FILE_FULL_PATH"
             MIME_TYPE=$(file -b --mime-type data.bin)
@@ -95,28 +97,28 @@ EOF
                 fi
             fi
             ;;
-        *.jar)              pv "$FILE_FULL_PATH" | jar x         ;;
-        *.tar)              pv "$FILE_FULL_PATH" | tar x         ;;
-        *.tgz | *.tar.gz)   pv "$FILE_FULL_PATH" | tar xz        ;;
-        *.tar.lz)           pv "$FILE_FULL_PATH" | tar x --lzip  ;;
-        *.tar.zst)          pv "$FILE_FULL_PATH" | tar x -I zstd ;;
-        *.tar.bz2 | *.tbz2) pv "$FILE_FULL_PATH" | tar xj        ;;
-        *.tar.xz | *.txz)   pv "$FILE_FULL_PATH" | tar xJ        ;;
+        *.jar)              pv $PV_FLAGS "$FILE_FULL_PATH" | jar x         ;;
+        *.tar)              pv $PV_FLAGS "$FILE_FULL_PATH" | tar x         ;;
+        *.tgz | *.tar.gz)   pv $PV_FLAGS "$FILE_FULL_PATH" | tar xz        ;;
+        *.tar.lz)           pv $PV_FLAGS "$FILE_FULL_PATH" | tar x --lzip  ;;
+        *.tar.zst)          pv $PV_FLAGS "$FILE_FULL_PATH" | tar x -I zstd ;;
+        *.tar.bz2 | *.tbz2) pv $PV_FLAGS "$FILE_FULL_PATH" | tar xj        ;;
+        *.tar.xz | *.txz)   pv $PV_FLAGS "$FILE_FULL_PATH" | tar xJ        ;;
         *.xz)
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
-            pv "$FILE_FULL_PATH" | unxz > "$UNCOMPRESSED_FILE" ;;
+            pv $PV_FLAGS "$FILE_FULL_PATH" | unxz > "$UNCOMPRESSED_FILE" ;;
         *.gz)
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
-            pv "$FILE_FULL_PATH" | gunzip > "$UNCOMPRESSED_FILE" ;;
+            pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip > "$UNCOMPRESSED_FILE" ;;
         *.bz2)
             UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
-            pv "$FILE_FULL_PATH" | bunzip2 "$UNCOMPRESSED_FILE" ;;
+            pv $PV_FLAGS "$FILE_FULL_PATH" | bunzip2 "$UNCOMPRESSED_FILE" ;;
         *.igz)
-            # pv "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
+            # pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
             unmkinitramfs "$FILE_FULL_PATH" . ;;
         *.squashfs) unsquashfs -d rootfs "$FILE_FULL_PATH" ;;
-        *.cpio) pv "$FILE_FULL_PATH" | cpio -i ;;
-        # *.7z) pv "$FILE_FULL_PATH" | 7z x -si > "$UNCOMPRESSED_FILE" ;; # Error: E_NOTIMPL
+        *.cpio) pv $PV_FLAGS "$FILE_FULL_PATH" | cpio -i ;;
+        # *.7z) pv $PV_FLAGS "$FILE_FULL_PATH" | 7z x -si > "$UNCOMPRESSED_FILE" ;; # Error: E_NOTIMPL
         *.7z) 7z x "$FILE_FULL_PATH" ;;
         *.rar) rar x "$FILE_FULL_PATH" ;; # impossible to read from stdin?
         *.zip | *.apk) unzip "$FILE_FULL_PATH" ;; # impossible to read from stdin?

@@ -1379,6 +1379,20 @@ pactl -- set-sink-volume INDEX +3%
 # get volume:
 LANGUAGE=en pactl list sinks | grep 'Volume: front' | cut -d' ' -f6
 
+# measure time of single command's execution:
+time sleep 1
+# measure time of multiple commands execution:
+print_secs_human() {
+    echo "$(( ${1} / 3600 ))h $(( (${1} / 60) % 60 ))m $(( ${1} % 60 ))s"
+}
+STARTTIME=$(date +%s)
+SECONDS=0
+sleep 1
+sleep 2
+ENDTIME=$(date +%s)
+echo "time elapsed: $(secs_to_human $SECONDS)"
+echo "time elapsed: $(secs_to_human $(($ENDTIME - $STARTTIME)))"
+
 # show date and time for scripts:
 date '+%Y_%m_%d__%H_%M_%S_%N'
 
