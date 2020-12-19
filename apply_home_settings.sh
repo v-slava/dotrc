@@ -42,7 +42,7 @@ fi
 MEDIA_FILES=/media/files
 
 if [ ! -L ~/h ]; then
-    ln -s $MEDIA_FILES/for_backup/actual_home ~/h
+    ln -s $MEDIA_FILES/actual_home ~/h
 fi
 if [ ! -L ~/downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/downloads
