@@ -366,6 +366,14 @@ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oC
 # list only directories in $DIR:
 ls -d $DIR/*/
 
+# keepass (keepassxc-cli) password manager:
+# list entries:
+keepassxc-cli ls keepass.kdbx [-R] [-f] [web_sites|emails|...]
+# show specific entry:
+keepassxc-cli show keepass.kdbx emails/viacheslav.volkov.1@gmail.com [-s]
+# copy specific attribute from specific entry to clipboard:
+keepassxc-cli clip keepass.kdbx web_sites/anki [-a {Title|Password|Notes}]
+
 # transmission disable password:
 in /etc/transmission-daemon/settings.json set:
 "rpc-authentication-required": false,

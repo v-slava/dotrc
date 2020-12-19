@@ -384,7 +384,7 @@ nnoremap ,d :clone?<CR>
 " ------------------------------------------------------------------------------
 
 " :mark mark /full/directory/path [filename]
-mark h ~/actual_home
+mark h ~/h
 mark b $DOTRC/bin
 mark B $DOTRC_S/bin
 mark d ~/downloads

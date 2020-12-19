@@ -56,7 +56,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     linux-base linux-perf ripgrep bvi git git-email make patch dos2unix \
     zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar zstd pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
-    ntpdate fuseiso9660 netcat-openbsd keepass2 \
+    ntpdate fuseiso9660 netcat-openbsd \
 
 # apt-get install rsyslog
 # apt-get install clang clang-format clang-tidy clang-tools llvm libclang-dev
@@ -140,6 +140,13 @@ apt-get install neovim
 apt-get install --install-recommends python3-pip
 apt-get install libcairo2-dev # needed for $DOTRC/other_files/update_system.sh
 pip3 install neovim youtube_dl psutil # --user
+
+# Install password manager:
+# apt-get install keepass2
+apt-get install keepassxc xclip
+# See also: https://www.passwordstore.org/
+# Current database version: kdbx 3.0, Cipher: AES 256-bit,
+# KDF: AES (6000 rounds)
 
 # Install email client:
 apt-get install evolution
