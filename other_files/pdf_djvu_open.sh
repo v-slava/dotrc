@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PASSWORD_FILE_PREFIX=/media/files/passwords/pdf_djvu_password
+PASSWORD_FILE_PREFIX=$DOTRC_S/other_files/pdf_djvu_password
 
 if [ $# -ne 1 ]; then
 	echo "Usage: $(basename $0) FILE.{pdf|djvu}" 1>&2
@@ -19,4 +19,3 @@ if [ "$(echo "$FILE" | cut -c -5)" = "pass_" ]; then
 fi
 CMD="$CMD '$FILE' 2>/dev/null 1>&2"
 echo $CMD | bash
-

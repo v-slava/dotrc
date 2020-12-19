@@ -384,12 +384,12 @@ nnoremap ,d :clone?<CR>
 " ------------------------------------------------------------------------------
 
 " :mark mark /full/directory/path [filename]
-mark h ~/my
+mark h ~/actual_home
 mark b $DOTRC/bin
 mark B $DOTRC_S/bin
 mark d ~/downloads
-mark t ~/temporary
-mark T /tmp
+mark t /tmp
+mark T /media/files/trash_vifm
 mark m /media
 mark w /media/files/workspace
 mark l /media/files/workspace/linux
@@ -397,7 +397,6 @@ mark o $DOTRC
 mark O $DOTRC_S
 mark u /media/usb
 mark f /media/files
-mark r /media/files/music/radio
 mark n /media/files/music/new
 mark s /media/sf_virtualbox_shared ..
 
@@ -418,8 +417,7 @@ nnoremap gl :!readlink '%c' | clipboard.sh -n<CR>
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/ .. trash_vifm
 bmark! $DOTRC/other_files/my_samples/ my_samples
-bmark! /media/files/other/books/ books
-bmark! /media/files/other/toolchains/ toolchains
+bmark! /media/files/for_backup/books/ books
 
 nnoremap ,c :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/vifm/vifmrc') | restart<CR>
 nnoremap ,C :write | execute system('exec echo :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/vifm/vifmrc') | restart<CR>

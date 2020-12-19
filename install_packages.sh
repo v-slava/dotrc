@@ -59,14 +59,14 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     ntpdate fuseiso9660 netcat-openbsd keepass2 \
 
 # apt-get install rsyslog
-# apt-get install clang clang-format clang-tidy clang-tools
+# apt-get install clang clang-format clang-tidy clang-tools llvm libclang-dev
 # apt-get install uftrace
 
 exit
 
 # exuberant-ctags cscope doxygen
 # sox libsox-fmt-mp3 android-tools-adb lame fuse sshfs qalculate ntfs-3g
-# libclang-dev llvm vim dhex
+# vim dhex
 # Install my (patched) version for:
 # bear rtags
 

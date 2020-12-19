@@ -41,8 +41,8 @@ fi
 
 MEDIA_FILES=/media/files
 
-if [ ! -L ~/my ]; then
-    ln -s $MEDIA_FILES/temporary/my ~/my
+if [ ! -L ~/actual_home ]; then
+    ln -s $MEDIA_FILES/other/home ~/actual_home
 fi
 if [ ! -L ~/downloads ]; then
     ln -s $MEDIA_FILES/downloads ~/downloads
@@ -53,26 +53,18 @@ fi
 if [ ! -L ~/Desktop ]; then
     ln -s $MEDIA_FILES/downloads ~/Desktop
 fi
-# if [ ! -d ~/terminal ]; then
-#     mkdir ~/terminal
-# fi
 
 if [ "$(id -u)" != "0" ]; then
-    mkdir -p $MEDIA_FILES/{downloads,temporary/my,workspace,other,programs}
+    mkdir -p $MEDIA_FILES/{downloads,other/home,other/programs,workspace}
 fi
 
-DIRS="downloads temporary workspace"
-for dir in $DIRS ; do
-    if [ ! -L ~/$dir ]; then
-        ln -s $MEDIA_FILES/$dir ~/$dir
-    fi
-done
-
-MY_DIRS="other"
-for dir in $MY_DIRS ; do
-    if [ ! -L ~/my/$dir ]; then
-        ln -s $MEDIA_FILES/$dir ~/my/$dir
-    fi
+LLVM_VERSION=11
+# LLVM_FILES="clang clang-format clang++ clang-tidy scan-build llvm-config \
+# llvm-objdump"
+LLVM_FILES="scan-build"
+for FILE in $LLVM_FILES ; do
+    rm -f $DOTRC/bin/$FILE
+    ln -s /bin/${FILE}-$LLVM_VERSION $DOTRC/bin/$FILE
 done
 
 xmms2 server config playlist.repeat_all 1

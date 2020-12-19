@@ -202,8 +202,8 @@ bindsym $WIN+k exec --no-startup-id exec keynav
 
 # bindsym $Alt_L+Return exec exec x-terminal-emulator -e vifm
 # bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm
-bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm ~/my ~/my
-# bindsym $Alt_L+Return exec exec $START $DOTRC/other_files/open_terminal.sh vifm ~/my ~/my
+bindsym $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm ~/actual_home ~/actual_home
+# bindsym $Alt_L+Return exec exec $START $DOTRC/other_files/open_terminal.sh vifm ~/actual_home ~/actual_home
 
 bindsym $Alt_L+t exec --no-startup-id exec $START_S dictionary "$(clipboard.sh -o)"
 bindsym $Alt_L+q exec --no-startup-id $(clipboard.sh --primary-2-clipboard) && exec $START_S dictionary "$(clipboard.sh -o)"
@@ -311,7 +311,7 @@ bindsym $Alt_r+d exec --no-startup-id exec $START $DOTRC/other_files/screen_brig
 bindsym $Alt_r+o exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --off
 
 # toggle keyboard layout (see also $DOTRC/root_settings/etc/default/keyboard):
-bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/programs/keyboard_layout --set-layout next
+bindsym $Alt_L+F3 exec --no-startup-id exec $START /media/files/other/programs/keyboard_layout --set-layout next
 
 # toggle touchpad:
 bindsym $Alt_L+F2 exec --no-startup-id exec $START $DOTRC/other_files/toggle_touchpad.sh
