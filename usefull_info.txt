@@ -368,9 +368,9 @@ ls -d $DIR/*/
 
 # keepass (keepassxc-cli) password manager:
 # list entries:
-keepassxc-cli ls keepass.kdbx [-R] [-f] [web_sites|emails|...]
+echo "password" | keepassxc-cli ls keepass.kdbx [-R] [-f] [web_sites|emails|...]
 # show specific entry:
-keepassxc-cli show keepass.kdbx emails/viacheslav.volkov.1@gmail.com [-s]
+keepassxc-cli show keepass.kdbx [-q] emails/viacheslav.volkov.1@gmail.com [-s]
 # copy specific attribute from specific entry to clipboard:
 keepassxc-cli clip keepass.kdbx web_sites/anki [-a {Title|Password|Notes}]
 
