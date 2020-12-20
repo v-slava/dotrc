@@ -142,7 +142,7 @@ def start_email(args):
 def start_telegram(args):
     def find_telegram(obj):
         return find_win_with_prop('class', 'TelegramDesktop', obj)
-    start_program(['telegram'] + args, find_telegram)
+    start_program(['telegram-desktop'] + args, find_telegram, 'telegram')
 
 def start_skype(args):
     def find_skype(obj):
