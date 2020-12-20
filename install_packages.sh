@@ -205,6 +205,9 @@ apt-get install minidlna
 # Record video from screen during lection / meeting / ... :
 apt-get install simplescreenrecorder
 
+# Display keypresses (might be usefull for screen recording):
+apt-get install screenkey
+
 # fzy:
 # apt-get install fzy
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
