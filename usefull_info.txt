@@ -1,3 +1,6 @@
+# Determine file type for script:
+file -b --mime-type FILE
+
 # Setup vpn (protonvpn):
 # Execute from root:
 apt-get install openvpn
@@ -658,6 +661,17 @@ gcc -dM -E - < /dev/null
 
 # start bash with empty (clean) environment (no environment variables):
 env -i bash --noprofile --norc
+
+# bash register cleanup function:
+my_cleanup()
+{
+    echo my_cleanup
+}
+trap my_cleanup EXIT INT
+set -e
+echo before false
+false
+echo after false
 
 # bash "set -e" documentation: search for "Exit immediately if" in "man bash"
 
