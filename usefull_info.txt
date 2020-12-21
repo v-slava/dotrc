@@ -1430,7 +1430,7 @@ systemctl status systemd-timesyncd
 # Permanently set timezone (EET = Eastern European Time = UTC+2):
 ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
 # See also:
-# $DOTRC/other_files/my_samples/single_sources/build_zoneinfo_tzdata.sh
+# $DOTRC/other_files/my_samples/single_sources/build_zoneinfo_tzdata_timezone.sh
 
 # Temporarily change timezone:
 # date && TZ='Africa/Accra' date
@@ -2725,6 +2725,9 @@ realpath PATH
 
 # Delete first audio track:
 ffmpeg -i in.mkv -map 0 -map -0:a:0 -c copy out.mkv
+
+# Convert to gif:
+ffmpeg -i in.mkv -vf "fps=10,scale=1024:-1:flags=lanczos" -c:v pam -f image2pipe - | convert -delay 10 - -loop 0 output.gif
 
 # Compose $OUT from a video stream from $IN_VIDEO and audio stream from $IN_AUDIO.
 # All other audio and subtitle streams from $IN_VIDEO will be lost:
