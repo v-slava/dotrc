@@ -104,6 +104,12 @@ def get_email_settings(account):
     return EmailSettings(user, host, port, spam_folder)
 
 def is_spam(msg, account):
+    if account == 'viacheslav.volkov.1@gmail.com':
+        From = decode(msg['From'])
+        Subject = decode(msg['Subject'])
+        if From == 'ROZETKA <bestdeal@rozetka.com.ua>':
+            if Subject.startswith('Залиште відгук про куплений товар'):
+                return True
     if not os.path.isfile(dotrc_s_file):
         return False
     dotrc_s_module = import_file('my_email_settings', dotrc_s_file)
