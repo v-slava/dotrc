@@ -257,7 +257,7 @@ class MyUnitTests(unittest.TestCase):
             '',
             'slava@laptop workspace/dotrc $   ' + expected_cmd + '      ',
                 ] + expected_lines + [
-            'slava@laptop ~/my $ '
+            'slava@laptop ~/h $ '
                 ]
         cmd, cmd_lines, bash_cwd = parse_last_cmd(visible_lines)
         self.assertEqual(expected_cmd, cmd)

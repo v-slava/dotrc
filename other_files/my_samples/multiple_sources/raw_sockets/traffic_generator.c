@@ -1,6 +1,6 @@
 /* EVAL REGION BEGINS HERE: |* |
  * let g:My_eval_var = "MyRunShellCmd clang -g3 -Weverything -pedantic -lgmp
- * \ -pthread traffic_generator.c -o ~/my/traffic_generator"
+ * \ -pthread traffic_generator.c -o ~/h/traffic_generator"
  * EVAL REGION ENDS HERE. */
 
 // sudo apt-get install libgmp-dev # libgmp10-doc

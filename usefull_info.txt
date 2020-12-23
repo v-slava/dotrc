@@ -662,6 +662,10 @@ gcc -dM -E - < /dev/null
 # start bash with empty (clean) environment (no environment variables):
 env -i bash --noprofile --norc
 
+# Bash recursive debug:
+set -x
+export SHELLOPTS
+
 # bash register cleanup function:
 my_cleanup()
 {
