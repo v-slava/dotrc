@@ -1,6 +1,13 @@
 # Determine file type for script:
 file -b --mime-type FILE
 
+# send message to all tty (linux, console) users:
+wall "your message"
+# If wall is not installed:
+for file in $(ls /dev/pts/) ; do
+    echo "your message" > /dev/pts/$file
+done
+
 # Setup vpn (protonvpn):
 # Execute from root:
 apt-get install openvpn
