@@ -93,7 +93,8 @@ def get_email_settings(account):
                 assert(spam_folder)
                 return EmailSettings(user, host, port, spam_folder)
     user, host, port, spam_folder = {
-    'gmail.com' : (account, f'imap.{provider}', imaplib.IMAP4_SSL_PORT, 'Spam'),
+        'gmail.com' : (account, f'imap.{provider}', imaplib.IMAP4_SSL_PORT,
+                       '"[Gmail]/Spam"'),
     }.get(provider, (None, None, None, None))
     if not user:
         print(f'Error: unknown email provider: {provider}', file = sys.stderr)
@@ -107,7 +108,7 @@ def is_spam(msg, account):
     if account == 'viacheslav.volkov.1@gmail.com':
         From = decode(msg['From'])
         Subject = decode(msg['Subject'])
-        if From == 'ROZETKA <bestdeal@rozetka.com.ua>':
+        if From == '"ROZETKA" <bestdeal@rozetka.com.ua>':
             if Subject.startswith('Залиште відгук про куплений товар'):
                 return True
     if not os.path.isfile(dotrc_s_file):
