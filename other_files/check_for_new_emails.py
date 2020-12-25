@@ -68,7 +68,7 @@ def get_email_settings(account):
     #     if account != 'Viacheslav.Volkov@some_org.com':
     #         return (None, None, None, None)
     #     return ('VVolkov', 'mail.some_org.com', imaplib.IMAP4_SSL_PORT,
-    #             '"Junk Email"') # 'Spam' for gmail
+    #             '"Junk Email"') # '"[Gmail]/Spam"'
     #
     # def is_spam(msg, account):
     #     if account != 'Viacheslav.Volkov@some_org.com':
@@ -144,6 +144,7 @@ def move_msg_to_folder(connection, msg_num, spam_folder):
 #     check('STORE -Seen')
 
 def main():
+    exit_code = 0
     def check(func):
         check_ret(func, ret, data, connection)
     pass_dir = os.path.join(os.environ['DOTRC_S'], 'other_files',
@@ -156,7 +157,14 @@ def main():
         email_settings = get_email_settings(account)
         with open(account_file, 'r') as f:
             password = f.read()[len('Pass "'):-2]
-        connection = imaplib.IMAP4_SSL(email_settings.host, email_settings.port)
+        try:
+            connection = imaplib.IMAP4_SSL(email_settings.host,
+                                           email_settings.port)
+        except TimeoutError as e:
+            print(f'Got connection timeout error for {account}: {e}',
+                  file = sys.stderr)
+            exit_code = 1
+            continue
         connection.login(email_settings.user, password)
         # print(f'\n{account}:') # print folders for all accounts
         # for i in connection.list()[1]:
@@ -186,6 +194,7 @@ def main():
         connection.expunge()
         connection.close()
         connection.logout()
+    return exit_code
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
