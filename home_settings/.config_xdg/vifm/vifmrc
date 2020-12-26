@@ -521,6 +521,8 @@ nmap isg :!$DOTRC/other_files/vifm_sync_git.sh %c %C %D<CR>
 " swap panels:
 nmap isw <c-w>x
 nmap id :winrun ^ !diff.sh %d/%c %C<CR>
+vmap i <nop>
+vmap id :winrun ^ !$DOTRC/other_files/vifm_diff_folders.sh %d %D %f %F<CR>
 nmap ied :winrun ^ !ediff.sh %d/%c %C<CR>
 nmap ivd :winrun ^ !vimdiff %d/%c %C<CR>
 nmap ig :winrun ^ !diffuse %d/%c %C<CR>
