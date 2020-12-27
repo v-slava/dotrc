@@ -1651,6 +1651,14 @@ git ls-tree HEAD
 # git remote -v submodules:
 git submodule foreach 'git remote -v'
 
+# Create svn commit from git patch file (created with "git format-patch":
+$DOTRC/other_files/my_samples/single_sources/svn_commit_git_patch.sh
+# Note: always keep 2nd line in git commit message empty for this to work.
+# See also this script on how to get git commit message from git patch file
+# created with "git format-patch".
+
+# apply changes from svn patch to git:
+patch -p0 < /path/to/file.patch
 # svn merge branch1 to current branch:
 svn merge [--reintegrate] https://HOST/repository/branches/branch1
 # svn repository URL changed:

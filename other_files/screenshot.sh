@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="$HOME/my/screenshots"
+DIR="$HOME/h/screenshots"
 FILE="$DIR/$(date '+%Y_%m_%d__%H_%M_%S_%N')_scrot.png"
 
 EDIT_IMAGE=false
