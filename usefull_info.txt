@@ -127,6 +127,8 @@ docker ps -a
 docker rm CONTAINER_ID
 # Delete all not executing container images:
 docker rm $(docker ps -a -q -f status=exited)
+# Remove all docker cache:
+docker system prune -a
 # Show all built images:
 docker image ls
 
@@ -467,6 +469,9 @@ zenity --info --text '<span foreground="blue" font="32">Some\nbig text</span>\n\
 
 # disable address space randomization:
 echo 0 > /proc/sys/kernel/randomize_va_space
+
+# find empty directories:
+find -type d -empty
 
 # Find everything. Exclude directory 'dir1':
 find -path ./dir1 -prune -o -print
@@ -2336,6 +2341,9 @@ git log --pretty=%P -n 1 HEAD
 # git delete/remove remote branch (from remote repository):
 git push REMOTE --delete BRANCH
 git push REMOTE :BRANCH
+
+# git delete/remove already deleted (invalid, obsolete) remote branches:
+git remote prune REMOTE
 
 # git repository as shared folder:
 # Write:
