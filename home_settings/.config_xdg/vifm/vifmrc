@@ -1,5 +1,4 @@
 " Ctrl-G creates a window showing detailed information about the current file.
-" cl     change link target
 " al     put symbolic links with absolute paths.
 " rl     put symbolic links with relative paths.
 
@@ -477,6 +476,10 @@ nmap cj :mkcd<SPACE>
 nmap cd :cd<SPACE>
 nmap M :mkdir<SPACE>
 nmap T :!touch<SPACE>
+
+" cl     change link target
+nmap cl :!$DOTRC/other_files/vifm_change_link.py %f<CR>
+vmap cl :!$DOTRC/other_files/vifm_change_link.py %f<CR>
 
 nmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>
 vmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>

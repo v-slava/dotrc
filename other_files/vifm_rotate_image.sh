@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# EVAL REGION BEGINS HERE: |# |
-# let g:My_eval_var = "silent wa | MyRunShellCmd cd ~/downloads && $DOTRC/other_files/vifm_rotate_image.sh 1.jpg 90"
-# EVAL REGION ENDS HERE.
-
 usage()
 {
     echo "Usage: $(basename $0) IN_FILE [90|180|270]" 1>&2
