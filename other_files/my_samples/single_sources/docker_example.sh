@@ -17,14 +17,13 @@ else
 fi
 # BASH_ARGS="-c '. my_env && make'"
 
-TOOLCHAIN_DIR=/opt/marvell
+TOOLCHAIN_DIR=/opt/arm
 CONTAINER=my_container
-DOCKER_DIR=/tmp/docker
-CONTAINER_FILE=$DOCKER_DIR/${CONTAINER}_Dockerfile
-USER=$(whoami)
+# USER=$(whoami) # is set by default
 
-mkdir -p $(dirname $CONTAINER_FILE)
-cat << EOF > $CONTAINER_FILE
+echo "Building the container..."
+
+cat << EOF | docker build -t $CONTAINER - # --no-cache
 FROM ubuntu:20.04
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade --no-install-recommends --yes
@@ -71,8 +70,6 @@ WORKDIR $REPO_DIR
 CMD echo "+ ls" && ls && bash $BASH_ARGS
 EOF
 
-echo "Building the container..."
-cat $CONTAINER_FILE | docker build -t $CONTAINER - # --no-cache
 echo "Building the container: done."
 
 set +e
