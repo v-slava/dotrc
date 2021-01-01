@@ -20,21 +20,10 @@ fi
 TOOLCHAIN_DIR=/opt/marvell
 CONTAINER=my_container
 DOCKER_DIR=/tmp/docker
-SUCCESS_FILE=$DOCKER_DIR/success
 CONTAINER_FILE=$DOCKER_DIR/${CONTAINER}_Dockerfile
-OLD_CONTAINER_FILE=${CONTAINER_FILE}_old
 USER=$(whoami)
 
 mkdir -p $(dirname $CONTAINER_FILE)
-if [ -f $SUCCESS_FILE ]; then
-    if [ -f $CONTAINER_FILE ]; then
-        mv $CONTAINER_FILE $OLD_CONTAINER_FILE
-    fi
-    rm $SUCCESS_FILE
-else
-    rm -f $CONTAINER_FILE $OLD_CONTAINER_FILE
-fi
-
 cat << EOF > $CONTAINER_FILE
 FROM ubuntu:20.04
 RUN apt-get update
@@ -82,17 +71,9 @@ WORKDIR $REPO_DIR
 CMD echo "+ ls" && ls && bash $BASH_ARGS
 EOF
 
-if ! diff "$CONTAINER_FILE" "$OLD_CONTAINER_FILE" 1>/dev/null 2>&1 ; then
-    set +e
-    OUTPUT="$(docker ps -a -f status=exited | grep "$CONTAINER")"
-    set -e
-    if [ -n "$OUTPUT" ]; then
-        echo -e "$OUTPUT" | cut -d' ' -f1 | xargs docker rm
-    fi
-    echo "Building the container..."
-    cat $CONTAINER_FILE | docker build -t $CONTAINER - # --no-cache
-    echo "Building the container: done."
-fi
+echo "Building the container..."
+cat $CONTAINER_FILE | docker build -t $CONTAINER - # --no-cache
+echo "Building the container: done."
 
 set +e
 docker run --user $USER -e TERM=$TERM -e USER=$USER \
@@ -101,7 +82,4 @@ docker run --user $USER -e TERM=$TERM -e USER=$USER \
     -it $CONTAINER
 
 RET=$?
-if [ $RET -eq 0 ]; then
-    touch $SUCCESS_FILE
-fi
 exit $RET
