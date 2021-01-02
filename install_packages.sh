@@ -156,8 +156,8 @@ apt-get install evolution
 # Install video player:
 apt-get install smplayer
 
-# Install images viewer:
-apt-get install gliv
+# Install images viewers:
+apt-get install gliv gwenview
 
 # Install images editor:
 # apt-get install gimp
