@@ -508,10 +508,8 @@ nnoremap yg :!realpath --relative-to="$(git rev-parse --show-toplevel)" ./%c | c
 nnoremap am :! mount /media/usb<CR>
 nnoremap au :! umount /media/usb<CR>
 " Android (smartphone):
-" old:
-" nnoremap cm :! jmtpfs -o nonempty /media/usb<CR>
-" new:
-nnoremap cm :! go-mtpfs -usb-timeout 60000 -allow-other /media/usb<CR>
+" nnoremap cm :! go-mtpfs -usb-timeout 60000 -allow-other /media/usb<CR>
+nnoremap cm :! jmtpfs /media/usb<CR>
 " ios (iphone, smartphone):
 " nnoremap cm :! ifuse -o allow_root /media/usb<CR>
 nnoremap cu :! fusermount -u /media/usb<CR>
