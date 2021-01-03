@@ -12,7 +12,7 @@ if [ -n "$PID" ]; then
     kill $PID
 fi
 
-if [[ $PWD == /media/files/music/new* ]]; then
+if [[ $PWD == /media/files/permanent/music/new* ]]; then
     for file in "$@" ; do
         if ! id3v2 -l "$file" | grep -q ': No ID3 tag$' ; then
 #             cat << EOF 1>&2

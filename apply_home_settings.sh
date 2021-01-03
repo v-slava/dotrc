@@ -55,7 +55,7 @@ if [ ! -L ~/Desktop ]; then
 fi
 
 if [ "$(id -u)" != "0" ]; then
-    mkdir -p $MEDIA_FILES/{downloads,actual_home,other/programs,workspace}
+    mkdir -p $MEDIA_FILES/{downloads,actual_home,programs,workspace}
 fi
 
 LLVM_VERSION=11

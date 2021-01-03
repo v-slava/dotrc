@@ -21,7 +21,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // Compilation:
-// gcc keyboard_layout.c -lX11 -O2 -flto -o /media/files/other/programs/keyboard_layout
+// gcc keyboard_layout.c -lX11 -O2 -flto -o /media/files/programs/keyboard_layout
 
 #include <stdio.h>
 #include <stdarg.h>

@@ -396,7 +396,7 @@ mark o $DOTRC
 mark O $DOTRC_S
 mark u /media/usb
 mark f /media/files
-mark n /media/files/music/new
+mark n /media/files/permanent/music/new
 mark s /media/sf_virtualbox_shared ..
 
 nmap B :bmarks<SPACE>
