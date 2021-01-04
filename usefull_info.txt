@@ -518,6 +518,7 @@ printenv
 printenv VARIABLE
 echo $VARIABLE
 printenv -a
+env default -a
 setenv VARIABLE "VALUE"
 # unset variable:
 setenv VARIABLE
@@ -690,6 +691,9 @@ false
 echo after false
 
 # bash "set -e" documentation: search for "Exit immediately if" in "man bash"
+
+# Fail if any command in pipe (error pipe) failed:
+set -o pipefail
 
 # bash save and restore options (set -e, ...):
 state=$(set +o;shopt)
@@ -1250,9 +1254,6 @@ mogrify -quality "80%" -resize 1048x768 file.jpg
 # rotate image clockwise:
 convert in.jpg -rotate 90 out.jpg
 
-# Fail if any command in pipe (error pipe) failed:
-set -o pipefail
-
 # icedove / thunderbird:
 # see $DOTRC/other_files/icedove_thunderbird
 
@@ -1666,10 +1667,15 @@ $DOTRC/other_files/my_samples/single_sources/svn_commit_git_patch.sh
 patch -p0 < /path/to/file.patch
 # svn merge branch1 to current branch:
 svn merge [--reintegrate] https://HOST/repository/branches/branch1
+# Note: --reintegrate just brings changes from the branch. The history is not
+# preserved, there will be just 1 merge commit that you will do explicitly in
+# the end.
 # svn repository URL changed:
 svn switch --relocate URL_REPO_ROOT_FROM URL_REPO_ROOT_TO .
 # svn diff (REV_START; REV_END] (here REV_START < REV_END):
 svn diff -r REV_START:REV_END
+# svn for "git clone URL"
+svn checkout URL
 # svn for "git status":
 svn status [-q]
 # svn for "git remote -v" (show remote repository URL):
@@ -2763,12 +2769,10 @@ ffmpeg -i $IN_VIDEO -i $IN_AUDIO -c copy -shortest -map 0:v:0 -map 1:a:0 $OUT
 # Convert raw framebuffer data to png image:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
-# Cut mp3 [00:00; 00:16]:
+# Cut mp3 [00:16; end]:
 avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
 # Cut mp3 [00:16; 00:26]:
 avconv -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
-# Cut mp3 [00:16; end]:
-avconv -ss 00:16 -i input.mp3 -codec copy out.mp3
 
 # Concat mp3:
 avconv -i "concat:in1.mp3|in2.mp3" -acodec copy out.mp3
@@ -3006,6 +3010,11 @@ avprobe file.avi
 
 # Add ppa to /etc/apt/sources.list (debian):
 deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main
+
+# Get first 2M bytes from file (slow):
+dd if=IN of=OUT bs=1 count=$((2 * 1024 * 1024))
+# Get first 2M bytes from file (fast):
+head IN -c $((2 * 1024 * 1024)) > OUT
 
 # Create usb to install Windows 7 (without grub):
 dd if=/dev/zero of=/dev/sdX bs=1k count=1
