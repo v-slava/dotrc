@@ -28,6 +28,11 @@ case "$EMAIL" in
     *) usage ;;
 esac
 
+GIT_WORK_EMAIL=$DOTRC_S/other_files/git_work_email.sh
+if [ -f $GIT_WORK_EMAIL ]; then
+    . $GIT_WORK_EMAIL
+fi
+
 set -x
 git init .
 git config user.email "$EMAIL"
