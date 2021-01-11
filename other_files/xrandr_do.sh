@@ -8,6 +8,7 @@
 # xrandr --output --set "underscan hborder" 38
 # xrandr --output --set "underscan vborder" 23
 
+# xrandr --listmonitors
 # xrandr --listproviders
 # xrandr --setprovideroutputsource 4 0
 
