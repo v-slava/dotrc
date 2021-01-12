@@ -135,7 +135,7 @@ docker rm CONTAINER_ID
 # Delete all not executing container images:
 docker rm $(docker ps -a -q -f status=exited)
 # Remove all docker cache:
-docker rm $(docker ps -a -q) && docker system prune -a
+docker rm $(docker ps -a -q) && docker system prune -a -f
 # Show all built images:
 docker image ls
 
