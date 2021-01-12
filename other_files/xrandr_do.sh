@@ -12,6 +12,15 @@
 # xrandr --listproviders
 # xrandr --setprovideroutputsource 4 0
 
+# In /etc/X11/xorg.conf:
+# Section "Device"
+# 	Identifier  "usbdev"
+# 	Driver      "modesetting"
+# 	Option      "kmsdev" "/dev/dri/card0"
+# EndSection
+
+# ls /sys/class/drm/*/status | xargs -I {} -i bash -c "echo -n {}: ; cat {}"
+
 # See also: /usr/share/doc/xserver-xorg-video-intel/xorg.conf
 
 set_default()
