@@ -1,6 +1,10 @@
 #!/bin/bash
 
 set -e
+if [ "$1" = "-r" ]; then
+    echo "+ svn revert -R -- ."
+    svn revert -R -- .
+fi
 svn status --no-ignore | grep '^[?I!A]      ' | cut -d' ' -f8- | xargs rm -rf
 echo "+ svn status --no-ignore"
 svn status --no-ignore
