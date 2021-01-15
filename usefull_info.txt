@@ -130,6 +130,8 @@ docker build -t NAME [--build-arg VAR[=value]] .
 docker run --mount type=bind,source=/media/files/workspace/docker_workspace,destination=/workspace -it NAME bash
 # Show running containers:
 docker ps -a
+# Stop running containers:
+docker stop $(docker ps -q)
 # Delete specific container image:
 docker rm CONTAINER_ID
 # Delete all not executing container images:
@@ -1690,6 +1692,8 @@ svn diff -r REV_START:REV_END
 svn checkout URL
 # svn for "git status":
 svn status [-q]
+# svn for "git revert COMMIT":
+svn merge -c -REV . && svn commit
 # svn for "git remote -v" (show remote repository URL):
 svn info .
 # svn determine repository root:
