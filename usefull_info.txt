@@ -144,6 +144,10 @@ docker rm $(docker ps -a -q -f status=exited)
 docker rm $(docker ps -a -q) && docker system prune -a -f
 # Show all built images:
 docker image ls
+# Remote docker:
+docker run -it IP:PORT/TAG:VERSION
+cd SOME_DIR && docker build -t IP:PORT/TAG:VERSION .
+docker push IP:PORT/TAG:VERSION
 
 # (generate) configure xorg:
 X -configure
@@ -2948,29 +2952,6 @@ m1:
 binutils-2.23.2/opcodes/arm-dis.c
 binutils-2.23.2/include/opcode/arm.h
 
-# Scan for network devices (port will be blocked):
-sudo arp-scan --interface=eth0 --localnet
-
-# Add route (tags: network, table):
-sudo ip r add 192.168.2.1 via 192.168.1.1 dev enx00249b20423d
-# Delete route:
-sudo ip r del 192.168.2.1
-
-# Measure network performance / throughput:
-# on server:
-iperf3 -s
-# on client:
-iperf3 -c SERVER_IP [-R] [-t10] [-u -b 100M]
-
-# Internet fixing commands:
-mtr --report-wide --show-ips --report-cycles 100 8.8.8.8
-nm-tool
-tracepath
-traceroute
-route # get default gateway
-cat /etc/resolv.conf
-/etc/network/interfaces
-
 # Partitions details:
 ls /dev/disk/by-uuid
 sudo blkid /dev/sda6
@@ -3262,7 +3243,31 @@ route add default gw 192.168.1.1
 # Get wireless networks list:
 sudo iwlist wlan0 scan
 
-# Use ifup to configure according to /etc/network/interfaces:
+# Scan for network devices (port will be blocked):
+sudo arp-scan --interface=eth0 --localnet
+
+# Add route (tags: network, table):
+sudo ip r add 192.168.2.1 via 192.168.1.1 dev enx00249b20423d
+# Delete route:
+sudo ip r del 192.168.2.1
+
+# Measure network performance / throughput:
+# on server:
+iperf3 -s
+# on client:
+iperf3 -c SERVER_IP [-R] [-t10] [-u -b 100M]
+
+# Internet fixing commands:
+mtr --report-wide --show-ips --report-cycles 100 8.8.8.8
+nm-tool
+tracepath
+traceroute
+route # get default gateway
+cat /etc/resolv.conf
+# ifupdown config:
+/etc/network/interfaces
+
+# Use ifup (ifupdown) to configure according to /etc/network/interfaces:
 ifup --all --verbose
 
 # Wireless devices manipulation (run as root):

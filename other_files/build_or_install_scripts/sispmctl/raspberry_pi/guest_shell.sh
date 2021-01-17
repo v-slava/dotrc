@@ -15,6 +15,8 @@
 # sudo chmod 664 /home/guest/devices/0/password /home/guest/devices/1/password /home/guest/devices/2/password
 #
 # # Put this script to /home/guest/
+# # For static IP see /etc/dhcpcd.conf (used to generate /etc/network/interfaces
+# # for ifupdown).
 
 GREETING="> "
 DEVICES=$HOME/devices
