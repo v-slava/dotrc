@@ -1,6 +1,10 @@
 # Determine file type for script:
 file -b --mime-type FILE
 
+# Create new user:
+groupadd -g $gid $group_name
+useradd -c "some comment" [-m -d /home/$user_name] -u $uid -g $gid -s /bin/bash $user_name
+
 # ls folders (ls directories):
 ls -d */
 
@@ -688,7 +692,7 @@ env -i bash --noprofile --norc
 set -x
 export SHELLOPTS
 
-# bash register cleanup function:
+# bash register cleanup function (execute on exit):
 my_cleanup()
 {
     echo my_cleanup

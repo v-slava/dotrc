@@ -3,7 +3,7 @@
 TMP="/media/files/workspace/tmp"
 
 set -ex
-sudo apt-get install libusb-dev
+sudo apt-get install libusb-dev git make gcc libtool m4 automake
 mkdir -p "$TMP"
 cd "$TMP"
 rm -rf sispmctl
@@ -22,6 +22,9 @@ ATTRS{idProduct}=="fd15", MODE="660", GROUP="plugdev"
 EOF
 sudo udevadm control --reload
 # Now reconnect EG-PMS2 usb device.
+
+# On raspberry pi use (bug?):
+# LD_LIBRARY_PATH=/usr/local/lib sispmctl
 
 # scan for supported devices:
 # sispmctl -s
