@@ -1709,6 +1709,8 @@ svn info | grep '^Repository Root: ' | cut -d' ' -f3
 # quick log: svn log -l10
 # svn determine branch a commit (revision) belongs to:
 svn log -v -q URL_OF_REPO_ROOT -r REVISION -l 1
+# svn for "git cherry-pick COMMIT" from some_branch:
+svn merge -c REVISION_1,REVISION_2,...,REVISION_N some_branch_url
 # svn for "git checkout COMMIT" (but first check out proper branch in another
 # folder!):
 svn up -r REVISION # svn update --revision REVISION
@@ -1862,6 +1864,8 @@ echo hello > /srv/tftp/SOME_DIR/FILE_NAME
 # On TFTP client:
 curl tftp://SERVER_IP_ADDRESS/FILE_NAME -o OUTPUT_FILE
 tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
+# if above is not working:
+echo 'get SOME_DIR/FILE_NAME' | tftp SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
 # See logs in /var/log/syslog
 

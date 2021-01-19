@@ -2,7 +2,8 @@
 
 # Prepare new guest user:
 
-# useradd -c "guest user" -m -g 1000 -G plugdev -s /home/guest/guest_shell.sh guest
+# useradd -c "guest user" -m -g 1000 -G plugdev,dialout -s \
+#         /home/guest/guest_shell.sh guest
 # sudo passwd guest
 # sudo chmod 775 /home/guest
 # mkdir -p /home/guest/devices/{0,1,2}
@@ -26,6 +27,7 @@ ERR_INTERNAL=250
 ERR_INVALID_PASSWORD=249
 ERR_INVALID_CMD=248
 ERR_INVALID_DEV_IDX=247
+ERR_USB_SERIAL_NOT_FOUND=246
 
 help()
 {
@@ -171,9 +173,18 @@ execute_cmd()
             if [ $RET -ne 0 ]; then
                 return $RET
             fi
-            minicom /dev/ttyUSB$DEV_IDX
-            RET=$?
-            # ser2net?
+            RET=$ERR_USB_SERIAL_NOT_FOUND
+            local EXPECTED_SERIAL="$DEVICES/$DEV_IDX/serial"
+            for DIR in $(find /sys/devices/ -type d -path '*tty/ttyUSB[0-9]*' \
+                    2>/dev/null | grep '[0-9]$') ; do
+                local ACTUAL_SERIAL="$DIR/../../../../serial"
+                if diff "$EXPECTED_SERIAL" "$ACTUAL_SERIAL" 1>/dev/null ; then
+                    minicom -D "/dev/$(basename $DIR)"
+                    RET=$?
+                    break
+                fi
+            done
+            # another option for telnet: ser2net
             unlock
             ;;
         "exit_on_first_error")
@@ -191,6 +202,9 @@ execute_cmd()
             ;;
         "help")
             help
+            RET=0
+            ;;
+        "")
             RET=0
             ;;
         *)
