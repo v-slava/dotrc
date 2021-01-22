@@ -115,6 +115,11 @@ export XDG_CACHE_HOME=$HOME/.cache_xdg
 export MINICOM='-c on'
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
 
+# T909S:
+# export BT_MAC=30:07:14:25:02:55
+# Sony MDR-10RBT:
+export BT_MAC=57:D3:98:0C:4A:2F
+
 # iris: A new experimental Gallium driver for Intel Gen8+ GPUs
 # export MESA_LOADER_DRIVER_OVERRIDE=iris
 # Workaround for smplayer/vlc crash:

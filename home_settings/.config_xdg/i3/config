@@ -173,7 +173,7 @@ for_window [window_role="browser"] mark --replace browser
 # for_window [class="Firefox-esr"] mark --replace browser
 # Set floating mode for some programs:
 for_window [title="Qemu: Windows 7"] fullscreen
-for_window [title="My bluetooth headset"] floating enable
+for_window [title="Toggle audio device"] floating enable
 for_window [title="Send input"] floating enable
 # for_window [class="Skype"] floating enable
 for_window [class="Skype"] mark --replace skype
@@ -290,8 +290,6 @@ bindsym $WIN+h        exec --no-startup-id exec $START xmms2 seek -3
 bindsym $WIN+l        exec --no-startup-id exec $START xmms2 seek +3
 bindsym $WIN+0        exec --no-startup-id exec $START xmms2 seek 0
 
-bindsym $Alt_R+a exec --no-startup-id exec $START pavucontrol
-
 # volume hotkeys:
 bindsym XF86AudioMute        exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh 0%
 bindsym XF86AudioRaiseVolume exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh +5%
@@ -299,9 +297,10 @@ bindsym $WIN+u exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh
 bindsym XF86AudioLowerVolume exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh -5%
 bindsym $WIN+d exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh -5%
 
-# toggle sound output (bluetooth headset / built-in audio):
-bindsym $Alt_R+$Shift_R+b exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_toggle_hotkey.sh
-bindsym $Alt_L+$Shift_L+b exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_toggle_hotkey.sh
+# toggle audio device (bluetooth headset / built-in audio or usb audio / built-in audio):
+bindsym $Alt_R+a exec --no-startup-id exec $START $DOTRC/other_files/audio_device_toggle.sh --spawn-terminal
+bindsym $Alt_R+b exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_toggle_profile.py
+bindsym $Alt_R+s exec --no-startup-id exec $START pavucontrol
 
 # brightness hotkeys:
 bindsym XF86MonBrightnessUp exec --no-startup-id exec $START $DOTRC/other_files/screen_brightness.sh --up

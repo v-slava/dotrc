@@ -3,11 +3,11 @@
 # exec "C:/Program Files/SlickEdit Pro 20.0.0/win/vs.exe" $@
 
 if [ -n "$1" ]; then
-    ARG="$(realpath "$1")"
+    ARG="$(realpath -- "$1")"
     if [ -e "$ARG" ]; then
         MIME="$(file -b --mime-type "$ARG")"
         case "$MIME" in
-            "image/jpeg")
+            image/*)
                 kolourpaint "$1"
                 exit 0 ;;
         esac

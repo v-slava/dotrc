@@ -1,24 +1,31 @@
 #!/bin/bash
 
-source ~/.config_xdg/BT_MAC.sh
-
-# BLUETOOTH_CONNECTED=$DOTRC/other_files/bluetooth_connected.sh
-# if $BLUETOOTH_CONNECTED ; then # connected => need to disconnect
-# else # disconnected => need to connect
-# fi
-
 set -e
-ACTION="$1"
-if [ -z "$ACTION" ]; then
-    echo -e "Type action number:\n\n1: connect\n2: disconnect\n\nYour choice: "
-    read -n1 ACTION_NUMBER
-    case $ACTION_NUMBER in
-        "1") ACTION=connect ;;
-        "2") ACTION=disconnect ;;
-        *) echo "Wrong action selected" 1>&2 ; exit 1 ;;
-    esac
+
+if [ "$1" = "--spawn-terminal" ]; then
+    # See: $DOTRC/other_files/open_terminal.sh
+    source ~/.bashrc
+    exec x-terminal-emulator -title "Toggle audio device" -geometry 120x30 \
+        -e bash -c "$DOTRC/other_files/audio_device_toggle.sh || vifm-pause"
 fi
-echo -e "\n"
+
+# ACTION="$1"
+# if [ -z "$ACTION" ]; then
+#     echo -e "Type action number:\n\n1: connect\n2: disconnect\n\nYour choice: "
+#     read -n1 ACTION_NUMBER
+#     case $ACTION_NUMBER in
+#         "1") ACTION=connect ;;
+#         "2") ACTION=disconnect ;;
+#         *) echo "Wrong action selected" 1>&2 ; exit 1 ;;
+#     esac
+# fi
+# echo -e "\n"
+
+if $DOTRC/other_files/bluetooth_connected.sh ; then
+    ACTION=disconnect
+else
+    ACTION=connect
+fi
 
 if [ -n "$BT_MAC" ]; then
     echo "$ACTION $BT_MAC" | bluetoothctl
