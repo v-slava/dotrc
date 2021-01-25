@@ -377,6 +377,12 @@ xset s off -dpms
 # remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
 
+# home video security / surveillance system:
+apt-get install zoneminder
+# app for android: zoneminder client mobile
+# app for ios: Surveillance Pro
+# See also: https://habr.com/ru/post/454132/
+
 # share screen sharing (x11vnc server uses port 5900):
 # On client start SSH tunnel:
 ssh -L 5900:localhost:5900 user@screen_sharing_host
