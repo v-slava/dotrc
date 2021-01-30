@@ -15,6 +15,7 @@
 # chroot rootfs_dir
 # passwd
 # mount /dev/sda1 /boot/efi
+# mkdir /media/files
 
 # apt-get install linux-image-amd64 systemd systemd-sysv
 #
@@ -53,7 +54,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
     gcc g++ cmake build-essential \
     gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
-    linux-base linux-perf ripgrep bvi git git-email make patch dos2unix \
+    linux-base linux-perf bvi git git-email make patch dos2unix \
     zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar zstd pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     ntpdate fuseiso9660 netcat-openbsd \
@@ -77,7 +78,7 @@ apt-file update
 # another option: jmtpfs
 
 # To mount ios file system:
-apt-get install ifuse usbmuxd
+# apt-get install ifuse usbmuxd
 
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
 # apt-get install firmware-atheros
@@ -88,9 +89,22 @@ apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 
 # Install GUI:
-# apt-get install sway swaylock kitty wofi
-# dunst -> mako (desktop notifications)
-# dmenu -> bemenu
+# apt-get install sway # way-cooler
+# rxvt-unicode-256color -> foot # kitty # alacritty
+# i3lock -> swaylock
+#
+# jq - for switching keyboard layout
+#
+# dunst -> mako-notifier (desktop notifications)
+# dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus &
+# mako &
+# use "makoctl dismiss" in sway config (map to Ctrl_L+Space)
+#
+# MOZ_ENABLE_WAYLAND=1 firefox
+# google-chrome -–enable-features=UseOzonePlatform –-ozone-platform=wayland
+#
+# dmenu -> bemenu # wofi
+# i3bar -> waybar # or by default: sway-bar
 # xclip, xsel -> wl-clipboard
 # scrot -> slurp, grim (screenshots)
 # Commands:

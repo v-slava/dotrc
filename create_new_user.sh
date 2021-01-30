@@ -19,7 +19,7 @@ USER_NAME=$1
 USER_PASSWD=$USER_NAME
 
 # echo -e "$USER_PASSWD\n$USER_PASSWD\n\n\n\n\n\ny" | adduser $USER_NAME
-useradd $USER_NAME
+useradd -m -s /bin/bash $USER_NAME
 echo "${USER_NAME}:${USER_PASSWD}" | chpasswd
 
 GROUPS=sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth,docker

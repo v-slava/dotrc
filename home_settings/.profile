@@ -29,7 +29,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 else # if [ ! true ]
-    source "$HOME/.bashrc"
+    . "$HOME/.bashrc"
 fi
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then

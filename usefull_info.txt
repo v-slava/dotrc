@@ -3,7 +3,7 @@ file -b --mime-type FILE
 
 # Create new user:
 groupadd -g $gid $group_name
-useradd -c "some comment" [-m -d /home/$user_name] -u $uid -g $gid -s /bin/bash $user_name
+useradd -c "some comment" [-m] [-d /home/$user_name] -u $uid -g $gid -s /bin/bash $user_name
 
 # ls folders (ls directories):
 ls -d */
