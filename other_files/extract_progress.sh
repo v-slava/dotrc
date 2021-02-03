@@ -101,6 +101,7 @@ EOF
         *.tar)              pv $PV_FLAGS "$FILE_FULL_PATH" | tar x         ;;
         *.tgz | *.tar.gz)   pv $PV_FLAGS "$FILE_FULL_PATH" | tar xz        ;;
         *.tar.lz)           pv $PV_FLAGS "$FILE_FULL_PATH" | tar x --lzip  ;;
+        *.tar.lzma)         pv $PV_FLAGS "$FILE_FULL_PATH" | tar x --lzma  ;;
         *.tar.zst)          pv $PV_FLAGS "$FILE_FULL_PATH" | tar x -I zstd ;;
         *.tar.bz2 | *.tbz2) pv $PV_FLAGS "$FILE_FULL_PATH" | tar xj        ;;
         *.tar.xz | *.txz)   pv $PV_FLAGS "$FILE_FULL_PATH" | tar xJ        ;;

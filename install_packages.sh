@@ -103,6 +103,9 @@ apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 # MOZ_ENABLE_WAYLAND=1 firefox
 # google-chrome -–enable-features=UseOzonePlatform –-ozone-platform=wayland
 #
+# network-manager-gnome: run nm-connection-editor, nm-applet doesn't work
+# See also nmtui
+#
 # dmenu -> bemenu # wofi
 # i3bar -> waybar # or by default: sway-bar
 # xclip, xsel -> wl-clipboard
