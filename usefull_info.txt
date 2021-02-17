@@ -1875,6 +1875,21 @@ echo 'get SOME_DIR/FILE_NAME' | tftp SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
 # See logs in /var/log/syslog
 
+# FTP server demo:
+sudo apt-get install vsftpd
+sudo nvim /etc/vsftpd.conf
+# Add the following lines:
+# anonymous_enable=YES
+# anon_root=/your/ftp/root/dir
+sudo systemctl restart vsftpd
+echo test > /your/ftp/root/dir/hello_world.txt
+curl ftp://localhost/hello_world.txt -o out.txt
+cat out.txt
+
+# SFTP server demo:
+sudo apt-get install openssh-sftp-server
+cd /tmp && echo 'get /etc/fstab' | sftp -b - localhost
+
 # Send a message from command line (notice level):
 logger "hello world"
 # Send a message from command line (copy it to stderr):
