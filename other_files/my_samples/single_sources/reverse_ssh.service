@@ -1,0 +1,18 @@
+# sudo cp reverse_ssh.service /etc/systemd/system/
+# systemctl start reverse_ssh.service
+# systemctl enable reverse_ssh.service
+# Make sure ssh doesn't ask for a password from root
+# ssh -t -p 53535 pi@IP ssh -p 53537 pi@localhost
+
+[Unit]
+Description=Reverse SSH connection
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -vvv -N -T -o "ServerAliveInterval 10" -o "ExitOnForwardFailure yes" -R 53537:localhost:22 -p 53535 pi@IP
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=default.target

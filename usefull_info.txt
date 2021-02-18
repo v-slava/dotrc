@@ -385,11 +385,14 @@ apt-get install zoneminder
 
 # share screen sharing (x11vnc server uses port 5900):
 # On client start SSH tunnel:
-ssh -L 5900:localhost:5900 user@screen_sharing_host
+ssh -N -L 5900:localhost:5900 user@screen_sharing_host
 # On server:
 x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
 gvncviewer {screen_sharing_host|localhost}
+
+# For reverse ssh see:
+$DOTRC/other_files/my_samples/single_sources/reverse_ssh.service
 
 # ssh query algorithms:
 ssh -Q KexAlgorithms
