@@ -1862,6 +1862,26 @@ sudo service nfs-kernel-server restart
 # /mnt_folder 192.168.1.1(rw,sync,no_root_squash,no_subtree_check)
 # /mnt_folder *(rw,sync,no_root_squash,no_subtree_check)
 
+# FTP server demo:
+sudo apt-get install vsftpd
+sudo nvim /etc/vsftpd.conf
+# Add the following lines:
+# anonymous_enable=YES
+# anon_root=/your/ftp/root/dir
+sudo systemctl restart vsftpd
+echo test > /your/ftp/root/dir/hello_world.txt
+curl ftp://localhost/hello_world.txt -o out.txt
+cat out.txt
+curl ftp://user:password@localhost/hello_world.txt -o out.txt
+curl ftp://user:%fe%23%42@localhost/hello_world.txt -o out.txt
+cat << EOF | ftp -i -p -n ftp.somecompany.com
+user USER PASSWORD
+cd /
+ls
+get some_file.txt
+exit
+EOF
+
 # Download file over TFTP:
 # On TFTP server:
 apt-get install tftpd-hpa
@@ -1877,17 +1897,6 @@ tftp -g -r SOME_DIR/FILE_NAME SERVER_IP_ADDRESS
 echo 'get SOME_DIR/FILE_NAME' | tftp SERVER_IP_ADDRESS
 # FILE_NAME will be in current folder
 # See logs in /var/log/syslog
-
-# FTP server demo:
-sudo apt-get install vsftpd
-sudo nvim /etc/vsftpd.conf
-# Add the following lines:
-# anonymous_enable=YES
-# anon_root=/your/ftp/root/dir
-sudo systemctl restart vsftpd
-echo test > /your/ftp/root/dir/hello_world.txt
-curl ftp://localhost/hello_world.txt -o out.txt
-cat out.txt
 
 # SFTP server demo:
 sudo apt-get install openssh-sftp-server
