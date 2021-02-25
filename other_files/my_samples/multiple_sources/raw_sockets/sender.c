@@ -66,9 +66,9 @@ int main(void)
     memset(send_buf, 0, sizeof(send_buf));
     struct ether_header *eh = (struct ether_header *)send_buf;
 
-    memcpy(eh->ether_shost, &ifr.ifr_hwaddr.sa_data, ETH_ALEN);
     memcpy(eh->ether_dhost, dest_mac, ETH_ALEN);
-    eh->ether_type = 0xFFFF; // ETH_P_IP
+    memcpy(eh->ether_shost, &ifr.ifr_hwaddr.sa_data, ETH_ALEN);
+    eh->ether_type = 0xFFFF; // htons(ETH_P_IP)
 
     size_t tx_len = sizeof(*eh);
     for (int i = 1; i <= L2_PAYLOAD; i++) {

@@ -979,6 +979,8 @@ chmod u+s /usr/sbin/tcpdump
 sudo modprobe usbmon
 # Dump packets and feed them to wireshark through unnamed pipe:
 tcpdump -i usbmon1 -w - -U [tcp port 7777] | wireshark -k -i -
+# Dump only L2 PTP packets:
+tcpdump ether proto 0x88f7
 
 # Use wireshark plugin (dissector):
 wireshark -X lua_script:/path/to/plugin/file.lua

@@ -5,6 +5,8 @@ set selection-clipboard clipboard
 # installed):
 set sandbox none
 
+unmap d
+
 " set scroll-step 100
 " set scroll-hstep 100
 
