@@ -260,7 +260,7 @@ filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.docm,*.xls,
 
 filextype *.dia dia %f %i &
 
-filextype *.pcapng wireshark %f &
+filextype *.pcapng,*.pcap wireshark %f &
 
 " filetype *.gl,*.vim,*vimrc,.*vimrc vim %f
 
