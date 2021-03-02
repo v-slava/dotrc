@@ -979,8 +979,18 @@ chmod u+s /usr/sbin/tcpdump
 sudo modprobe usbmon
 # Dump packets and feed them to wireshark through unnamed pipe:
 tcpdump -i usbmon1 -w - -U [tcp port 7777] | wireshark -k -i -
-# Dump only L2 PTP packets:
-tcpdump ether proto 0x88f7
+# Dump PTP packets:
+tcpdump ether proto 0x88f7 or udp port 319 or udp port 320
+
+# Start IPv4 PTPv2 2 steps master:
+sudo ptp4l -i $PTP_MASTER_INTERFACE -E -S -4 -l 7 -m -q
+
+# Start L2 PTPv2 2 steps master:
+cat << EOF > /tmp/ptp4l.conf
+[global]
+ptp_dst_mac b8:27:eb:b8:40:22
+EOF
+sudo ptp4l -i eno1 -E -S -2 -l 7 -m -q -f /tmp/ptp4l.conf
 
 # Use wireshark plugin (dissector):
 wireshark -X lua_script:/path/to/plugin/file.lua
@@ -1702,7 +1712,9 @@ patch -p0 < /path/to/file.patch
 svn merge [--reintegrate] https://HOST/repository/branches/branch1
 # Note: --reintegrate just brings changes from the branch. The history is not
 # preserved, there will be just 1 merge commit that you will do explicitly in
-# the end.
+# the end. A merge from the parent branch to the feature branch is called a
+# 'sync' or 'catch-up' merge, and a merge from the feature branch to the parent
+# branch is called a 'reintegrate' merge.
 # svn repository URL changed:
 svn switch --relocate URL_REPO_ROOT_FROM URL_REPO_ROOT_TO .
 # svn diff (REV_START; REV_END] (here REV_START < REV_END):
@@ -3191,6 +3203,11 @@ https://en.wikipedia.org/wiki/Frame_check_sequence#/media/File:Ethernet_Frame.pn
 ethtool INTERFACE
 # Set interface (ethernet) speed:
 ethtool -s INTERFACE {10|100|1000}
+
+# See whether we discard bad TCP/UDP checksums:
+ethtool -k INTERFACE | grep check
+# Do not discard bad UDP checksums:
+sudo ethtool -K INTERFACE rx off
 
 # connect to wifi via network manager (nmcli):
 # ("d" stands for "device")
