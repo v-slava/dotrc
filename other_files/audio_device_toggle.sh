@@ -21,15 +21,27 @@ fi
 # fi
 # echo -e "\n"
 
-if $DOTRC/other_files/bluetooth_connected.sh ; then
-    ACTION=disconnect
-else
-    ACTION=connect
-fi
-
 if [ -n "$BT_MAC" ]; then
-    echo "$ACTION $BT_MAC" | bluetoothctl
-    journalctl --follow _SYSTEMD_UNIT=bluetooth.service
+    set +e
+    if $DOTRC/other_files/bluetooth_connected.sh ; then
+        ACTION=disconnect
+        EXPECTED_RET=1
+    else
+        ACTION=connect
+        EXPECTED_RET=0
+    fi
+    do_bt_action()
+    {
+        echo "$ACTION $BT_MAC" | bluetoothctl
+        $DOTRC/other_files/bluetooth_connected.sh
+    }
+    do_bt_action
+    while [ $? -ne $EXPECTED_RET ]; do
+        sleep 1
+        do_bt_action
+    done
+    exit 0
+    # journalctl --follow _SYSTEMD_UNIT=bluetooth.service
 else
     # Assume this is not a bluetooth but rather a USB headset.
     case $ACTION in
