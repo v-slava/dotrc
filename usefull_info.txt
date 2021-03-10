@@ -1883,6 +1883,7 @@ sudo nvim /etc/vsftpd.conf
 # anonymous_enable=YES
 # anon_root=/your/ftp/root/dir
 sudo systemctl restart vsftpd
+# sudo tail -f /var/log/vsftpd.log
 echo test > /your/ftp/root/dir/hello_world.txt
 curl ftp://localhost/hello_world.txt -o out.txt
 cat out.txt
@@ -1890,6 +1891,7 @@ curl ftp://user:password@localhost/hello_world.txt -o out.txt
 curl ftp://user:%fe%23%42@localhost/hello_world.txt -o out.txt
 cat << EOF | ftp -i -p -n ftp.somecompany.com
 user USER PASSWORD
+user anonymous any_password
 cd /
 ls
 get some_file.txt
@@ -1900,6 +1902,7 @@ EOF
 # On TFTP server:
 apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
+# See TFTP_DIRECTORY in /etc/default/tftpd-hpa
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME
 # Use the following portable tftp server for windows:
 # https://www.softpedia.com/get/PORTABLE-SOFTWARE/Internet/Servers/Tftpd32-Portable.shtml#download
