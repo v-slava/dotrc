@@ -1892,6 +1892,8 @@ curl ftp://user:%fe%23%42@localhost/hello_world.txt -o out.txt
 cat << EOF | ftp -i -p -n ftp.somecompany.com
 user USER PASSWORD
 user anonymous any_password
+binary
+get /some_file.txt
 cd /
 ls
 get some_file.txt
@@ -3222,17 +3224,24 @@ nmcli d wifi list
 nmcli d wifi connect <SSID> password <PASSWORD>
 
 # Connect manually to wifi (wpasupplicant):
+echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" > /etc/wpa_supplicant/wpa_supplicant.conf
+wpa_passphrase SSID PASSWORD | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
 cat << EOF > /etc/wpa_supplicant/my_wpa_supplicant.conf
+# country=RU
 ctrl_interface=/var/run/wpa_supplicant
+# update_config=1
 network={
 	ssid="your_wifi_ssid"
 	psk="your_wifi_password"
-	priority=1
+# 	priority=1
 # 	key_mgmt=WPA-PSK
 # 	scan_ssid=1
 }
 EOF
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/my_wpa_supplicant.conf
+# rfkill
+# rfkill list
+# rfkill unblock wifi
 
 # Connect to wifi (either open network or WEP, doesn't work for WPA):
 iwconfig wlan0 essid WIFI_SSID key WIFI_PASSWORD
@@ -3265,8 +3274,19 @@ ip addr add 192.168.1.29/24 dev wlan0
 ip route add default via 192.168.1.1
 # ip addr del 106.124.32.34/24 dev eth0
 
-# Start DHCP server and forward packets from one interface to another (router):
-$DOTRC/other_files/start_router.sh
+# Start DHCP server and forward packets from one interface to another (router,
+# wifi access point):
+$DOTRC/other_files/my_samples/single_sources/start_router.sh
+
+# iptables:
+# list all tables rules:
+sudo iptables -L -v -n
+# list all IPv4 rules:
+sudo iptables -S
+# list all IPv6 rules:
+sudo ip6tables -S
+# list NAT rules:
+# iptables -t nat -L
 
 # Release current lease and stop running DHCP client:
 dhclient -r
@@ -3339,9 +3359,6 @@ genisoimage -r -J -o cd_image.iso <folder> # create iso image
 # Check (paranoidal) image correctness:
 sudo mount -t iso9660 -o ro cd_image.iso /media/cd_mount_point
 sudo wodim -v -eject dev=/dev/sr0 /home/user/img.iso # -multi
-
-# Launch wi-fi access point:
-wifi_ap.sh -w 1+2 wlan0 eth0 AP_NAME PASSWORD
 
 # use backtrace(3) with addr2line(1):
 # copy code from example in backtrace(3):
