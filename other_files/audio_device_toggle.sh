@@ -32,12 +32,17 @@ if [ -n "$BT_MAC" ]; then
     fi
     do_bt_action()
     {
+        if [ -z "$ITER" ]; then
+            ITER=0
+        fi
+        ITER=$(($ITER + 1))
+        echo -e "\nIteration #$ITER..."
         echo "$ACTION $BT_MAC" | bluetoothctl
         $DOTRC/other_files/bluetooth_connected.sh
     }
     do_bt_action
     while [ $? -ne $EXPECTED_RET ]; do
-        sleep 1
+        sleep 0.1
         do_bt_action
     done
     exit 0
