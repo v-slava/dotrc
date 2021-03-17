@@ -60,7 +60,8 @@ def main():
         n = c.expect(['@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
             "The authenticity of host [^\n]+ can't be established.",
             f'ssh: connect to host {args.target_ip} port 22: No route to host',
-            password_prompt])
+            # pexpect.TIMEOUT,
+            password_prompt]) # , timeout = 300
         if n == 0: # got '@@@@@@...'
             c = ssh_keygen_retry(c, process, args.target_ip)
         elif n == 1: # got 'The authenticity of host ...'

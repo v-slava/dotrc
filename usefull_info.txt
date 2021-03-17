@@ -1,6 +1,9 @@
 # Determine file type for script:
 file -b --mime-type FILE
 
+# stopwatch timer:
+while true ; do sleep 0.1 ; date +%H:%M:%S:%N ; done
+
 # Create new user:
 groupadd -g $gid $group_name
 useradd -c "some comment" [-m] [-d /home/$user_name] -u $uid -g $gid -s /bin/bash $user_name
@@ -1244,7 +1247,7 @@ cmake -DCMAKE_INSTALL_PREFIX=.. ../src_dir
 
 # create JSON file with build commands, used by clang tooling interface (rtags):
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
-bear make
+bear [--force-wrapper] [--] make
 compiledb make
 ./scripts/gen_compile_commands.py # for linux kernel >= v5.0
 # need additional processing:
@@ -1472,6 +1475,7 @@ echo "time elapsed: $(secs_to_human $(($ENDTIME - $STARTTIME)))"
 
 # show date and time for scripts:
 date '+%Y_%m_%d__%H_%M_%S_%N'
+date '+%s_%N'
 
 # Set time 3 hours back:
 date -s "$(date -R -d '-3 hour')"
@@ -1906,6 +1910,8 @@ apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
 # See TFTP_DIRECTORY in /etc/default/tftpd-hpa
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME
+# See config in: /etc/default/tftpd-hpa /etc/init/tftpd-hpa.conf
+# sudo systemctl restart tftpd-hpa.service
 # Use the following portable tftp server for windows:
 # https://www.softpedia.com/get/PORTABLE-SOFTWARE/Internet/Servers/Tftpd32-Portable.shtml#download
 # See also: $DOTRC/windows/desktop_bat_files/download_from_miniserve.bat
