@@ -89,11 +89,6 @@ echo 'Runtime.evaluate {"expression":"alert(\"hello\");"}' | websocat -n1 --json
 # Another option: connect to remote debugging from another chrome instance:
 google-chrome http://localhost:9222/
 
-# Run simple tcp server:
-nc -l localhost 9222
-# Run simple tcp client (connect to the server above):
-nc localhost 9222
-
 # terminal (urxvt) send ^H (ctrl-H) as backspace (for telnet):
 stty erase ^H
 printf "\e[?67h"
@@ -386,6 +381,14 @@ apt-get install zoneminder
 # app for ios: Surveillance Pro
 # See also: https://habr.com/ru/post/454132/
 
+# Run simple tcp server:
+nc -l localhost 9222
+# Run simple tcp client (connect to the server above):
+nc localhost 9222
+# TCP proxy: forward 10.70.126.164:9999 -> localhost:9998
+rm -f /tmp/fifo && mkfifo /tmp/fifo
+nc -l -p 9998 < /tmp/fifo | nc 10.70.126.164 9999 > /tmp/fifo
+
 # share screen sharing (x11vnc server uses port 5900):
 # On client start SSH tunnel:
 ssh -N -L 5900:localhost:5900 user@screen_sharing_host
@@ -403,6 +406,23 @@ ssh -Q HostKeyAlgorithms
 ssh -Q Ciphers
 # ssh specify algorithms:
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oCiphers=+aes256-cbc user@host
+
+# ssh connect to host on specified port (default port = 22):
+ssh -p port user@host
+
+# non-interactive authentication with password:
+sshpass -p PASSWORD ssh user@host
+sshpass -p PASSWORD scp FILE user@host:/some/path/
+
+# View machines, connected via ssh (list of currently logged users):
+who -a
+
+# Mount folder over SSH:
+sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
+
+# Copy files over ssh:
+ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
+ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
 
 # list only directories in $DIR:
 ls -d $DIR/*/
@@ -1602,23 +1622,6 @@ mplayer -ao alsa:device=btheadset file.mp3
 hdparm -R0 /dev/sdX
 hdparm -r0 /dev/sdX
 
-# ssh connect to host on specified port (default port = 22):
-ssh -p port user@host
-
-# non-interactive authentication with password:
-sshpass -p PASSWORD ssh user@host
-sshpass -p PASSWORD scp FILE user@host:/some/path/
-
-# View machines, connected via ssh (list of currently logged users):
-who -a
-
-# Mount folder over SSH:
-sshfs -o allow_root,nonempty user_name@server_name_or_IP:/folder/to/mount /mount/point
-
-# Copy files over ssh:
-ssh USER_NAME@$IP "tar cz --exclude=*.o -C /path/to dir" | pv > 1.tar.gz
-ssh USER_NAME@$IP "cat FILE" | pv -s 1G > FILE
-
 # git clone official linux kernel:
 git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 cd linux
@@ -1751,6 +1754,8 @@ svn switch https://.../log4j/trunk
 # new_branch):
 svn copy "$(svn info | grep '^URL: ' | cut -d' ' -f2)" NEW_BRANCH_URL \
          [-m 'Creating a new branch: new_branch']
+# svn for creating new commit (with current changes) in new branch:
+svn copy . NEW_BRANCH_URL
 # svn for "git add FILE":
 svn {add|rm} FILE
 # svn commit local changes directly to new branch:
