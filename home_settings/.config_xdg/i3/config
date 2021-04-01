@@ -300,6 +300,7 @@ bindsym $WIN+d exec --no-startup-id exec $START $DOTRC/other_files/set_volume.sh
 # toggle audio device (bluetooth headset / built-in audio or usb audio / built-in audio):
 bindsym $Alt_R+a exec --no-startup-id exec $START $DOTRC/other_files/audio_device_toggle.sh --spawn-terminal
 bindsym $Alt_R+b exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_toggle_profile.py
+bindsym $Alt_R+r exec --no-startup-id exec $START $DOTRC/other_files/bluetooth_switch_sinks_sources.sh
 bindsym $Alt_R+s exec --no-startup-id exec $START pavucontrol
 
 # brightness hotkeys:
