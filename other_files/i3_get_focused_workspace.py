@@ -4,7 +4,9 @@ import subprocess
 import json
 
 def get_focused_workspace():
-    ret = subprocess.run(['i3-msg', '-t', 'get_workspaces'], check = True,
+    sway = True
+    program = 'swaymsg' if sway else 'i3-msg'
+    ret = subprocess.run([program, '-t', 'get_workspaces'], check = True,
             capture_output = True, encoding = 'utf8')
     for workspace in json.loads(ret.stdout):
         if workspace['focused']:

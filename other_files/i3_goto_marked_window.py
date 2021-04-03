@@ -3,12 +3,20 @@
 import json
 import subprocess
 
-ret = subprocess.run(['i3-msg', '-t', 'get_marks'], check = True,
-        capture_output = True, encoding = 'ascii')
+sway = True
+if sway:
+    msg = 'swaymsg'
+    font_args = []
+else:
+    msg = 'i3-msg'
+    font_args = ['-fn', 'Inconsolata LGC-16:monospace']
+
+ret = subprocess.run([msg, '-t', 'get_marks'], check = True,
+                     capture_output = True, encoding = 'ascii')
 marks = '\n'.join(json.loads(ret.stdout))
-cmd = ['dmenu', '-fn', 'Inconsolata LGC-16:monospace', '-p', 'Go to window:']
+cmd = ['dmenu'] + font_args + ['-p', 'Go to window:']
 ret = subprocess.run(cmd, check = True, input = marks, capture_output = True,
-        encoding = 'ascii')
+                     encoding = 'ascii')
 selected_mark = ret.stdout[:-1]
-cmd = ['i3-msg', f'[con_mark="{selected_mark}"]', 'focus']
+cmd = [msg, f'[con_mark="{selected_mark}"]', 'focus']
 subprocess.run(cmd, check = True, stdout = subprocess.DEVNULL)

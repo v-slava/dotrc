@@ -1,5 +1,27 @@
 #!/bin/bash
 
+# For sway:
+set -e
+swaymsg -t get_inputs | python3 -c '\
+import sys, json
+inputs = json.load(sys.stdin)
+for input in inputs:
+    identifier = input["identifier"]
+    if "touchpad" in identifier or "Touchpad" in identifier:
+        send_events = input["libinput"]["send_events"]
+        print(f"{identifier} {send_events}")
+        break
+' | while read TOUCHPAD_ID OLD_STATE ; do
+    if [ "$OLD_STATE" = "disabled" ]; then
+        NEW_STATE=enabled
+    else
+        NEW_STATE=disabled
+    fi
+    swaymsg input $TOUCHPAD_ID events $NEW_STATE 1>/dev/null
+done
+exit
+
+# For i3:
 TOUCHPAD_REGEXES=(
     "touchpad"
     "Synaptics TM2722-001"

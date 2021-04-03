@@ -20,6 +20,9 @@
 # copies fine:
 # xclip -selection clipboard
 
+if [ -z "$WAYLAND_DISPLAY" ]; then
+# For X11:
+
 # CLIPBOARD_CMD="xclip -selection clipboard"
 CLIPBOARD_CMD="xsel --clipboard"
 
@@ -32,3 +35,16 @@ case "$1" in
     # "--primary-2-clipboard") xclip -selection primary -o | xclip -selection clipboard -i ;;
     *) $CLIPBOARD_CMD -i ;;
 esac
+
+else
+# For wayland:
+
+case "$1" in
+    "-o") wl-paste ;;
+    "-n") cat | tr -d '\n' | wl-copy ;;
+    "--clipboard-2-primary") wl-paste | wl-copy --primary ;;
+    "--primary-2-clipboard") wl-paste --primary | wl-copy ;;
+    *) wl-copy ;;
+esac
+
+fi

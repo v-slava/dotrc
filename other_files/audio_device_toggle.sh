@@ -3,10 +3,9 @@
 set -e
 
 if [ "$1" = "--spawn-terminal" ]; then
-    # See: $DOTRC/other_files/open_terminal.sh
-    source ~/.bashrc
-    exec x-terminal-emulator -title "Toggle audio device" -geometry 120x30 \
-        -e bash -c "$DOTRC/other_files/audio_device_toggle.sh || vifm-pause"
+    exec $DOTRC/other_files/open_terminal.sh --title "Toggle audio device" \
+        bash -c "$DOTRC/other_files/audio_device_toggle.sh || vifm-pause"
+        # --geometry 120x30
 fi
 
 # ACTION="$1"

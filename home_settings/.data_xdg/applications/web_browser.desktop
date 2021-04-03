@@ -2,7 +2,8 @@
 Version=1.0
 Name=Web Browser
 GenericName=Web Browser
-Exec=x-www-browser %U
+# Exec=x-www-browser %U
+Exec=/media/files/workspace/dotrc/bin/x-www-browser %U
 StartupNotify=true
 Terminal=false
 Type=Application

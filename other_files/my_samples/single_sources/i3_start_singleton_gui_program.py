@@ -8,8 +8,7 @@ import signal
 import psutil
 import argparse
 import subprocess
-# TODO implement:
-# from i3_get_focused_workspace import get_focused_workspace
+from i3_get_focused_workspace import get_focused_workspace
 
 def json_find_recursive(obj, func, arr):
     if func(obj):
@@ -78,14 +77,6 @@ def find_win_with_prop(prop_name, prop_value, obj):
 #     return json_find_single(json_root, is_our_workspace)
 
 def start_program(cmd, find_window, process_name = None, single_run = False):
-    # For sway:
-    dotrc = os.environ['DOTRC']
-    start_from_gui = os.path.join(dotrc, 'other_files', 'start_from_gui.sh')
-    cmd = [start_from_gui] + cmd
-    subprocess.Popen(cmd, stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL)
-    return
-    # For i3:
     def get_win_id(win):
         assert(win)
         return win[0]['window']
@@ -138,8 +129,7 @@ def start_browser(args):
     def find_browser(obj):
         return find_win_with_prop('window_role', 'browser', obj)
     # start_program(['firefox'] + args, find_browser)
-    # start_program(['google-chrome'] + args, find_browser)
-    start_program(['x-www-browser'] + args, find_browser)
+    start_program(['google-chrome'] + args, find_browser)
 
 def start_email(args):
     def find_email_client(obj):
@@ -170,50 +160,24 @@ def start_slack(args):
     start_program(['slack'] + args, find_slack)
 
 def start_dictionary(args):
-    # def find_dictionary(obj):
-    #     return find_win_with_prop('class', 'GoldenDict', obj)
-    # start_program(['goldendict'] + args, find_dictionary)
-
-    # # TODO goldendict for wayland crashes if there are arguments.
-    # # TODO: on wayland second command goldendict causes failure. Therefore we
-    # # will use this workaround:
-    # cmd = ['goldendict'] # + args
-    # process_name = cmd[0]
-    # is_running = process_name in (p.name() for p in psutil.process_iter())
-    # if is_running:
-    #     pid = None
-    #     for p in psutil.process_iter():
-    #         if p.name() == process_name:
-    #             pid = p.pid
-    #             break
-    #     assert (pid != None)
-    #     os.kill(pid, signal.SIGTERM)
-
-    cmd = ['goldendict'] + args
-    my_env = os.environ.copy()
-    my_env['QT_QPA_PLATFORM'] = 'xcb'
-    subprocess.Popen(cmd, env = my_env, stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL)
+    def find_dictionary(obj):
+        return find_win_with_prop('class', 'GoldenDict', obj)
+    start_program(['goldendict'] + args, find_dictionary)
 
 def parse_cmd_line_args():
     desc = 'Start singleton GUI program.'
     parser = argparse.ArgumentParser(description = desc)
-    programs_supported = ['browser', 'email', 'telegram', 'dictionary', 'viber',
-            # 'skype', # use in browser: https://web.skype.com/
-            # 'slack' # use in browser: https://slack.com/
-            ]
+    programs_supported = ['browser', 'email', 'telegram', 'skype', 'viber',
+            'slack', 'dictionary']
     parser.add_argument('program', choices = programs_supported,
             help = 'program to start')
     return parser.parse_known_args()
 
 def main():
-    # start_viber()
-    # start_slack()
     # start_skype()
-    # start_telegram()
     # start_browser()
-    # start_email()
-    # start_dictionary()
+    # start_telegram()
+    # start_dictionary_lookup()
     # import sys; sys.exit()
     args = parse_cmd_line_args()
     func = 'start_' + args[0].program

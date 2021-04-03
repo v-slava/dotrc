@@ -1,0 +1,4 @@
+#!/bin/bash
+
+google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"
+# MOZ_ENABLE_WAYLAND=1 firefox "$@"

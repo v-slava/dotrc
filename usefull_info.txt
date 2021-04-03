@@ -998,6 +998,10 @@ tcpflow -i any -C -g port 9222
 # Set setuid bit in order to dump packages as non-root user
 # (this doesn't work for usb dumping with dumpcap):
 chmod u+s /usr/sbin/tcpdump
+# Clear user ID bit:
+chmod u-s EXECUTABLE
+# Set group ID bit:
+chmod g+s EXECUTABLE
 # Enable USB monitoring:
 sudo modprobe usbmon
 # Dump packets and feed them to wireshark through unnamed pipe:
@@ -1338,6 +1342,9 @@ $DOTRC/other_files/my_samples/single_sources/view_eml.py
 gcc UNIT_TESTS.c -o UNIT_TESTS.out --coverage
 gcov UNIT_TESTS.out
 
+# Reformat (beautify) json:
+cat some_file.json | python3 -mjson.tool
+
 # Reformat source file with uncrustify:
 uncrustify -f FILE_BEFORE.c -o FILE_AFTER.c
 
@@ -1513,6 +1520,11 @@ date -s "$(date -R -d '-3 hour')"
 hwclock -w
 # Date 3 days back:
 date -R -d '-3 day'
+
+# Execute command after 2 seconds:
+echo 'sleep 2 && touch /tmp/some_file' | at now
+# The following will probably execute immediate, need >15 seconds for delay:
+echo 'touch /tmp/some_file' | at -t $(date '+%Y%m%d%H%M.%S' -d '+2 second')
 
 # Show ntp server currently used in the system:
 systemctl status systemd-timesyncd.service

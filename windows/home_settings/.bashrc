@@ -114,6 +114,8 @@ export XDG_CACHE_HOME=$HOME/.cache_xdg
 # Other settings:
 export MINICOM='-c on'
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
+export QT_QPA_PLATFORM=wayland # use qtwayland5
+# export QT_QPA_PLATFORM=xcb # use xwayland
 
 # T909S:
 # export BT_MAC=30:07:14:25:02:55

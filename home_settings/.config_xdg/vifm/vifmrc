@@ -184,7 +184,7 @@ filextype *.eml thunderbird %f &
 
 " Image
 filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.tif
-	\ $DOTRC/other_files/view_image.sh %c,
+	\ $DOTRC/other_files/view_image.sh %c &,
 	\ gliv %f,
 	\ sxiv %f,
 	\ gpicview %c,
@@ -425,8 +425,8 @@ nnoremap ,v :!$DOTRC/other_files/edit_config.sh dotrc .vimrc<CR>
 nnoremap ,V :!$DOTRC/other_files/edit_config.sh dotrc_s .vimrc<CR>
 nnoremap ,b :!$DOTRC/other_files/edit_config.sh dotrc .bashrc<CR>
 nnoremap ,B :!$DOTRC/other_files/edit_config.sh dotrc_s .bashrc<CR>
-nnoremap ,i :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/i3/config && i3-msg reload 1>/dev/null<CR>
-nnoremap ,I :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/i3/config && i3-msg reload 1>/dev/null<CR>
+nnoremap ,s :!$DOTRC/other_files/edit_config.sh dotrc .config_xdg/sway/config && swaymsg reload<CR>
+nnoremap ,S :!$DOTRC/other_files/edit_config.sh dotrc_s .config_xdg/sway/config && swaymsg reload<CR>
 nnoremap ,u :!e $DOTRC/usefull_info.txt<CR>
 nnoremap ,r :!e $DOTRC_S/other_files/remarks.txt<CR>
 

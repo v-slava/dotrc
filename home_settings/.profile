@@ -36,7 +36,7 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
     CONFIGDIR=native
     if [ -n "$DOTRC" ]; then
         source $DOTRC/other_files/config_file.sh
-        config_generate -h .Xmodmap
+        # config_generate -h .Xmodmap
         # config_generate -h .config_xdg/i3/config # too early for this?
         if $DOTRC/other_files/virtual_box.sh ; then
             CONFIGDIR=virtual
@@ -46,6 +46,9 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
     # lightdm should be disabled:
     # sudo systemctl disable lightdm.service
     # exec startx -- -configdir $CONFIGDIR
-    exec startx
+
+    #exec startx
+    exec sway
+
     # fi
 fi

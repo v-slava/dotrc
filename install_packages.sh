@@ -52,7 +52,7 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     isc-dhcp-client traceroute wget at kbd \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
     gcc-doc libc-dev glibc-doc glibc-doc-reference \
-    gcc g++ cmake build-essential \
+    gcc g++ cmake build-essential jq \
     gdb gdb-doc gdbserver gdb-multiarch strace ltrace graphviz python3 \
     linux-base linux-perf bvi git git-email make patch dos2unix \
     zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar zstd pv htop \
@@ -83,114 +83,92 @@ apt-file update
 # For Asus F541U (bluetooth) (not stable WI-FI, see dmesg -w):
 # apt-get install firmware-atheros
 # For Asus F541U:
-apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
+sudo apt-get install firmware-realtek firmware-misc-nonfree intel-microcode
 
 # For Dell Latitude 5401:
-apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
+sudo apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 
 # Install GUI:
-# apt-get install sway # way-cooler
-# rxvt-unicode-256color -> foot # kitty # alacritty
-# i3lock -> swaylock
-#
-# jq - for switching keyboard layout
-#
-# dunst -> mako-notifier (desktop notifications)
-# dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus &
-# mako &
-# use "makoctl dismiss" in sway config (map to Ctrl_L+Space)
-#
-# MOZ_ENABLE_WAYLAND=1 firefox
-# google-chrome -–enable-features=UseOzonePlatform –-ozone-platform=wayland
-#
-# network-manager-gnome: run nm-connection-editor, nm-applet doesn't work
-# See also nmtui
-#
-# dmenu -> bemenu # wofi
+# Install sway:
+sudo apt-get install sway # way-cooler libpam-systemd at-spi2-core
+
+# Install terminal emulator:
+sudo apt-get install cargo libxcb-shape0-dev libxcb-xfixes0-dev
+cargo install alacritty
+# sudo apt-get install kitty # foot
+
+# Install helper programs:
+sudo apt-get install i3status swaylock wl-clipboard qtwayland5 xwayland
 # i3bar -> waybar # or by default: sway-bar
-# xclip, xsel -> wl-clipboard
-# scrot -> slurp, grim (screenshots)
-# Commands:
-# sway
-# WAYLAND_DISPLAY=wayland-0 kitty
-# KITTY_ENABLE_WAYLAND=1 kitty # no effect
-# export EGL_LOG_LEVEL=debug
-# export LIBGL_DEBUG=verbose
-# export MESA_DEBUG=1
-# See also egl_version.c in $DOTRC/other_files/my_samples/single_sources/egl_version.c
-
-# Install xorg (use xserver-xorg-video-vmware for virtualbox):
-apt-get install xorg xserver-xorg-video-intel xserver-xorg-input-libinput \
-    xinit rxvt-unicode-256color libpam-systemd
-# Alternative for evdev and synaptics: xserver-xorg-input-libinput
-
-# Install window manager, status bar, screen locker, keyboard layout
-# indicator:
-apt-get install i3-wm libanyevent-i3-perl i3status i3lock fbxkb
+sudo apt-get install ydotool # wtype # xdotool
+sudo apt-get install slurp && pip3 install --user swayinfo # xprop
 
 # Install network manager:
-apt-get install network-manager-gnome gnome-keyring notification-daemon
+sudo apt-get install network-manager-gnome gnome-keyring notification-daemon
+# For sway run nm-connection-editor, nm-applet doesn't work. See also nmtui.
 
 # Install PulseAudio:
-apt-get install pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
-apt-get install bluez pavucontrol
+sudo apt-get install pulseaudio pulseaudio-module-bluetooth pulseaudio-utils
+sudo apt-get install bluez pavucontrol
 # apt-get install bluez-tools
 
 # Install audio player:
 # apt-get install alsa-utils alsaplayer-daemon alsaplayer-common
-apt-get install xmms2-client-nycli xmms2-plugin-mpg123 xmms2-plugin-pulse
-apt-get install id3v2 alsa-utils # for volume control (amixer)
+sudo apt-get install xmms2-client-nycli xmms2-plugin-mpg123 xmms2-plugin-pulse
+sudo apt-get install id3v2 alsa-utils # for volume control (amixer)
 
 # Install qemu:
 # apt-get install qemu-system-x86 qemu-kvm spice-client
 
 # Install X helper programs:
-apt-get install wmctrl xdotool xsel xinput xbacklight scrot zenity xcape xprintidle uim-gtk2.0
-# keynav
+sudo apt-get install zenity wl-clipboard # xclip, xsel
+# apt-get install wmctrl xinput xbacklight xcape xprintidle uim-gtk2.0 keynav
+sudo apt-get install grim # scrot (screenshots)
 
 # Destop notifications (use notify-send to send a message):
-apt-get install libnotify-bin dunst
+sudo apt-get install libnotify-bin mako-notifier # dunst (for X11)
 # notify-osd # heavy-weight, has issues with i3wm
 
 # Install vim instance, which is able to access X clipboard:
-apt-get install neovim
-apt-get install --install-recommends python3-pip
-apt-get install libcairo2-dev # needed for $DOTRC/other_files/update_system.sh
-pip3 install neovim youtube_dl psutil # --user
+sudo apt-get install neovim python3-neovim
+sudo apt-get install python3-psutil # needed for $START_S in sway/i3
+sudo apt-get install --install-recommends python3-pip
+sudo apt-get install libcairo2-dev # needed for $DOTRC/other_files/update_system.sh
+pip3 install --user youtube_dl # neovim psutil
 
 # Install password manager:
 # apt-get install keepass2
-apt-get install keepassxc xclip
+sudo apt-get install keepassxc
 # See also: https://www.passwordstore.org/
 # Current database version: kdbx 3.0, Cipher: AES 256-bit,
 # KDF: AES (6000 rounds)
 
 # Install email client:
-apt-get install evolution
+sudo apt-get install evolution
 # thunderbird icedove msmtp mutt mmh
 # For microsoft exchange server: evolution-ews
 
 # Install video player:
-apt-get install smplayer
+sudo apt-get install smplayer
 
 # Install images viewers:
-apt-get install gliv gwenview
+sudo apt-get install gwenview imv # gliv
 
 # Install images editor:
 # apt-get install gimp
-apt-get install kolourpaint
+sudo apt-get install kolourpaint
 
 # Install vocabulary:
-apt-get install goldendict
+sudo apt-get install goldendict
 
 # Install torrent client:
-apt-get install transmission-gtk
+sudo apt-get install transmission-gtk
 
 # Install office suite:
-apt-get install libreoffice
+sudo apt-get install libreoffice
 
 # Install pdf viewer:
-apt-get install zathura
+sudo apt-get install zathura
 # editable pdf support: evince
 
 # Install alternative browsers:
@@ -200,36 +178,38 @@ apt-get install zathura
 # apt-get install chromium
 # chromium-l10n pepperflashplugin-nonfree uzbl
 
-# dmenu:
-make -f $DOTRC/other_files/build_or_install_scripts/dmenu/Makefile_dmenu.mk
+# dmenu for i3:
+# make -f $DOTRC/other_files/build_or_install_scripts/dmenu/Makefile_dmenu.mk
+# dmenu for sway:
+sudo apt-get install dmenu # suckless-tools # bemenu # wofi
 
 # Install rdp server:
-apt-get install xrdp xorgxrdp
+# sudo apt-get install xrdp xorgxrdp
 
 # Install rdp client:
-apt-get install remmina remmina-plugin-rdp
+sudo apt-get install remmina remmina-plugin-rdp
 
 # Install screen sharing server:
-apt-get install x11vnc
+# sudo apt-get install x11vnc
 
 # Install screen sharing client:
-apt-get install gvncviewer
+sudo apt-get install gvncviewer
 # apt-cache search vncviewer
 
 # Install media sharing server for smart TV (DLNA):
-apt-get install minidlna
+sudo apt-get install minidlna
 
 # Record video from screen during lection / meeting / ... :
-apt-get install simplescreenrecorder
+# sudo apt-get install simplescreenrecorder
 
 # Display keypresses (might be usefull for screen recording):
-apt-get install screenkey
+# sudo apt-get install screenkey
 
 # fzy:
 # apt-get install fzy
 # wget http://ftp.de.debian.org/debian/pool/main/f/fzy/fzy_1.0-1_amd64.deb
 
-apt-get -install telegram-cli
+# sudo apt-get -install telegram-cli
 # Install also: Viber, Skype, Telegram, Teamviewer
 # For teamviewer see issue with login manager/display manager/session:
 # https://community.teamviewer.com/t5/Linux-EN/TeamViewer-13-amp-debian-9-3-NO-GUI/td-p/29138
@@ -241,8 +221,8 @@ apt-get -install telegram-cli
 # 4) sudo chvt 1 # go back to original GUI session
 # 5) When done: killall TeamViewer && sudo systemctl stop lightdm.service
 # Implicit viber dependencies:
-apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
-    libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
+# apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+#     libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0
 # apt-get -f install # fix missing dependencies
 
 # Use google-chrome for zoom, microsoft teams

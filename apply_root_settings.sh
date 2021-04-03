@@ -84,6 +84,11 @@ fc-cache -f
 # restart udev:
 service udev restart
 
+WAIT_FOR_INPUT=/media/files/programs/wait_for_input
+gcc -O2 -flto $DOTRC/other_files/wait_for_input.c -o $WAIT_FOR_INPUT
+chown slava:input $WAIT_FOR_INPUT
+sudo chmod g+s $WAIT_FOR_INPUT
+
 if [ -x $DOTRC_S/apply_root_settings.sh ]; then
     $DOTRC_S/apply_root_settings.sh
 fi

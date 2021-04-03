@@ -30,6 +30,17 @@ import json
 import copy
 import select
 import tempfile
+import subprocess
+
+def get_sway_keyboard_layout():
+    ret = subprocess.run(['swaymsg', '-t', 'get_inputs'], check = True,
+            capture_output = True)
+    inputs = json.loads(ret.stdout)
+    for elem in inputs:
+        if elem['identifier'] == '1:1:AT_Translated_Set_2_keyboard':
+            layout_index = elem['xkb_active_layout_index']
+            return ['US', 'RU'][layout_index]
+    return 'unknown keyboard layout'
 
 def get_brightness():
     intel_backlight = '/sys/class/backlight/intel_backlight'
@@ -42,6 +53,18 @@ def get_brightness():
     else:
         brightness = 'unknown'
     return 'brightness: ' + brightness
+
+def get_final(j_stdin):
+    j_full = copy.deepcopy(j_stdin)
+    additional_data = [
+        get_brightness(),
+        # get_network_traffic(),
+    ]
+    for data in additional_data:
+        if data:
+            j_full.insert(0, {'full_text' : data})
+    j_full.append({'full_text' : get_sway_keyboard_layout()})
+    return j_full
 
 def get_network_traffic():
     try:
@@ -127,14 +150,7 @@ def main():
                     if stdin_line.startswith(','):
                         stdin_line, stdin_prefix = stdin_line[1:], ','
                     j_stdin = json.loads(stdin_line)
-                    additional_data = [
-                        get_brightness(),
-                        # get_network_traffic(),
-                    ]
-                    for data in additional_data:
-                        if data:
-                            j_stdin.insert(0, {'full_text' : data})
-                    update(j_stdin, stdin_prefix, fifo_line)
+                    update(get_final(j_stdin), stdin_prefix, fifo_line)
                 if event & select.POLLHUP != 0:
                     event &= ~select.POLLHUP
                     stdin_is_open = False
@@ -143,7 +159,7 @@ def main():
                 if event & select.POLLIN != 0:
                     event &= ~select.POLLIN
                     fifo_line = fifo.readline()[:-1]
-                    update(j_stdin, stdin_prefix, fifo_line)
+                    update(get_final(j_stdin), stdin_prefix, fifo_line)
                 assert(event == 0)
 
 if __name__ == '__main__':

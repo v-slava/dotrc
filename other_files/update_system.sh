@@ -9,10 +9,13 @@
 # set -x
 # sudo update-flashplugin-nonfree --install
 # sudo update-pepperflashplugin-nonfree --install
+set -e
 echo "+ sudo apt-get clean"
 sudo apt-get clean
 echo "+ sudo apt-get update"
+set +e
 sudo apt-get update
+set -e
 echo "+ sudo apt-get upgrade --with-new-pkgs --yes"
 sudo apt-get upgrade --with-new-pkgs --yes
 echo "+ sudo apt-get autoremove --purge --yes"

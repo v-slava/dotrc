@@ -1,0 +1,401 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+set $DOTRC /media/files/workspace/dotrc
+set $START $DOTRC/other_files/start_from_gui.sh
+set $START_S $DOTRC/other_files/start_singleton_gui_program.py
+set $WWW_START_PAGE $DOTRC/other_files/start_page.html
+
+set $Alt_L Mod1
+set $Alt_R Mod3
+set $WIN Mod4
+set $Ctrl_L Control
+set $Ctrl_R Control
+set $Shift_L Shift
+set $Shift_R Shift
+set $PrintScreen 107
+# set $Menu 135
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+input * {
+    xkb_layout "us,ru"
+    # xkb_options "grp:menu_toggle,ctrl:nocaps"
+    xkb_options "ctrl:nocaps"
+}
+
+input type:touchpad {
+    # tap enabled
+
+    # Reverse touchpad scrolling direction as I've used to:
+    natural_scroll enabled
+}
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+output eDP-1 scale 1.2
+output * background #121212 solid_color
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+# status bar (see man 5 sway-bar):
+bar {
+    # swaybar_command waybar
+
+    position bottom
+    # status_command exec i3status
+    # See also: $DOTRC/other_files/my_samples/single_sources/sway_status_bar.sh
+    status_command i3status | $DOTRC/other_files/i3_status_wrapper.py
+    # tray_output $OUTPUT_TRAY
+    colors {
+        statusline #FFFFFF
+        background #000000
+        focused_workspace #4C7899 #285577 #FFFFFF
+        inactive_workspace #333333 #222222 #888888
+    }
+}
+
+exec exec $DOTRC/other_files/monitor_hotplug.sh startup
+
+# Start notification daemon:
+exec exec mako
+
+bindsym --to-code $Ctrl_L+space exec exec makoctl dismiss
+
+bindsym --to-code $Alt_R+e exec exec $START $DOTRC_S/i3_hotkey_handler.sh
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+# Use Mouse+$Alt_L to drag floating windows to their wanted position:
+floating_modifier $Alt_L
+# floating_modifier $Alt_L normal
+
+# kill focused window
+bindsym --to-code $Alt_R+$Shift_R+Q kill
+bindsym --to-code $WIN+Escape kill
+
+# "minimize" window (move to workspace 0):
+bindsym --to-code $WIN+Tab move container to workspace 0
+
+# switch to virtual consoles:
+bindsym --to-code $Ctrl_L+$Alt_L+F2 exec exec sudo chvt 2
+bindsym --to-code $Ctrl_L+$Alt_L+F7 exec exec sudo chvt 7
+
+# change focus
+bindsym --to-code $Alt_L+h focus left
+bindsym --to-code $Alt_L+j focus down
+bindsym --to-code $Alt_L+k focus up
+bindsym --to-code $Alt_L+l focus right
+
+# move focused window
+bindsym --to-code $Alt_L+$Shift_L+h move left
+bindsym --to-code $Alt_L+$Shift_L+j move down
+bindsym --to-code $Alt_L+$Shift_L+k move up
+bindsym --to-code $Alt_L+$Shift_L+l move right
+
+# split in horizontal orientation
+bindsym --to-code $Alt_R+h split h
+
+# split in vertical orientation
+bindsym --to-code $Alt_R+v split v
+
+# enter fullscreen mode for the focused container
+bindsym --to-code $Alt_L+f fullscreen
+
+# change container layout (stacked, tabbed, default)
+# bindsym --to-code $Alt_L+s layout stacking
+bindsym --to-code $Alt_L+w layout tabbed
+bindsym --to-code $Alt_L+e layout default
+
+# toggle tiling / floating
+bindsym --to-code $Alt_L+$Shift_L+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym --to-code $Alt_L+space focus mode_toggle
+
+# focus the parent container (father)
+bindsym --to-code $Alt_R+f focus parent
+
+# focus the child container
+bindsym --to-code $Alt_R+C focus child
+
+# switch to workspace
+bindsym --to-code $Alt_L+0 workspace 0
+bindsym --to-code $Alt_L+1 workspace 1
+# bindsym --to-code $Alt_L+1 workspace 1: main
+bindsym --to-code $Alt_L+2 workspace 2
+bindsym --to-code $Alt_L+3 workspace 3
+bindsym --to-code $Alt_L+4 workspace 4
+bindsym --to-code $Alt_L+5 workspace 5
+bindsym --to-code $Alt_L+6 workspace 6
+bindsym --to-code $Alt_L+7 workspace 7
+bindsym --to-code $Alt_L+8 workspace 8
+bindsym --to-code $Alt_L+9 workspace 9
+
+# move focused container to workspace
+bindsym --to-code $Alt_L+$Shift_L+0 move container to workspace 0
+bindsym --to-code $Alt_R+$Shift_R+1 move container to workspace 1
+bindsym --to-code $Alt_R+$Shift_R+2 move container to workspace 2
+bindsym --to-code $Alt_R+$Shift_R+3 move container to workspace 3
+bindsym --to-code $Alt_R+$Shift_R+4 move container to workspace 4
+bindsym --to-code $Alt_R+$Shift_R+5 move container to workspace 5
+bindsym --to-code $Alt_R+$Shift_R+6 move container to workspace 6
+bindsym --to-code $Alt_L+$Shift_L+6 move container to workspace 6
+bindsym --to-code $Alt_L+$Shift_L+7 move container to workspace 7
+bindsym --to-code $Alt_L+$Shift_L+8 move container to workspace 8
+bindsym --to-code $Alt_L+$Shift_L+9 move container to workspace 9
+
+# reload the configuration file
+bindsym --to-code $Alt_R+$Shift_R+c reload
+
+# restart sway inplace (preserves your layout/session):
+bindsym --to-code $Alt_R+$Shift_R+R restart
+# exit sway (logs you out of your Wayland session)
+bindsym --to-code $Alt_R+$Shift_R+E exit
+# bindsym --to-code $Alt_R+$Shift_R+E exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+    # These bindings trigger as soon as you enter the resize mode
+    bindsym --to-code h resize shrink width 10 px or 1 ppt
+    bindsym --to-code j resize grow height 10 px or 1 ppt
+    bindsym --to-code k resize shrink height 10 px or 1 ppt
+    bindsym --to-code l resize grow width 10 px or 1 ppt
+
+    # back to normal: Enter or Escape
+    bindsym --to-code Return mode "default"
+    bindsym --to-code Escape mode "default"
+}
+
+bindsym --to-code $Alt_L+r mode "resize"
+
+bindsym --to-code $Alt_R+l exec exec $START $DOTRC/other_files/lock_screen.sh sway_hotkey
+bindsym --to-code $Ctrl_L+$Alt_L+r exec exec sudo reboot
+# bindsym --to-code $Ctrl_L+$Alt_L+h exec sudo poweroff
+bindsym --to-code $Ctrl_L+$Alt_L+h exec exec $START $DOTRC/other_files/hibernate_hotkey.sh
+bindsym --to-code $Ctrl_L+$WIN+h exec exec $START $DOTRC/other_files/hibernate_hotkey.sh --sleep 180
+
+bindsym --to-code $Alt_L+Return exec exec $DOTRC/other_files/open_terminal.sh vifm ~/h ~/h
+# bindsym --to-code $Alt_L+Return exec exec $START $DOTRC/other_files/open_terminal.sh vifm ~/h ~/h
+
+bindsym --to-code $Alt_L+t exec exec $START_S dictionary "$(clipboard.sh -o)"
+bindsym --to-code $Alt_L+q exec $(clipboard.sh --primary-2-clipboard) && exec $START_S dictionary "$(clipboard.sh -o)"
+# pronounce (say) word from clipboard:
+bindsym --to-code $Alt_L+s exec exec $START $DOTRC/other_files/say_word.sh "$(clipboard.sh -o)"
+bindsym --to-code $WIN+c exec exec $START qalculate
+
+# bindsym --to-code $WIN+a exec exec $START $DOTRC/other_files/start_anki.sh
+bindsym --to-code $WIN+t exec exec $START $DOTRC/other_files/torrent_download.sh
+
+# browser
+# XF86Back, XF86Shutdown
+bindsym --to-code XF86HomePage exec exec $START_S browser $WWW_START_PAGE
+bindsym --to-code $Alt_L+b exec exec $START_S browser $WWW_START_PAGE
+
+bindsym --to-code $Alt_R+$Shift_R+t exec exec $START_S telegram
+exec exec $START_S telegram
+
+# autostart mail client (claws-mail):
+# exec exec $START claws-mail'
+# Hotkey to open mail client:
+# bindsym --to-code $WIN+m exec exec $START claws-mail
+# bindsym --to-code $WIN+m exec exec $START thunderbird
+# Hotkeys to open specified folders:
+# bindsym --to-code $Alt_R+$Shift_R+v exec exec $START claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
+# bindsym --to-code $Alt_R+$Shift_R+s exec exec $START claws-mail --select '#imap/slava65536/INBOX'
+
+# Start mail client:
+# exec rm -rf /tmp/mbsync_lock_dir && exec $START_S email --startup
+exec exec $START_S email --startup
+
+# Switch to "mail" workspace:
+# bindsym --to-code $WIN+m workspace m
+bindsym --to-code $WIN+m exec exec $START_S email
+
+# Start emacs daemon:
+# exec exec emacs --daemon
+
+# Start network manager applet:
+exec exec $START nm-applet --indicator
+# Note: use nm-connection-editor to open network manager GUI.
+
+# Start skype in WEB browser:
+exec exec $START_S browser https://web.skype.com
+
+# Delete system update lock directory:
+exec exec rm -rf /tmp/system_update_lock_dir
+
+# audio player hotkeys:
+bindsym --to-code $Alt_L+p      exec exec $START $DOTRC/other_files/my_play_pause.sh
+bindsym --to-code $Alt_R+p      exec exec $START $DOTRC/other_files/my_play_pause.sh
+bindsym --to-code XF86AudioPlay exec exec $START $DOTRC/other_files/my_play_pause.sh
+
+# alsaplayer:
+# exec exec alsaplayer -i daemon --looplist --startvolume 1.0 1>/dev/null &
+# bindsym --to-code XF86AudioNext exec exec alsaplayer --next
+# bindsym --to-code $WIN+n        exec exec alsaplayer --next
+# bindsym --to-code XF86AudioPrev exec o-startup-id exec alsaplayer --prev
+# bindsym --to-code $WIN+p        exec exec alsaplayer --prev
+# bindsym --to-code $WIN+h        exec exec alsaplayer --relative -3
+# bindsym --to-code $WIN+l        exec exec alsaplayer --relative +3
+# bindsym --to-code $WIN+0        exec exec alsaplayer --seek 0
+
+# xmms2:
+bindsym --to-code XF86AudioNext exec exec $START xmms2 next
+bindsym --to-code $WIN+n        exec exec $START xmms2 next
+bindsym --to-code XF86AudioPrev exec exec $START xmms2 prev
+bindsym --to-code $WIN+p        exec exec $START xmms2 prev
+bindsym --to-code $WIN+h        exec exec $START xmms2 seek -3
+bindsym --to-code $WIN+l        exec exec $START xmms2 seek +3
+bindsym --to-code $WIN+0        exec exec $START xmms2 seek 0
+
+# volume hotkeys:
+bindsym --to-code XF86AudioMute        exec exec $START $DOTRC/other_files/set_volume.sh 0%
+bindsym --to-code XF86AudioRaiseVolume exec exec $START $DOTRC/other_files/set_volume.sh +5%
+bindsym --to-code $WIN+u exec exec $START $DOTRC/other_files/set_volume.sh +5%
+bindsym --to-code XF86AudioLowerVolume exec exec $START $DOTRC/other_files/set_volume.sh -5%
+bindsym --to-code $WIN+d exec exec $START $DOTRC/other_files/set_volume.sh -5%
+
+# toggle audio device (bluetooth headset / built-in audio or usb audio / built-in audio):
+bindsym --to-code $Alt_R+a exec exec $START $DOTRC/other_files/audio_device_toggle.sh --spawn-terminal
+bindsym --to-code $Alt_R+b exec exec $START $DOTRC/other_files/bluetooth_toggle_profile.py
+bindsym --to-code $Alt_R+r exec exec $START $DOTRC/other_files/bluetooth_switch_sinks_sources.sh
+bindsym --to-code $Alt_R+s exec exec $START pavucontrol
+
+# brightness hotkeys:
+bindsym --to-code XF86MonBrightnessUp exec exec $START $DOTRC/other_files/screen_brightness.sh --up
+bindsym --to-code XF86MonBrightnessDown exec exec $START $DOTRC/other_files/screen_brightness.sh --down
+bindsym --to-code $Alt_R+u exec exec $START $DOTRC/other_files/screen_brightness.sh --up
+bindsym --to-code $Alt_R+d exec exec $START $DOTRC/other_files/screen_brightness.sh --down
+bindsym --to-code $Alt_R+o exec exec $START $DOTRC/other_files/screen_brightness.sh --off
+
+# toggle keyboard layout (see also $DOTRC/root_settings/etc/default/keyboard):
+bindsym --to-code $Alt_L+F3 exec exec $DOTRC/other_files/keyboard_layout.sh --toggle
+
+# toggle touchpad:
+bindsym --to-code $Alt_L+F2 exec exec $START $DOTRC/other_files/toggle_touchpad.sh
+bindsym --to-code XF86TouchpadToggle exec exec $START $DOTRC/other_files/toggle_touchpad.sh
+
+# dmenu (a program launcher)
+bindsym --to-code $Alt_L+d exec exec $START $DOTRC/other_files/dmenu.sh
+# # Your preferred application launcher
+# # Note: pass the final command to swaymsg so that the resulting window can be opened
+# # on the original workspace that the command was run on.
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+# # Start your launcher
+# bindsym --to-code $mod+d exec $menu
+
+# Send keys (type something):
+bindsym --to-code --release $Alt_L+i exec exec $START $DOTRC/other_files/send_input.sh
+
+# mark window with label for further fast access:
+bindsym --to-code $Alt_L+m exec exec $START $DOTRC/other_files/i3_mark_window.sh
+# goto window by mark (label name):
+bindcode $Alt_L+48 exec exec $START $DOTRC/other_files/i3_goto_marked_window.py
+
+bindsym --to-code $Alt_R+$Shift_R+v exec exec $START_S viber
+exec exec $START_S viber
+
+bindcode $PrintScreen exec exec $START $DOTRC/other_files/screenshot.sh
+# bindcode $Alt_L+$PrintScreen exec exec $START $DOTRC/other_files/screenshot.sh --focused --border
+bindcode $WIN+$PrintScreen exec $START $DOTRC/other_files/screenshot.sh --my-sleep 6
+# bindcode $WIN+$PrintScreen exec $START $DOTRC/other_files/screenshot.sh --my-sleep 6 --my-edit-image
+# bindsym --to-code $WIN+q exec exec $START $DOTRC/other_files/screenshot.sh --my-edit-image --focused --border
+
+# Switch en <--> de keyboard layout:
+# bindsym --to-code $WIN+s exec exec $START $DOTRC/other_files/switch_us_de_keyboard_layout.sh
+
+# bindsym --to-code $WIN+k exec exec keynav
+
+# # font for window title
+# font pango:Inconsolata LGC 8
+
+# windows guest
+# bindsym --to-code $Ctrl_L+$Alt_L+q exec exec $START $DOTRC/other_files/qemu_start.sh
+
+# # Sway has a "scratchpad", which is a bag of holding for windows.
+# # You can send windows there and get them back later.
+# # Move the currently focused window to the scratchpad
+# bindsym --to-code $mod+Shift+minus move scratchpad
+# # Show the next scratchpad window or hide the focused scratchpad window.
+# # If there are multiple scratchpad windows, this command cycles through them.
+# bindsym --to-code $mod+minus scratchpad show
+# # CapsLock (caps lock):
+# bindsym --to-code $WIN+j exec exec $START xdotool key Caps_Lock
+
+# workspace m output $OUTPUT_TRAY
+# workspace 1 output $OUTPUT_1
+# workspace 2 output $OUTPUT_2
+# workspace 3 output $OUTPUT_3
+# workspace 4 output $OUTPUT_4
+# workspace 5 output $OUTPUT_5
+# workspace 6 output $OUTPUT_6
+# workspace 7 output $OUTPUT_7
+# workspace 8 output $OUTPUT_8
+# workspace 9 output $OUTPUT_9
+
+# for_window [title="Qemu: Windows 7"] fullscreen
+# for_window [title="Send input"] floating enable
+# for_window [class="ViberPC"] mark --replace viber
+# for_window [class="Gimp"] floating enable
+# for_window [class="GoldenDict"] floating disable
+# for_window [title="mutt"] mark --replace mail
+# for_window [class="Claws-mail" title="Search messages"] floating enable
+# for_window [class="Claws-mail" title="Find in current message"] floating enable
+# for_window [class="Icedove" title="Search Messages"] floating enable
+# for_window [class="Icedove"] focus, mark --replace mail
+# for_window [class="thunderbird" title="Search Messages"] floating enable
+# for_window [class="thunderbird"] focus, mark --replace mail, move container to workspace m
+# for_window [class="Skype"] floating enable
+# for_window [class="Skype"] mark --replace skype
+# for_window [class="TeamViewer" title="TeamViewer"] mark --replace teamviewer
+# for_window [class="TeamViewer" title="Computers & Contacts"] kill
+for_window [workspace="0"] layout tabbed
+for_window [title="background_window"] move container to workspace 0
+for_window [title="temp_window"] fullscreen
+for_window [app_id="org.kde.kolourpaint"] move container to workspace 0
+for_window [app_id="Google-chrome"] mark --replace browser
+for_window [title="Toggle audio device"] floating enable
+for_window [app_id=".*Telegram_Desktop"] mark --replace telegram
+for_window [title="hibernate script"] floating enable
+
+# include /etc/sway/config-vars.d/*
+include /etc/sway/config.d/*

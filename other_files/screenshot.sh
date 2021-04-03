@@ -33,8 +33,13 @@ if [ -n "$SLEEP" ]; then
 fi
 
 mkdir -p "$DIR"
-scrot "$@" "$FILE"
+
 # gnome-screenshot -p
+# For i3wm:
+# scrot "$@" "$FILE"
+# For sway:
+grim -c -t png "$FILE" # -o eDP-1
+
 if [ "$PRINT_FILE_PATH" = "true" ]; then
     echo "$FILE"
 fi

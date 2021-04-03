@@ -23,4 +23,4 @@ if [ -n "$SLEEP" ]; then
     CMD="$DOTRC/other_files/sleep.sh $SLEEP 'shutdown / hibernate' && $CMD"
 fi
 
-x-terminal-emulator -title "hibernate script" -e bash -c "$CMD"
+$DOTRC/other_files/open_terminal.sh --title "hibernate script" bash -c "$CMD"

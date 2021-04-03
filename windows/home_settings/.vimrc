@@ -332,6 +332,7 @@ autocmd BufEnter menurc setlocal filetype=claws_mail_menurc " my filetype
 autocmd BufEnter *.mbsyncrc,*.msmtprc setlocal filetype=conf
 autocmd BufEnter *kitty/*.conf setlocal filetype=conf
 autocmd BufEnter *.muttrc setlocal filetype=muttrc
+autocmd BufEnter foot.ini setlocal filetype=foot_ini | setlocal syntax=dosini
 
 autocmd BufEnter * if &filetype == "" | setlocal filetype=unknown | endif
             \ | call My_configure_tcomment()
@@ -670,7 +671,7 @@ function! My_update_status_line(message, status)
     else
         let l:lang='EN'
     endif
-    let &statusline=l:lang . '   file: %f %p%%   ' . a:message
+    let &statusline=l:lang . '   file: %f %p%% %c   ' . a:message
     if a:status == 'error'
         hi StatusLine ctermbg=160
     endif
@@ -941,6 +942,7 @@ function! My_configure_tcomment()
         call tcomment#type#Define('toml', '# %s')
         call tcomment#type#Define('ninja', '# %s')
         call tcomment#type#Define('wget', '# %s')
+        call tcomment#type#Define('foot_ini', '# %s')
         call tcomment#type#Define('aptconf', '// %s')
         call tcomment#type#Define('jtag_script', '; %s')
         call tcomment#type#Define('claws_mail_menurc', '; %s')
@@ -1357,6 +1359,9 @@ nmap <silent> <S-Right> :execute 'silent! tabmove ' . tabpagenr()<CR>
 " Scroll horizontally:
 nmap <C-l> zl
 nmap <C-h> zh
+" Mouse vertical scroll with the wheel: scrool 1 line instead of 3:
+map <ScrollWheelUp> <C-Y>
+map <ScrollWheelDown> <C-E>
 " Open location in QuickFix window:
 autocmd FileType qf nmap <buffer> o :call My_open_location()<CR>
 " Reformat C/C++ source code:

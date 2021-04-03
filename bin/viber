@@ -1,1 +1,3 @@
-/opt/viber/Viber
+#!/bin/bash
+
+QT_QPA_PLATFORM=xcb /opt/viber/Viber

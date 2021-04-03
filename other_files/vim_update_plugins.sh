@@ -173,7 +173,7 @@ for dir in $(ls) ; do
 done
 ARGS="$ARGS | q"
 if [ "$TERM" = "dumb" ]; then
-    x-terminal-emulator -e nvim "$ARGS"
+    $DOTRC/other_files/open_terminal.sh nvim "$ARGS"
 else
     nvim "$ARGS"
 fi

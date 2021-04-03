@@ -11,6 +11,7 @@ CONFIG_FILE=$SEND_INPUT_DIR/config
 # n	new password	xdotool type "$(echo -e "echo new\ \ password\r\n")"
 # o	old password	$DOTRC_S/other_files/send_input/old_password.sh
 # t	test	xdotool type "echo hello" && xdotool key Return # some comment
+# t	test	sudo ydotool type "echo hello" && sudo ydotool key Enter
 
 set -e
 
@@ -37,7 +38,8 @@ case $NUM_LINES in
         set -e
         if [ -z "$INPUT" ]; then
             echo "Nothing has been selected" 1>&2
-            exit 1
+            # exit 1
+            exit 0
         fi
 
         if [ "$FILTER" == "$FILTER_ROFI" ]; then
@@ -57,7 +59,7 @@ case $NUM_LINES in
         && read -n1 INPUT_SYMBOL \
         && echo -n \$INPUT_SYMBOL > $INPUT_FILE"
 
-        x-terminal-emulator --title "Send input" -e bash -c "$SCRIPT"
+        $DOTRC/other_files/open_terminal.sh --title "Send input" bash -c "$SCRIPT"
 
         set +e
         LINE="$(grep "^$(cat $INPUT_FILE)" $CONFIG_FILE | head -n1)"
