@@ -127,7 +127,7 @@ EOF
         *)
             FILE_TYPE="$(file --brief "$FILE_FULL_PATH")"
             case "$FILE_TYPE" in
-                u-boot\ legacy\ uImage,\ *Multi-File\ Image\ \(Not\ compressed\),\ *)
+                u-boot\ legacy\ uImage,\ *Linux/ARM,\ Multi-File\ Image\ \(Not\ compressed\),\ *)
                     METAINF=meta_information.txt
                     echo "$ dumpimage -l $FILE" > $METAINF
                     OUTPUT="$(dumpimage -l "$FILE_FULL_PATH")"
@@ -138,6 +138,9 @@ EOF
                     for i in $(seq 0 ${NUM_IMAGES}) ; do
                         dumpimage -p $i -o images/$i "$FILE_FULL_PATH"
                     done
+                    ;;
+                u-boot\ legacy\ uImage,\ *Linux/MIPS,\ Multi-File\ Image\ \(lzma\),\ *)
+                    binwalk -e "$FILE_FULL_PATH"
                     ;;
                 *)
                     echo "Error: \"$FILE\" - unknown archive format." 1>&2
