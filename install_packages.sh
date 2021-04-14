@@ -14,7 +14,6 @@
 # mount -B /dev/pts rootfs_dir/dev/pts
 # chroot rootfs_dir
 # passwd
-# mount /dev/sda1 /boot/efi
 # mkdir /media/files
 
 # apt-get install linux-image-amd64 systemd systemd-sysv
@@ -26,7 +25,8 @@
 # alternative #2 (BIOS grub2, obsolete):
 # apt-get install grub-pc os-prober
 #
-# alternative #2 (EFI grub2, recommended):
+# alternative #3 (EFI grub2, recommended):
+# mkdir /boot/efi
 # mount /dev/sda1 /boot/efi # 512M
 # mkdir -p /boot/efi/EFI/Debian
 # apt-get install grub-efi-amd64 os-prober
@@ -37,6 +37,7 @@
 # update-grub
 
 # apt-get install network-manager
+# Install also laptop-specific firmware for wifi card...
 
 # exit && umount -R rootfs_dir && sync && reboot
 
@@ -45,9 +46,9 @@ set -ex
 apt-get upgrade --yes
 
 # Install non-gui packages:
-apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
+sudo apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     vbindiff vifm ripgrep progress fzf less bash-completion xxd \
-    apt-file apt-rdepends apt-utils dialog locales \
+    apt-file apt-rdepends apt-utils dialog locales dmidecode \
     wpasupplicant iputils-ping iproute2 net-tools wireless-tools iptables \
     isc-dhcp-client traceroute wget at kbd \
     man-db manpages manpages-dev manpages-posix manpages-posix-dev info \
@@ -57,10 +58,13 @@ apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     linux-base linux-perf bvi git git-email make patch dos2unix \
     zip unzip gzip lzip xz-utils bzip2 p7zip-full cpio unrar zstd pv htop \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
-    ntpdate fuseiso9660 netcat-openbsd \
+    fuseiso9660 netcat-openbsd \
+
+sudo apt-get install --install-recommends python3-pip
 
 # apt-get install rsyslog
 # apt-get install clang clang-format clang-tidy clang-tools llvm libclang-dev
+# sudo apt-get install docker.io apparmor
 # apt-get install uftrace
 
 exit
@@ -74,8 +78,7 @@ exit
 apt-file update
 
 # To mount android file system:
-# apt-get install go-mtpfs
-# another option: jmtpfs
+# apt-get install jmtpfs # go-mtpfs
 
 # To mount ios file system:
 # apt-get install ifuse usbmuxd
@@ -93,15 +96,16 @@ sudo apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 sudo apt-get install sway # way-cooler libpam-systemd at-spi2-core
 
 # Install terminal emulator:
-sudo apt-get install cargo libxcb-shape0-dev libxcb-xfixes0-dev
-cargo install alacritty
+sudo apt-get install cargo libxcb-shape0-dev libxcb-xfixes0-dev pkg-config \
+    libfontconfig-dev
+cargo install alacritty # execute as ordinary user
 # sudo apt-get install kitty # foot
 
 # Install helper programs:
 sudo apt-get install i3status swaylock wl-clipboard qtwayland5 xwayland
 # i3bar -> waybar # or by default: sway-bar
 sudo apt-get install ydotool # wtype # xdotool
-sudo apt-get install slurp && pip3 install --user swayinfo # xprop
+# sudo apt-get install slurp && pip3 install --user swayinfo # xprop
 
 # Install network manager:
 sudo apt-get install network-manager-gnome gnome-keyring notification-daemon
@@ -132,7 +136,6 @@ sudo apt-get install libnotify-bin mako-notifier # dunst (for X11)
 # Install vim instance, which is able to access X clipboard:
 sudo apt-get install neovim python3-neovim
 sudo apt-get install python3-psutil # needed for $START_S in sway/i3
-sudo apt-get install --install-recommends python3-pip
 sudo apt-get install libcairo2-dev # needed for $DOTRC/other_files/update_system.sh
 pip3 install --user youtube_dl # neovim psutil
 

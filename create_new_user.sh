@@ -22,8 +22,8 @@ USER_PASSWD=$USER_NAME
 useradd -m -s /bin/bash $USER_NAME
 echo "${USER_NAME}:${USER_PASSWD}" | chpasswd
 
-GROUPS=sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth,docker
-if ! usermod -a -G $GROUPS $USER_NAME ; then
+USER_GROUPS=sudo,audio,video,systemd-journal,netdev,plugdev,bluetooth,docker
+if ! usermod -a -G $USER_GROUPS $USER_NAME ; then
 	echo "Failed to add user to groups!" 1>&2
 	exit 1
 fi
