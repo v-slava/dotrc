@@ -152,7 +152,7 @@ sudo apt-get install evolution
 # For microsoft exchange server: evolution-ews
 
 # Install video player:
-sudo apt-get install smplayer
+sudo apt-get install vlc # smplayer
 
 # Install images viewers:
 sudo apt-get install gwenview imv # gliv
