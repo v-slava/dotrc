@@ -1015,6 +1015,17 @@ ptp_dst_mac b8:27:eb:b8:40:22
 EOF
 sudo ptp4l -i eno1 -E -S -2 -l 7 -m -q -f /tmp/ptp4l.conf
 
+# Start L2 PTPv2 2 steps slave:
+cat << EOF > /tmp/ptp4l.conf
+[global]
+ptp_dst_mac b8:27:eb:b8:40:22
+slaveOnly 1
+EOF
+sudo ptp4l -i eno1 -E -S -2 -l 7 -m -q -f /tmp/ptp4l.conf
+
+# Check timestamping modes (for PTP) supported by interface:
+ethtool -T INTERFACE
+
 # Use wireshark plugin (dissector):
 wireshark -X lua_script:/path/to/plugin/file.lua
 
@@ -1504,7 +1515,14 @@ hwclock -w
 date -R -d '-3 day'
 
 # Show ntp server currently used in the system:
-systemctl status systemd-timesyncd
+systemctl status systemd-timesyncd.service
+# See also:
+timedatectl
+# Update date/time from NTP:
+date && \
+sudo timedatectl set-ntp false && \
+sudo timedatectl set-ntp true && \
+sleep 1 && date
 
 # Permanently set time-zone (EET = Eastern European Time = UTC+2):
 ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
@@ -3224,6 +3242,11 @@ ethtool -s INTERFACE {10|100|1000}
 ethtool -k INTERFACE | grep check
 # Do not discard bad UDP checksums:
 sudo ethtool -K INTERFACE rx off
+
+# disconnect current connection on INTERFACE
+nmcli d disconnect INTERFACE
+nmcli dev disconnect INTERFACE
+nmcli device disconnect INTERFACE
 
 # connect to wifi via network manager (nmcli):
 # ("d" stands for "device")
