@@ -11,6 +11,14 @@ network_connected()
 
     # ● network-online.target - Network is Online
     #      Loaded: loaded (/lib/systemd/system/network-online.target; static)
+    #      Active: active since Fri 2021-04-16 06:30:42 EEST; 1h 44min ago
+    #        Docs: man:systemd.special(7)
+    #              https://www.freedesktop.org/wiki/Software/systemd/NetworkTarget
+    #
+    # Apr 16 06:30:42 laptop systemd[1]: Reached target Network is Online.
+
+    # ● network-online.target - Network is Online
+    #      Loaded: loaded (/lib/systemd/system/network-online.target; static)
     #      Active: inactive (dead)
     #        Docs: man:systemd.special(7)
     #              https://www.freedesktop.org/wiki/Software/systemd/NetworkTarget

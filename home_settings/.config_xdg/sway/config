@@ -329,9 +329,9 @@ bindsym --to-code $Alt_L+d exec exec $START $DOTRC/other_files/dmenu.sh
 bindsym --to-code --release $Alt_L+i exec exec $START $DOTRC/other_files/send_input.sh
 
 # mark window with label for further fast access:
-bindsym --to-code $Alt_L+m exec exec $START $DOTRC/other_files/i3_mark_window.sh
+bindsym --to-code $Alt_L+m exec exec $DOTRC/other_files/i3_mark_window.sh
 # goto window by mark (label name):
-bindcode $Alt_L+48 exec exec $START $DOTRC/other_files/i3_goto_marked_window.py
+bindcode $Alt_L+48 exec exec $DOTRC/other_files/i3_goto_marked_window.py
 
 bindsym --to-code $Alt_R+$Shift_R+v exec exec $START_S viber
 exec exec $START_S viber
@@ -398,6 +398,8 @@ for_window [app_id="Google-chrome"] mark --replace browser
 for_window [title="Toggle audio device"] floating enable
 for_window [app_id=".*Telegram_Desktop"] mark --replace telegram
 for_window [title="hibernate script"] floating enable
+
+include ~/.config_xdg/sway/generated_config
 
 # include /etc/sway/config-vars.d/*
 include /etc/sway/config.d/*
