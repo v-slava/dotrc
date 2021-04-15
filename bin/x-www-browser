@@ -1,4 +1,26 @@
 #!/bin/bash
 
-google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"
+# google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"
 # MOZ_ENABLE_WAYLAND=1 firefox "$@"
+
+network_connected()
+{
+    # nmcli | grep ' connected ' | grep -vq docker
+    systemctl status network-online.target | grep -q \
+        ': Reached target Network is Online.'
+}
+
+if [ "$1" = "--my-startup" ]; then
+    while ! network_connected ; do
+        echo sleeping >> /tmp/nm_log
+        sleep 0.1
+    done
+fi
+
+if pidof chrome 1>/dev/null ; then
+    exec google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"
+else
+    # Do not pass any arguments to open configured in chrome WEB pages on
+    # startup:
+    exec google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland
+fi

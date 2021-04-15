@@ -258,7 +258,9 @@ exec exec $START nm-applet --indicator
 # Note: use nm-connection-editor to open network manager GUI.
 
 # Start skype in WEB browser:
-exec exec $START_S browser https://web.skype.com
+# exec exec $START_S browser https://web.skype.com
+# Start browser and open preconfigured WEB pages (skype, ...):
+exec exec $START_S browser --my-startup
 
 # Delete system update lock directory:
 exec exec rm -rf /tmp/system_update_lock_dir

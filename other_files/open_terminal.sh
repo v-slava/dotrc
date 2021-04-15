@@ -12,6 +12,13 @@ fi
 source ~/.bashrc
 # open_terminal.sh [--title TITLE] CMD
 
+if ! pidof foot 1>/dev/null ; then
+    foot -s &
+    sleep 0.1
+fi
+exec footclient "$@"
+exec foot "$@"
+
 TITLE="Alacritty"
 for arg do
     shift
@@ -23,17 +30,10 @@ done
 # alacritty -o env.TERM=xterm -e bash
 exec alacritty --title "$TITLE" -e "$@"
 
+exec kitty "$@"
 # https://github.com/majestrate/wterm - broken font
 # https://github.com/ii8/havoc - couldn't build
-exec kitty "$@"
 
-if ! pidof foot 1>/dev/null ; then
-	foot -s &
-	sleep 0.1
-fi
-exec footclient "$@"
-
-exec foot "$@"
 exec x-terminal-emulator -e "$@"
 
 # Generate unique directory name in $HOME/terminal:

@@ -96,10 +96,11 @@ sudo apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 sudo apt-get install sway # way-cooler libpam-systemd at-spi2-core
 
 # Install terminal emulator:
-sudo apt-get install cargo libxcb-shape0-dev libxcb-xfixes0-dev pkg-config \
-    libfontconfig-dev
-cargo install alacritty # execute as ordinary user
-# sudo apt-get install kitty # foot
+sudo apt-get install foot # kitty
+# Alacritty:
+# sudo apt-get install cargo libxcb-shape0-dev libxcb-xfixes0-dev pkg-config \
+#     libfontconfig-dev
+# cargo install alacritty # execute as ordinary user
 
 # Install helper programs:
 sudo apt-get install i3status swaylock wl-clipboard qtwayland5 xwayland
