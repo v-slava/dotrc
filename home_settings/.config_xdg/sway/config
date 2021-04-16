@@ -326,7 +326,9 @@ bindsym --to-code $Alt_L+d exec exec $START $DOTRC/other_files/dmenu.sh
 # bindsym --to-code $mod+d exec $menu
 
 # Send keys (type something):
-bindsym --to-code --release $Alt_L+i exec exec $START $DOTRC/other_files/send_input.sh
+bindsym --to-code $Alt_L+i exec exec $START $DOTRC/other_files/send_input.sh
+# Note: for i3wm use "binsym --release ...".
+# Test: $ cat<ENTER><Alt_L+i> ...
 
 # mark window with label for further fast access:
 bindsym --to-code $Alt_L+m exec exec $DOTRC/other_files/i3_mark_window.sh
