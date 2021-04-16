@@ -5,9 +5,15 @@
 
 network_connected()
 {
-    # nmcli | grep ' connected ' | grep -vq docker
-    systemctl status network-online.target | grep -q \
-        ': Reached target Network is Online.'
+    nmcli | grep ' connected ' | grep -vq docker
+    # systemctl status network-online.target | grep -q \
+    #     ': Reached target Network is Online.'
+
+    # ● network-online.target - Network is Online
+    #      Loaded: loaded (/lib/systemd/system/network-online.target; static)
+    #      Active: inactive (dead)
+    #        Docs: man:systemd.special(7)
+    #              https://www.freedesktop.org/wiki/Software/systemd/NetworkTarget
 }
 
 if [ "$1" = "--my-startup" ]; then
