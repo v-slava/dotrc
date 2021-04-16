@@ -16,7 +16,7 @@ if ! $DOTRC/other_files/virtual_box.sh ; then
     $DOTRC/other_files/lock_screen.sh &
 fi
 
-CMD="$DOTRC/other_files/update_system.sh && exec sudo poweroff"
+CMD="$DOTRC/other_files/update_system.sh ; exec sudo poweroff"
 # sudo systemctl hibernate
 
 if [ -n "$SLEEP" ]; then

@@ -22,7 +22,15 @@ echo "+ sudo apt-get autoremove --purge --yes"
 sudo apt-get autoremove --purge --yes
 if which pip3 1>/dev/null ; then
     # pip3 install --user --upgrade
-    PACKAGES="$(pip3 list | tail -n +3 | cut -d' ' -f1 | tr '\r\n' ' ')"
+    PACKAGES=""
+    for PACKAGE in $(pip3 list | tail -n +3 | cut -d' ' -f1) ; do
+        if [ "$PACKAGE" = "PyGObject" ]; then
+            continue
+        fi
+        if ! dpkg -l | grep -q "ii  python3-$PACKAGE " ; then
+            PACKAGES="$PACKAGES $PACKAGE"
+        fi
+    done
     echo "+ pip3 install --upgrade $PACKAGES"
     pip3 install --upgrade $PACKAGES
 fi

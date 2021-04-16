@@ -810,6 +810,10 @@ key_bindings:
 
   # (Windows, Linux, and BSD only)
 
+  # - { key: Back, chars: "\x7f" }
+  # Remap backspace from ^? (0x7f) to ^H (0x08):
+  - { key: Back, chars: "\x08" }
+
   #- { key: V, mods: Control|Shift, mode: ~Vi, action: Paste }
   - { key: V, mods: Control|Shift, mode: ~Vi, action: None }
   - { key: V, mods: Alt, action: Paste }
