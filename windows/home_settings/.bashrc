@@ -117,6 +117,12 @@ export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
 export QT_QPA_PLATFORM=wayland # use qtwayland5
 # export QT_QPA_PLATFORM=xcb # use xwayland
 
+# Wayland clipboard support for root:
+if [ $(id -u) -eq 0 ] && [ -f /tmp/sway_booted ]; then
+    export WAYLAND_DISPLAY=wayland-0
+    export XDG_RUNTIME_DIR=/run/user/1000
+fi
+
 # T909S:
 # export BT_MAC=30:07:14:25:02:55
 # Sony MDR-10RBT:
