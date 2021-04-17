@@ -3134,7 +3134,7 @@ dd if=/dev/zero of=/dev/sdX bs=1k count=1
 fdisk /dev/sdX
 mkfs -t vfat -F 32 -n USB_BOOT /dev/sdX1
 mount /dev/sdX1 /media/usb
-apt-get install grub2-common
+sudo apt-get install grub2-common
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --boot-directory=/media/usb/boot /dev/sdX
 # grub-install --target=i386-efi --efi-directory=/boot/efi --boot-directory=/media/usb/boot /dev/sdX
 sudo apt-get install grub-pc-bin

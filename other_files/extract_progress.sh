@@ -17,6 +17,12 @@ if [ $# -lt 1 ]; then
     usage
 fi
 
+get_uncompressed_file()
+{
+    UNCOMPRESSED_FILE="$(echo $FILE_FULL_PATH | rev | cut -d'/' -f1 \
+        | cut -d'.' -f 2- | rev)"
+}
+
 for FILE in "$@" ; do
     if [ ! -f "$FILE" ]; then
         echo "Error: \"$FILE\" is not a valid archive file." 1>&2
@@ -105,14 +111,11 @@ EOF
         *.tar.zst)          pv $PV_FLAGS "$FILE_FULL_PATH" | tar x -I zstd ;;
         *.tar.bz2 | *.tbz2) pv $PV_FLAGS "$FILE_FULL_PATH" | tar xj        ;;
         *.tar.xz | *.txz)   pv $PV_FLAGS "$FILE_FULL_PATH" | tar xJ        ;;
-        *.xz)
-            UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
+        *.xz) get_uncompressed_file
             pv $PV_FLAGS "$FILE_FULL_PATH" | unxz > "$UNCOMPRESSED_FILE" ;;
-        *.gz)
-            UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
+        *.gz) get_uncompressed_file
             pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip > "$UNCOMPRESSED_FILE" ;;
-        *.bz2)
-            UNCOMPRESSED_FILE="`echo $FILE_FULL_PATH | rev | cut -d'/' -f1 | cut -d'.' -f 2- | rev`"
+        *.bz2) get_uncompressed_file
             pv $PV_FLAGS "$FILE_FULL_PATH" | bunzip2 "$UNCOMPRESSED_FILE" ;;
         *.igz)
             # pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
@@ -123,6 +126,15 @@ EOF
         *.7z) 7z x "$FILE_FULL_PATH" ;;
         *.rar) rar x "$FILE_FULL_PATH" ;; # impossible to read from stdin?
         *.zip | *.apk) unzip "$FILE_FULL_PATH" ;; # impossible to read from stdin?
+        *.iso)
+            MOUNT_DIR="$(mktemp -d /tmp/extract_iso_XXXXXXXXXX)"
+            fuseiso9660 "$FILE_FULL_PATH" "$MOUNT_DIR"
+            SIZE=$(du -bs "$MOUNT_DIR" | cut -f1)
+            ( cd "$MOUNT_DIR" && tar c . ) | pv $PV_FLAGS -s $SIZE | tar x
+            fusermount -u "$MOUNT_DIR"
+            rm -rf "$MOUNT_DIR"
+            chmod +w .
+            ;;
         # *.Z) uncompress "$FILE_FULL_PATH" ;;
         *)
             FILE_TYPE="$(file --brief "$FILE_FULL_PATH")"
