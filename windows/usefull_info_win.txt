@@ -1,3 +1,11 @@
+# Run cmd as administrator:
+WIN -> cmd -> ctrl+shift+enter
+# Run disk management tool:
+WIN+r -> diskmgmt.msc
+# Windows dd implementation:
+wget http://www.chrysocome.net/downloads/ddrelease64.exe
+ddrelease64.exe of=\\?\Device\HarddiskX\Partition0 if=usb.img bs=1M
+
 # View or export installed certificates (ssl, PEM):
 WIN+r -> certmgr.msc
 # To be compatible with /etc/ssl/certs/ca-certificates.crt select
