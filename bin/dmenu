@@ -1,8 +1,10 @@
 #!/bin/bash
 
 ACTIVE_OUTPUT=$(swaymsg -t get_workspaces | jq ".[] | select(.focused==true)" | jq '.output' | cut -d'"' -f2)
-ARGS=
+# echo "|$ACTIVE_OUTPUT|"
 if [ "${ACTIVE_OUTPUT:0:3}" = "eDP" ]; then
     ARGS="-m 0"
+else
+    ARGS="-m 1"
 fi
 /usr/bin/dmenu $ARGS "$@"

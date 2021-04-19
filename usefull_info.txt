@@ -1030,6 +1030,10 @@ sudo ptp4l -i eno1 -E -S -2 -l 7 -m -q -f /tmp/ptp4l.conf
 # Check timestamping modes (for PTP) supported by interface:
 ethtool -T INTERFACE
 
+# delete packets [2; 4] from wireshark capture:
+editcap in.pcapng out.pcapng 2-4
+# edit frame contents in hex editor
+
 # Use wireshark plugin (dissector):
 wireshark -X lua_script:/path/to/plugin/file.lua
 
@@ -3008,8 +3012,7 @@ arm-linux-gnueabi-objdump -D -b binary -m arm Image
 sudo mount -o loop -t sysfs /boot/initrd.img-3.11.0-12-generic <mount point>
 
 # mount iso file:
-fuseiso <image_file> <mount_point>
-fuseiso --help
+fuseiso9660 <image_file> <mount_point>
 fusermount -u -z <mount_point> # unmount
 
 # Code formatting (eclipse):
@@ -3405,7 +3408,7 @@ iw dev wlan0 <command>
 commands: link, scan
 iw dev wlan0 connect <SSID>
 
-# Write file to CD-R:
+# Write file to CD-R (generate .iso image):
 genisoimage -r -J -o cd_image.iso <folder> # create iso image
 # Check (paranoidal) image correctness:
 sudo mount -t iso9660 -o ro cd_image.iso /media/cd_mount_point
