@@ -3142,7 +3142,7 @@ sudo apt-get install grub2-common
 # grub-install --target=i386-efi --efi-directory=/boot/efi --boot-directory=/media/usb/boot /dev/sdX
 sudo apt-get install grub-pc-bin
 # The following requires 8.5M:
-grub-install --target=i386-pc --boot-directory=/media/usb/boot /dev/sdX
+sudo grub-install --target=i386-pc --boot-directory=/media/usb/boot /dev/sdX
 edit /media/usb/boot/grub/grub.cfg
 # Add memdisk (to boot iso/floppy/hard disk images):
 wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.xz

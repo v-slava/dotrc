@@ -127,13 +127,14 @@ EOF
         *.rar) rar x "$FILE_FULL_PATH" ;; # impossible to read from stdin?
         *.zip | *.apk) unzip "$FILE_FULL_PATH" ;; # impossible to read from stdin?
         *.iso)
-            MOUNT_DIR="$(mktemp -d /tmp/extract_iso_XXXXXXXXXX)"
-            fuseiso9660 "$FILE_FULL_PATH" "$MOUNT_DIR"
-            SIZE=$(du -bs "$MOUNT_DIR" | cut -f1)
-            ( cd "$MOUNT_DIR" && tar c . ) | pv $PV_FLAGS -s $SIZE | tar x
-            fusermount -u "$MOUNT_DIR"
-            rm -rf "$MOUNT_DIR"
-            chmod +w .
+            7z x "$FILE_FULL_PATH"
+            # MOUNT_DIR="$(mktemp -d /tmp/extract_iso_XXXXXXXXXX)"
+            # fuseiso9660 "$FILE_FULL_PATH" "$MOUNT_DIR"
+            # SIZE=$(du -bs "$MOUNT_DIR" | cut -f1)
+            # ( cd "$MOUNT_DIR" && tar c . ) | pv $PV_FLAGS -s $SIZE | tar x
+            # fusermount -u "$MOUNT_DIR"
+            # rm -rf "$MOUNT_DIR"
+            # chmod -R +w .
             ;;
         # *.Z) uncompress "$FILE_FULL_PATH" ;;
         *)
