@@ -24,8 +24,9 @@ convert -rotate "$DEGREES" "$IN_FILE" "$OUT_FILE"
 $VIFM_CMD "mark z"
 $DOTRC/other_files/vifm_rename.py rotated_image "$IN_FILE"
 CMD="normal 'z"
-if pidof gliv 1>/dev/null ; then
-    # reopen image in gliv:
+# if pidof gliv 1>/dev/null ; then
+if pidof imv-wayland 1>/dev/null ; then
+    # reopen image:
     CMD="${CMD}l"
 fi
 $VIFM_CMD "$CMD"
