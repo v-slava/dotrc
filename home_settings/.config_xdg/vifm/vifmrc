@@ -155,7 +155,7 @@ filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
 
 " Video
 filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v,*.opus
-	\ vlc %f 2>/dev/null &,
+	\ killall vlc 2>/dev/null; vlc %f 2>/dev/null &,
 	\ smplayer %f &,
 	\ mplayer %f &,
 	\ ffplay -fs %c,
@@ -482,8 +482,8 @@ nmap T :!touch<SPACE>
 nmap cl :!$DOTRC/other_files/vifm_change_link.py %f<CR>
 vmap cl :!$DOTRC/other_files/vifm_change_link.py %f<CR>
 
-nmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>
-vmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh %"f<CR><c-l>
+nmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh '%f'<CR><c-l>
+vmap cx :!$DOTRC/other_files/vifm_run_command.sh --pause on_failure $DOTRC/other_files/toggle_executable.sh '%f'<CR><c-l>
 
 nnoremap ot :!objdump.sh -t ./%c | c++filt | less -i<CR>
 nnoremap od :!objdump.sh -D ./%c | c++filt | less -i<CR>

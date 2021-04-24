@@ -39,7 +39,7 @@ case "$1" in
             NUM_OUTPUTS=$(echo -e "$OUTPUTS" | wc -l)
         done
         ;;
-    startup)
+    startup|"")
         OUTPUTS=$(swaymsg -t get_outputs | grep '    "name": "' | cut -d'"' -f4)
         NUM_OUTPUTS=$(echo -e "$OUTPUTS" | wc -l)
         ;;
@@ -110,6 +110,7 @@ case $NUM_OUTPUTS in
         echo "step 2" >> $LOG
         echo > $GEN_CONFIG
         echo "output $MAIN_OUTPUT pos 0 0" >> $GEN_CONFIG
+        echo "workspace 0 output $MAIN_OUTPUT" >> $GEN_CONFIG
         for WORKSPACE in $(seq 1 2 9) ; do
             echo "workspace $WORKSPACE output $MAIN_OUTPUT" >> $GEN_CONFIG
         done
