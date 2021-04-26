@@ -1,3 +1,13 @@
+# To open autostart folder type in explorer's address line:
+shell:startup
+
+# Run powershell script from bat file/cmd:
+Powershell.exe -executionpolicy remotesigned -File C:\\powershell_script.ps1
+
+# Share VPN from windows using mobile hotspot:
+https://support.unlocator.com/article/351-how-to-share-your-vpn-connection-from-your-windows-pc
+# See also: $DOTRC/windows/other_files/start_mobile_hotspot.ps1
+
 # Run cmd as administrator:
 WIN -> cmd -> ctrl+shift+enter
 # Run disk management tool:
