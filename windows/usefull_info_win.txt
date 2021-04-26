@@ -160,6 +160,9 @@ dir /s /b *.cpp
 # find -name '*.cpp' | xargs cat:
 forfiles /s /m *.cpp /c "cmd /c type @file"
 
+# sleep 42
+time /t 42
+
 # time cmd
 echo %time% && cmd %% echo %time%
 # powershell:
