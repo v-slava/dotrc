@@ -85,9 +85,11 @@ case $NUM_OUTPUTS in
             if ! [[ "$WORKSPACE" =~ ^[0-9]+$ ]] ; then
                continue # not a number
             fi
-            if [ "$WORKSPACE" = "0" ] && [ "$OUTPUT" != "$MAIN_OUTPUT" ]; then
-                CMD="${CMD}workspace $WORKSPACE, "
-                CMD="${CMD}move workspace to output $MAIN_OUTPUT, "
+            if [ "$WORKSPACE" = "0" ]; then
+                if [ "$OUTPUT" != "$MAIN_OUTPUT" ]; then
+                    CMD="${CMD}workspace $WORKSPACE, "
+                    CMD="${CMD}move workspace to output $MAIN_OUTPUT, "
+                fi
                 continue
             fi
             if [ $(($WORKSPACE % 2)) -eq 0 ]; then
