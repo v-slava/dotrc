@@ -402,6 +402,7 @@ gvncviewer {screen_sharing_host|localhost}
 
 # For reverse ssh see:
 $DOTRC/other_files/my_samples/single_sources/reverse_ssh.service
+# Another way: sudo apt-get install autossh
 
 # ssh query algorithms:
 ssh -Q KexAlgorithms

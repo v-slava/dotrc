@@ -224,7 +224,8 @@ sudo apt-get install minidlna
 # 3) DISPLAY=:0 teamviewer # by default DISPLAY would be :1
 # 4) sudo chvt 1 # go back to original GUI session
 # 5) When done: killall TeamViewer && sudo systemctl stop lightdm.service
-# Check also: nomachine (free remote desktop), wireguard (VPN).
+# Check also: nomachine (free remote desktop), wireguard (VPN), sshuttle.
+# https://www.reddit.com/r/WireGuard/comments/g0l1sn/help_me_make_a_reverse_vpn_box/
 # https://github.com/swaywm/sway/wiki/Useful-add-ons-for-sway#log-in-managers
 # https://github.com/swaywm/sway/wiki/Systemd-integration#running-sway-itself-as-a---user-service
 # Implicit viber dependencies:
