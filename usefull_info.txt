@@ -3335,8 +3335,10 @@ ip route
 # Set static ip (iproute package in debian):
 ip addr add 192.168.1.29/24 dev wlan0
 # ifconfig wlan0 192.168.1.29/24
+# ifconfig wlan0 192.168.1.29 netmask 255.255.255.0
 ip route add default via 192.168.1.1
 # ip addr del 106.124.32.34/24 dev eth0
+# sudo ip route add DESTINATION_IP/24 via GATEWAY_IP dev INTERFACE
 
 # Start DHCP server and forward packets from one interface to another (router,
 # wifi access point):
@@ -3557,6 +3559,13 @@ info sharedlibrary
 # gdb: mapping in running process from "Start Addr" to "End Addr" (which results
 # in total "Size") from "objfile" starting from "Offset":
 info proc mappings
+
+# gdb: investigate core dump:
+gdb-multiarch
+> set architecture arm
+> set sysroot /path/to/your/sysroot
+> core-file /path/to/your/core-dump
+> symbol-file /path/to/your/crashed/executable
 
 # gdb: debug program with core dump:
 gdb -e PROGRAM -c core.dump
