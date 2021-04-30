@@ -6,7 +6,7 @@ if [ "$1" = "-r" ]; then
     svn revert -R -- .
 fi
 svn status --no-ignore | grep '^[?I!A]      ' | grep -v '^?       \.git$' \
-    | cut -d' ' -f8- | xargs rm -rf
+    | grep -v '^?       \.gitignore$' | cut -d' ' -f8- | xargs rm -rf
 echo "+ svn status --no-ignore"
 svn status --no-ignore
 echo "+ svn status --no-ignore: exit code=$?"
