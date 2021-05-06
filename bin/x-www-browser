@@ -30,11 +30,24 @@ if [ "$1" = "--my-startup" ]; then
         sleep 0.1
     done
 fi
+CMD="google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
-if pidof chrome 1>/dev/null ; then
-    exec google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"
-else
+if ! pidof chrome 1>/dev/null ; then
     # Do not pass any arguments to open configured in chrome WEB pages on
     # startup:
-    exec google-chrome --enable-features=UseOzonePlatform --ozone-platform=wayland
+    (
+        while true ; do
+            OUTPUT="$($CMD 2>&1)"
+            RET=$?
+            ERROR_MSG="Fatal Wayland protocol error 4 on interface xdg_wm_base \
+(object 13). Shutting down.."
+            if [ $RET -ne 0 ] || echo -e "$OUTPUT" | grep -q "$ERROR_MSG" ; then
+                continue
+            fi
+            break
+        done
+    ) &
+    sleep 1
 fi
+
+$CMD "$@"

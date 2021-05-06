@@ -129,7 +129,7 @@ cmd & disown
 
 # See also example in $DOTRC/other_files/my_samples/single_sources/docker_example.sh
 e Dockerfile
-docker build -t NAME [--build-arg VAR[=value]] .
+docker build [--platform windows] -t NAME [--build-arg VAR[=value]] .
 # if =value is not specified, use $VAR
 # docker build -f /path/to/a/Dockerfile .
 docker run --mount type=bind,source=/media/files/workspace/docker_workspace,destination=/workspace -it NAME bash
