@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# See also:
+# https://github.com/mviereck/x11docker
+# https://github.com/hurricanehrndz/docker-containers/tree/b19bceb1ce334f73a8cb2957bebe675320039df5/teamviewer
+
+# TODO the following doesn't work (teamviewer hangs while connecting...)
+
 CONTAINER=teamviewer
 
 TMP=/media/files/workspace/tmp
@@ -50,8 +56,7 @@ echo '+    && chmod +x /root/teamviewer.sh'
 echo ' '
 echo ' ################################################################################'
 echo ' # builder'
-        ) > /tmp/$REPO.patch
-        git apply /tmp/$REPO.patch
+        ) | git apply -
         touch $TMP/$REPO/prepared
     fi
 
