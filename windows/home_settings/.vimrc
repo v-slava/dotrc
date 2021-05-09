@@ -201,6 +201,8 @@ endfunction
 if g:My_is_windows
     set noswapfile
     set expandtab
+    set tabstop=4
+    set shiftwidth=4
     " set shell=\"C:/Program\ Files/Git/bin/bash.exe\"
     " set shell=\"C:/windows/system32/cmd.exe\"
     " set shell="C:\\windows\\system32\\cmd.exe"

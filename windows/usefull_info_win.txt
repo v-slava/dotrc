@@ -1,8 +1,16 @@
+# Batch file comment:
+:: this is single line comment, can't repeat this on next line!
+REM this is line 1 comment
+REM this is line 2 comment
+
 # To open autostart folder type in explorer's address line:
 shell:startup
 
 # Run powershell script from bat file/cmd:
 Powershell.exe -executionpolicy remotesigned -File C:\\powershell_script.ps1
+
+# tee from cmd (using powershell):
+powershell C:script.bat 2>&1 ^| tee-object -FilePath C:\log.txt
 
 # Share VPN from windows using mobile hotspot:
 https://support.unlocator.com/article/351-how-to-share-your-vpn-connection-from-your-windows-pc
@@ -32,7 +40,7 @@ cmd /C "COMMAND"
 # Do not print a command being executed just once:
 @ SOME_COMMAND
 
-:: Do not print commands being executed:
+# Do not print commands being executed:
 @echo off
 
 # Print empty line:
@@ -47,6 +55,8 @@ set
 # Assign and reference variable in batch file (do not quote VALUE):
 set VAR_NAME=VALUE
 echo %VAR_NAME%
+# echo in braces to notice empty space:
+echo {%VAR_NAME%}
 
 # To setup shortcut on start panel:
 # 1) in "Target" write:
@@ -61,6 +71,12 @@ echo %errorlevel%
 
 # check exit code:
 if %errorlevel% equ 0 (echo True) else (echo False)
+if errorlevel 0 (echo True) else (echo False)
+
+# check if executable is in %PATH% :
+set executable_found=false
+where /q EXECUTABLE && set executable_found=true
+if %executable_found"=="true" (echo found) else (echo not_found)
 
 # Print home directory:
 echo %homedrive%%homepath%
@@ -71,8 +87,12 @@ echo %homedrive%%homepath%
 # All arguments ("%@" in linux):
 %*
 
+# Check if variable is set:
+if defined VARIABLE_NAME ( echo defined )
+
 # Check if variable is empty:
-if [%VARIABLE%] == [] (
+# if [%VARIABLE%]==[] (
+if "%VARIABLE%"=="" (
    cmd1
    cmd2
 )

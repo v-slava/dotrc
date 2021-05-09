@@ -185,6 +185,7 @@ alias gloga='git log --graph --decorate --color=always --all | cless -i'
 alias ga='git add'
 __git_complete ga _git_add
 alias gs='git status'
+# alias gsh='git show HEAD'
 alias gd='git diff'
 __git_complete gd _git_diff
 alias gco='git commit'

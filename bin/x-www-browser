@@ -24,7 +24,10 @@ network_connected()
     #              https://www.freedesktop.org/wiki/Software/systemd/NetworkTarget
 }
 
+STARTUP=
 if [ "$1" = "--my-startup" ]; then
+    STARTUP=true
+    shift
     while ! network_connected ; do
         echo sleeping >> /tmp/nm_log
         sleep 0.1
@@ -50,4 +53,6 @@ if ! pidof chrome 1>/dev/null ; then
     sleep 1
 fi
 
-$CMD "$@"
+if [ -z "$STARTUP" ] && [ -n "$1" ]; then
+    $CMD "$@"
+fi
