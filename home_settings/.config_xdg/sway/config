@@ -325,7 +325,7 @@ bindsym --to-code $Alt_L+d exec exec $START $DOTRC/other_files/dmenu.sh
 # # Start your launcher
 # bindsym --to-code $mod+d exec $menu
 
-bindsym $WIN+w exec exec remmina -c $XDG_DATA_HOME/remmina/home_pc.remmina
+bindsym --to-code $WIN+w exec exec remmina -c $XDG_DATA_HOME/remmina/home_pc.remmina
 
 # Send keys (type something):
 bindsym --to-code $Alt_L+i exec exec $START $DOTRC/other_files/send_input.sh

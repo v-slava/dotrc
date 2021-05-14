@@ -10,7 +10,8 @@ shell:startup
 Powershell.exe -executionpolicy remotesigned -File C:\\powershell_script.ps1
 
 # tee from cmd (using powershell):
-powershell C:script.bat 2>&1 ^| tee-object -FilePath C:\log.txt
+powershell C:script.bat ^| tee-object -FilePath 'C:\log 1.txt'
+powershell "& '.\script.bat' 2>&1 | Tee-Object -FilePath 'C:\log 1.txt'"
 
 # Share VPN from windows using mobile hotspot:
 https://support.unlocator.com/article/351-how-to-share-your-vpn-connection-from-your-windows-pc
