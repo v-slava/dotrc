@@ -3,6 +3,13 @@
 REM this is line 1 comment
 REM this is line 2 comment
 
+# Batch file split command on multiple lines:
+# before:
+copy file1.txt file2.txt
+# after:
+copy file1.txt^
+ file2.txt
+
 # To open autostart folder type in explorer's address line:
 shell:startup
 

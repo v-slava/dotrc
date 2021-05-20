@@ -175,6 +175,13 @@ Linux:
   handler is completed, see linux/arch/arm64/kernel/entry.S
   Linux uses CPSR.IRQ (not FIQ) for ARMv7-A.
   On how to enable/disable/check IRQs see: linux/arch/arm/include/asm/irqflags.h
+  Top-half responds to interrupt, bottom-half is scheduled by top-half.
+  During bottom-half execution all interrupts are enabled.
+  All of the restrictions that apply to interrupt handlers also apply to bottom
+  halves. Thus, bottom halves cannot sleep, cannot access user space, and cannot
+  invoke the scheduler.
+  Timer (struct timer_list) executes in bottom-half context, as softirqs, after
+  the timer interrupt completes.
 
 # virtualbox toggle scale mode:
 right_ctrl+c
@@ -3393,6 +3400,9 @@ sudo iwlist wlan0 scan
 
 # Scan for network devices (port will be blocked):
 sudo arp-scan --interface=eth0 --localnet
+
+# delete arp cache:
+arp -d
 
 # Add route (tags: network, table):
 sudo ip r add 192.168.2.1 via 192.168.1.1 dev enx00249b20423d

@@ -9,4 +9,5 @@ if [ "$1" = "--startup" ]; then
     done
 fi
 
-evolution
+# evolution
+thunderbird

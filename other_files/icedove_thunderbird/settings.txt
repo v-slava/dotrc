@@ -1,0 +1,17 @@
+{
+    "j": "cmd:cmd_nextMsg",
+    "k": "cmd:cmd_previousMsg",
+    "l": "cmd:cmd_openMessage",
+    "f": "cmd:cmd_forward",
+    "d": "cmd:cmd_delete",
+    "a": "cmd:cmd_replyall",
+    "c": "func:MsgNewMessage",
+    "q": "tbkeys:closeMessageAndRefresh",
+    "+": "cmd:cmd_fullZoomEnlarge",
+    "-": "cmd:cmd_fullZoomReduce",
+    "=": "cmd:cmd_fullZoomReset",
+    "r": "cmd:cmd_getNewMessages",
+    "o": "cmd:cmd_goBack",
+    "u": "cmd:cmd_undoCloseTab",
+    "/": "cmd:cmd_search"
+}

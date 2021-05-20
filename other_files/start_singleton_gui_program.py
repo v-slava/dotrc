@@ -143,11 +143,11 @@ def start_browser(args):
 
 def start_email(args):
     def find_email_client(obj):
-        return find_win_with_prop('class', 'Evolution', obj)
+        return find_win_with_prop('class', 'thunderbird', obj) # Evolution
     dotrc = os.environ['DOTRC']
     email_client = os.path.join(dotrc, 'other_files', 'email_client.sh')
     start_program([email_client] + args, find_email_client,
-                  process_name = 'evolution', single_run = True)
+                  process_name = 'thunderbird', single_run = True) # evolution
 
 def start_telegram(args):
     def find_telegram(obj):
