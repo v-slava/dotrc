@@ -1520,6 +1520,10 @@ let g:which_key_map.r = { 'name' : '+rtags',
 \   'w' : [':call rtags#RenameSymbolUnderCursor()', 'RenameSymbolUnderCursor'],
 \ }
 
+noremap <c-LeftMouse> <LeftMouse>:call rtags#JumpTo(g:SAME_WINDOW)<CR>
+noremap <c-RightMouse> <LeftMouse>:let g:My_use_denite_errors = 0<CR>:call rtags#FindRefs()<CR>
+noremap <c-w> <c-o>
+
 " nmap <F3> :set hlsearch!<CR> " set/unset search highlighting
 " \   's' : [':call Swoop()', 'fuzzy search in this file'],
 " \   's' : ['/', 'fuzzy search in this file'],
