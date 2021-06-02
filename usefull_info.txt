@@ -199,6 +199,8 @@ Linux:
   invoke the scheduler.
   Timer (struct timer_list) executes in bottom-half context, as softirqs, after
   the timer interrupt completes.
+  Semaphores are not recommended for usage in new linux kernel code (heavily
+  optimized for the “available” case => use mutex instead).
 
 # virtualbox toggle scale mode:
 right_ctrl+c
