@@ -909,7 +909,8 @@ apt-cache rdepends <package_name>
 apt-get source --download-only <package_name>
 
 # Download package from repository:
-apt-get download <package_name>
+apt-get download [--print-uris] <package_name>
+# See also: $DOTRC/other_files/my_samples/single_sources/deb_repo_get_package_urls.sh
 
 # list installed packages by installation date:
 ls -lt /var/lib/dpkg/info/*.list | cut -d' ' -f 5-
@@ -2494,8 +2495,6 @@ git log -S part_of_deleted_string path/to/file
 # git log/blame find commit which deleted file:
 git log [--full-history] -- FILE_PATH_REGEX
 
-# git delete non-existend (obsolete, stale) remote branches:
-git remote prune REMOTE
 # git get list of commits in BRANCH since COMMIT_1:
 git rev-list ^COMMIT_1 BRANCH
 
@@ -2512,7 +2511,7 @@ git log --pretty=%P -n 1 HEAD
 git push REMOTE --delete BRANCH
 git push REMOTE :BRANCH
 
-# git delete/remove already deleted (invalid, obsolete) remote branches:
+# git delete/remove already deleted (non-existed, invalid, obsolete) remote branches:
 git remote prune REMOTE
 
 # git repository as shared folder:
