@@ -759,7 +759,7 @@ env -i bash --noprofile --norc
 set -x
 export SHELLOPTS
 
-# bash register cleanup function (execute on exit):
+# bash register cleanup function (execute on exit/signal):
 my_cleanup()
 {
     echo my_cleanup
