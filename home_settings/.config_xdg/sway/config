@@ -35,8 +35,10 @@ set $PrintScreen 107
 
 input * {
     xkb_layout "us,ru"
-    # xkb_options "grp:menu_toggle,ctrl:nocaps"
-    xkb_options "ctrl:nocaps,compose:ralt"
+    # xkb_options "grp:menu_toggle,compose:ralt"
+    # search for "Position of Compose key" in xkeyboard-config(7)
+    # Note: requires ~/.XCompose. Doesn't work in chrome
+    xkb_options "ctrl:nocaps"
 }
 
 input type:touchpad {
@@ -402,6 +404,8 @@ for_window [app_id="Google-chrome"] mark --replace browser
 for_window [title="Toggle audio device"] floating enable
 for_window [app_id=".*Telegram_Desktop"] mark --replace telegram
 for_window [title="hibernate script"] floating enable
+for_window [title="Multi_key script"] floating enable
+bindsym --to-code $WIN+i exec exec $START $DOTRC/other_files/send_input_multi_key.sh
 
 include ~/.config_xdg/sway/generated_config
 
