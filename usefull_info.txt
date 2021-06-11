@@ -1067,8 +1067,8 @@ sudo ptp4l -i eno1 -E -S -2 -l 7 -m -q -f /tmp/ptp4l.conf
 # Check timestamping modes (for PTP) supported by interface:
 ethtool -T INTERFACE
 
-# delete packets [2; 4] from wireshark capture:
-editcap in.pcapng out.pcapng 2-4
+# delete packets [2; 4] and [6-14] from wireshark capture:
+editcap in.pcapng out.pcapng 2-4 6-14
 # edit frame contents in hex editor
 
 # Use wireshark plugin (dissector):
@@ -1130,7 +1130,7 @@ j - loop subtitle (e.g. none, rus, eng, ...)
 v - switch subtitle visibility
 a - change aspect ratio
 
-# Compose key sequences (not works for some apps):
+# Compose key sequences (does not work for some apps):
 # 1) add the following contents:
 # <Multi_key> <a> : "ä"
 # <Multi_key> <b> <r> : "Best regards," # email ending
@@ -1692,6 +1692,9 @@ mplayer -ao alsa:device=btheadset file.mp3
 # USB flash turn write protection off:
 hdparm -R0 /dev/sdX
 hdparm -r0 /dev/sdX
+
+# git grep in repo history (deleted file):
+git grep REGEX $(git rev-list --all)
 
 # git clone official linux kernel:
 git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git

@@ -36,7 +36,7 @@ set $PrintScreen 107
 input * {
     xkb_layout "us,ru"
     # xkb_options "grp:menu_toggle,ctrl:nocaps"
-    xkb_options "ctrl:nocaps"
+    xkb_options "ctrl:nocaps,compose:ralt"
 }
 
 input type:touchpad {
