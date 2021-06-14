@@ -34,6 +34,7 @@ set $PrintScreen 107
 # Read `man 5 sway-input` for more information about this section.
 
 input * {
+    # xkb_layout "us,ru,ua"
     xkb_layout "us,ru"
     # xkb_options "grp:menu_toggle,compose:ralt"
     # search for "Position of Compose key" in xkeyboard-config(7)
