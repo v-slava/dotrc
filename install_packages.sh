@@ -205,6 +205,8 @@ sudo apt-get install minidlna
 
 # Record video from screen during lection / meeting / ... :
 # sudo apt-get install simplescreenrecorder
+sudo apt-get install wf-recorder
+# Usage: wf-recorder -a
 
 # Display keypresses (might be usefull for screen recording):
 # sudo apt-get install screenkey

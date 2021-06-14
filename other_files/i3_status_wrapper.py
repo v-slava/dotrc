@@ -39,7 +39,7 @@ def get_sway_keyboard_layout():
     for elem in inputs:
         if elem['identifier'] == '1:1:AT_Translated_Set_2_keyboard':
             layout_index = elem['xkb_active_layout_index']
-            return ['US', 'RU'][layout_index]
+            return ['US', 'RU', 'UA'][layout_index]
     return 'unknown keyboard layout'
 
 def get_brightness():

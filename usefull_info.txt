@@ -430,13 +430,15 @@ gvncviewer {screen_sharing_host|localhost}
 $DOTRC/other_files/my_samples/single_sources/reverse_ssh.service
 # Another way: sudo apt-get install autossh
 
+# Do not fail due to "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!":
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@host
+
 # ssh query algorithms:
 ssh -Q KexAlgorithms
 ssh -Q HostKeyAlgorithms
 ssh -Q Ciphers
 # ssh specify algorithms:
 ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oCiphers=+aes256-cbc user@host
-# -oStrictHostKeyChecking=no
 
 # ssh connect to host on specified port (default port = 22):
 ssh -p port user@host
