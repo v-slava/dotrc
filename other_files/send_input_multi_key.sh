@@ -50,8 +50,8 @@ else
     fi
     cat << EOF
 <Multi_key> <4> : "§"
-<Multi_key> <e> : "€"
-<Multi_key> <m> : "μ"
+<Multi_key> <е> : "€"
+<Multi_key> <м> : "μ"
 
 <Multi_key> <Cyrillic_yeru>     : "і"   # ы
 <Multi_key> <Cyrillic_YERU>     : "І"   # Ы
@@ -66,15 +66,15 @@ EOF
     read -n1 INPUT_SYMBOL
     case "$INPUT_SYMBOL" in
         "4") OUTPUT_SYMBOL="§" ;;
-        "e") OUTPUT_SYMBOL="€" ;;
-        "m") OUTPUT_SYMBOL="μ" ;;
+        "е") OUTPUT_SYMBOL="€" ;;
+        "м") OUTPUT_SYMBOL="μ" ;;
         "ы") OUTPUT_SYMBOL="і" ;;
         "Ы") OUTPUT_SYMBOL="І" ;;
         "ъ") OUTPUT_SYMBOL="ї" ;;
         "Ъ") OUTPUT_SYMBOL="Ї" ;;
         "э") OUTPUT_SYMBOL="є" ;;
         "Э") OUTPUT_SYMBOL="Є" ;;
-        "ё") OUTPUT_SYMBOL="'" ;;
+        "ё") OUTPUT_SYMBOL="\"'\"" ;;
         *) OUTPUT_SYMBOL="" ;;
     esac
 fi

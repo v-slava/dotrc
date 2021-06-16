@@ -12,14 +12,9 @@ config_concat_dotrc_s()
 (
     set -e
     if [ -L "$DOTRC_FILE" ]; then
-        REAL_DOTRC_FILE="$(realpath "$DOTRC_FILE")"
-        if [[ $REAL_DOTRC_FILE == $DOTRC/windows/* ]]; then
-            DOTRC_FILE="$REAL_DOTRC_FILE"
-        fi
-    fi
-    if [ -L "$DOTRC_FILE" ]; then
-        cp -P "$DOTRC_FILE" "$DEST"
-        return
+        echo -e "Error processing symlink: $DOTRC_FILE\n\
+Please define file in \$DOTRC/other_files/settings_merge/" 1>&2
+        exit 1
     fi
     if [ -f "$DOTRC_FILE" ]; then
         cp --preserve=mode "$DOTRC_FILE" "$DEST"
@@ -29,6 +24,13 @@ config_concat_dotrc_s()
     else
         cp --preserve=mode "$DOTRC_S_FILE" "$DEST"
     fi
+)
+
+config_concat_dotrc_s_realpath()
+(
+    set -e
+    DOTRC_FILE="$REAL_DOTRC_FILE"
+    config_concat_dotrc_s
 )
 
 config_create_dir_only()
@@ -71,38 +73,17 @@ config_copy_symlink()
 config_symlink_dotrc()
 (
     set -e
-    rm -f "$DEST"
+    rm -rf "$DEST"
     ln -s "$DOTRC_FILE" "$DEST"
 )
 
-config_fix_env_vars()
+config_copy_realpath_dir()
 (
     set -e
-    ARGS=()
-    while [ $# -ne 0 ]; do
-        VAR_NAME="$1"
-        VAR_VALUE="$(eval echo \$$VAR_NAME)"
-        ARGS+=("-e" "s|${VAR_NAME}_TEMPLATE|${VAR_VALUE}|g")
-        shift
-    done
-    if [ ${#ARGS[@]} -ne 0 ]; then
-        sed -i "$DEST" "${ARGS[@]}"
+    if [ ! -d "$DEST" ]; then
+        mkdir "$DEST"
     fi
-)
-
-config_virtualbox()
-(
-    TMP_FILE="/tmp/config_virtualbox"
-    if $DOTRC/other_files/virtual_box.sh ; then
-        WORD="native"
-    else
-        WORD="virtual"
-    fi
-    BEGIN=$(grep -n "# SED $WORD begin$" "$DEST" | cut -d':' -f1)
-    END=$(grep -n "# SED $WORD end$" "$DEST" | cut -d':' -f1)
-    head "$DEST" -n $BEGIN > "$TMP_FILE"
-    tail "$DEST" -n +$END >> "$TMP_FILE"
-    mv "$TMP_FILE" "$DEST"
+    cp -r "$REAL_DOTRC_FILE/"* "$DEST/"
 )
 
 config_generate()
@@ -122,6 +103,7 @@ config_generate()
         *) exit 1
     esac
     DOTRC_FILE="$DOTRC/$SETTINGS/$FILE"
+    REAL_DOTRC_FILE="$(realpath "$DOTRC_FILE")"
     DOTRC_S_FILE="$DOTRC_S/$SETTINGS/$FILE"
     MERGE_SUFFIX=other_files/settings_merge/$SETTINGS/${FILE}.sh
     MERGE=$DOTRC/$MERGE_SUFFIX

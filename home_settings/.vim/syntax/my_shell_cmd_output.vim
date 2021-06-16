@@ -1,1 +1,0 @@
-../../../windows/home_settings/.vim/syntax/my_shell_cmd_output.vim

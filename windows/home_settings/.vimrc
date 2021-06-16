@@ -695,7 +695,7 @@ function! My_swap_keyboard_layout()
     else
         if &keymap == 'russian-jcukenwin' " if current layout is russian
             " then switch to ukrainian
-            set keymap=ukrainian-jcuken
+            set keymap=my_ukrainian-jcuken
         else " current layout is ukrainian
             " switch to english
             set iminsert=0

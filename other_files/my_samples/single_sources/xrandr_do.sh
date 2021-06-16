@@ -84,6 +84,21 @@ init_vars()
 set -e
 source $DOTRC/other_files/config_file.sh
 
+config_fix_env_vars()
+(
+    set -e
+    ARGS=()
+    while [ $# -ne 0 ]; do
+        VAR_NAME="$1"
+        VAR_VALUE="$(eval echo \$$VAR_NAME)"
+        ARGS+=("-e" "s|${VAR_NAME}_TEMPLATE|${VAR_VALUE}|g")
+        shift
+    done
+    if [ ${#ARGS[@]} -ne 0 ]; then
+        sed -i "$DEST" "${ARGS[@]}"
+    fi
+)
+
 update_i3_config()
 {
     echo "starting update_i3_config()" >> $LOG
