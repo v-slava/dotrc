@@ -1365,7 +1365,7 @@ pdftk in.pdf cat 1-endright output out.pdf
 # apt-get install imagemagick
 convert page*.png mydoc.pdf
 # extract images from pdf:
-pdfimages [-all] input.pdf output_folder
+pdfimages -all input.pdf output_folder
 
 # compress (minimize) image size (jpg, png):
 mogrify -quality "80%" -resize 1048x768 file.jpg

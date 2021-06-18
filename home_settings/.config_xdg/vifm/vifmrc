@@ -154,14 +154,16 @@ filetype *.wav,*.mp3,*.flac,*.ogg,*.m4a,*.wma,*.ape,*.ac3
 " fileviewer *.flac soxi
 
 " Video
-filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v,*.opus
+filextype *.f4m,*.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv
+\,*.m2v,*.mov,*.webm,*.ts,*.m4v,*.opus
 	\ killall vlc 2>/dev/null; vlc %f 2>/dev/null &,
 	\ smplayer %f &,
 	\ mplayer %f &,
 	\ ffplay -fs %c,
 	\ dragon %f,
 
-" fileviewer *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv,*.m2v,*.mov,*.webm,*.ts,*.m4v
+" fileviewer *.flv,*.avi,*.mp4,*.wmv,*.3gp,*.ogv,*.mkv,*.mpg,*.vob,*.flv
+" \,*.m2v,*.mov,*.webm,*.ts,*.m4v
 " 	\ avprobe -pretty %c 2>&1
 
 " Web
@@ -184,16 +186,17 @@ filextype *.eml thunderbird %f &
 " fileviewer *.[1-8] gtbl %c | groff -Tascii -man | col -b
 
 " Image
-filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.tif
+filextype *.bmp,*.png,*.jpg,*.jpeg,*.gif,*.xpm,*.tif
+\,.*.bmp,.*.png,.*.jpg,.*.jpeg
 	\ $DOTRC/other_files/view_image.sh %c &,
 	\ gliv %f,
 	\ sxiv %f,
 	\ gpicview %c,
 
-filextype *.xcf
-	\ gimp %f,
+filextype *.xcf gimp %f,
 
-" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm convert -identify %f -verbose /dev/null
+" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
+" \ convert -identify %f -verbose /dev/null
 
 " Check MD5 hash sum
 " filetype *.md5 md5sum -c %f,
@@ -243,9 +246,8 @@ filextype *.xcf
 " 	\ FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR,
 
 " FtpMount
-" filetype *.ftp
-" 	\ {Mount with curlftpfs}
-" 	\ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR,
+" filetype *.ftp {Mount with curlftpfs}
+"   \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR,
 
 " Fuse7z and 7z archives
 " filetype *.7z
@@ -255,7 +257,8 @@ filextype *.xcf
 " fileviewer *.7z 7z l %c
 
 " Office files
-filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.docm,*.xls,*.xlsx,*.xlsm,*.odp,*.ppt,*.pptx,*.csv,*.vsd libreoffice %f %i &
+filextype *.rtf,*.fodt,*.fods,*.odt,*.ott,*.odg,*.ods,*.doc,*.docx,*.docm
+\,*.xls,*.xlsx,*.xlsm,*.odp,*.ppt,*.pptx,*.csv,*.vsd libreoffice %f %i &
 " fileviewer *.doc catdoc %c
 " fileviewer *.docx, docx2txt.pl %f -
 
