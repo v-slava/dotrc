@@ -30,6 +30,7 @@ shift
 TEXT="$1"
 shift
 
+set -e
 FILES_LIST="$(ls -a "$IN_DIR" | grep -v '^\.\.\?$')"
 
 MIN_WIDTH=99999999999
