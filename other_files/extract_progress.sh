@@ -116,7 +116,7 @@ EOF
         *.gz) get_uncompressed_file
             pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip > "$UNCOMPRESSED_FILE" ;;
         *.bz2) get_uncompressed_file
-            pv $PV_FLAGS "$FILE_FULL_PATH" | bunzip2 "$UNCOMPRESSED_FILE" ;;
+            pv $PV_FLAGS "$FILE_FULL_PATH" | bunzip2 > "$UNCOMPRESSED_FILE" ;;
         *.igz)
             # pv $PV_FLAGS "$FILE_FULL_PATH" | gunzip -c | cpio -i -d -H newc --no-absolute-filenames ;;
             unmkinitramfs "$FILE_FULL_PATH" . ;;

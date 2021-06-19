@@ -538,6 +538,9 @@ echo $?
 # Detect encoding:
 uchardet FILE
 
+# if umount reports "target is busy":
+lsof | grep MOUNT_POINT
+
 # Umount recursively:
 umount -R rootfs_dir
 
@@ -577,6 +580,9 @@ grep -m 1 OTHER_OPTIONS
 
 # Find \r symbols:
 grep -r $'\r'
+
+# Remove file duplicates (files):
+filedup -r -N
 
 # Remove duplicates from input list:
 echo -e 'item1\nitem2\nitem1' | sort -u
@@ -1133,6 +1139,9 @@ https://github.com/cmccabe/lksmith
 j - loop subtitle (e.g. none, rus, eng, ...)
 v - switch subtitle visibility
 a - change aspect ratio
+
+# Instead of executing xmodmap, it is possible to modify file:
+# /usr/share/X11/xkb/keycodes/evdev
 
 # Compose key sequences (does not work for some apps):
 # 1) add the following contents:
@@ -3156,6 +3165,9 @@ avprobe file.avi
 
 # Add ppa to /etc/apt/sources.list (debian):
 deb http://ppa.launchpad.net/colingille/freshlight/ubuntu lucid main
+
+# Preallocate file of a give size (10G):
+fallocate -l $((10 * 1024 * 1024 * 1024)) FILE
 
 # Get first 2M bytes from file (slow):
 dd if=IN of=OUT bs=1 count=$((2 * 1024 * 1024))

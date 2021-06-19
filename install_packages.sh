@@ -127,7 +127,8 @@ sudo apt-get install xmms2-client-nycli xmms2-plugin-mpg123 xmms2-plugin-pulse
 sudo apt-get install id3v2 alsa-utils # for volume control (amixer)
 
 # Install qemu:
-# apt-get install qemu-system-x86 qemu-kvm spice-client
+sudo apt-get install qemu-system-x86 virt-viewer
+# spice-client-gtk qemu-utils
 
 # Install X helper programs:
 sudo apt-get install zenity wl-clipboard # xclip, xsel

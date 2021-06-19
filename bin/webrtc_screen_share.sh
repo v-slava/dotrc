@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# https://www.screenleap.com
+# Enable: chrome://flags/#enable-webrtc-pipewire-capturer
+
 PIPEWIRE_DEBUG=3 pipewire &
 PIPEWIRE_PID=$!
 sleep 1
