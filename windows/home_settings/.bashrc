@@ -116,6 +116,8 @@ export MINICOM='-c on'
 export RIPGREP_CONFIG_PATH=$XDG_CONFIG_HOME/ripgreprc
 export QT_QPA_PLATFORM=wayland # use qtwayland5
 # export QT_QPA_PLATFORM=xcb # use xwayland
+export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_TYPE=wayland
 
 # Wayland clipboard support for root:
 if [ $(id -u) -eq 0 ] && [ -f /tmp/sway_booted ]; then

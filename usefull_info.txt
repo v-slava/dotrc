@@ -418,6 +418,8 @@ nc localhost 9222
 rm -f /tmp/fifo && mkfifo /tmp/fifo
 nc -l -p 9998 < /tmp/fifo | nc 10.70.126.164 9999 > /tmp/fifo
 
+# test screen sharing in browser:
+https://mozilla.github.io/webrtc-landing/gum_test.html
 # share screen sharing (x11vnc server uses port 5900):
 # On client start SSH tunnel:
 ssh -N -L 5900:localhost:5900 user@screen_sharing_host

@@ -94,6 +94,10 @@ sudo apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 # Install GUI:
 # Install sway:
 sudo apt-get install sway # way-cooler libpam-systemd at-spi2-core
+# libappindicator-gtk3
+
+# To make screen sharing work:
+sudo apt-get install xdg-desktop-portal-wlr pipewire-bin
 
 # Install terminal emulator:
 sudo apt-get install foot # kitty
