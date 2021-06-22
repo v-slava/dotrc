@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# https://mozilla.github.io/webrtc-landing/gum_test.html
 # https://www.screenleap.com
 # Enable: chrome://flags/#enable-webrtc-pipewire-capturer
 

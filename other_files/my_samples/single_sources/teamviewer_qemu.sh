@@ -62,6 +62,7 @@ apt-get install -y linux-image-amd64 systemd systemd-sysv
 apt-get install -y udev kmod sudo neovim vifm tree file less psmisc
 DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration
 apt-get install --install-recommends -y lxqt
+apt-get install -y network-manager
 # For clipboard sharing:
 apt-get install spice-vdagent
 
