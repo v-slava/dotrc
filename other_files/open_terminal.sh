@@ -12,7 +12,7 @@ fi
 source ~/.bashrc
 # open_terminal.sh [--title TITLE] CMD
 
-TITLE="Alacritty"
+TITLE="Terminal"
 for arg do
     shift
     case "$arg" in
@@ -22,6 +22,9 @@ for arg do
 done
 # alacritty -o env.TERM=xterm -e bash
 exec alacritty --title "$TITLE" -e "$@"
+
+ARGS="$@"
+exec terminator --title "$TITLE" -e "$ARGS"
 
 if ! pidof foot 1>/dev/null ; then
     foot -s &

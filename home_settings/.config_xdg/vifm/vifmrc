@@ -417,6 +417,8 @@ nmap <c-f> :!$DOTRC/other_files/vifm_find_fuzzy.sh<CR>
 " Copy symlink destination to clipboard (tags: location):
 nnoremap gl :!readlink '%c' | clipboard.sh -n<CR>
 
+nnoremap wl :!ln -s '%c'<SPACE>
+
 " :bmark! path tag1 [tag2 [tag3...]]
 bmark! /media/files/trash_vifm/ .. trash_vifm
 bmark! $DOTRC/other_files/my_samples/ my_samples

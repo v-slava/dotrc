@@ -1,3 +1,10 @@
+# use dtach to detach from session:
+# Create new session:
+dtach -c SOCKET CMD
+# By default use CTRL-\ to detach...
+# Attach to existing session:
+dtach -a SOCKET
+
 # Build software and dump build logs:
 LOG=build_log__$(date '+%Y_%m_%d__%H_%M_%S_%N') ;\
 touch $LOG ;\

@@ -28,7 +28,7 @@ def init_logging(log_file):
     stdout_handler.addFilter(StdoutFilter())
     stderr_handler = logging.StreamHandler()
     stderr_handler.setLevel(logging.WARNING)
-    logging.basicConfig(level = logging.DEBUG, datefmt = '%Y-%m-%d %I:%M:%S',
+    logging.basicConfig(level = logging.DEBUG, datefmt = '%Y-%m-%d %H:%M:%S',
         format = '%(asctime)s.%(msecs)03d %(levelname)s: %(message)s',
         handlers = [
             file_handler,

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # For sway:
 MARK=$(dmenu -p 'Mark current window as:' < /dev/null)
 exec swaymsg "mark --replace $MARK"

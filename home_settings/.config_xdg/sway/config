@@ -83,7 +83,7 @@ bar {
     position bottom
     # status_command exec i3status
     # See also: $DOTRC/other_files/my_samples/single_sources/sway_status_bar.sh
-    status_command sleep 1 && i3status | $DOTRC/other_files/i3_status_wrapper.py
+    status_command sleep 3 && i3status | $DOTRC/other_files/i3_status_wrapper.py
     # tray_output $OUTPUT_TRAY
     colors {
         statusline #FFFFFF
