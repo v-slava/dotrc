@@ -33,8 +33,9 @@ import tempfile
 import subprocess
 
 def get_sway_keyboard_layout():
-    ret = subprocess.run(['swaymsg', '-t', 'get_inputs'], check = True,
-            capture_output = True)
+    ret = subprocess.run(['swaymsg', '-t', 'get_inputs'], capture_output = True)
+    if ret.returncode != 0:
+        return 'error getting keyboard layout'
     inputs = json.loads(ret.stdout)
     for elem in inputs:
         if elem['identifier'] == '1:1:AT_Translated_Set_2_keyboard':

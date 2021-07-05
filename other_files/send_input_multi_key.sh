@@ -19,6 +19,7 @@ if [ "$LAYOUT" = "US" ]; then
 <Multi_key> <4> : "§"
 <Multi_key> <e> : "€"
 <Multi_key> <m> : "μ"
+<Multi_key> <g> : "👍" = THUMBS UP SIGN
 
 <Multi_key> <a> : "ä"           <Multi_key> <A> : "Ä"
 <Multi_key> <u> : "ü"           <Multi_key> <U> : "Ü"
@@ -32,6 +33,7 @@ EOF
         "4") OUTPUT_SYMBOL="§" ;;
         "e") OUTPUT_SYMBOL="€" ;;
         "m") OUTPUT_SYMBOL="μ" ;;
+        "g") OUTPUT_SYMBOL="👍" ;;
 
         "a") OUTPUT_SYMBOL="ä" ;;
         "A") OUTPUT_SYMBOL="Ä" ;;
@@ -52,6 +54,7 @@ else
 <Multi_key> <4> : "§"
 <Multi_key> <е> : "€"
 <Multi_key> <м> : "μ"
+<Multi_key> <п> : "👍" = THUMBS UP SIGN
 
 <Multi_key> <Cyrillic_yeru>     : "і"   # ы
 <Multi_key> <Cyrillic_YERU>     : "І"   # Ы
@@ -68,6 +71,8 @@ EOF
         "4") OUTPUT_SYMBOL="§" ;;
         "е") OUTPUT_SYMBOL="€" ;;
         "м") OUTPUT_SYMBOL="μ" ;;
+        "п") OUTPUT_SYMBOL="👍" ;;
+
         "ы") OUTPUT_SYMBOL="і" ;;
         "Ы") OUTPUT_SYMBOL="І" ;;
         "ъ") OUTPUT_SYMBOL="ї" ;;

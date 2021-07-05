@@ -96,6 +96,8 @@ sudo apt-get install firmware-misc-nonfree wireless-regdb firmware-iwlwifi
 sudo apt-get install sway # way-cooler libpam-systemd at-spi2-core
 # libappindicator-gtk3
 
+sudo apt-get install fonts-recommended
+
 # To make screen sharing work:
 sudo apt-get install xdg-desktop-portal-wlr pipewire-bin
 
