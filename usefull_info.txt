@@ -2660,8 +2660,8 @@ aplay -v -c 2 -f S16_LE -r 44100 ./raw_samples_file
 # Play sound via specific sound device:
 aplay -D hw:#CARD,#DEVICE,#SUBDEVICE FILE.wav
 
-# Convert wav to mp3:
-avconv -i IN.wav -sample_fmt s16 -ar 48000 -ab 32k -loglevel warning OUT.mp3
+# Convert wav to mp3 (previously: avconv):
+ffmpeg -i IN.wav -sample_fmt s16 -ar 48000 -ab 32k -loglevel warning OUT.mp3
 
 # Alsa commands:
 cat /proc/asound/cards (modules, devices)
@@ -2956,15 +2956,15 @@ ffmpeg -i $IN_VIDEO -i $IN_AUDIO -c copy -shortest -map 0:v:0 -map 1:a:0 $OUT
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 1920x1080 -i FRAMEBUFFER.DUMP -f image2 -vcodec png framebuffer.png
 
 # Cut mp3 [00:16; end]:
-avconv -i input.mp3 -codec copy -ss 00:16 out.mp3
+ffmpeg -i input.mp3 -codec copy -ss 00:16 out.mp3
 # Cut mp3 [00:16; 00:26]:
-avconv -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
+ffmpeg -i input.mp3 -codec copy -ss 00:16 -t 00:10 out.mp3
 
 # Concat mp3:
-avconv -i "concat:in1.mp3|in2.mp3" -acodec copy out.mp3
+ffmpeg -i "concat:in1.mp3|in2.mp3" -acodec copy out.mp3
 
 # extract audio (mp3) from video (convert to mp3):
-avconv -i video.mp4 -q:a 0 -map a audio.mp3
+ffmpeg -i video.mp4 -q:a 0 -map a audio.mp3
 
 # less search command line:
 less -p pattern FILE
@@ -3339,6 +3339,9 @@ nmcli con up CONNECTION
 nmcli d disconnect INTERFACE
 nmcli dev disconnect INTERFACE
 nmcli device disconnect INTERFACE
+
+# disconnect from specific WIFI network:
+nmcli con down id SSID
 
 # connect to wifi via network manager (nmcli):
 # ("d" stands for "device")

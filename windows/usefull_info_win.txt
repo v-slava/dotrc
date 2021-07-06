@@ -10,6 +10,11 @@ copy file1.txt file2.txt
 copy file1.txt^
  file2.txt
 
+# Autologin:
+https://docs.microsoft.com/en-us/troubleshoot/windows-server/user-profiles-and-logon/turn-on-automatic-logon
+https://docs.microsoft.com/en-us/sysinternals/downloads/autologon
+https://download.sysinternals.com/files/AutoLogon.zip
+
 # To open autostart folder type in explorer's address line:
 shell:startup
 
