@@ -410,6 +410,9 @@ xset s off -dpms
 
 # remote desktop / RDP client (remmina):
 remmina -c $XDG_DATA_HOME/remmina/1567499367996.remmina
+# To remap caps_lock to ctrl (doesn't work for me) in
+# $XDG_CONFIG_HOME/remmina/remmina.pref:
+rdp_use_client_keymap=1
 
 # home video security / surveillance system:
 apt-get install zoneminder

@@ -39,6 +39,7 @@ input * {
     # xkb_options "grp:menu_toggle,compose:ralt"
     # search for "Position of Compose key" in xkeyboard-config(7)
     # Note: requires ~/.XCompose. Doesn't work in chrome
+    # Remap ctrl to caps_lock:
     xkb_options "ctrl:nocaps"
 }
 

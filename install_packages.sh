@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Virtualbox guest can't be booted with EFI.
+# grub-pc can't be installed in GPT partition table without "BIOS boot
+# partition" (size >= 1M).
+
 # Install debian:
 # mkfs -t vfat -F 32 -n EFI /dev/sdX1
 # mkfs -t ext4 -L root_partition /dev/sdX2
@@ -22,14 +26,16 @@
 # apt-get install efibootmgr
 # apply postinst for kernel and initramfs
 #
-# alternative #2 (BIOS grub2, obsolete):
+# alternative #2 (BIOS grub2, obsolete, use this for virtualbox guest):
 # apt-get install grub-pc os-prober
+# # grub-install /dev/sdX
 #
 # alternative #3 (EFI grub2, recommended):
 # mkdir /boot/efi
 # mount /dev/sda1 /boot/efi # 512M
 # mkdir -p /boot/efi/EFI/Debian
 # apt-get install grub-efi-amd64 os-prober
+# # grub-install --target=x86_64-efi /dev/sdX
 #
 # For grub2:
 # sed -i /etc/default/grub -e \

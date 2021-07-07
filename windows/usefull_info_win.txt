@@ -12,8 +12,9 @@ copy file1.txt^
 
 # Autologin:
 https://docs.microsoft.com/en-us/troubleshoot/windows-server/user-profiles-and-logon/turn-on-automatic-logon
+# See also: $DOTRC/windows/other_files/autologin.reg
 https://docs.microsoft.com/en-us/sysinternals/downloads/autologon
-https://download.sysinternals.com/files/AutoLogon.zip
+# Backup link: https://download.sysinternals.com/files/AutoLogon.zip
 
 # To open autostart folder type in explorer's address line:
 shell:startup
