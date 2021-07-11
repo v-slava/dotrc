@@ -65,7 +65,8 @@ else
 
     # default colorless prompt:
     # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    if echo $TERM | grep -q '256color\|screen' ; then
+    # if echo $TERM | grep -q '256color\|screen' ; then
+    if [ "$TERM" != "linux" ]; then
         if [ `id -un` == root ]; then
             USER_COLOR=196
         else
