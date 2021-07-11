@@ -54,7 +54,7 @@ for OUTPUT in $OUTPUTS ; do
 done
 echo -e "\nNUM_OUTPUTS=|$NUM_OUTPUTS|" >> $LOG
 
-MAIN_OUTPUT=$(echo -e "$OUTPUTS" | grep eDP)
+MAIN_OUTPUT=$(echo -e "$OUTPUTS" | grep '\(eDP\|Virtual-1\)')
 echo "MAIN_OUTPUT=|$MAIN_OUTPUT|" >> $LOG
 
 case $NUM_OUTPUTS in
