@@ -247,13 +247,12 @@ exec exec $START_S telegram
 # bindsym --to-code $Alt_R+$Shift_R+v exec exec $START claws-mail --select '#imap/viacheslav.volkov.1/INBOX'
 # bindsym --to-code $Alt_R+$Shift_R+s exec exec $START claws-mail --select '#imap/slava65536/INBOX'
 
-# Start mail client:
-# exec rm -rf /tmp/mbsync_lock_dir && exec $START_S email --startup
-exec exec $START_S email --startup
+# Start email client:
+# exec exec $START_S email --startup
 
 # Switch to "mail" workspace:
+# bindsym --to-code $WIN+m exec exec $START_S email
 # bindsym --to-code $WIN+m workspace m
-bindsym --to-code $WIN+m exec exec $START_S email
 
 # Start emacs daemon:
 # exec exec emacs --daemon

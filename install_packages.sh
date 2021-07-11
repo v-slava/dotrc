@@ -161,7 +161,8 @@ sudo apt-get install keepassxc
 # KDF: AES (6000 rounds)
 
 # Install email client:
-sudo apt-get install evolution
+# sudo apt-get install thunderbird
+# sudo apt-get install evolution
 # thunderbird icedove msmtp mutt mmh
 # For microsoft exchange server: evolution-ews
 
