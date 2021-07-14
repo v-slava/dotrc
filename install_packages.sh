@@ -66,6 +66,7 @@ sudo apt-get install udev kmod sudo usbutils pciutils util-linux lsof \
     colordiff socat psmisc ffmpeg tree file bsdutils openssh-client \
     fuseiso9660 netcat-openbsd \
 
+# sudo apt-get install python-is-python3
 sudo apt-get install --install-recommends python3-pip
 
 # apt-get install rsyslog
