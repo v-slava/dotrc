@@ -1325,6 +1325,10 @@ function! My_call_graph_paste_location()
     normal J0
 endfunction
 
+function! My_print_cur_line_to_terminal()
+    execute '!echo -e "Copy the following:\n" && echo "' . getline('.') . '"'
+endfunction
+
 " Fugitive (git):
 " :copen - open quickfix window
 " In status window use:
@@ -1482,6 +1486,8 @@ let g:which_key_map.m = { 'name' : '+my',
 let g:which_key_map.o = { 'name' : '+other',
 \   'c' : ['0D', 'clear current line'],
 \   'f' : [':execute g:My_eval_var', 'evaluate variable'],
+\   't' : [':call My_print_cur_line_to_terminal()',
+\             'print current line to terminal for copying'],
 \ }
 
 let g:which_key_map.r = { 'name' : '+rtags',
