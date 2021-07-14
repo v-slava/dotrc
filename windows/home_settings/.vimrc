@@ -1326,7 +1326,11 @@ function! My_call_graph_paste_location()
 endfunction
 
 function! My_print_cur_line_to_terminal()
-    execute '!echo -e "Copy the following:\n" && echo "' . getline('.') . '"'
+    let l:cur_line = getline('.')
+    " Escape hash characters:
+    let l:cur_line = substitute(l:cur_line, '#', '\\#', 'g')
+    " echo l:cur_line
+    execute '!echo -e "Copy the following:\n" && echo "' . l:cur_line . '"'
 endfunction
 
 " Fugitive (git):
