@@ -249,6 +249,7 @@ pyinstaller -F ./your_script.py
 make -O
 
 # some yocto commands (tags: bitbake):
+https://wiki.st.com/stm32mpu/wiki/OpenEmbedded
 devtool status
 devtool modify busybox
 # now do your changes
@@ -2164,6 +2165,7 @@ man 1ssl cmd
 zcat /proc/config.gz
 
 # Note: for debug logging better use normal printk().
+# See also: print_hex_dump()
 # debug printk:
 pr_devel() should produce zero code unless DEBUG is defined
 # printk(KERN_DEBUG "fmt", ...)
@@ -2197,8 +2199,6 @@ readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
 # = 0x80000000 + 0x0057b3f0
 # See also CONFIG_AUTO_ZRELADDR, $DOTRC/bin/uboot_mem_dump_extract_strings.sh
 
-# Enable all (debug-level) messages:
-echo 7 > /proc/sys/kernel/printk
 # in linux command line:
 loglevel=8
 # or
@@ -2569,6 +2569,8 @@ git format-patch -1 [-o OUT_DIR] [SHA]
 # Apply patch file:
 cd GIT_ROOT_DIR
 git apply PATCH_FILE
+# Apply svn patch file to git repo:
+patch -p0 < PATCH_FILE
 # Apply patch file at least partially (as much as possible):
 git apply --reject PATCH_FILE
 # Apply patch file and create commit based on it:
@@ -3350,6 +3352,9 @@ nmcli device disconnect INTERFACE
 # disconnect from specific WIFI network:
 nmcli con down id SSID
 
+# forget specific WIFI network:
+nmcli con delete id SSID
+
 # connect to wifi via network manager (nmcli):
 # ("d" stands for "device")
 # turn on wifi radio interface:
@@ -3500,6 +3505,21 @@ genisoimage -r -J -o cd_image.iso <folder> # create iso image
 # Check (paranoidal) image correctness:
 sudo mount -t iso9660 -o ro cd_image.iso /media/cd_mount_point
 sudo wodim -v -eject dev=/dev/sr0 /home/user/img.iso # -multi
+
+# Cortex A TrustZone, execution levels:
+https://chromium.googlesource.com/chromiumos/third_party/arm-trusted-firmware/+/v1.2-rc0/docs/firmware-design.md
+https://wiki.st.com/stm32mpu/wiki/STM32MPU_Embedded_Software_architecture_overview
+Boot Loader stage 1 (BL1) AP Trusted ROM
+Boot Loader stage 2 (BL2) Trusted Boot Firmware
+Boot Loader stage 3-1 (BL31) EL3 Runtime Firmware
+Boot Loader stage 3-2 (BL32) Secure-EL1 Payload (optional)
+Boot Loader stage 3-3 (BL33) Non-trusted Firmware
+BL31 is TF-A, running at EL3.
+OP-TEE is BL32, running at SEL1.
+# EL0 - Application
+# EL1 - Rich OS
+# EL2 - Hypervisor
+# EL3 - Firmware
 
 # use backtrace(3) with addr2line(1):
 # copy code from example in backtrace(3):
