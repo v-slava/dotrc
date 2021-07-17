@@ -1199,6 +1199,7 @@ rustc -O -Z print-link-args main.rs
 tail -n +${START_LINE} | head -n $NUM_LINES
 
 # get line with specified number from FILE:
+sed -n '<line number>p' FILE
 sed -n '<line number>p' < FILE
 
 # Delete (remove) lines matching regex from FILE:
