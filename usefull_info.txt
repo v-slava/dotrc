@@ -1994,13 +1994,15 @@ sudo nvim /etc/vsftpd.conf
 # Add the following lines:
 # anonymous_enable=YES
 # anon_root=/your/ftp/root/dir
+# To enable write access (for local users exept anonymous):
+# write_enable=YES
 sudo systemctl restart vsftpd
 # sudo tail -f /var/log/vsftpd.log
-echo test > /your/ftp/root/dir/hello_world.txt
-curl ftp://localhost/hello_world.txt -o out.txt
-cat out.txt
-curl ftp://user:password@localhost/hello_world.txt -o out.txt
-curl ftp://user:%fe%23%42@localhost/hello_world.txt -o out.txt
+# Downloading file from FTP server:
+echo test > /your/ftp/root/dir/hello_download.txt
+curl ftp://localhost/hello_download.txt -o downloaded.txt
+curl ftp://user:password@localhost/file.txt -o out.txt
+curl ftp://user:%fe%23%42@localhost/file.txt -o out.txt
 cat << EOF | ftp -i -p -n ftp.somecompany.com
 user USER PASSWORD
 user anonymous any_password
@@ -2011,6 +2013,9 @@ ls
 get some_file.txt
 exit
 EOF
+# Uploading file to FTP server:
+echo test > /tmp/local.txt
+curl -T /tmp/local.txt ftp://user:password@localhost/remote.txt
 
 # Download file over TFTP:
 # On TFTP server:
