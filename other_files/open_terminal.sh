@@ -12,6 +12,13 @@ fi
 source ~/.bashrc
 # open_terminal.sh [--title TITLE] CMD
 
+if ! pidof foot 1>/dev/null ; then
+    foot -s &
+    sleep 0.1
+fi
+exec footclient "$@"
+exec foot "$@"
+
 TITLE="Terminal"
 for arg do
     shift
@@ -25,13 +32,6 @@ exec alacritty --title "$TITLE" -e "$@"
 
 ARGS="$@"
 exec terminator --title "$TITLE" -e "$ARGS"
-
-if ! pidof foot 1>/dev/null ; then
-    foot -s &
-    sleep 0.1
-fi
-exec footclient "$@"
-exec foot "$@"
 
 exec kitty "$@"
 # https://github.com/majestrate/wterm - broken font
