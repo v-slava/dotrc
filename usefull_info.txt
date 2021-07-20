@@ -442,6 +442,8 @@ https://mozilla.github.io/webrtc-landing/gum_test.html
 ssh -N -L 5900:localhost:5900 user@screen_sharing_host
 # On server:
 x11vnc -display :0 [-passwd YOUR_PASSWORD]
+wayvnc 0.0.0.0
+# See also: $DOTRC/other_files/build_or_install_scripts/wayvnc/wayvnc.sh
 # On client:
 gvncviewer {screen_sharing_host|localhost}
 # Or sudo apt-get install remmina-plugin-vnc && remmina
