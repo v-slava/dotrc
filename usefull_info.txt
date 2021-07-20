@@ -3349,6 +3349,8 @@ nmcli con add type ethernet con-name CONNECTION ifname INTERFACE ip4 MY_IP \
 nmcli con show CONNECTION
 # Connect to connection:
 nmcli con up CONNECTION
+# Add public DNS servers:
+nmcli con mod CONNECTION ipv4.dns "8.8.8.8 8.8.4.4"
 
 # disconnect current connection on INTERFACE
 nmcli d disconnect INTERFACE
