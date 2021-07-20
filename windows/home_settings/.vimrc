@@ -249,7 +249,7 @@ else
         hi MySuccessMsg ctermfg=118
         hi MyErrorMsg ctermfg=161 cterm=bold
         if g:rehash256
-            hi Error ctermfg=219 ctermbg=89
+            hi Error ctermfg=219 ctermbg=124
         endif
         hi MatchParen ctermfg=none ctermbg=59 " ctermbg=20
     endfunction
