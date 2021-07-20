@@ -3352,6 +3352,8 @@ nmcli con show CONNECTION
 nmcli con up CONNECTION
 # Add public DNS servers:
 nmcli con mod CONNECTION ipv4.dns "8.8.8.8 8.8.4.4"
+nmcli con down CONNECTION
+nmcli con up CONNECTION
 
 # disconnect current connection on INTERFACE
 nmcli d disconnect INTERFACE
