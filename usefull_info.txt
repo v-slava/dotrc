@@ -444,7 +444,9 @@ ssh -N -L 5900:localhost:5900 user@screen_sharing_host
 x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
 gvncviewer {screen_sharing_host|localhost}
-# Or sudo apt-get install remmina-plugin-vnc
+# Or sudo apt-get install remmina-plugin-vnc && remmina
+xtigervncviewer {screen_sharing_host|localhost}
+xtightvncviewer {screen_sharing_host|localhost}
 
 # For reverse ssh see:
 $DOTRC/other_files/my_samples/single_sources/reverse_ssh.service
