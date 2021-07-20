@@ -213,6 +213,8 @@ Linux:
 right_ctrl+c
 apt-get install linux-headers-amd64
 use Settings -> Display -> Graphics Controller: VBoxSVGA
+Start without display (use RDP instead):
+VBoxHeadless -s VM_NAME
 
 # redmine code style (block):
 <pre>
@@ -442,6 +444,7 @@ ssh -N -L 5900:localhost:5900 user@screen_sharing_host
 x11vnc -display :0 [-passwd YOUR_PASSWORD]
 # On client:
 gvncviewer {screen_sharing_host|localhost}
+# Or sudo apt-get install remmina-plugin-vnc
 
 # For reverse ssh see:
 $DOTRC/other_files/my_samples/single_sources/reverse_ssh.service
