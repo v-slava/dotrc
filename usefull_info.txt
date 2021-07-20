@@ -215,6 +215,8 @@ apt-get install linux-headers-amd64
 use Settings -> Display -> Graphics Controller: VBoxSVGA
 Start without display (use RDP instead):
 VBoxHeadless -s VM_NAME
+# Networking: bridge, behind nat, ...
+https://www.virtualbox.org/manual/ch06.html#table-networking-modes
 
 # redmine code style (block):
 <pre>
@@ -2026,7 +2028,7 @@ curl -T /tmp/local.txt ftp://user:password@localhost/remote.txt
 
 # Download file over TFTP:
 # On TFTP server:
-apt-get install tftpd-hpa
+sudo apt-get install tftpd-hpa
 mkdir /srv/tftp/SOME_DIR
 # See TFTP_DIRECTORY in /etc/default/tftpd-hpa
 echo hello > /srv/tftp/SOME_DIR/FILE_NAME

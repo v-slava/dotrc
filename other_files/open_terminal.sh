@@ -16,6 +16,7 @@ if ! pidof foot 1>/dev/null ; then
     foot -s &
     sleep 0.1
 fi
+# exec footclient -t xterm-256color "$@"
 exec footclient "$@"
 exec foot "$@"
 
