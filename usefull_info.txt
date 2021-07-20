@@ -2203,7 +2203,8 @@ readelf -s vmlinux | grep __log_buf | cut -d: -f2 | cut -d' ' -f2
 #
 # PHYSICAL address = start_of(PHYSICAL memory) + offset =
 # = 0x80000000 + 0x0057b3f0
-# See also CONFIG_AUTO_ZRELADDR, $DOTRC/bin/uboot_mem_dump_extract_strings.sh
+# See also CONFIG_AUTO_ZRELADDR,
+# $DOTRC/other_files/my_samples/single_sources/uboot_mem_dump_extract_strings.sh
 
 # in linux command line:
 loglevel=8
