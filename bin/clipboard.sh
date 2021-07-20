@@ -40,8 +40,9 @@ else
 # For wayland:
 
 case "$1" in
-    "-o") wl-paste ;;
-    "-n") cat | tr -d '\n' | wl-copy ;;
+    "-o") wl-paste --no-newline ;; # --watch cat
+    # "-n") cat | tr -d '\n' | wl-copy ;;
+    "-n") wl-copy --trim-newline ;;
     "--clipboard-2-primary") wl-paste | wl-copy --primary ;;
     "--primary-2-clipboard") wl-paste --primary | wl-copy ;;
     *) wl-copy ;;

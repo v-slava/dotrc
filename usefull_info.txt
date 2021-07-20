@@ -432,7 +432,7 @@ apt-get install zoneminder
 # Run simple tcp server:
 nc -l localhost 9222
 # Run simple tcp client (connect to the server above):
-nc localhost 9222
+nc [-N] localhost 9222
 # TCP proxy: forward 10.70.126.164:9999 -> localhost:9998
 rm -f /tmp/fifo && mkfifo /tmp/fifo
 nc -l -p 9998 < /tmp/fifo | nc 10.70.126.164 9999 > /tmp/fifo

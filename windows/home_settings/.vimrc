@@ -248,6 +248,9 @@ else
         " autocmd WinEnter * match Error /\s\+$/
         hi MySuccessMsg ctermfg=118
         hi MyErrorMsg ctermfg=161 cterm=bold
+        if g:rehash256
+            hi Error ctermfg=219 ctermbg=89
+        endif
         hi MatchParen ctermfg=none ctermbg=59 " ctermbg=20
     endfunction
     autocmd BufEnter * call My_fix_colorscheme()
