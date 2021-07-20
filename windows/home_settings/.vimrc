@@ -232,6 +232,8 @@ if g:My_is_windows
         let &runtimepath.=',~\.vim'
     endif
 else
+    " let g:molokai_original = 1
+    let g:rehash256 = 1
     colorscheme molokai
     " Fix colorscheme:
     function! My_fix_colorscheme()
