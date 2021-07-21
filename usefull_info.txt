@@ -430,7 +430,7 @@ apt-get install zoneminder
 # See also: https://habr.com/ru/post/454132/
 
 # Run simple tcp server:
-nc -l localhost 9222
+nc -l [localhost|0.0.0.0] 9222
 # Run simple tcp client (connect to the server above):
 nc [-N] localhost 9222
 # TCP proxy: forward 10.70.126.164:9999 -> localhost:9998
