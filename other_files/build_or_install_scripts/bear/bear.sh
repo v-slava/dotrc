@@ -9,7 +9,7 @@ cd "$TMP"
 rm -rf Bear
 git clone https://github.com/rizsotto/Bear
 cd Bear
-git checkout 3.0.1
+git checkout 3.0.13
 mkdir out
 cd out
 cmake -DCMAKE_BUILD_TYPE=Release ..
